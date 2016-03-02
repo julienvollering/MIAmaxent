@@ -2,4 +2,4 @@
 altrMaxent
 ==========
 
-altrMaxent is an R package under development (pre-release). The contents of this repository are not intended for public use.
+altrMaxent is an R package under development (pre-release). The contents of this repository are not currently intended for public use.
