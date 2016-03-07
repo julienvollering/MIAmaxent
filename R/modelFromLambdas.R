@@ -51,6 +51,14 @@ Jarpreds_3dv <- read.csv("D:\\Rpackage\\MIATtest\\MIATtest2\\AM\\M3A_All\\M3A_Al
 plot (Jarpreds_3dv, Rpreds_3dv)
 abline(a=0, b=1, col="red")
 
+mymodel_4dv <- modelFromLambdas("D:\\Rpackage\\MIATtest\\MIATtest2\\AM\\M3B_All\\M3B_aNI_RV_Al1\\GP02\\GrPr02pv1\\aNI_RV_Al1_P02.lambdas")
+samplevalues_4dv <- read.csv("D:\\Rpackage\\MIATtest\\MIATtest2\\AM\\M3B_All\\M3B_aNI_RV_Al1\\GP02\\GrPr02pv1_aNI_RV_Al1_P02.csv")[,4:7]
+samplevalues_4dv <- as.matrix(samplevalues_4dv) # dvvalues need to be in vectors
+Rpreds_4dv <- apply(samplevalues_4dv, 1, mymodel_4dv)
+Jarpreds_4dv <- read.csv("D:\\Rpackage\\MIATtest\\MIATtest2\\AM\\M3B_All\\M3B_aNI_RV_Al1\\GP02\\GrPr02pv1\\aNI_RV_Al1_P02_samplePredictions.csv")[,4]
+plot (Jarpreds_4dv, Rpreds_4dv)
+abline(a=0, b=1, col="red")
+
 mymodel_45dv <- modelFromLambdas("D:\\Rpackage\\MIATtest\\MIATtest2\\AM\\M3C_All\\M3C_aWI_RV_Al1\\GP03\\GrPr03pv4\\aWI_RV_Al1P03.lambdas")
 samplevalues_45dv <- read.csv("D:\\Rpackage\\MIATtest\\MIATtest2\\AM\\M3C_All\\M3C_aWI_RV_Al1\\GP03\\GrPr03pv4_aWI_RV_Al1P03.csv")[,4:48]
 samplevalues_45dv <- as.matrix(samplevalues_45dv) # dvvalues need to be in vectors
