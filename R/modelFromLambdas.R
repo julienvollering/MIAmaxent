@@ -5,21 +5,33 @@
 #' The returned function gives predictions of the model in "raw output" format
 #' from values of explanatory variables.
 #'
+#' The \code{modelFromLambdas} function returns a Maxent model, in the form of
+#' a function, which calculates Maxent predictions for given values of
+#' explanatory variables.
+#'
+#' Input to the function returned by \code{modelFromLambdas} are values of
+#' explanatory variables in the model. The format of this input must be an
+#' array (matrix or data frame) with m columns, and column names must match
+#' variable names in the .lambdas file used to reproduce the model.
+#'
 #' @param file pathway to the .lambdas file of a given Maxent model
+#' @param name Character(). Specifies the name of the function to be returned.
+#' Defaults to the basename of the .lambdas file.
 #'
 #' @return returns an R function (object).
-#
-# This is a function named 'modelFromLambdas' which reproduces a model
-# produced by maxent.jar in R, from the model's lambda file.
+#'
+#' @examples
+#' \dontrun {
+#' modelFromLambdas("D:\\tutorial-data\\bradypus_variegatus.lambdas", name="mymodel")
+#' mymodel(projection.df)
+#' }
 
-# Details: the modelFromLambdas function returns a maxent model in the form of a
-# function which calculates maxent predictions for the given values of the
-# explanatory variables.
+modelFromLambdas <- function(file, name = NULL) {
 
-# Input to the resulting function must be an array (matrix or df) with m
-# columns, where column names match variable names in lambda file.
+  if (is.null(name)) {
+    name <- sub(".lambdas", "", basename(file))
+  }
 
-modelFromLambdas <- function(file) { # file is the pathway to the lambdas file of the desired Maxent model
   lambdas <- read.csv(file, header = FALSE)
   dvrows <- lambdas[1:(nrow(lambdas)-4),]
   m <- nrow(dvrows)
@@ -28,7 +40,7 @@ modelFromLambdas <- function(file) { # file is the pathway to the lambdas file o
   xmaxs <- dvrows[,4]
   linPredNorm <- lambdas[nrow(lambdas)-3,2]
   densNorm <- lambdas[nrow(lambdas)-2,2]
-  function(X) {
+  model <- function(X) {
     matchorder <- match(as.character(dvrows[,1]), colnames(X))
 
     if (ncol(X) != m) {
@@ -50,4 +62,5 @@ modelFromLambdas <- function(file) { # file is the pathway to the lambdas file o
     projection <- cbind(orderedX, rawoutput)
     return(projection)
   }
+  assign(name, model, pos = ".GlobalEnv")
 }
