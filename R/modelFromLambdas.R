@@ -6,7 +6,7 @@
 #' from values of explanatory variables.
 #'
 #' The \code{modelFromLambdas} function returns a Maxent model, in the form of
-#' a function, which calculates Maxent predictions for given values of
+#' a function that calculates Maxent predictions for given values of
 #' explanatory variables.
 #'
 #' Input to the function returned by \code{modelFromLambdas} are values of
@@ -21,7 +21,7 @@
 #' @return returns an R function (object).
 #'
 #' @examples
-#' \dontrun {
+#' \dontrun{
 #' modelFromLambdas("D:\\tutorial-data\\bradypus_variegatus.lambdas", name="mymodel")
 #' mymodel(projection.df)
 #' }

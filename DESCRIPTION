@@ -9,3 +9,4 @@ License: What license is it under?
 LazyData: TRUE
 URL: https://github.com/julienvollering/altrMaxent
 BugReports: https://github.com/julienvollering/altrMaxent/issues
+RoxygenNote: 5.0.1
