@@ -2,19 +2,26 @@
 #'
 #' \code{plotFOP} produces a Frequency of Observed Presence plot for a given
 #' explanatory variable, and provides a data frame with the plotted data (for
-#' customizable plotting).
+#' customizable plotting).The EVoptimum that is retuned is based on the smoothed
+#' data, unless a maximum exists at the extrames of the EV (outside the smoothing
+#' window).
 #'
 #' @param data dataframe. Containing the response variable in the first column
 #' and explanatory variables in subsequenct columns.
 #'
-#' Imports: dplyr, Hmisc, stats
+#' Imports: dplyr, Hmisc
 
 
-plotFOP <- function(data, EV, intervals = 20, smoothwindow = 5) {
+plotFOP <- function(data, EV, intervals = 20, smoothwindow = 3) {
   df <- data.frame(RV = data[,1], EV = data[,EV])
 
   if (anyNA(df[,1]) && length(levels(as.factor(df[,1]))) > 1) {
     stop("The response variable must contain 2 levels only: presence (1)
+      and background (NA/0)", call. = FALSE)
+  }
+
+  if (class(df[,1]) != "numeric" && class(df[,1]) != "integer") {
+    stop("The response variable must be numeric or integer class: presence (1)
       and background (NA/0)", call. = FALSE)
   }
 
@@ -32,17 +39,32 @@ plotFOP <- function(data, EV, intervals = 20, smoothwindow = 5) {
     intRV = mean(RV, na.rm=F)
     )
 
-  plot(FOPdf$intRV ~ FOPdf$intEV)
-
   s <- smoothwindow
-  if (s %% 2 != 0) {
-    expwindow <- dexp(c(((s-1)/2):0,1:((s-1)/2)))
+  FOPdf$smoothRV <- ewma(FOPdf$intRV, s)
+
+  RVname <- colnames(data)[1]
+  if (class(EV)=="character") {
+    EVname <- EV
   } else {
-    expwindow <- dexp(c((s/2):0,1:((s-2)/2)))
+    EVname <- colnames(data)[EV]
   }
-  expweights <- expwindow/sum(expwindow)
-  FOPdf$smoothRV <- filter(FOPdf$intRV,expweights, sides=2)
-  lines(FOPdf$intEV,FOPdf$smoothRV)
+  plot(FOPdf$intRV ~ FOPdf$intEV,
+    xlab = EVname, ylab = RVname,
+    main = "Frequency of Observed Presence")
+  lines(FOPdf$intEV,FOPdf$smoothRV, col="grey")
+
+  maxRV <- FOPdf$smoothRV
+  maxRV[is.na(maxRV)] <- FOPdf$intRV[is.na(maxRV)]
+
+  FOP <- list()
+  FOP[[1]] <- FOPdf$intEV[which(maxRV == max(maxRV))]
+  FOP[[2]] <- data.frame("n"=FOPdf$n, "meanEV"=FOPdf$intEV,
+    "freqRV"=FOPdf$intRV, "smooth_freqRV"=FOPdf$smoothRV)
+  names(FOP) <- c("EVoptimum", "FOPdata")
+
   }
 
+  # need to add support for categorical EVs
+
+  return(FOP)
 }
