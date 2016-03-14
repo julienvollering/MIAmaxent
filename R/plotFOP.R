@@ -9,6 +9,8 @@
 #' The EVoptimum that is retuned is based on the smoothed data, unless a maximum
 #' exists at the extremes of the EV (outside the smoothing window).
 #'
+#' \code{DESCRIPTION Imports}: dplyr, Hmisc, scales
+#'
 #' @param data Dataframe containing the response variable in the first column
 #'   and explanatory variables in subsequent columns.
 #' @param EV Name or column number of the explanatory variable for which to
@@ -16,8 +18,8 @@
 #' @param intervals Number of intervals into which the continuous EV is divided.
 #'   Irrelevant for categorical EVs.
 #' @param smoothwindow Width of the smoothing window. Represents the number of
-#'   intervals included in an exponentially weighted moving average. Should be
-#'   an odd number, to give a centered moving average. Irrelevant for
+#'   intervals included in an exponentially weighted moving average. Should be odd,
+#'   otherwise the window will be uncentered. Irrelevant for
 #'   categorical EVs.
 #' @param EVranging if \code{TRUE}, will range the EV scale to [0,1]. This is
 #'   equivalent to plotting FOP over the linear transformation produced by
@@ -27,7 +29,7 @@
 #'   the EV value at which FOP is highest (\code{EVoptimum}) and 2) a data frame
 #'   with the plotted data (\code{FOPdata}).
 #'
-#'   Imports: dplyr, Hmisc, scales
+#' @export
 
 
 plotFOP <- function(data, EV, intervals = 20, smoothwindow = 3,

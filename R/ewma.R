@@ -2,9 +2,9 @@
 #'
 #' @param x numeric. Vector across which the moving average is to be applied.
 #' @param n integer. Width of the moving average window. Should be odd,
-#' otherwise the window will be uncentered.
+#'   otherwise the window will be uncentered.
 #'
-#' Imports: stats
+#' \code{DESCRIPTION Imports}: stats
 #'
 
 ewma <- function(x, n) {

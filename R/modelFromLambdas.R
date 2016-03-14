@@ -1,22 +1,22 @@
 #' Maxent model from .lambdas file.
 #'
-#' \code{modelFromLambdas} returns an R function for a given Maxent model,
-#' using the .lambdas file produced by Maxent.jar to parameterize the model.
-#' The returned function gives predictions of the model in "raw output" format
-#' from values of explanatory variables.
+#' \code{modelFromLambdas} returns an R function for a given Maxent model, using
+#' the .lambdas file produced by Maxent.jar to parameterize the model. The
+#' returned function gives predictions of the model in "raw output" format from
+#' values of explanatory variables.
 #'
-#' The \code{modelFromLambdas} function returns a Maxent model, in the form of
-#' a function that calculates Maxent predictions for given values of
-#' explanatory variables.
+#' The \code{modelFromLambdas} function returns a Maxent model, in the form of a
+#' function that calculates Maxent predictions for given values of explanatory
+#' variables.
 #'
 #' Input to the function returned by \code{modelFromLambdas} are values of
-#' explanatory variables in the model. The format of this input must be an
-#' array (matrix or data frame) with m columns, and column names must match
-#' variable names in the .lambdas file used to reproduce the model.
+#' explanatory variables in the model. The format of this input must be an array
+#' (matrix or data frame) with m columns, and column names must match variable
+#' names in the .lambdas file used to reproduce the model.
 #'
 #' @param file pathway to the .lambdas file of a given Maxent model
-#' @param name Character(). Specifies the name of the function to be returned.
-#' Defaults to the basename of the .lambdas file.
+#' @param name Specifies the name of the function to be returned. Defaults to
+#'   the basename of the .lambdas file.
 #'
 #' @return returns an R function (object).
 #'

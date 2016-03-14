@@ -10,3 +10,8 @@ LazyData: TRUE
 URL: https://github.com/julienvollering/altrMaxent
 BugReports: https://github.com/julienvollering/altrMaxent/issues
 RoxygenNote: 5.0.1
+Imports:
+    dplyr (>= 0.4.3),
+    Hmisc (>= 3.17-2),
+    scales (>= 0.3.0),
+    stats (>= 3.2.3)
