@@ -1,4 +1,4 @@
-#' plot Frequency of Observed Presence
+#' Plot Frequency of Observed Presence (FOP)
 #'
 #' \code{plotFOP} produces a Frequency of Observed Presence (FOP) plot for a
 #' given explanatory variable. For continuous variables, the exponetially
@@ -7,20 +7,25 @@
 #' plotted data (for customizable plotting).
 #'
 #' The EVoptimum that is retuned is based on the smoothed data, unless a maximum
-#' exists at the extremes of the EV (outside the smoothing window).
+#' exists at the extremes of the EV (outside the smoothing window). Note that if
+#' the response variable represents presence/absence data, the result is an
+#' empirical frequency of presence curve, rather than a observed frequency of
+#' presence curve (see Stoea et al. [in press], Sommerfeltia).
 #'
 #' \code{DESCRIPTION Imports}: dplyr, Hmisc, scales
 #'
 #' @param data Dataframe containing the response variable in the first column
-#'   and explanatory variables in subsequent columns.
+#'   and explanatory variables in subsequent columns. The response variable
+#'   should represent presence/background data, coded as: 1/NA. See Details for
+#'   information regarding presence/absence data.
 #' @param EV Name or column number of the explanatory variable for which to
 #'   calculate FOP.
 #' @param intervals Number of intervals into which the continuous EV is divided.
 #'   Irrelevant for categorical EVs.
 #' @param smoothwindow Width of the smoothing window. Represents the number of
-#'   intervals included in an exponentially weighted moving average. Should be odd,
-#'   otherwise the window will be uncentered. Irrelevant for
-#'   categorical EVs.
+#'   intervals included in an exponentially weighted moving average. Should be
+#'   odd, otherwise the window will be uncentered. Irrelevant for categorical
+#'   EVs.
 #' @param EVranging if \code{TRUE}, will range the EV scale to [0,1]. This is
 #'   equivalent to plotting FOP over the linear transformation produced by
 #'   deriveVars. Irrelevant for categorical EVs.
