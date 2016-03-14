@@ -20,10 +20,14 @@
 #'   an odd number, to give a centered moving average. Irrelevant for
 #'   categorical EVs.
 #' @param EVranging if \code{TRUE}, will range the EV scale to [0,1]. This is
-#'   equivalent to plotting FOP over the linear transformtion produced by
+#'   equivalent to plotting FOP over the linear transformation produced by
 #'   deriveVars. Irrelevant for categorical EVs.
 #'
-#'  Imports: dplyr, Hmisc, scales
+#' @return In addition to the plotted output, a list is returned containing 1)
+#'   the EV value at which FOP is highest (\code{EVoptimum}) and 2) a data frame
+#'   with the plotted data (\code{FOPdata}).
+#'
+#'   Imports: dplyr, Hmisc, scales
 
 
 plotFOP <- function(data, EV, intervals = 20, smoothwindow = 3,

@@ -22,10 +22,15 @@ an odd number, to give a centered moving average. Irrelevant for
 categorical EVs.}
 
 \item{EVranging}{if \code{TRUE}, will range the EV scale to [0,1]. This is
-  equivalent to plotting FOP over the linear transformtion produced by
-  deriveVars. Irrelevant for categorical EVs.
+equivalent to plotting FOP over the linear transformation produced by
+deriveVars. Irrelevant for categorical EVs.}
+}
+\value{
+In addition to the plotted output, a list is returned containing 1)
+  the EV value at which FOP is highest (\code{EVoptimum}) and 2) a data frame
+  with the plotted data (\code{FOPdata}).
 
- Imports: dplyr, Hmisc, scales}
+  Imports: dplyr, Hmisc, scales
 }
 \description{
 \code{plotFOP} produces a Frequency of Observed Presence (FOP) plot for a
