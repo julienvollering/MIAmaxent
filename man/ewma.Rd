@@ -10,9 +10,9 @@ ewma(x, n)
 \item{x}{numeric. Vector across which the moving average is to be applied.}
 
 \item{n}{integer. Width of the moving average window. Should be odd,
-otherwise the window will be uncentered.
+  otherwise the window will be uncentered.
 
-Imports: stats}
+\code{DESCRIPTION Imports}: stats}
 }
 \description{
 calculates exponentially weighted moving average

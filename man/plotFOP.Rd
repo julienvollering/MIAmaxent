@@ -17,8 +17,8 @@ calculate FOP.}
 Irrelevant for categorical EVs.}
 
 \item{smoothwindow}{Width of the smoothing window. Represents the number of
-intervals included in an exponentially weighted moving average. Should be
-an odd number, to give a centered moving average. Irrelevant for
+intervals included in an exponentially weighted moving average. Should be odd,
+otherwise the window will be uncentered. Irrelevant for
 categorical EVs.}
 
 \item{EVranging}{if \code{TRUE}, will range the EV scale to [0,1]. This is
@@ -29,8 +29,6 @@ deriveVars. Irrelevant for categorical EVs.}
 In addition to the plotted output, a list is returned containing 1)
   the EV value at which FOP is highest (\code{EVoptimum}) and 2) a data frame
   with the plotted data (\code{FOPdata}).
-
-  Imports: dplyr, Hmisc, scales
 }
 \description{
 \code{plotFOP} produces a Frequency of Observed Presence (FOP) plot for a
@@ -42,5 +40,7 @@ plotted data (for customizable plotting).
 \details{
 The EVoptimum that is retuned is based on the smoothed data, unless a maximum
 exists at the extremes of the EV (outside the smoothing window).
+
+\code{DESCRIPTION Imports}: dplyr, Hmisc, scales
 }
 
