@@ -16,7 +16,7 @@
 #'
 #' @param data Dataframe containing the response variable in the first column
 #'   and explanatory variables in subsequent columns. The response variable
-#'   should represent presence/background data, coded as: 1/NA. See Details for
+#'   should represent presence or background, coded as: 1/NA. See Details for
 #'   information regarding presence/absence data.
 #' @param EV Name or column number of the explanatory variable for which to
 #'   calculate FOP.

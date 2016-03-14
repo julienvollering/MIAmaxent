@@ -4,7 +4,30 @@
 \alias{deriveVars}
 \title{Derive variables by transformation.}
 \usage{
-deriveVars()
+deriveVars(data, writedir = NULL, transformtype = c(L, M, D, HF, HR, Th, B),
+  allsplines = FALSE)
+}
+\arguments{
+\item{data}{Dataframe containing the response variable in the first column
+and explanatory variables in subsequent columns. The response variable
+should represent presence/background data, coded as: 1/NA.}
+
+\item{writedir}{The directory to which Maxent files will be written during
+subset selection of spline variables. Defaults to the working directory.}
+
+\item{transformtype}{Specifies the types of transformations types to be
+performed. Default is the full set of the following transfomation types: L
+(linear), M (monotonous), D (deviation), HF (forward hinge), HR (reverse
+hinge), Th (threshold), and B (binary).}
+
+\item{allsplines}{Logical. Keep all spline transformations created, rather
+than selecting particular splines based on faction of total variation
+explained.}
+}
+\value{
+List of dataframes, with each data frame containing the derived
+  variables produced for a given explanatory variable by transformation.
+  Dimensions: [[EV]] [N, DV].
 }
 \description{
 \code{deriveVars} produces derived variables from explanatory variables by
@@ -12,6 +35,9 @@ the following transformation types as described in Halvorsen et al. (2015):
 L, M, D, HF, HR, T (for continuous EVs), and B (for categorical EVs). For
 spline transformation types (HF, HR, T),  a subset of possible DVs is
 selected by the criteria described in Halvorsen et al. (2015) p. 179.
+}
+\details{
+(Details)
 }
 \references{
 Halvorsen, R., Mazzoni, S., Bryn, A., & Bakkestuen, V. (2015).
