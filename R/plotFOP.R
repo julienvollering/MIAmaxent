@@ -73,7 +73,7 @@ plotFOP <- function(data, EV, intervals = 20, smoothwindow = 3,
       intRV = mean(RV, na.rm=F)
       )
 
-    FOPdf$smoothRV <- ewma(FOPdf$intRV, smoothwindow)
+    FOPdf$smoothRV <- altrMaxent::ewma(FOPdf$intRV, smoothwindow)
 
     plot(FOPdf$intRV ~ FOPdf$intEV,
       xlab = EVname, ylab = RVname,
