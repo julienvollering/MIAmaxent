@@ -33,7 +33,7 @@
 
 
 deriveVars <- function(data, writedir = NULL,
-  transformtype = c(L, M, D, HF, HR, Th, B), allsplines = FALSE) {
+  transformtype = c("L", "M", "D", "HF", "HR", "T", "B"), allsplines = FALSE) {
 
   if (is.null(writedir)) {
     writedir <- getwd()
@@ -41,8 +41,9 @@ deriveVars <- function(data, writedir = NULL,
 
   EVDV <- list()
   for (i in 2:ncol(data)) {
-    EVDV[[i]] <- dvfromev(data[,1], data[,i],
-      writedir, transformtype, allsplines)
+    df <- data[,c(1,i)]
+    EVDV[[i]] <- dvfromev(df, writedir, transformtype, allsplines)
+    names(EVDV[[i]]) <- colnames(data)[i]
   }
 
   return(EVDV)
