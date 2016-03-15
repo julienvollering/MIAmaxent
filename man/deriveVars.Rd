@@ -4,8 +4,8 @@
 \alias{deriveVars}
 \title{Derive variables by transformation.}
 \usage{
-deriveVars(data, writedir = NULL, transformtype = c(L, M, D, HF, HR, Th, B),
-  allsplines = FALSE)
+deriveVars(data, writedir = NULL, transformtype = c("L", "M", "D", "HF",
+  "HR", "T", "B"), allsplines = FALSE)
 }
 \arguments{
 \item{data}{Dataframe containing the response variable in the first column

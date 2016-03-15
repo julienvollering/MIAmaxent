@@ -1,5 +1,8 @@
 #' produces dvs from a given ev by different transformations.
 #'
+#' In MIAT, "D" transformation is only performed if the optimum occurs in the
+#' middle 80\% of the EV range. \code{dvfromev} does not specify this condition.
+#'
 #' @param df Dataframe with 2 columns: response variable and explanatory
 #'   variable (in that order). Column names are used as identifiers. The
 #'   response variable represents presence or background, coded as: 1/NA. The
@@ -35,9 +38,14 @@ dvfromev <- function(df, writedir, transformtype, allsplines) {
       colnames(M) <- paste(evname, "_M", sep = "")
       evdv <- cbind(evdv, M)
     }
+
+    if ("D" %in% transformtype) {
+
+    }
   }
 
   if (class(ev) == "factor" || class(ev) == "character") {
 
   }
+  return(evdv)
 }

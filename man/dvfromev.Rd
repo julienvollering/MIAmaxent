@@ -4,13 +4,13 @@
 \alias{dvfromev}
 \title{produces dvs from a given ev by different transformations.}
 \usage{
-dvfromev(rv, ev, writedir, transformtype, allsplines)
+dvfromev(df, writedir, transformtype, allsplines)
 }
 \arguments{
-\item{rv}{Response variable (vector) representing presence or background,
-coded as: 1/NA.}
-
-\item{ev}{Explanatory variable. May be continuous or categorical.}
+\item{df}{Dataframe with 2 columns: response variable and explanatory
+variable (in that order). Column names are used as identifiers. The
+response variable represents presence or background, coded as: 1/NA. The
+explanatory variable may be continuous or categorical.}
 
 \item{writedir}{Directory to which Maxent runs of spline transformations are
 written}
@@ -23,6 +23,7 @@ written}
 Dataframe with one column for each DV.
 }
 \description{
-produces dvs from a given ev by different transformations.
+In MIAT, "D" transformation is only performed if the optimum occurs in the
+middle 80\% of the EV range. \code{dvfromev} does not specify this condition.
 }
 
