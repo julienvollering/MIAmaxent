@@ -15,12 +15,12 @@ minskew <- function(x) {
     cmin <- -min(x)
   }
   cmid <- (cmin+cmax)/2;
-  skew <- e1071::skewness(altrMaxent::scalex(x, cmid), na.rm=TRUE);
+  skew <- e1071::skewness(altrMaxent::.scalex(x, cmid), na.rm=TRUE);
   while (abs(skew) > 1*10^-05 && min(abs(c(cmax, cmin)-cmid)) > 10^-10) {
     #_OptCode print(c(cmin,cmid,cmax,skew));
-    sleft <- e1071::skewness(altrMaxent::scalex(x, (cmid+cmin)/2),
+    sleft <- e1071::skewness(altrMaxent::.scalex(x, (cmid+cmin)/2),
       na.rm=TRUE, type=2)
-    sright <- e1071::skewness(altrMaxent::scalex(x, (cmid+cmax)/2),
+    sright <- e1071::skewness(altrMaxent::.scalex(x, (cmid+cmax)/2),
       na.rm=TRUE, type=2)
     if (abs(sleft) < abs(skew) && abs(sleft) < abs(sright)) {
       cmax <- cmid

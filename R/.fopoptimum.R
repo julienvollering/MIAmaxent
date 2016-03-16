@@ -46,7 +46,7 @@ fopoptimum <- function(data, intervals = 20, smoothwindow = 5,
       intRV = mean(RV, na.rm=F)
       )
 
-    FOPdf$smoothRV <- altrMaxent::ewma(FOPdf$intRV, smoothwindow)
+    FOPdf$smoothRV <- altrMaxent::.ewma(FOPdf$intRV, smoothwindow)
     maxRV <- FOPdf$smoothRV
     maxRV[is.na(maxRV)] <- FOPdf$intRV[is.na(maxRV)]
     EVoptimum <- FOPdf$intEV[which(maxRV == max(maxRV))]

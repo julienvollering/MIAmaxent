@@ -48,11 +48,13 @@ modelFromLambdas <- function(file, name = NULL) {
     matchorder <- match(as.character(dvrows[,1]), colnames(X))
 
     if (ncol(X) != m) {
-      stop("Input must have as many columns as there are variables in the model", call. = F)
+      stop("Input must have as many columns as there are variables in the model",
+        call. = F)
     }
 
     if (length((matchorder[!is.na(matchorder)])) < m) {
-      stop("Input column names must match the names of the variables in the model", call. = F)
+      stop("Input column names must match the names of the variables in the model",
+        call. = F)
     }
 
     orderedX <- as.matrix(X[,matchorder])

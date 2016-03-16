@@ -42,7 +42,7 @@ deriveVars <- function(data, writedir = NULL,
   EVDV <- list()
   for (i in 2:ncol(data)) {
     df <- data[,c(1,i)]
-    EVDV[[i]] <- dvfromev(df, writedir, transformtype, allsplines)
+    EVDV[[i]] <- altrMaxent::.dvfromev(df, writedir, transformtype, allsplines)
     names(EVDV[[i]]) <- colnames(data)[i]
   }
 
