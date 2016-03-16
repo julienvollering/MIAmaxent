@@ -25,6 +25,10 @@
 #' modelFromLambdas("D:\\tutorial-data\\bradypus_variegatus.lambdas", name="mymodel")
 #' mymodel(projection.df)
 #' }
+#'
+#' @keywords internal
+#'
+#' @export
 
 modelFromLambdas <- function(file, name = NULL) {
 
