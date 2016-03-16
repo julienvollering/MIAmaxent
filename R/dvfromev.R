@@ -1,7 +1,8 @@
 #' produces dvs from a given ev by different transformations.
 #'
 #' In MIAT, "D" transformation is only performed if the optimum occurs in the
-#' middle 80\% of the EV range. \code{dvfromev} does not specify this condition.
+#' middle 80\% of the EV range. \code{dvfromev} does not currently specify this
+#' condition.
 #'
 #' @param df Dataframe with 2 columns: response variable and explanatory
 #'   variable (in that order). Column names are used as identifiers. The
@@ -41,7 +42,11 @@ dvfromev <- function(df, writedir, transformtype, allsplines) {
 
     if ("D" %in% transformtype) {
       L <- (ev - range(ev)[1])/diff(range(ev))
-      opt <- fopoptimum(data.frame(rv, L))
+      opt <- altrMaxent::fopoptimum(data.frame(rv, L))
+      devexp = c(0.5, 1, 2)
+      D <- altrMaxent::devtransf(L, opt, devexp)
+      colnames(D) <- paste(evname, "_D", devexp, sep = "")
+      evdv <- cbind(evdv, D)
     }
   }
 

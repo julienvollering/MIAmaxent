@@ -47,15 +47,14 @@ fopoptimum <- function(data, intervals = 20, smoothwindow = 5,
       )
 
     FOPdf$smoothRV <- altrMaxent::ewma(FOPdf$intRV, smoothwindow)
-
     maxRV <- FOPdf$smoothRV
     maxRV[is.na(maxRV)] <- FOPdf$intRV[is.na(maxRV)]
-
     EVoptimum <- FOPdf$intEV[which(maxRV == max(maxRV))]
-    return(EVoptimum)
 
   } else {
     stop("EVoptimum is calculated for numeric or integer class EVs only",
       call. = F)
   }
+
+  return(EVoptimum)
 }

@@ -24,6 +24,7 @@ Dataframe with one column for each DV.
 }
 \description{
 In MIAT, "D" transformation is only performed if the optimum occurs in the
-middle 80\% of the EV range. \code{dvfromev} does not specify this condition.
+middle 80\% of the EV range. \code{dvfromev} does not currently specify this
+condition.
 }
 
