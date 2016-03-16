@@ -40,7 +40,8 @@ dvfromev <- function(df, writedir, transformtype, allsplines) {
     }
 
     if ("D" %in% transformtype) {
-
+      L <- (ev - range(ev)[1])/diff(range(ev))
+      opt <- fopoptimum(data.frame(rv, L))
     }
   }
 
