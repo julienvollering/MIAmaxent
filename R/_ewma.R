@@ -7,7 +7,7 @@
 #' \code{DESCRIPTION Imports}: stats
 #'
 
-ewma <- function(x, n) {
+.ewma <- function(x, n) {
   if (missing(n)) {
     stop("Specify the width of the moving average window (n)", call. = F)
   }

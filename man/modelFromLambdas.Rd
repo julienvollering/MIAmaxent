@@ -36,5 +36,7 @@ names in the .lambdas file used to reproduce the model.
 modelFromLambdas("D:\\\\tutorial-data\\\\bradypus_variegatus.lambdas", name="mymodel")
 mymodel(projection.df)
 }
+
 }
+\keyword{internal}
 

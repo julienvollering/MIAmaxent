@@ -16,7 +16,7 @@
 #' @return Dataframe with one column for each DV.
 
 
-dvfromev <- function(df, writedir, transformtype, allsplines) {
+.dvfromev <- function(df, writedir, transformtype, allsplines) {
 
   rv <- df[,1]
   ev <- df[,2]
@@ -34,7 +34,7 @@ dvfromev <- function(df, writedir, transformtype, allsplines) {
 
     if ("M" %in% transformtype) {
       L <- (ev - range(ev)[1])/diff(range(ev))
-      ZSk <- altrMaxent::.scalex(L, altrMaxent::.minskew(L)$c)
+      ZSk <- altrMaxent:::.scalex(L, altrMaxent:::.minskew(L)$c)
       M <- data.frame((ZSk - range(ZSk)[1])/diff(range(ZSk)))
       colnames(M) <- paste(evname, "_M", sep = "")
       evdv <- cbind(evdv, M)
@@ -42,9 +42,9 @@ dvfromev <- function(df, writedir, transformtype, allsplines) {
 
     if ("D" %in% transformtype) {
       L <- (ev - range(ev)[1])/diff(range(ev))
-      opt <- altrMaxent::.fopoptimum(data.frame(rv, L))
+      opt <- altrMaxent:::.fopoptimum(data.frame(rv, L))
       devexp = c(0.5, 1, 2)
-      D <- altrMaxent::.devtransf(L, opt, devexp)
+      D <- altrMaxent:::.devtransf(L, opt, devexp)
       colnames(D) <- paste(evname, "_D", devexp, sep = "")
       evdv <- cbind(evdv, D)
     }
