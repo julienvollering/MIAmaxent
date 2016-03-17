@@ -35,6 +35,9 @@
 deriveVars <- function(data, writedir = NULL,
   transformtype = c("L", "M", "D", "HF", "HR", "T", "B"), allsplines = FALSE) {
 
+  if (any(c("HF", "HR", "T") %in% transformtype) && allsplines == F) {
+    altrMaxent:::.binaryrvcheck(data[,1])
+  }
   if (is.null(writedir)) {
     writedir <- getwd()
   }

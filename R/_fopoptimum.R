@@ -22,14 +22,7 @@
   EVranging = F) {
 
   df <- data.frame(RV = data[,1], EV = data[,2])
-  if (anyNA(df[,1]) && length(levels(as.factor(df[,1]))) > 1) {
-    stop("The response variable must contain 2 levels only: presence (1)
-      and background (NA/0)", call. = FALSE)
-  }
-  if (class(df[,1]) != "numeric" && class(df[,1]) != "integer") {
-    stop("The response variable must be numeric or integer class: presence (1)
-      and background (NA/0)", call. = FALSE)
-  }
+  altrMaxent:::.binaryrvcheck(df[,1])
   df[,1][is.na(df[,1])] <- 0
 
   if (class(df[,2]) == "numeric" || class(df[,2]) == "integer") {

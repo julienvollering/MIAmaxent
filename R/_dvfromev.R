@@ -48,6 +48,19 @@
       colnames(D) <- paste(evname, "_D", devexp, sep = "")
       evdv <- cbind(evdv, D)
     }
+
+    if ("HF" %in% transformtype) {
+      L <- (ev - range(ev)[1])/diff(range(ev))
+      knots <- 20
+      hf <- altrMaxent:::.hintransf(L, knots, forward = T)
+      colnames(hf) <- paste(evname, "_HF", 1:knots, sep = "")
+      if (allsplines == T) {
+        HF <- hf
+      } else {
+        altrMaxent:::.splselect(rv, hf, writedir)
+      }
+      evdv <- cbind(evdv, HF)
+    }
   }
 
   if (class(ev) == "factor" || class(ev) == "character") {
