@@ -8,21 +8,27 @@
 #'   variable (in that order). Column names are used as identifiers. The
 #'   response variable represents presence or background, coded as: 1/NA. The
 #'   explanatory variable may be continuous or categorical.
-#' @param writedir Directory to which Maxent runs of spline transformations are
-#'   written
 #' @param transformtype Set of transformation types to be used.
 #' @param allsplines Logical. Keep all spline transformations.
+#' @param dir Directory to which Maxent runs of spline transformations are
+#'   written
+#' @param jarpath Pathway to maxent.jar
 #'
 #' @return Dataframe with one column for each DV.
 
 
-.dvfromev <- function(df, writedir, transformtype, allsplines) {
+.dvfromev <- function(df, transformtype, allsplines, dir, jarpath) {
 
   rv <- df[,1]
   ev <- df[,2]
   evname <- colnames(df)[2]
   evdv <- data.frame(df[,2])
   colnames(evdv) <- evname
+
+  if (any(c("HF", "HR", "T") %in% transformtype) && allsplines == F) {
+    evdir <- paste(dir, "\\", evname, sep="")
+    dir.create(evdir)
+  }
 
   if (class(ev) == "numeric" || class(ev) == "integer") {
 
@@ -57,7 +63,9 @@
       if (allsplines == T) {
         HF <- hf
       } else {
-        altrMaxent:::.splselect(rv, hf, writedir)
+        hfdir <- paste(evdir, "\\HF", sep="")
+        dir.create(hfdir)
+        altrMaxent:::.splselect(rv, hf, hfdir, jarpath)
       }
       evdv <- cbind(evdv, HF)
     }
