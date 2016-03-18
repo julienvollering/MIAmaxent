@@ -55,7 +55,7 @@ deriveVars <- function(data,
     }
 
     dir <- paste(writedir, "\\deriveVars", sep="")
-    if file.exists(dir) {
+    if (file.exists(dir)) {
       stop("The specified writedir already contains a selection of spline DVs.
         Please specify a different writedir")
     } else {
