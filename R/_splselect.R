@@ -9,9 +9,13 @@
 
 .splselect <- function(rv, dv, dir, jarpath) {
 
-  comparison <- data.frame(DV=character(), n=integer(), N=integer(),
-    Entropy=numeric(), trainingAUC=numeric(), FTA=numeric(), df=integer(),
-    Fstatistic=numeric(), Pvalue=numeric(), Directory=character())
+  comparison <- data.frame(DV=character(ncol(dv)), n=integer(ncol(dv)),
+    N=integer(ncol(dv)), Entropy=numeric(ncol(dv)),
+    trainingAUC=numeric(ncol(dv)), FTA=numeric(ncol(dv)), df=integer(ncol(dv)),
+    Fstatistic=numeric(ncol(dv)), Pvalue=numeric(ncol(dv)),
+    Directory=character(ncol(dv)), stringsAsFactors = F)
+
+  pb <- txtProgressBar(min = 0, max = ncol(dv), style = 3)
 
   for (i in 1:ncol(dv)) {
     dvname <- colnames(dv)[i]
@@ -61,7 +65,9 @@
     comparison$Fstatistic[i] <- (comparison$FTA[i] * comparison$df[i]) /
                                 ((1-comparison$FTA[i]) * 1)
     comparison$Pvalue[i] <- 1 - pf(comparison$Fstatistic[i], 1, comparison$df[i])
-    comparison$Directory <- paste(dvdir, "\\", sep="")
+    comparison$Directory[i] <- dvdir
+
+    setTxtProgressBar(pb, i)
   }
 
 

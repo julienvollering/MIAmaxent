@@ -65,6 +65,8 @@
       } else {
         hfdir <- paste(evdir, "\\HF", sep="")
         dir.create(hfdir)
+        message(paste("Selecting forward hinge transformations of ", evname,
+          sep = ""))
         altrMaxent:::.splselect(rv, hf, hfdir, jarpath)
       }
       evdv <- cbind(evdv, HF)
