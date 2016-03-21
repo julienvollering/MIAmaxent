@@ -10,10 +10,10 @@
 .splselect <- function(rv, dv, dir, jarpath) {
 
   comparison <- data.frame(DV=character(), n=integer(), N=integer(),
-                Entropy=numeric(), trainingAUC=numeric(), FTA=numeric(),
-                Directory=character())
+    Entropy=numeric(), trainingAUC=numeric(), FTA=numeric(), df=integer(),
+    Fstatistic=numeric(), Pvalue=numeric(), Directory=character())
 
-  for (i in 1:ncol(dv))
+  for (i in 1:ncol(dv)) {
     dvname <- colnames(dv)[i]
     df <- data.frame("RV" = rv, "X" = -9999, "Y" = -9999, dv[,i])
     colnames(df)[4] <- dvname
@@ -57,5 +57,12 @@
     comparison$trainingAUC[i] <- maxRes$Training.AUC
     comparison$FTA[i] <- (log(comparison$N[i]) - comparison$Entropy[i]) /
                          (log(comparison$N[i]) - log(comparison$n[i]))
-    comparison
+    comparison$df[i] <- comparison$N[i] - comparison$n[i] - 3
+    comparison$Fstatistic[i] <- (comparison$FTA[i] * comparison$df[i]) /
+                                ((1-comparison$FTA[i]) * 1)
+    comparison$Pvalue[i] <- 1 - pf(comparison$Fstatistic[i], 1, comparison$df[i])
+    comparison$Directory <- paste(dvdir, "\\", sep="")
+  }
+
+
 }
