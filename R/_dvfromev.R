@@ -57,7 +57,7 @@
     if ("HF" %in% transformtype) {
       L <- (ev - range(ev)[1])/diff(range(ev))
       knots <- 20
-      hf <- altrMaxent:::.hintransf(L, knots, forward = T)
+      hf <- altrMaxent:::.spltransf(L, knots, type = "HF")
       colnames(hf) <- paste(evname, "_HF", 1:knots, sep = "")
       if (allsplines == T) {
         HF <- hf
@@ -74,7 +74,7 @@
     if ("HR" %in% transformtype) {
       L <- (ev - range(ev)[1])/diff(range(ev))
       knots <- 20
-      hr <- altrMaxent:::.hintransf(L, knots, forward = F)
+      hr <- altrMaxent:::.spltransf(L, knots, type="HR")
       colnames(hr) <- paste(evname, "_HR", 1:knots, sep = "")
       if (allsplines == T) {
         HR <- hr
@@ -87,7 +87,26 @@
       }
       evdv <- cbind(evdv, HR)
     }
+
+    if ("T" %in% transformtype) {
+      L <- (ev - range(ev)[1])/diff(range(ev))
+      knots <- 20
+      th <- altrMaxent:::.spltransf(L, knots, type = "T")
+      colnames(th) <- paste(evname, "_T", 1:knots, sep = "")
+      if (allsplines == T) {
+        Th <- th
+      } else {
+        thdir <- paste(evdir, "\\T", sep="")
+        dir.create(thdir)
+        message(paste("Selecting threshold transformations of ", evname,
+          sep = ""))
+        Th <- altrMaxent:::.splselect(rv, th, thdir, jarpath)
+      }
+      evdv <- cbind(evdv, Th)
+    }
   }
+
+
 
   if (class(ev) == "factor" || class(ev) == "character") {
 
