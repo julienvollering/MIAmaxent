@@ -8,6 +8,11 @@
 #'
 
 .splselect <- function(rv, dv, dir, jarpath) {
+
+  comparison <- data.frame(DV=character(), n=integer(), N=integer(),
+                Entropy=numeric(), trainingAUC=numeric(), FTA=numeric(),
+                Directory=character())
+
   for (i in 1:ncol(dv))
     dvname <- colnames(dv)[i]
     df <- data.frame("RV" = rv, "X" = -9999, "Y" = -9999, dv[,i])
@@ -23,21 +28,34 @@
     write.csv(samplesdf, csvfiles[1], row.names = F)
     write.csv(environlayersdf, csvfiles[2], row.names = F)
 
-    commandsettings <- " threads=8 pictures=FALSE plots=FALSE autofeature=FALSE
-    beta_categorical=0 beta_hinge=0 beta_lqp=0 beta_threshold=0 betamultiplier=0
-    doclamp=FALSE extrapolate=FALSE jackknife=FALSE
-    outputformat=raw outputgrids=FALSE perspeciesresults=FALSE
-    hinge=FALSE product=FALSE quadratic=FALSE threshold=FALSE randomtestpoints=0
-    removeduplicates=FALSE responsecurves=FALSE responsecurvesexponent=FALSE
-    writeplotdata=FALSE warnings=FALSE skipifexists=FALSE redoifexists=TRUE\n"
-    command <- paste("java -Xmx512m -jar ",
+    jarflags1 <- " removeduplicates=FALSE addsamplestobackground=FALSE"
+    jarflags2 <- " maximumbackground=100000 autofeature=FALSE betamultiplier=0"
+    jarflags3 <- " quadratic=FALSE product=FALSE hinge=FALSE threshold=FALSE"
+    jarflags4 <- " outputformat=raw writebackgroundpredictions=TRUE"
+    jarflags5 <- " outputgrids=FALSE pictures=FALSE"
+    jarflags6 <- " extrapolate=FALSE writemess=FALSE plots=FALSE"
+    jarflags7 <- " doclamp=FALSE writeclampgrid=FALSE"
+    jarflags8 <- " autorun=TRUE threads=8 visible=FALSE warnings=FALSE"
+    jarflags <- paste(jarflags1, jarflags2, jarflags3, jarflags4, jarflags5,
+      jarflags6, jarflags7, jarflags8, sep="")
+
+    command <- paste("java -mx512m -jar ",
                      "\"", jarpath, "\"",
-                     commandsettings,
-                     " samplesfile=","\"", csvfiles[1], "\"", "\n",
-                     " outputdirectory=", "\"", dvdir, "\\", "\"", "\n",
-                     " environmentallayers=", "\"", csvfiles[2], "\"", "\n",
-                     " visible=FALSE",
-                     " autorun", sep="")
-    command <- gsub("\\\\","/", command)
-    system(paste(command), wait=T)
+                     jarflags,
+                     " samplesfile=","\"", csvfiles[1], "\"",
+                     " environmentallayers=", "\"", csvfiles[2], "\"",
+                     " outputdirectory=", "\"", dvdir, "\\", "\"",
+                     sep="")
+    javacommand <- gsub("\\\\","/", command)
+    system(paste(javacommand), wait=T)
+
+    maxRes <- read.csv(paste(dvdir, "\\maxentResults.csv", sep=""))
+    comparison$DV[i] <- dvname
+    comparison$n[i] <- maxRes$X.Training.samples
+    comparison$N[i] <- maxRes$X.Background.points
+    comparison$Entropy[i] <- maxRes$Entropy
+    comparison$trainingAUC[i] <- maxRes$Training.AUC
+    comparison$FTA[i] <- (log(comparison$N[i]) - comparison$Entropy[i]) /
+                         (log(comparison$N[i]) - log(comparison$n[i]))
+    comparison
 }
