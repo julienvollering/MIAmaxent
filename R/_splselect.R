@@ -9,11 +9,12 @@
 
 .splselect <- function(rv, dv, dir, jarpath) {
 
-  comparison <- data.frame(DV=character(ncol(dv)), n=integer(ncol(dv)),
-    N=integer(ncol(dv)), Entropy=numeric(ncol(dv)),
-    trainingAUC=numeric(ncol(dv)), FTA=numeric(ncol(dv)), df=integer(ncol(dv)),
-    Fstatistic=numeric(ncol(dv)), Pvalue=numeric(ncol(dv)),
-    Directory=character(ncol(dv)), stringsAsFactors = F)
+  comparison <- data.frame(DV=character(ncol(dv)),
+    KnotPosition=numeric(ncol(dv)), n=integer(ncol(dv)), N=integer(ncol(dv)),
+    Entropy=numeric(ncol(dv)), trainingAUC=numeric(ncol(dv)),
+    FVA=numeric(ncol(dv)), df=integer(ncol(dv)), Fstatistic=numeric(ncol(dv)),
+    Pvalue=numeric(ncol(dv)), Directory=character(ncol(dv)),
+    stringsAsFactors = F)
 
   pb <- txtProgressBar(min = 0, max = ncol(dv), style = 3)
 
@@ -55,20 +56,45 @@
 
     maxRes <- read.csv(paste(dvdir, "\\maxentResults.csv", sep=""))
     comparison$DV[i] <- dvname
+    comparison$KnotPosition[i] <- (2 * i - 1) / (2 * ncol(dv))
     comparison$n[i] <- maxRes$X.Training.samples
     comparison$N[i] <- maxRes$X.Background.points
     comparison$Entropy[i] <- maxRes$Entropy
     comparison$trainingAUC[i] <- maxRes$Training.AUC
-    comparison$FTA[i] <- (log(comparison$N[i]) - comparison$Entropy[i]) /
+    comparison$FVA[i] <- (log(comparison$N[i]) - comparison$Entropy[i]) /
                          (log(comparison$N[i]) - log(comparison$n[i]))
     comparison$df[i] <- comparison$N[i] - comparison$n[i] - 3
-    comparison$Fstatistic[i] <- (comparison$FTA[i] * comparison$df[i]) /
-                                ((1-comparison$FTA[i]) * 1)
+    comparison$Fstatistic[i] <- (comparison$FVA[i] * comparison$df[i]) /
+                                ((1-comparison$FVA[i]) * 1)
     comparison$Pvalue[i] <- 1 - pf(comparison$Fstatistic[i], 1, comparison$df[i])
     comparison$Directory[i] <- dvdir
 
     setTxtProgressBar(pb, i)
   }
 
+  write.csv(comparison, paste(dir, "\\splineselection.csv", sep=""), row.names = F)
 
+  selected <- character()
+  for (i in 2:nrow(comparison)-1) {
+    if (comparison$FVA[i] > comparison$FVA[i-1] &&
+        comparison$FVA[i] > comparison$FVA[i+1] &&
+        comparison$Pvalue[i] < 0.05) {
+      selected <- append(selected, comparison$DV[i])
+    }
+  }
+  selecteddf <- as.data.frame(dv[, which(colnames(dv) == selected), drop=F])
+
+  ptsx <- comparison$KnotPosition[which(colnames(dv) == selected)]
+  ptsy <- comparison$FVA[which(colnames(dv) == selected)]
+
+  png(paste(dir, "\\Vknotplot.png", sep=""))
+  plot(comparison$KnotPosition, comparison$FVA, lty = "solid",
+    main = "V-knot plot",
+    xlab = "Position of knot",
+    ylab = "Fraction of variation accounted for (FVA)")
+  points(ptsx, ptsy, col="red", pch=16)
+  text(ptsx, ptsy, labels=selected, cex= 0.9, pos=1)
+  dev.off()
+
+  return(selecteddf)
 }
