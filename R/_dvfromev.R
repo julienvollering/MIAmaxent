@@ -22,8 +22,7 @@
   rv <- df[,1]
   ev <- df[,2]
   evname <- colnames(df)[2]
-  evdv <- data.frame(df[,2])
-  colnames(evdv) <- evname
+  evdv <- data.frame(df[,2, drop=F])
 
   if (any(c("HF", "HR", "T") %in% transformtype) && allsplines == F) {
     evdir <- paste(dir, "\\", evname, sep="")
@@ -70,6 +69,23 @@
         HF <- altrMaxent:::.splselect(rv, hf, hfdir, jarpath)
       }
       evdv <- cbind(evdv, HF)
+    }
+
+    if ("HR" %in% transformtype) {
+      L <- (ev - range(ev)[1])/diff(range(ev))
+      knots <- 20
+      hr <- altrMaxent:::.hintransf(L, knots, forward = F)
+      colnames(hr) <- paste(evname, "_HR", 1:knots, sep = "")
+      if (allsplines == T) {
+        HR <- hr
+      } else {
+        hrdir <- paste(evdir, "\\HR", sep="")
+        dir.create(hrdir)
+        message(paste("Selecting reverse hinge transformations of ", evname,
+          sep = ""))
+        HR <- altrMaxent:::.splselect(rv, hr, hrdir, jarpath)
+      }
+      evdv <- cbind(evdv, HR)
     }
   }
 
