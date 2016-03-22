@@ -34,22 +34,20 @@ List of dataframes, with each data frame containing the derived
 }
 \description{
 \code{deriveVars} produces derived variables from explanatory variables by
-the following transformation types as described in Halvorsen et al. (2015):
-L, M, D, HF, HR, T (for continuous EVs), and B (for categorical EVs). For
-spline transformation types (HF, HR, T),  a subset of possible DVs is
-selected by the criteria described in Halvorsen et al. (2015) p. 179.
+transformation, and returns a list of dataframes. The available
+transformation types are as follows, described in Halvorsen et al. (2015): L,
+M, D, HF, HR, T (for continuous EVs), and B (for categorical EVs). For spline
+transformation types (HF, HR, T),  a subset of possible DVs is selected by
+the criteria described under Details.
 }
 \details{
 For spline transformations, DVs are created around 20 different break points
 (knots). Only DVs which satisfy all of the following criteria are retained:
-\enumerate{
-   \item 3 <= knot <= 18 (DVs with knots at the extremes of the EV are never
-   retained).
-   \item F-test of the single-variable Maxent model from the given DV gives a
-   p-value < 0.05.
-   \item The single-variable Maxent model from the given DV shows a local
-   maximum in fraction of variation explained (FVA) compared to DVs from the
-   neighboring 4 knots.}
+\enumerate{ \item 3 <= knot <= 18 (DVs with knots at the extremes of the EV
+are never retained). \item F-test of the single-variable Maxent model from
+the given DV gives a p-value < 0.05. \item The single-variable Maxent model
+from the given DV shows a local maximum in fraction of variation explained
+(FVA) compared to DVs from the neighboring 4 knots.}
 }
 \references{
 Halvorsen, R., Mazzoni, S., Bryn, A., & Bakkestuen, V. (2015).
