@@ -104,12 +104,18 @@
       }
       evdv <- cbind(evdv, Th)
     }
-  }
 
+  }
 
 
   if (class(ev) == "factor" || class(ev) == "character") {
-
+    if ("B" %in% transformtype) {
+      B <- stats::model.matrix( ~ ev - 1, data=df )
+      colnames(B) <- paste(evname, "_B", levels(ev), sep="")
+      evdv <- cbind(evdv, B)
+    }
   }
+
+  evdv <- evdv[,-1]
   return(evdv)
 }
