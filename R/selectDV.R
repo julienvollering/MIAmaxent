@@ -28,38 +28,41 @@
 
 selectDV <- function(dv, rv, writedir = NULL, jarpath = NULL) {
 
-  if (any(c("HF", "HR", "T") %in% transformtype) && allsplines == F) {
-    altrMaxent:::.binaryrvcheck(data[,1])
+  altrMaxent:::.binaryrvcheck(rv)
 
-    if (is.null(writedir)) {
-      writedir <- getwd()
-    }
+  if (is.null(writedir)) {
+    writedir <- getwd()
+  }
 
-    if (is.null(jarpath)) {
-      jarpath <- paste(writedir, "\\maxent.jar", sep="")
-    }
+  if (is.null(jarpath)) {
+    jarpath <- paste(writedir, "\\maxent.jar", sep="")
+  }
 
-    if (file.exists(jarpath) == F) {
-      stop("maxent.jar file must be present in writedir, or its pathway must be
+  if (file.exists(jarpath) == F) {
+    stop("maxent.jar file must be present in writedir, or its pathway must be
 specified by the jarpath parameter. \n ")
-    }
+  }
 
-    dir <- paste(writedir, "\\deriveVars", sep="")
-    if (file.exists(dir)) {
-      stop("The specified writedir already contains a selection of spline DVs.
+  dir <- paste(writedir, "\\selectDV", sep="")
+  if (file.exists(dir)) {
+    stop("The specified writedir already contains a selection of DVs.
 Please specify a different writedir. \n ")
-    } else {
-      dir.create(dir)
-    }
+  } else {
+    dir.create(dir)
   }
 
   EVDV <- list()
-  for (i in 2:ncol(data)) {
-    df <- data[,c(1,i)]
-    EVDV[[i-1]] <- altrMaxent:::.dvfromev(df, transformtype, allsplines,
-      dir, jarpath)
-    names(EVDV)[i-1] <- colnames(data)[i]
+  trail <- list()
+  for (i in 1:length(dv)) {
+    df <- dv[[i]]
+    result <- altrMaxent:::.parsdvs(df, rv, dir, jarpath)
+    EVDV[[i]] <- result[[1]]
+    trail[[i]] <- result[[2]]
   }
+  names(EVDV) <- names(dv)
+  names(trail) <- names(dv)
 
-  return(EVDV)
+  RESULT <- list(EVDV, trail)
+
+  return(RESULT)
 }
