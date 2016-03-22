@@ -38,7 +38,7 @@
 
 
 plotFOP <- function(data, EV, intervals = 20, smoothwindow = 3,
-  EVranging = FALSE) {
+                    EVranging = FALSE) {
 
   df <- data.frame(RV = data[,1], EV = data[,EV])
   RVname <- colnames(data)[1]

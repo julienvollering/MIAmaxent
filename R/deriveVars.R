@@ -35,8 +35,8 @@
 
 
 deriveVars <- function(data,
-  transformtype = c("L", "M", "D", "HF", "HR", "T", "B"), allsplines = FALSE,
-  writedir = NULL, jarpath = NULL) {
+                       transformtype = c("L", "M", "D", "HF", "HR", "T", "B"),
+                       allsplines = FALSE, writedir = NULL, jarpath = NULL) {
 
   if (any(c("HF", "HR", "T") %in% transformtype) && allsplines == F) {
     altrMaxent:::.binaryrvcheck(data[,1])
@@ -57,7 +57,7 @@ deriveVars <- function(data,
     dir <- paste(writedir, "\\deriveVars", sep="")
     if (file.exists(dir)) {
       stop("The specified writedir already contains a selection of spline DVs.
-        Please specify a different writedir")
+        \nPlease specify a different writedir")
     } else {
       dir.create(dir)
     }
