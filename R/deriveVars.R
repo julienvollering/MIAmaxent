@@ -6,7 +6,16 @@
 #' spline transformation types (HF, HR, T),  a subset of possible DVs is
 #' selected by the criteria described in Halvorsen et al. (2015) p. 179.
 #'
-#' (Details)
+#' For spline transformations, DVs are created around 20 different break points
+#' (knots). Only DVs which satisfy all of the following criteria are retained:
+#' \enumerate{
+#'    \item 3 <= knot <= 18 (DVs with knots at the extremes of the EV are never
+#'    retained).
+#'    \item F-test of the single-variable Maxent model from the given DV gives a
+#'    p-value < 0.05.
+#'    \item The single-variable Maxent model from the given DV shows a local
+#'    maximum in fraction of variation explained (FVA) compared to DVs from the
+#'    neighboring 4 knots.}
 #'
 #' @param data Dataframe containing the response variable in the first column
 #'   and explanatory variables in subsequent columns. The response variable
@@ -14,7 +23,7 @@
 #' @param transformtype Specifies the types of transformations types to be
 #'   performed. Default is the full set of the following transfomation types: L
 #'   (linear), M (monotonous), D (deviation), HF (forward hinge), HR (reverse
-#'   hinge), Th (threshold), and B (binary).
+#'   hinge), T (threshold), and B (binary).
 #' @param allsplines Logical. Keep all spline transformations created, rather
 #'   than selecting particular splines based on faction of total variation
 #'   explained.
@@ -66,9 +75,9 @@ Please specify a different writedir. \n ")
   EVDV <- list()
   for (i in 2:ncol(data)) {
     df <- data[,c(1,i)]
-    EVDV[[i]] <- altrMaxent:::.dvfromev(df, transformtype, allsplines,
+    EVDV[[i-1]] <- altrMaxent:::.dvfromev(df, transformtype, allsplines,
       dir, jarpath)
-    names(EVDV)[i] <- colnames(data)[i]
+    names(EVDV)[i-1] <- colnames(data)[i]
   }
 
   return(EVDV)

@@ -4,25 +4,28 @@
 \alias{deriveVars}
 \title{Derive variables by transformation.}
 \usage{
-deriveVars(data, writedir = NULL, transformtype = c("L", "M", "D", "HF",
-  "HR", "T", "B"), allsplines = FALSE)
+deriveVars(data, transformtype = c("L", "M", "D", "HF", "HR", "T", "B"),
+  allsplines = FALSE, writedir = NULL, jarpath = NULL)
 }
 \arguments{
 \item{data}{Dataframe containing the response variable in the first column
 and explanatory variables in subsequent columns. The response variable
 should represent presence/background data, coded as: 1/NA.}
 
-\item{writedir}{The directory to which Maxent files will be written during
-subset selection of spline variables. Defaults to the working directory.}
-
 \item{transformtype}{Specifies the types of transformations types to be
 performed. Default is the full set of the following transfomation types: L
 (linear), M (monotonous), D (deviation), HF (forward hinge), HR (reverse
-hinge), Th (threshold), and B (binary).}
+hinge), T (threshold), and B (binary).}
 
 \item{allsplines}{Logical. Keep all spline transformations created, rather
 than selecting particular splines based on faction of total variation
 explained.}
+
+\item{writedir}{The directory to which Maxent files will be written during
+subset selection of spline variables. Defaults to the working directory.}
+
+\item{jarpath}{The pathway to the maxent.jar executable jar file. If
+unspecified, the function looks for the file in the writedir.}
 }
 \value{
 List of dataframes, with each data frame containing the derived
@@ -37,7 +40,16 @@ spline transformation types (HF, HR, T),  a subset of possible DVs is
 selected by the criteria described in Halvorsen et al. (2015) p. 179.
 }
 \details{
-(Details)
+For spline transformations, DVs are created around 20 different break points
+(knots). Only DVs which satisfy all of the following criteria are retained:
+\enumerate{
+   \item 3 <= knot <= 18 (DVs with knots at the extremes of the EV are never
+   retained).
+   \item F-test of the single-variable Maxent model from the given DV gives a
+   p-value < 0.05.
+   \item The single-variable Maxent model from the given DV shows a local
+   maximum in fraction of variation explained (FVA) compared to DVs from the
+   neighboring 4 knots.}
 }
 \references{
 Halvorsen, R., Mazzoni, S., Bryn, A., & Bakkestuen, V. (2015).

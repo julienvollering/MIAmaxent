@@ -1,8 +1,9 @@
-#' selects a subset of spline dvs based on Maxent FTVE
+#' checks the validity of RV values
+#'
+#' Presence-only data should be coded as: 1/NA (preferred) or 1/0 (danger of
+#' misinterpretation as presence/absence data)
 #'
 #' @param rv Vector of response variable values
-#' @param dv
-#' @param writedir
 #'
 
 .binaryrvcheck <- function(rv) {
