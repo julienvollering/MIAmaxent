@@ -75,9 +75,11 @@
   write.csv(comparison, paste(dir, "\\splineselection.csv", sep=""), row.names = F)
 
   selected <- character()
-  for (i in 2:nrow(comparison)-1) {
-    if (comparison$FVA[i] > comparison$FVA[i-1] &&
-        comparison$FVA[i] > comparison$FVA[i+1] &&
+  for (i in 3:(nrow(comparison)-2)) {
+    if (comparison$FVA[i] >= comparison$FVA[i-2] &&
+        comparison$FVA[i] >= comparison$FVA[i-1] &&
+        comparison$FVA[i] >= comparison$FVA[i+1] &&
+        comparison$FVA[i] >= comparison$FVA[i+2] &&
         comparison$Pvalue[i] < 0.05) {
       selected <- append(selected, comparison$DV[i])
     }
