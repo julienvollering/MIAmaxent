@@ -82,18 +82,21 @@
       selected <- append(selected, comparison$DV[i])
     }
   }
-  selecteddf <- as.data.frame(dv[, which(colnames(dv) == selected), drop=F])
+  selecteddf <- as.data.frame(dv[, colnames(dv) %in% selected, drop=F])
 
-  ptsx <- comparison$KnotPosition[which(colnames(dv) == selected)]
-  ptsy <- comparison$FVA[which(colnames(dv) == selected)]
+  ptsx <- comparison$KnotPosition[colnames(dv) %in% selected]
+  ptsy <- comparison$FVA[colnames(dv) %in% selected]
 
   png(paste(dir, "\\Vknotplot.png", sep=""))
   plot(comparison$KnotPosition, comparison$FVA, lty = "solid",
     main = "V-knot plot",
     xlab = "Position of knot",
     ylab = "Fraction of variation accounted for (FVA)")
-  points(ptsx, ptsy, col="red", pch=16)
-  text(ptsx, ptsy, labels=selected, cex= 0.9, pos=1)
+  if (length(selected) > 0) {
+    points(ptsx, ptsy, col="red", pch=16)
+    text(ptsx, ptsy, labels=selected, cex= 0.9, pos=1)
+  }
+
   dev.off()
 
   return(selecteddf)

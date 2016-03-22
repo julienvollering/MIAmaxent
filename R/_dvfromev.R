@@ -24,12 +24,12 @@
   evname <- colnames(df)[2]
   evdv <- data.frame(df[,2, drop=F])
 
-  if (any(c("HF", "HR", "T") %in% transformtype) && allsplines == F) {
-    evdir <- paste(dir, "\\", evname, sep="")
-    dir.create(evdir)
-  }
-
   if (class(ev) == "numeric" || class(ev) == "integer") {
+
+    if (any(c("HF", "HR", "T") %in% transformtype) && allsplines == F) {
+      evdir <- paste(dir, "\\", evname, sep="")
+      dir.create(evdir)
+    }
 
     if ("L" %in% transformtype) {
       L <- data.frame((ev - range(ev)[1])/diff(range(ev)))

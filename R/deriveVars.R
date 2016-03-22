@@ -51,13 +51,13 @@ deriveVars <- function(data,
 
     if (file.exists(jarpath) == F) {
       stop("maxent.jar file must be present in writedir, or its pathway must be
-        specified by the jarpath parameter")
+specified by the jarpath parameter. \n ")
     }
 
     dir <- paste(writedir, "\\deriveVars", sep="")
     if (file.exists(dir)) {
       stop("The specified writedir already contains a selection of spline DVs.
-        \nPlease specify a different writedir")
+Please specify a different writedir. \n ")
     } else {
       dir.create(dir)
     }
@@ -68,7 +68,7 @@ deriveVars <- function(data,
     df <- data[,c(1,i)]
     EVDV[[i]] <- altrMaxent:::.dvfromev(df, transformtype, allsplines,
       dir, jarpath)
-    names(EVDV[[i]]) <- colnames(data)[i]
+    names(EVDV)[i] <- colnames(data)[i]
   }
 
   return(EVDV)
