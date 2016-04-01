@@ -2,8 +2,7 @@
 #'
 #' @param rv Vector of response variable values
 #' @param dv Dataframe of spline dvs to be selected from (HF, HR, or Th)
-#' @param dir Directory to which Maxent runs are
-#'   written
+#' @param dir Directory to which Maxent runs are written
 #' @param jarpath Pathway to maxent.jar
 #'
 

@@ -1,16 +1,19 @@
 #' Select parsimonious sets of derived variables.
 #'
-#' For each explanatory variable, \code{selectDV} selects the set of derived
-#' variables which best explains variation in a given response variable.
+#' For each explanatory variable, \code{selectDV} selects the parsimonious set
+#' of derived variables which best explains variation in a given response
+#' variable. The function uses a process of forward selection based on
+#' comparison of nested models by the F-test.
 #'
 #' If the derived variables were created using \code{\link{deriveVars}}, the
 #' same response variable should be used in \code{selectDV}, as the deviation
 #' and spline transformations produced by \code{deriveVars} are RV-specific.
 #'
-#' @param dv List of data frames, with each data frame containing DVs for a
-#'   given EV.
 #' @param rv Response variable vector. The RV should represent
 #'   presence/background data, coded as: 1/NA.
+#' @param dv List of data frames, with each data frame containing DVs for a
+#'   given EV. E.g. output of \code{deriveVars}.
+#' @param alpha Alpha-level used in F-test comparison of models.
 #' @param writedir The directory to which Maxent files will be written during
 #'   subset selection of DVs. Defaults to the working directory.
 #' @param jarpath The pathway to the maxent.jar executable jar file. If
@@ -26,7 +29,7 @@
 #' @export
 
 
-selectDV <- function(dv, rv, writedir = NULL, jarpath = NULL) {
+selectDV <- function(rv, dv, alpha = 0.01, writedir = NULL, jarpath = NULL) {
 
   altrMaxent:::.binaryrvcheck(rv)
 
@@ -54,15 +57,18 @@ Please specify a different writedir. \n ")
   EVDV <- list()
   trail <- list()
   for (i in 1:length(dv)) {
+    evname <- names(dv)[i]
+    evdir <- paste(dir, "\\", evname, sep="")
+    dir.create(evdir)
     df <- dv[[i]]
-    result <- altrMaxent:::.parsdvs(df, rv, dir, jarpath)
+    result <- altrMaxent:::.parsdvs(rv, df, alpha, evdir, jarpath)
     EVDV[[i]] <- result[[1]]
     trail[[i]] <- result[[2]]
   }
   names(EVDV) <- names(dv)
   names(trail) <- names(dv)
 
-  RESULT <- list(EVDV, trail)
+  Result <- list(selectedDV = EVDV, selection = trail)
 
-  return(RESULT)
+  return(Result)
 }

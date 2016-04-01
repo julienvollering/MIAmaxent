@@ -23,7 +23,7 @@
 #'   (linear), M (monotonous), D (deviation), HF (forward hinge), HR (reverse
 #'   hinge), T (threshold), and B (binary).
 #' @param allsplines Logical. Keep all spline transformations created, rather
-#'   than selecting particular splines based on faction of total variation
+#'   than selecting particular splines based on fraction of total variation
 #'   explained.
 #' @param writedir The directory to which Maxent files will be written during
 #'   subset selection of spline variables. Defaults to the working directory.
