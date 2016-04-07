@@ -10,6 +10,7 @@
 .parsdvs <- function(rv, dv, alpha, dir, jarpath) {
 
   selectedset <- character(length=0)
+  remainingset <- colnames(dv)
   evtable <- data.frame()
   cyclenumber <- 0
   bestFVA <- 0
@@ -20,7 +21,6 @@
     cyclenumber <- cyclenumber + 1
     cycledir <- paste(dir, paste0("cycle", cyclenumber), sep="\\")
     dir.create(cycledir)
-    remainingset <- colnames(dv)[!(colnames(dv) %in% selectedset)]
     cyclemodels <- lapply(remainingset, function(x) c(selectedset, x))
 
     nrows <- length(cyclemodels)
@@ -41,7 +41,7 @@
 
       samplesdf <- na.omit(df)
       environlayersdf <- df
-      csvfiles <- paste(modeldir, c("\\samples.csv", "\\environlayers.csv"), sep="")
+      csvfiles <- paste0(modeldir, c("\\samples.csv", "\\environlayers.csv"))
       write.csv(samplesdf, csvfiles[1], row.names = F)
       write.csv(environlayersdf, csvfiles[2], row.names = F)
 
@@ -87,14 +87,17 @@
     }
 
     ctable <- ctable[order(-ctable$Fstatistic), ]
-    evtable <- rbind(evtable, ctable)
+    evtable <- rbind(evtable, ctable, make.row.names = FALSE)
 
     if (ctable$Pvalue[1] < alpha) {
       selectedset <- unlist(strsplit(ctable$DV[1], split=" "))
       bestFVA <- ctable$FVA[1]
+      addedDV <- unlist(lapply(strsplit(ctable$DV[2:nrow(ctable)], split=" "),
+        function(x) {x[cyclenumber]}))
+      remainingset <- addedDV[ctable$Pvalue[2:nrow(ctable)] < alpha]
     }
 
-    if (ctable$Pvalue[1] > alpha ||
+    if (nrow(ctable) == 1 || ctable$Pvalue[1] > alpha ||
         (ctable$Pvalue[1] < alpha &&
             all(ctable$Pvalue[2:nrow(ctable)] >= alpha))) {
       iterationexit <- TRUE

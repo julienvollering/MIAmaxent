@@ -56,14 +56,21 @@ Please specify a different writedir. \n ")
 
   EVDV <- list()
   trail <- list()
+
+  message(paste0("Forward selection of DVs for ", length(dv), " EVs"))
+  pb <- txtProgressBar(min = 0, max = length(dv), style = 3)
+
   for (i in 1:length(dv)) {
     evname <- names(dv)[i]
     evdir <- paste(dir, "\\", evname, sep="")
     dir.create(evdir)
     df <- dv[[i]]
     result <- altrMaxent:::.parsdvs(rv, df, alpha, evdir, jarpath)
+    write.csv(result[[2]], file = paste(evdir, "dvselection.csv", sep="\\"),
+      row.names = FALSE)
     EVDV[[i]] <- result[[1]]
     trail[[i]] <- result[[2]]
+    setTxtProgressBar(pb, i)
   }
   names(EVDV) <- names(dv)
   names(trail) <- names(dv)
