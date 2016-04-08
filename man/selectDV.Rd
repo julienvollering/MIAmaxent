@@ -4,14 +4,16 @@
 \alias{selectDV}
 \title{Select parsimonious sets of derived variables.}
 \usage{
-selectDV(dv, rv, writedir = NULL, jarpath = NULL)
+selectDV(rv, dv, alpha = 0.01, writedir = NULL, jarpath = NULL)
 }
 \arguments{
-\item{dv}{List of data frames, with each data frame containing DVs for a
-given EV.}
-
 \item{rv}{Response variable vector. The RV should represent
 presence/background data, coded as: 1/NA.}
+
+\item{dv}{List of data frames, with each data frame containing DVs for a
+given EV. E.g. output of \code{deriveVars}.}
+
+\item{alpha}{Alpha-level used in F-test comparison of models.}
 
 \item{writedir}{The directory to which Maxent files will be written during
 subset selection of DVs. Defaults to the working directory.}
@@ -24,8 +26,10 @@ List of data frames, with each data frame containing \emph{selected}
   DVs for a given EV. Dimensions: [[EV]] [N, <=DV].
 }
 \description{
-For each explanatory variable, \code{selectDV} selects the set of derived
-variables which best explains variation in a given response variable.
+For each explanatory variable, \code{selectDV} selects the parsimonious set
+of derived variables which best explains variation in a given response
+variable. The function uses a process of forward selection based on
+comparison of nested models by the F-test.
 }
 \details{
 If the derived variables were created using \code{\link{deriveVars}}, the

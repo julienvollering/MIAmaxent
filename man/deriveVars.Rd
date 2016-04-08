@@ -18,7 +18,7 @@ performed. Default is the full set of the following transfomation types: L
 hinge), T (threshold), and B (binary).}
 
 \item{allsplines}{Logical. Keep all spline transformations created, rather
-than selecting particular splines based on faction of total variation
+than selecting particular splines based on fraction of total variation
 explained.}
 
 \item{writedir}{The directory to which Maxent files will be written during
