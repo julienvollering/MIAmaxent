@@ -44,7 +44,7 @@
 
 
 # JV: keep track of number of parameters in comparison model (like bestFVA) for dfe
-selectEV <- function(rv, dv, alpha = 0.01, interaction = TRUE, writedir = NULL,
+selectEV <- function(rv, ev, alpha = 0.01, interaction = TRUE, writedir = NULL,
                      jarpath = NULL) {
 
   altrMaxent:::.binaryrvcheck(rv)
@@ -62,9 +62,9 @@ selectEV <- function(rv, dv, alpha = 0.01, interaction = TRUE, writedir = NULL,
 specified by the jarpath parameter. \n ")
   }
 
-  dir <- paste(writedir, "\\selectDV", sep="")
+  dir <- paste(writedir, "\\selectEV", sep="")
   if (file.exists(dir)) {
-    stop("The specified writedir already contains a selection of DVs.
+    stop("The specified writedir already contains a selection of EVs.
 Please specify a different writedir. \n ")
   } else {
     dir.create(dir)
@@ -73,25 +73,15 @@ Please specify a different writedir. \n ")
   EVDV <- list()
   trail <- list()
 
-  message(paste0("Forward selection of DVs for ", length(dv), " EVs"))
-  pb <- txtProgressBar(min = 0, max = length(dv), style = 3)
+  message(paste0("Forward selection of ", length(ev), " EVs"))
 
-  for (i in 1:length(dv)) {
-    evname <- names(dv)[i]
-    evdir <- paste(dir, "\\", evname, sep="")
-    dir.create(evdir)
-    df <- dv[[i]]
-    result <- altrMaxent:::.parsdvs(rv, df, alpha, evdir, jarpath)
-    write.csv(result[[2]], file = paste(evdir, "dvselection.csv", sep="\\"),
-      row.names = FALSE)
-    EVDV[[i]] <- result[[1]]
-    trail[[i]] <- result[[2]]
-    setTxtProgressBar(pb, i)
-  }
-  names(EVDV) <- names(dv)
-  names(trail) <- names(dv)
+  result <- altrMaxent:::.parsevs(rv, ev, alpha, interaction, dir, jarpath)
+  write.csv(result[[2]], file = paste(evdir, "dvselection.csv", sep="\\"),
+    row.names = FALSE)
+  EVDV[[i]] <- result[[1]]
+  trail[[i]] <- result[[2]]
 
-  Result <- list(selectedDV = EVDV, selection = trail)
+  Result <- list(selectedEV = EVDV, selection = trail)
 
   return(Result)
 }
