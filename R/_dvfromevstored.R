@@ -33,10 +33,9 @@
     }
 
     if ("L" %in% transformtype) {
-      storage[[paste0(evname, "_L_tranfs")]] <- function(x, xnull=ev) {
-        y <- (x - range(xnull)[1])/diff(range(xnull))
-      }
-      L <- data.frame((ev - range(ev)[1])/diff(range(ev)))
+      tfunction <- altrMaxent:::.Ltransf(ev)
+      storage[[paste0(evname, "_L_transf")]] <- tfunction
+      L <- data.frame(tfunction(ev))
       colnames(L) <- paste(evname, "_L", sep = "")
       evdv <- cbind(evdv, L)
     }
@@ -122,19 +121,4 @@
 
   evdv <- evdv[,-1]
   return(evdv)
-}
-
-
-#' A lexical closure for storing L transformations
-#'
-#' @param ev explanatory data used for training
-#'
-#' @return Function that transforms x into y by the particular L transfomation
-#'   used on the training data
-
-.Lstored <- function(xnull) {
-  function(x) {
-    y <- (x - range(xnull)[1])/diff(range(xnull))
-    return(y)
-  }
 }
