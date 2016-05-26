@@ -22,7 +22,7 @@
 #' @param writedir The directory to which Maxent files will be written during
 #'   subset selection of DVs. Defaults to the working directory.
 #' @param jarpath The pathway to the maxent.jar executable jar file. If
-#'   unspecified, the function looks for the file in the writedir.
+#'   unspecified, the function looks for maxent.jar in the writedir.
 #'
 #' @return List of length two. The first item is a list of data frames, with
 #'   each data frame containing \emph{selected} DVs for a given EV. The second
