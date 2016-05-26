@@ -104,5 +104,5 @@
     }
   }
 
-  return(list(dv[,selectedset], evtable))
+  return(list(dv[,selectedset, drop = FALSE], evtable))
 }
