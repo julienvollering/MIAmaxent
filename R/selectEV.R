@@ -5,19 +5,23 @@
 #' be represented by 1 or more derived variables (see \code{\link{deriveVars}}).
 #' The function uses a process of forward selection based on comparison of
 #' nested models by the F-test, where the F-statistic is calculated using
-#' equation 58 in Halvorsen (2013). See Halvorsen et al. (2015) for an
+#' equation 59 in Halvorsen (2013). See Halvorsen et al. (2015) for an
 #' explanation of the forward selection procedure.
 #'
 #' When \code{interaction = TRUE}, the forward selection procedure selects a
 #' parsimonious group of individual EVs first, and then tests interactions
 #' between EVs included in the model afterwards. Therefore, interactions are
 #' only explored between terms which are individually explain a significant
-#' amount of variation.
+#' amount of variation. When \code{interaction = FALSE}, interactions are not
+#' considered.
+#'
+#' Each item in the EV list must be uniquely named, and the names must not
+#' contain spaces.
 #'
 #' @param rv Response variable vector. The RV should represent
 #'   presence/background data, coded as: 1/NA.
-#' @param ev List of data frames, with each data frame containing 1 or more DVs
-#'   for a given EV. E.g. output [[1]] of \code{selectDV}.
+#' @param ev Named list of data frames, with each data frame containing 1 or
+#'   more DVs for a given EV. E.g. output [[1]] of \code{selectDV}.
 #' @param alpha Alpha-level used in F-test comparison of models. Default is
 #'   0.01.
 #' @param interaction Logical. Allows interaction terms between pairs of EVs.

@@ -1,7 +1,7 @@
 #' Forward selection of EVs
 #'
 #' @param rv Vector of response variable values.
-#' @param ev Dataframe of DVs to be selected from.
+#' @param ev List of EVs to be selected from.
 #' @param alpha Alpha level for F-test.
 #' @param interaction Logical. Allows interaction terms.
 #' @param dir Directory to which Maxent runs are written.
@@ -11,9 +11,10 @@
 .parsevs <- function(rv, ev, alpha, interaction, dir, jarpath) {
 
   selectedset <- character(length=0)
-  remainingset <- colnames(dv)
-  evtable <- data.frame()
+  remainingset <- names(ev)
+  modeltable <- data.frame()
   cyclenumber <- 0
+  mnull <- 0
   bestFVA <- 0
 
   iterationexit <- FALSE
@@ -26,15 +27,16 @@
 
     nrows <- length(cyclemodels)
     ctable <- data.frame(cycle=integer(nrows), model=integer(nrows),
-      DV=character(nrows), m=integer(nrows), trainAUC=numeric(nrows),
+      EV=character(nrows), m=integer(nrows), trainAUC=numeric(nrows),
       Entropy=numeric(nrows), FVA=numeric(nrows), addedFVA=numeric(nrows),
       Fstatistic=numeric(nrows), dfe=integer(nrows), dfu=integer(nrows),
       Pvalue=numeric(nrows), Directory=character(nrows),
       stringsAsFactors = F)
 
     for (i in 1:length(cyclemodels)) { #JV: consider replacing with lapply + function
-      dvnames <- cyclemodels[[i]]
-      df <- data.frame("RV" = rv, "X" = -9999, "Y" = -9999, dv[,dvnames])
+      evnames <- cyclemodels[[i]]
+      dvnames <- unlist(lapply(ev[evnames], names), use.names = FALSE)
+      df <- data.frame("RV" = rv, "X" = -9999, "Y" = -9999, ev[evnames])
       colnames(df)[4:ncol(df)] <- dvnames
 
       modeldir <- paste(cycledir, paste0("model", i), sep = "\\")
@@ -69,7 +71,7 @@
       maxRes <- read.csv(paste(modeldir, "\\maxentResults.csv", sep=""))
       ctable$cycle[i] <- cyclenumber
       ctable$model[i] <- i
-      ctable$DV[i] <- paste(dvnames, collapse = " ")
+      ctable$EV[i] <- paste(evnames, collapse = " ")
       ctable$m[i] <- length(dvnames)
       ctable$trainAUC[i] <- maxRes$Training.AUC
       ctable$Entropy[i] <- maxRes$Entropy
@@ -77,7 +79,7 @@
       N <- maxRes$X.Background.points
       ctable$FVA[i] <- (log(N) - ctable$Entropy[i]) / (log(N) - log(n))
       ctable$addedFVA[i] <- ctable$FVA[i] - bestFVA
-      dfe <- 1
+      dfe <- ctable$m[i] - mnull
       dfu <- (N - n) - (ctable$m[i] + 1) - 1
       ctable$Fstatistic[i] <- (ctable$addedFVA[i] * dfu) /
         ((1 - ctable$FVA[i]) * dfe)
@@ -88,14 +90,15 @@
     }
 
     ctable <- ctable[order(-ctable$Fstatistic), ]
-    evtable <- rbind(evtable, ctable, make.row.names = FALSE)
+    modeltable <- rbind(modeltable, ctable, make.row.names = FALSE)
 
     if (ctable$Pvalue[1] < alpha) {
-      selectedset <- unlist(strsplit(ctable$DV[1], split=" "))
+      selectedset <- unlist(strsplit(ctable$EV[1], split=" "))
+      mnull <- ctable$m[1]
       bestFVA <- ctable$FVA[1]
-      addedDV <- unlist(lapply(strsplit(ctable$DV[2:nrow(ctable)], split=" "),
+      addedEV <- unlist(lapply(strsplit(ctable$EV[2:nrow(ctable)], split=" "),
         function(x) {x[cyclenumber]}))
-      remainingset <- addedDV[ctable$Pvalue[2:nrow(ctable)] < alpha]
+      remainingset <- addedEV[ctable$Pvalue[2:nrow(ctable)] < alpha]
     }
 
     if (nrow(ctable) == 1 || ctable$Pvalue[1] > alpha ||
@@ -105,5 +108,5 @@
     }
   }
 
-  return(list(dv[,selectedset], evtable))
+  return(list(ev[selectedset], modeltable))
 }
