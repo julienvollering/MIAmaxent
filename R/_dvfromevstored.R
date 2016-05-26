@@ -17,6 +17,10 @@
 #' @return Dataframe with one column for each DV.
 
 
+# IMPORTANT: This file is for testing purposes only (e.g. transformation
+# storage)! Editing for inclusion in the package must proceed in the _dvfromev
+# file as it contains the latest bug fixes.
+
 .dvfromev <- function(df, transformtype, allsplines, dir, jarpath) {
 
   rv <- df[,1]
