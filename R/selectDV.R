@@ -4,7 +4,7 @@
 #' set of derived variables (DV) which best explains variation in a given
 #' response variable. The function uses a process of forward selection based on
 #' comparison of nested models by the F-test, where the F-statistic is
-#' calculated using equation 58 in Halvorsen (2013). See Halvorsen et al. (2015)
+#' calculated using equation 59 in Halvorsen (2013). See Halvorsen et al. (2015)
 #' for an explanation of the forward selection procedure.
 #'
 #' If the derived variables were created using \code{\link{deriveVars}}, the
@@ -84,6 +84,7 @@ Please specify a different writedir. \n ")
   }
   names(EVDV) <- names(dv)
   names(trail) <- names(dv)
+  EVDV <- EVDV[sapply(EVDV, function(x) {dim(x)[2] != 0})]
 
   Result <- list(selectedDV = EVDV, selection = trail)
 
