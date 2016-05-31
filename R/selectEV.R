@@ -47,7 +47,6 @@
 #' @export
 
 
-# JV: keep track of number of parameters in comparison model (like bestFVA) for dfe
 selectEV <- function(rv, ev, alpha = 0.01, interaction = TRUE, writedir = NULL,
                      jarpath = NULL) {
 
