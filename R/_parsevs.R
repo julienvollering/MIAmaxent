@@ -96,14 +96,16 @@
       selectedset <- unlist(strsplit(ctable$EV[1], split=" "))
       mnull <- ctable$m[1]
       bestFVA <- ctable$FVA[1]
-      addedEV <- unlist(lapply(strsplit(ctable$EV[2:nrow(ctable)], split=" "),
-        function(x) {x[cyclenumber]}))
-      remainingset <- addedEV[ctable$Pvalue[2:nrow(ctable)] < alpha]
+      addedEV <- sapply(strsplit(ctable$EV[seq(nrow(ctable))[-1]], split=" "),
+        function(x) {x[cyclenumber]})
+      remainingset <- addedEV[ctable$Pvalue[seq(nrow(ctable))[-1]] < alpha]
     }
+
+    message(paste0("Cycle ", cyclenumber, " complete."))
 
     if (nrow(ctable) == 1 || ctable$Pvalue[1] > alpha ||
         (ctable$Pvalue[1] < alpha &&
-            all(ctable$Pvalue[2:nrow(ctable)] >= alpha))) {
+            all(ctable$Pvalue[seq(nrow(ctable))[-1]] >= alpha))) {
       iterationexit <- TRUE
     }
   }
@@ -112,9 +114,12 @@
     return(list(ev[selectedset], modeltable))
   }
 
+  message(paste0("Forward selection of interaction terms between ",
+    length(selectedset), " EVs"))
+
   combos <- t(combn(selectedset, 2))
   products <- vector("list", nrow(combos))
-  names(products) <- apply(combos, 1, function(x) {paste(x, collapse="*")})
+  names(products) <- apply(combos, 1, function(x) {paste(x, collapse=":")})
   for (i in 1:nrow(combos)) {
     ev1 <- ev[[combos[i,1]]]
     ev2 <- ev[[combos[i,2]]]
@@ -124,10 +129,95 @@
       productdvs[, j] <- ev1[[dvcombos[j,1]]] * ev2[[dvcombos[j,2]]]
     }
     colnames(productdvs) <- apply(dvcombos, 1, function(x) {
-      paste(x, collapse="*")})
+      paste(x, collapse=":")})
     products[[i]] <- as.data.frame(productdvs)
   }
 
+  ev <- append(ev, products)
+  remainingset <- names(products)
 
+  iterationexit <- FALSE
+  while (iterationexit == FALSE) {
+
+    cyclenumber <- cyclenumber + 1
+    cycledir <- paste(dir, paste0("cycle", cyclenumber), sep="\\")
+    dir.create(cycledir)
+    cyclemodels <- lapply(remainingset, function(x) c(selectedset, x))
+
+    nrows <- length(cyclemodels)
+    ctable <- data.frame(cycle=integer(nrows), model=integer(nrows),
+      EV=character(nrows), m=integer(nrows), trainAUC=numeric(nrows),
+      Entropy=numeric(nrows), FVA=numeric(nrows), addedFVA=numeric(nrows),
+      Fstatistic=numeric(nrows), dfe=integer(nrows), dfu=integer(nrows),
+      Pvalue=numeric(nrows), Directory=character(nrows),
+      stringsAsFactors = F)
+
+    for (i in 1:length(cyclemodels)) { #JV: consider replacing with lapply + function
+      evnames <- cyclemodels[[i]]
+      dvnames <- unlist(lapply(ev[evnames], names), use.names = FALSE)
+      df <- data.frame("RV" = rv, "X" = -9999, "Y" = -9999, ev[evnames])
+      colnames(df)[4:ncol(df)] <- dvnames
+
+      modeldir <- paste(cycledir, paste0("model", i), sep = "\\")
+      dir.create(modeldir)
+
+      samplesdf <- na.omit(df)
+      environlayersdf <- df
+      csvfiles <- paste0(modeldir, c("\\samples.csv", "\\environlayers.csv"))
+      write.csv(samplesdf, csvfiles[1], row.names = F)
+      write.csv(environlayersdf, csvfiles[2], row.names = F)
+
+      command <- paste0("java -mx512m -jar ",
+        "\"", jarpath, "\"",
+        jarflags,
+        " samplesfile=","\"", csvfiles[1], "\"",
+        " environmentallayers=", "\"", csvfiles[2], "\"",
+        " outputdirectory=", "\"", modeldir, "\\", "\"")
+      javacommand <- gsub("\\\\","/", command)
+      system(paste(javacommand), wait=T)
+
+      maxRes <- read.csv(paste(modeldir, "\\maxentResults.csv", sep=""))
+      ctable$cycle[i] <- cyclenumber
+      ctable$model[i] <- i
+      ctable$EV[i] <- paste(evnames, collapse = " ")
+      ctable$m[i] <- length(dvnames)
+      ctable$trainAUC[i] <- maxRes$Training.AUC
+      ctable$Entropy[i] <- maxRes$Entropy
+      n <- maxRes$X.Training.samples
+      N <- maxRes$X.Background.points
+      ctable$FVA[i] <- (log(N) - ctable$Entropy[i]) / (log(N) - log(n))
+      ctable$addedFVA[i] <- ctable$FVA[i] - bestFVA
+      dfe <- ctable$m[i] - mnull
+      dfu <- (N - n) - (ctable$m[i] + 1) - 1
+      ctable$Fstatistic[i] <- (ctable$addedFVA[i] * dfu) /
+        ((1 - ctable$FVA[i]) * dfe)
+      ctable$dfe[i] <- dfe
+      ctable$dfu[i] <- dfu
+      ctable$Pvalue[i] <- 1 - pf(ctable$Fstatistic[i], dfe, dfu)
+      ctable$Directory[i] <- modeldir
+    }
+
+    ctable <- ctable[order(-ctable$Fstatistic), ]
+    modeltable <- rbind(modeltable, ctable, make.row.names = FALSE)
+
+    if (ctable$Pvalue[1] < alpha) {
+      selectedset <- unlist(strsplit(ctable$EV[1], split=" "))
+      mnull <- ctable$m[1]
+      bestFVA <- ctable$FVA[1]
+      addedEV <- sapply(strsplit(ctable$EV[seq(nrow(ctable))[-1]], split=" "),
+        function(x) {x[cyclenumber]})
+      remainingset <- addedEV[ctable$Pvalue[seq(nrow(ctable))[-1]] < alpha]
+    }
+
+    message(paste0("Cycle ", cyclenumber, " complete."))
+
+    if (nrow(ctable) == 1 || ctable$Pvalue[1] > alpha ||
+        (ctable$Pvalue[1] < alpha &&
+            all(ctable$Pvalue[seq(nrow(ctable))[-1]] >= alpha))) {
+      iterationexit <- TRUE
+    }
+  }
+
+  return(list(ev[selectedset], modeltable))
 
 }
