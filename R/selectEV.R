@@ -74,18 +74,13 @@ Please specify a different writedir. \n ")
     dir.create(dir)
   }
 
-  EVDV <- list()
-  trail <- list()
-
   message(paste0("Forward selection of ", length(ev), " EVs"))
 
   result <- altrMaxent:::.parsevs(rv, ev, alpha, interaction, dir, jarpath)
-  write.csv(result[[2]], file = paste(evdir, "dvselection.csv", sep="\\"),
+  write.csv(result[[2]], file = paste(dir, "evselection.csv", sep="\\"),
     row.names = FALSE)
-  EVDV[[i]] <- result[[1]]
-  trail[[i]] <- result[[2]]
 
-  Result <- list(selectedEV = EVDV, selection = trail)
+  Result <- list(selectedEV = result[[1]], selection = result[[2]])
 
   return(Result)
 }
