@@ -92,14 +92,14 @@
     if (ctable$Pvalue[1] < alpha) {
       selectedset <- unlist(strsplit(ctable$DV[1], split=" "))
       bestFVA <- ctable$FVA[1]
-      addedDV <- unlist(lapply(strsplit(ctable$DV[2:nrow(ctable)], split=" "),
+      addedDV <- sapply(strsplit(ctable$DV[seq(nrow(ctable))[-1]], split=" "),
         function(x) {x[cyclenumber]}))
-      remainingset <- addedDV[ctable$Pvalue[2:nrow(ctable)] < alpha]
+      remainingset <- addedDV[ctable$Pvalue[seq(nrow(ctable))[-1]] < alpha]
     }
 
     if (nrow(ctable) == 1 || ctable$Pvalue[1] > alpha ||
         (ctable$Pvalue[1] < alpha &&
-            all(ctable$Pvalue[2:nrow(ctable)] >= alpha))) {
+            all(ctable$Pvalue[seq(nrow(ctable))[-1]] >= alpha))) {
       iterationexit <- TRUE
     }
   }
