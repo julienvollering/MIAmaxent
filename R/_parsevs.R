@@ -108,5 +108,26 @@
     }
   }
 
-  return(list(ev[selectedset], modeltable))
+  if (interaction == FALSE) {
+    return(list(ev[selectedset], modeltable))
+  }
+
+  combos <- t(combn(selectedset, 2))
+  products <- vector("list", nrow(combos))
+  names(products) <- apply(combos, 1, function(x) {paste(x, collapse="*")})
+  for (i in 1:nrow(combos)) {
+    ev1 <- ev[[combos[i,1]]]
+    ev2 <- ev[[combos[i,2]]]
+    dvcombos <- expand.grid(names(ev1), names(ev2))
+    productdvs <- matrix(nrow = nrow(ev[[1]]), ncol = nrow(dvcombos))
+    for (j in 1:nrow(dvcombos)) {
+      productdvs[, j] <- ev1[[dvcombos[j,1]]] * ev2[[dvcombos[j,2]]]
+    }
+    colnames(productdvs) <- apply(dvcombos, 1, function(x) {
+      paste(x, collapse="*")})
+    products[[i]] <- as.data.frame(productdvs)
+  }
+
+
+
 }
