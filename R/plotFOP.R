@@ -18,7 +18,7 @@
 #'   and explanatory variables in subsequent columns. The response variable
 #'   should represent presence or background, coded as: 1/NA. See Details for
 #'   information regarding presence/absence data.
-#' @param EV Name or column number of the explanatory variable for which to
+#' @param EV Name or column index of the explanatory variable for which to
 #'   calculate FOP.
 #' @param intervals Number of intervals into which the continuous EV is divided.
 #'   Irrelevant for categorical EVs.

@@ -12,7 +12,7 @@ and explanatory variables in subsequent columns. The response variable
 should represent presence or background, coded as: 1/NA. See Details for
 information regarding presence/absence data.}
 
-\item{EV}{Name or column number of the explanatory variable for which to
+\item{EV}{Name or column index of the explanatory variable for which to
 calculate FOP.}
 
 \item{intervals}{Number of intervals into which the continuous EV is divided.
