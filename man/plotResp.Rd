@@ -11,7 +11,7 @@ plotResp(rv, ev, evdata, dvdata, writedir = NULL, jarpath = NULL)
 represent presence/background data, coded as: 1/NA.}
 
 \item{ev}{Name or list index of the explanatory variable in \code{dvdata} for
-which the response curve is to be generated.}
+which the response curve is to be generated. Interaction terms not allowed.}
 
 \item{evdata}{Explanatory variables used to train the model, in their
 original (untransformed) form. Data frame.}

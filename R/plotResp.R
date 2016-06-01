@@ -14,7 +14,7 @@
 #' @param rv Response variable vector used to train the model. The RV should
 #'   represent presence/background data, coded as: 1/NA.
 #' @param ev Name or list index of the explanatory variable in \code{dvdata} for
-#'   which the response curve is to be generated.
+#'   which the response curve is to be generated. Interaction terms not allowed.
 #' @param evdata Explanatory variables used to train the model, in their
 #'   original (untransformed) form. Data frame.
 #' @param dvdata Derived variables used to train the model. Named list of data
@@ -51,6 +51,11 @@ plotResp <- function(rv, ev, evdata, dvdata, writedir = NULL, jarpath = NULL) {
   dir <- paste(writedir, "\\plotResp", sep="")
   dir.create(dir, showWarnings = FALSE)
   evname <- names(dvdata[ev])
+  if (!(evname %in% names(evdata))) {
+    stop("The specified EV must be present in the original evdata.
+       E.g. interaction terms between multiple EVs are not supported. \n ",
+      call. = FALSE)
+  }
   modeldir <- paste(dir, "\\response", evname, sep="")
   if (file.exists(modeldir)) {
     stop("The response to this EV has already been evaluated in the given writedir.
