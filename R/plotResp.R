@@ -99,7 +99,7 @@ plotResp <- function(rv, ev, evdata, dvdata, writedir = NULL, jarpath = NULL) {
 
   plot(plotdf[,"PRO"] ~ plotdf[,evname], pch = 20,
     xlab = evname, ylab = "Probability Ratio Output (PRO)",
-    main = paste0("Single-effect response to ", evname))
+    main = paste0("Single-effect model response to ", evname))
   if (class(plotdf[,evname]) %in% c("numeric", "integer")) {
     lines(plotdf[,"PRO"] ~ plotdf[,evname], col="red", lwd = 2)
   }
