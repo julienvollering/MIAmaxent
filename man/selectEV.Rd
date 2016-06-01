@@ -4,12 +4,15 @@
 \alias{selectEV}
 \title{Select parsimonious sets of explanatory variables.}
 \usage{
-selectEV(rv, dv, alpha = 0.01, interaction = TRUE, writedir = NULL,
+selectEV(rv, ev, alpha = 0.01, interaction = TRUE, writedir = NULL,
   jarpath = NULL)
 }
 \arguments{
 \item{rv}{Response variable vector. The RV should represent
 presence/background data, coded as: 1/NA.}
+
+\item{ev}{Named list of data frames, with each data frame containing 1 or
+more DVs for a given EV. E.g. output [[1]] of \code{selectDV}.}
 
 \item{alpha}{Alpha-level used in F-test comparison of models. Default is
 0.01.}
@@ -22,9 +25,6 @@ subset selection of DVs. Defaults to the working directory.}
 
 \item{jarpath}{The pathway to the maxent.jar executable jar file. If
 unspecified, the function looks for the file in the writedir.}
-
-\item{ev}{List of data frames, with each data frame containing 1 or more DVs
-for a given EV. E.g. output [[1]] of \code{selectDV}.}
 }
 \value{
 List of length two. The first item is a list of data frames, with one
@@ -39,7 +39,7 @@ which best explains variation in a given response variable (RV). Each EV can
 be represented by 1 or more derived variables (see \code{\link{deriveVars}}).
 The function uses a process of forward selection based on comparison of
 nested models by the F-test, where the F-statistic is calculated using
-equation 58 in Halvorsen (2013). See Halvorsen et al. (2015) for an
+equation 59 in Halvorsen (2013). See Halvorsen et al. (2015) for an
 explanation of the forward selection procedure.
 }
 \details{
@@ -47,7 +47,11 @@ When \code{interaction = TRUE}, the forward selection procedure selects a
 parsimonious group of individual EVs first, and then tests interactions
 between EVs included in the model afterwards. Therefore, interactions are
 only explored between terms which are individually explain a significant
-amount of variation.
+amount of variation. When \code{interaction = FALSE}, interactions are not
+considered.
+
+Each item in the EV list must be uniquely named, and the names must not
+contain spaces.
 }
 \references{
 Halvorsen, R. (2013). A strict maximum likelihood explanation of

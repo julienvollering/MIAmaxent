@@ -20,7 +20,7 @@ given EV. E.g. output of \code{deriveVars}.}
 subset selection of DVs. Defaults to the working directory.}
 
 \item{jarpath}{The pathway to the maxent.jar executable jar file. If
-unspecified, the function looks for the file in the writedir.}
+unspecified, the function looks for maxent.jar in the writedir.}
 }
 \value{
 List of length two. The first item is a list of data frames, with
@@ -33,7 +33,7 @@ For each explanatory variable (EV), \code{selectDV} selects the parsimonious
 set of derived variables (DV) which best explains variation in a given
 response variable. The function uses a process of forward selection based on
 comparison of nested models by the F-test, where the F-statistic is
-calculated using equation 58 in Halvorsen (2013). See Halvorsen et al. (2015)
+calculated using equation 59 in Halvorsen (2013). See Halvorsen et al. (2015)
 for an explanation of the forward selection procedure.
 }
 \details{

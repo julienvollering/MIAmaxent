@@ -28,16 +28,16 @@ equivalent to plotting FOP over the linear transformation produced by
 deriveVars. Irrelevant for categorical EVs.}
 }
 \value{
-In addition to the plotted output, a list is returned containing 1)
+In addition to the graphical output, a list is returned with 1)
   the EV value at which FOP is highest (\code{EVoptimum}) and 2) a data frame
-  with the plotted data (\code{FOPdata}).
+  containing the plotted data (\code{FOPdata}).
 }
 \description{
 \code{plotFOP} produces a Frequency of Observed Presence (FOP) plot for a
 given explanatory variable. For continuous variables, the exponetially
 weighted moving average of the FOP values is added. \code{plotFOP} also
-returns a list containing the optimum EV value, and a data frame with the
-plotted data (for customizable plotting).
+returns a list containing the optimum EV value, and a data frame containing
+the plotted data (for customizable graphics).
 }
 \details{
 The EVoptimum that is retuned is based on the smoothed data, unless a maximum

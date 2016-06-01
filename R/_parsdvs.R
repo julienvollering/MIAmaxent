@@ -93,7 +93,7 @@
       selectedset <- unlist(strsplit(ctable$DV[1], split=" "))
       bestFVA <- ctable$FVA[1]
       addedDV <- sapply(strsplit(ctable$DV[seq(nrow(ctable))[-1]], split=" "),
-        function(x) {x[cyclenumber]}))
+        function(x) {x[cyclenumber]})
       remainingset <- addedDV[ctable$Pvalue[seq(nrow(ctable))[-1]] < alpha]
     }
 

@@ -3,5 +3,6 @@
 export(deriveVars)
 export(modelFromLambdas)
 export(plotFOP)
+export(plotResp)
 export(selectDV)
 export(selectEV)
