@@ -1,4 +1,4 @@
-#' Plots model response across a given explanatory variable.
+#' Plot model response across a given explanatory variable.
 #'
 #' \code{plotResp} plots  the response of a given Maxent model over any of the
 #' included explanatory variables (EVs) in that model. For categorical
@@ -43,7 +43,7 @@ plotResp <- function(rv, ev, evdata, dvdata, writedir = NULL, jarpath = NULL) {
 
   if (file.exists(jarpath) == F) {
     stop("maxent.jar file must be present in writedir, or its pathway must be
-      specified by the jarpath argument. \n ")
+       specified by the jarpath argument. \n ", call. = FALSE)
   }
 
   dir <- paste(writedir, "\\plotResp", sep="")
@@ -52,7 +52,8 @@ plotResp <- function(rv, ev, evdata, dvdata, writedir = NULL, jarpath = NULL) {
   modeldir <- paste(dir, "\\response", evname, sep="")
   if (file.exists(modeldir)) {
     stop("The response to this EV has already been evaluated in the given writedir.
-       Please select a different EV or specify a different writedir. \n ")
+       Please select a different EV or specify a different writedir. \n ",
+      call. = FALSE)
   } else {
     dir.create(modeldir)
   }
@@ -96,5 +97,6 @@ plotResp <- function(rv, ev, evdata, dvdata, writedir = NULL, jarpath = NULL) {
     lines(plotdf[,"PRO"] ~ plotdf[,evname], col="red", lwd = 2)
   }
 
+  return(plotdf)
 
 }

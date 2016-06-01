@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotResp.R
 \name{plotResp}
 \alias{plotResp}
-\title{Plots model response across a given explanatory variable.}
+\title{Plot model response across a given explanatory variable.}
 \usage{
 plotResp(rv, ev, evdata, dvdata, writedir = NULL, jarpath = NULL)
 }
