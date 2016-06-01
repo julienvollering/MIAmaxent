@@ -32,10 +32,9 @@
 #'   unspecified, the function looks for the file in the writedir.
 #'
 #' @return List of length two. The first item is a list of data frames, with one
-#'   data frame for each \emph{selected} EV. The second item is also a list of
-#'   data frames, where the first shows the trail of forward selection of
-#'   individual EVs, while the second shows the trail of forward selection of
-#'   interaction terms (if necessary).
+#'   data frame for each \emph{selected} EV. The second item is a data frame
+#'   showing the trail of forward selection of individual EVs (and interaction
+#'   terms if necessary).
 #'
 #' @references Halvorsen, R. (2013). A strict maximum likelihood explanation of
 #'   MaxEnt, and some implications for distribution modelling. Sommerfeltia, 36,

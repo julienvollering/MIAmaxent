@@ -28,10 +28,9 @@ unspecified, the function looks for the file in the writedir.}
 }
 \value{
 List of length two. The first item is a list of data frames, with one
-  data frame for each \emph{selected} EV. The second item is also a list of
-  data frames, where the first shows the trail of forward selection of
-  individual EVs, while the second shows the trail of forward selection of
-  interaction terms (if necessary).
+  data frame for each \emph{selected} EV. The second item is a data frame
+  showing the trail of forward selection of individual EVs (and interaction
+  terms if necessary).
 }
 \description{
 \code{selectEV} selects the parsimonious set of explanatory variables (EVs)
