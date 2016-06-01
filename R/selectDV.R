@@ -53,7 +53,7 @@ selectDV <- function(rv, dv, alpha = 0.01, writedir = NULL, jarpath = NULL) {
 
   if (file.exists(jarpath) == F) {
     stop("maxent.jar file must be present in writedir, or its pathway must be
-specified by the jarpath parameter. \n ")
+specified by the jarpath argument. \n ")
   }
 
   dir <- paste(writedir, "\\selectDV", sep="")
