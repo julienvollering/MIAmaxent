@@ -11,10 +11,15 @@
 #'
 #' @param rv Response variable vector used to train the model. The RV should
 #'   represent presence/background data, coded as: 1/NA.
-#' @param ev Explanatory data used to train the model. Named list of data
+#' @param evdata Explanatory data used to train the model. Named list of data
 #'   frames, with each data frame containing 1 or more DVs for a given EV. E.g.
 #'   output [[1]] of \code{selectEV}.
-#' @param jarpath The pathway to the maxent.jar executable jar file.
+#' @param ev Name or list index of the explanatory variable in \code{evdata} for
+#'   which the response curve is to be generated.
+#' @param writedir The directory to which Maxent files will be written during
+#'   subset selection of DVs. Defaults to the working directory.
+#' @param jarpath The pathway to the maxent.jar executable jar file. If
+#'   unspecified, the function looks for the file in the writedir.
 #'
 #' @return In addition to the graphical output, a data frame containing the
 #'   plotted data is returned.
@@ -22,14 +27,29 @@
 #' @export
 
 
-plotResp <- function(rv, ev, jarpath = NULL) {
+plotResp <- function(rv, evdata, ev, writedir = NULL, jarpath = NULL) {
 
   altrMaxent:::.binaryrvcheck(rv)
 
-  if (file.exists(jarpath) == F) {
-    stop("The pathway of the maxent.jar file must be correctly specified by the
-      jarpath parameter. \n ")
+  if (is.null(writedir)) {
+    writedir <- getwd()
   }
 
+  if (is.null(jarpath)) {
+    jarpath <- paste(writedir, "\\maxent.jar", sep="")
+  }
+
+  if (file.exists(jarpath) == F) {
+    stop("maxent.jar file must be present in writedir, or its pathway must be
+      specified by the jarpath argument. \n ")
+  }
+
+  dir <- paste(writedir, "\\plotResp\\", sep="")
+  if (file.exists(dir)) {
+    stop("The specified writedir already contains a selection of EVs.
+      Please specify a different writedir. \n ")
+  } else {
+    dir.create(dir)
+  }
 
 }
