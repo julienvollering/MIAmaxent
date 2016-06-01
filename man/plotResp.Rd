@@ -4,18 +4,21 @@
 \alias{plotResp}
 \title{Plots model response across a given explanatory variable.}
 \usage{
-plotResp(rv, evdata, ev, writedir = NULL, jarpath = NULL)
+plotResp(rv, ev, evdata, dvdata, writedir = NULL, jarpath = NULL)
 }
 \arguments{
 \item{rv}{Response variable vector used to train the model. The RV should
 represent presence/background data, coded as: 1/NA.}
 
-\item{evdata}{Explanatory data used to train the model. Named list of data
+\item{ev}{Name or list index of the explanatory variable in \code{dvdata} for
+which the response curve is to be generated.}
+
+\item{evdata}{Explanatory variables used to train the model, in their
+original (untransformed) form. Data frame.}
+
+\item{dvdata}{Derived variables used to train the model. Named list of data
 frames, with each data frame containing 1 or more DVs for a given EV. E.g.
 output [[1]] of \code{selectEV}.}
-
-\item{ev}{Name or list index of the explanatory variable in \code{evdata} for
-which the response curve is to be generated.}
 
 \item{writedir}{The directory to which Maxent files will be written during
 subset selection of DVs. Defaults to the working directory.}
