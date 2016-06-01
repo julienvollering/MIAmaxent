@@ -9,6 +9,8 @@
 #' curves, presenting the response of a model containing the explanatory
 #' variable of interest only (cf. marginal-effect response curves).
 #'
+#' The \code{ev} specified in \code{dvdata} must not be an interaction term.
+#'
 #' @param rv Response variable vector used to train the model. The RV should
 #'   represent presence/background data, coded as: 1/NA.
 #' @param ev Name or list index of the explanatory variable in \code{dvdata} for

@@ -40,5 +40,7 @@ returns a data frame containing the plotted data (for customizable graphics).
 The response curves generated in this function are single-effect response
 curves, presenting the response of a model containing the explanatory
 variable of interest only (cf. marginal-effect response curves).
+
+The \code{ev} specified in \code{dvdata} must not be an interaction term.
 }
 
