@@ -7,6 +7,9 @@
 #' transformation types (HF, HR, T),  a subset of possible DVs is selected by
 #' the criteria described under Details.
 #'
+#' The monotonous transformation "M" performed in this function is a zero-skew
+#' transformation (Økland et al. 2001).
+#'
 #' For spline transformations, DVs are created around 20 different break points
 #' (knots). Only DVs which satisfy all of the following criteria are retained:
 #' \enumerate{ \item 3 <= knot <= 18 (DVs with knots at the extremes of the EV
@@ -37,6 +40,11 @@
 #' @references Halvorsen, R., Mazzoni, S., Bryn, A., & Bakkestuen, V. (2015).
 #'   Opportunities for improved distribution modelling practice via a strict
 #'   maximum likelihood interpretation of MaxEnt. Ecography, 38(2), 172-183.
+#' @references Økland, R.H., Økland, T. & Rydgren, K. (2001)
+#'   Vegetation-environment relationships of boreal spruce swamp forests in
+#'   Østmarka Nature Reserve, SE Norway. Natural History Museums and Botanical
+#'   Garden, University of Oslo, Oslo.
+
 #'
 #' @export
 
