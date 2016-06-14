@@ -1,25 +1,24 @@
 #' selects a subset of spline dvs based on Maxent FTVE
 #'
 #' @param rv Vector of response variable values
-#' @param dv Dataframe of spline dvs to be selected from (HF, HR, or Th)
+#' @param dv List of spline dvs to be selected from (HF, HR, or Th)
 #' @param dir Directory to which Maxent runs are written
 #' @param jarpath Pathway to maxent.jar
 #'
 
 .splselect <- function(rv, dv, dir, jarpath) {
 
-  comparison <- data.frame(DV=character(ncol(dv)),
-    KnotPosition=numeric(ncol(dv)), n=integer(ncol(dv)), N=integer(ncol(dv)),
-    Entropy=numeric(ncol(dv)), trainingAUC=numeric(ncol(dv)),
-    FVA=numeric(ncol(dv)), df=integer(ncol(dv)), Fstatistic=numeric(ncol(dv)),
-    Pvalue=numeric(ncol(dv)), Directory=character(ncol(dv)),
-    stringsAsFactors = F)
+  n <- length(dv)
+  comparison <- data.frame(DV=character(n), KnotPosition=numeric(n),
+    n=integer(n), N=integer(n), Entropy=numeric(n), trainingAUC=numeric(n),
+    FVA=numeric(n), df=integer(n), Fstatistic=numeric(n), Pvalue=numeric(n),
+    Directory=character(n), stringsAsFactors = F)
 
-  pb <- txtProgressBar(min = 0, max = ncol(dv), style = 3)
+  pb <- txtProgressBar(min = 0, max = n, style = 3)
 
-  for (i in 1:ncol(dv)) {
-    dvname <- colnames(dv)[i]
-    df <- data.frame("RV" = rv, "X" = -9999, "Y" = -9999, dv[,i])
+  for (i in 1:n) {
+    dvname <- names(dv)[[i]]
+    df <- data.frame("RV" = rv, "X" = -9999, "Y" = -9999, dv[[i]])
     colnames(df)[4] <- dvname
 
     dvdir <- paste(dir, "\\", dvname, sep = "")
@@ -55,7 +54,7 @@
 
     maxRes <- read.csv(paste(dvdir, "\\maxentResults.csv", sep=""))
     comparison$DV[i] <- dvname
-    comparison$KnotPosition[i] <- (2 * i - 1) / (2 * ncol(dv))
+    comparison$KnotPosition[i] <- (2 * i - 1) / (2 * n)
     comparison$n[i] <- maxRes$X.Training.samples
     comparison$N[i] <- maxRes$X.Background.points
     comparison$Entropy[i] <- maxRes$Entropy
@@ -83,10 +82,9 @@
       selected <- append(selected, comparison$DV[i])
     }
   }
-  selecteddf <- as.data.frame(dv[, colnames(dv) %in% selected, drop=F])
 
-  ptsx <- comparison$KnotPosition[colnames(dv) %in% selected]
-  ptsy <- comparison$FVA[colnames(dv) %in% selected]
+  ptsx <- comparison$KnotPosition[names(dv) %in% selected]
+  ptsy <- comparison$FVA[names(dv) %in% selected]
 
   png(paste(dir, "\\Vknotplot.png", sep=""))
   plot(comparison$KnotPosition, comparison$FVA, lty = "solid",
@@ -100,5 +98,5 @@
 
   dev.off()
 
-  return(selecteddf)
+  return(selected)
 }

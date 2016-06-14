@@ -26,7 +26,6 @@
   rv <- df[,1]
   ev <- df[,2]
   evname <- colnames(df)[2]
-  evdv <- data.frame(df[,2, drop=F])
   storage <- list()
 
   if (class(ev) == "numeric" || class(ev) == "integer") {
@@ -39,28 +38,37 @@
     if ("L" %in% transformtype) {
       tfunction <- .transfL(ev)
       storage[[paste0(evname, "_L_transf")]] <- tfunction
-      evdv[, paste0(evname, "_L")] <- tfunction(ev)
     }
 
     if ("M" %in% transformtype) {
       tfunction <- .transfM(ev)
       storage[[paste0(evname, "_M_transf")]] <- tfunction
-      evdv[, paste0(evname, "_M")] <- tfunction(ev)
     }
 
     if ("D" %in% transformtype) {
       for (i in c(0.5, 1, 2)) {
         tfunction <- .transfD(ev, rv, i)
         storage[[paste0(evname, "_D", i, "_transf")]] <- tfunction
-        evdv[, paste0(evname, "_D", i)] <- tfunction(ev)
       }
     }
 
     if ("HF" %in% transformtype) {
+      splall <- list()
       knots <- 20
       for (i in 1:knots) {
         k <- (2 * i - 1) / (2 * knots)
         tfunction <- .transfSpline(ev, k, type = "HF")
+        splall[[paste0(evname, "_HF", i, "_transf")]] <- tfunction
+      }
+      if (allsplines == T) {
+        storage <- c(storage, splall)
+      } else {
+        hfdir <- paste(evdir, "\\HF", sep="")
+        dir.create(hfdir)
+        message(paste0("Selecting forward hinge transformations of ", evname))
+        dvs <- lapply(splall, function(x) {x(ev)})
+        selected <- altrMaxent:::.splselect(rv, dvs, hfdir, jarpath)
+        storage <- c(storage, splall[selected])
       }
     }
   }
@@ -73,6 +81,7 @@
     }
   }
 
-  evdv <- evdv[,-1]
+  evdv <- data.frame(lapply(storage, function(x) {x(ev)}))
+  colnames(evdv) <- gsub("_transf", "", names(storage))
   return(evdv)
 }

@@ -27,7 +27,7 @@
   function(x) {
     L <- (x - range(xnull)[1])/diff(range(xnull))
     ZSk <- altrMaxent:::.scalex(Lnull, L, c)
-    y <- data.frame((ZSk - range(ZSknull)[1])/diff(range(ZSknull)))
+    y <- (ZSk - range(ZSknull)[1])/diff(range(ZSknull))
     return(y)
   }
 }
@@ -59,11 +59,12 @@
 #'   transformation
 #' @param k Break point between 0 and 1.
 #' @param type Specifies type of spline transformation: "HF", "HR", or "T".
-#' @return list of functions that transform x into y by the particular spline transfomations
-#'   defined by the properties of xnull, and specified by k and type.
+#' @return list of functions that transform x into y by the particular spline
+#'   transformations defined by the properties of xnull, and specified by k and
+#'   type.
 
 .transfSpline <- function(xnull, k, type) {
-
+  force(k)
   function(x) {
     L <- (x - range(xnull)[1])/diff(range(xnull))
     if (type == "HF") {
