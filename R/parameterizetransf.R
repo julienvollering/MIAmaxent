@@ -1,0 +1,80 @@
+#' A lexical closure for defining an "L" transformation
+#'
+#' @param xnull training data that will be used to parameterize the
+#'   transformation
+#' @return Function that transforms x into y by the particular L transfomation
+#'   defined by the properties of xnull
+
+.transfL <- function(xnull) {
+  function(x) {
+    y <- (x - range(xnull)[1])/diff(range(xnull))
+    return(y)
+  }
+}
+
+#' A lexical closure for defining an "M" transformation
+#'
+#' @param xnull training data that will be used to parameterize the
+#'   transformation
+#' @return Function that transforms x into y by the particular M transfomation
+#'   defined by the properties of xnull
+
+.transfM <- function(xnull) {
+  Lnull <- (xnull - range(xnull)[1])/diff(range(xnull))
+  c <- altrMaxent:::.minskew(Lnull)$c
+  ZSknull <- altrMaxent:::.scalex(Lnull, Lnull, c)
+
+  function(x) {
+    L <- (x - range(xnull)[1])/diff(range(xnull))
+    ZSk <- altrMaxent:::.scalex(Lnull, L, c)
+    y <- data.frame((ZSk - range(ZSknull)[1])/diff(range(ZSknull)))
+    return(y)
+  }
+}
+
+#' A lexical closure for defining an "D" transformation
+#'
+#' @param xnull training data that will be used to parameterize the
+#'   transformation
+#' @param rv response variable that will be used to parameterize the
+#'   transformation
+#' @param devexp exponent determining the steepness of the deviation transformation
+#' @return Function that transforms x into y by the particular D transfomation
+#'   defined by the properties of xnull and rv, and specified by devexp.
+
+.transfD <- function(xnull, rv, devexp) {
+  optnull <- .fopoptimum(data.frame(rv, xnull))
+  uynull <- (abs(xnull - optnull)) ^ devexp
+
+  function(x) {
+    uy <- (abs(x - optnull)) ^ devexp
+    y <- (uy - range(uynull)[1])/diff(range(uynull))
+    return(y)
+  }
+}
+
+#' A lexical closure for defining a spline ("HF", "HR", "T") transformation
+#'
+#' @param xnull training data that will be used to parameterize the
+#'   transformation
+#' @param k Break point between 0 and 1.
+#' @param type Specifies type of spline transformation: "HF", "HR", or "T".
+#' @return list of functions that transform x into y by the particular spline transfomations
+#'   defined by the properties of xnull, and specified by k and type.
+
+.transfSpline <- function(xnull, k, type) {
+
+  function(x) {
+    L <- (x - range(xnull)[1])/diff(range(xnull))
+    if (type == "HF") {
+      y <- ((L - k) * (1 * (L > k))) / (1 - k)
+    }
+    if (type == "HR") {
+      y <- ((L - k) * (-1 * (L < k))) / k
+    }
+    if (type == "T") {
+      y <- 1 * (L >= k)
+    }
+    return(y)
+  }
+}

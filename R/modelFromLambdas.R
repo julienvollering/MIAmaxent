@@ -26,11 +26,10 @@
 #' mymodel(projection.df)
 #' }
 #'
-#' @keywords internal
-#'
 #' @export
+#' @keywords internal
 
-modelFromLambdas <- function(file, name = NULL) {
+.modelFromLambdas <- function(file, name = NULL) {
 
   if (is.null(name)) {
     name <- sub(".lambdas", "", basename(file))

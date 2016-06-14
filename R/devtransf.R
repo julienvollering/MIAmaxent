@@ -8,7 +8,7 @@
 #'   deviation transformation
 #'
 
-.devtransf <- function(ev, optimum, devexp = c(0.5, 1, 2)) {
+.devtransf <- function(ev, optimum, devexp) {
   stopifnot(class(ev) == "numeric" || class(ev) == "integer",
     class(optimum) == "numeric" || class(optimum) == "integer",
     length(optimum) == 1)
