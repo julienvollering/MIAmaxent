@@ -55,28 +55,29 @@ deriveVars <- function(data,
 
   if (any(c("HF", "HR", "T") %in% transformtype) && allsplines == F) {
     altrMaxent:::.binaryrvcheck(data[,1])
-
-    if (is.null(writedir)) {
-      writedir <- getwd()
-    }
-
-    if (is.null(jarpath)) {
-      jarpath <- paste(writedir, "\\maxent.jar", sep="")
-    }
-
-    if (file.exists(jarpath) == F) {
-      stop("maxent.jar file must be present in writedir, or its pathway must be
-specified by the jarpath parameter. \n ")
-    }
-
-    dir <- paste(writedir, "\\deriveVars", sep="")
-    if (file.exists(dir)) {
-      stop("The specified writedir already contains a selection of spline DVs.
-Please specify a different writedir. \n ")
-    } else {
-      dir.create(dir)
-    }
   }
+
+  if (is.null(writedir)) {
+    writedir <- getwd()
+  }
+
+  if (is.null(jarpath)) {
+    jarpath <- paste(writedir, "\\maxent.jar", sep="")
+  }
+
+  if (file.exists(jarpath) == F) {
+    stop("maxent.jar file must be present in writedir, or its pathway must be
+specified by the jarpath parameter. \n ")
+  }
+
+  dir <- paste(writedir, "\\deriveVars", sep="")
+  if (file.exists(dir)) {
+    stop("The specified writedir already contains a selection of spline DVs.
+Please specify a different writedir. \n ")
+  } else {
+    dir.create(dir)
+  }
+
 
   Storage <- list()
   EVDV <- list()
