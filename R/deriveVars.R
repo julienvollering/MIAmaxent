@@ -78,13 +78,15 @@ Please specify a different writedir. \n ")
     }
   }
 
+  Storage <- list()
   EVDV <- list()
   for (i in 2:ncol(data)) {
     df <- data[,c(1,i)]
-    EVDV[[i-1]] <- altrMaxent:::.dvfromev(df, transformtype, allsplines,
-      dir, jarpath)
-    names(EVDV)[i-1] <- colnames(data)[i]
+    result <- .dvfromev(df, transformtype, allsplines, dir, jarpath)
+    Storage <- c(Storage, result$storage)
+    EVDV <- c(EVDV, result$evdv)
   }
 
-  return(EVDV)
+  save(Storage, paste0(dir, "\\transf_storage.Rdata"))
+  return(list("EVDV" = EVDV, "transformations" = Storage))
 }

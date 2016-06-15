@@ -67,21 +67,67 @@
         dir.create(hfdir)
         message(paste0("Selecting forward hinge transformations of ", evname))
         dvs <- lapply(splall, function(x) {x(ev)})
+        colnames(dvs) <- gsub("_transf", "", names(splall))
         selected <- altrMaxent:::.splselect(rv, dvs, hfdir, jarpath)
-        storage <- c(storage, splall[selected])
+        storage <- c(storage, splall[paste0(selected, "_transf")])
+      }
+    }
+
+    if ("HR" %in% transformtype) {
+      splall <- list()
+      knots <- 20
+      for (i in 1:knots) {
+        k <- (2 * i - 1) / (2 * knots)
+        tfunction <- .transfSpline(ev, k, type = "HR")
+        splall[[paste0(evname, "_HR", i, "_transf")]] <- tfunction
+      }
+      if (allsplines == T) {
+        storage <- c(storage, splall)
+      } else {
+        hrdir <- paste(evdir, "\\HR", sep="")
+        dir.create(hrdir)
+        message(paste0("Selecting reverse hinge transformations of ", evname))
+        dvs <- lapply(splall, function(x) {x(ev)})
+        colnames(dvs) <- gsub("_transf", "", names(splall))
+        selected <- altrMaxent:::.splselect(rv, dvs, hrdir, jarpath)
+        storage <- c(storage, splall[paste0(selected, "_transf")])
+      }
+    }
+
+    if ("T" %in% transformtype) {
+      splall <- list()
+      knots <- 20
+      for (i in 1:knots) {
+        k <- (2 * i - 1) / (2 * knots)
+        tfunction <- .transfSpline(ev, k, type = "T")
+        splall[[paste0(evname, "_T", i, "_transf")]] <- tfunction
+      }
+      if (allsplines == T) {
+        storage <- c(storage, splall)
+      } else {
+        tdir <- paste(evdir, "\\T", sep="")
+        dir.create(tdir)
+        message(paste0("Selecting threshold transformations of ", evname))
+        dvs <- lapply(splall, function(x) {x(ev)})
+        colnames(dvs) <- gsub("_transf", "", names(splall))
+        selected <- altrMaxent:::.splselect(rv, dvs, tdir, jarpath)
+        storage <- c(storage, splall[paste0(selected, "_transf")])
       }
     }
   }
 
   if (class(ev) == "factor" || class(ev) == "character") {
+    ev <- as.factor(ev)
+
     if ("B" %in% transformtype) {
-      B <- stats::model.matrix( ~ ev - 1, data=df )
-      colnames(B) <- paste(evname, "_B", levels(ev), sep="")
-      evdv <- cbind(evdv, B)
+      for (i in levels(ev)) {
+        tfunction <- .transfB(ev, i)
+        storage[[paste0(evname, "_B", i, "_transf")]] <- tfunction
+      }
     }
   }
 
   evdv <- data.frame(lapply(storage, function(x) {x(ev)}))
   colnames(evdv) <- gsub("_transf", "", names(storage))
-  return(evdv)
+  return(list("storage" = storage, "evdv" = evdv))
 }

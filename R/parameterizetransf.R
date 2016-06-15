@@ -38,7 +38,8 @@
 #'   transformation
 #' @param rv response variable that will be used to parameterize the
 #'   transformation
-#' @param devexp exponent determining the steepness of the deviation transformation
+#' @param devexp exponent determining the steepness of the deviation
+#'   transformation
 #' @return Function that transforms x into y by the particular D transfomation
 #'   defined by the properties of xnull and rv, and specified by devexp.
 
@@ -76,6 +77,22 @@
     if (type == "T") {
       y <- 1 * (L >= k)
     }
+    return(y)
+  }
+}
+
+#' A lexical closure for defining x number of "B" transformations
+#'
+#' @param xnull categorical training data that will be used to parameterize the
+#'   transformation
+#' @param lvl string specifying which level of the variable to be made binary
+#' @return One function for each level of xnull, which transforms categorical
+#'   variable x into binary variable y.
+
+.transfB <- function(xnull, lvl) {
+  force(lvl)
+  function(x) {
+    y <- unname(sapply(x, function(x) {if (x == lvl) {1} else {0}}))
     return(y)
   }
 }
