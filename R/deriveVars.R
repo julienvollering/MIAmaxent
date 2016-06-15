@@ -73,7 +73,7 @@ specified by the jarpath parameter. \n ")
   dir <- paste(writedir, "\\deriveVars", sep="")
   if (file.exists(dir)) {
     stop("The specified writedir already contains a selection of spline DVs.
-Please specify a different writedir. \n ")
+Please specify a different writedir. \n ", call. = FALSE)
   } else {
     dir.create(dir)
   }
@@ -88,6 +88,6 @@ Please specify a different writedir. \n ")
     EVDV <- c(EVDV, result$evdv)
   }
 
-  save(Storage, paste0(dir, "\\transf_storage.Rdata"))
+  save(Storage, file = paste0(dir, "\\transf_storage.Rdata"))
   return(list("EVDV" = EVDV, "transformations" = Storage))
 }

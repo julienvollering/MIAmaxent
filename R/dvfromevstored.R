@@ -67,7 +67,7 @@
         dir.create(hfdir)
         message(paste0("Selecting forward hinge transformations of ", evname))
         dvs <- lapply(splall, function(x) {x(ev)})
-        colnames(dvs) <- gsub("_transf", "", names(splall))
+        names(dvs) <- gsub("_transf", "", names(splall))
         selected <- altrMaxent:::.splselect(rv, dvs, hfdir, jarpath)
         storage <- c(storage, splall[paste0(selected, "_transf")])
       }
@@ -88,7 +88,7 @@
         dir.create(hrdir)
         message(paste0("Selecting reverse hinge transformations of ", evname))
         dvs <- lapply(splall, function(x) {x(ev)})
-        colnames(dvs) <- gsub("_transf", "", names(splall))
+        names(dvs) <- gsub("_transf", "", names(splall))
         selected <- altrMaxent:::.splselect(rv, dvs, hrdir, jarpath)
         storage <- c(storage, splall[paste0(selected, "_transf")])
       }
@@ -109,7 +109,7 @@
         dir.create(tdir)
         message(paste0("Selecting threshold transformations of ", evname))
         dvs <- lapply(splall, function(x) {x(ev)})
-        colnames(dvs) <- gsub("_transf", "", names(splall))
+        names(dvs) <- gsub("_transf", "", names(splall))
         selected <- altrMaxent:::.splselect(rv, dvs, tdir, jarpath)
         storage <- c(storage, splall[paste0(selected, "_transf")])
       }
