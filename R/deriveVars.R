@@ -83,9 +83,9 @@ Please specify a different writedir. \n ", call. = FALSE)
   EVDV <- list()
   for (i in 2:ncol(data)) {
     df <- data[,c(1,i)]
-    result <- .dvfromev(df, transformtype, allsplines, dir, jarpath)
+    result <- .dvfromevstored(df, transformtype, allsplines, dir, jarpath)
     Storage <- c(Storage, result$storage)
-    EVDV <- c(EVDV, result$evdv)
+    EVDV[[colnames(df)[2]]] <- result$evdv
   }
 
   save(Storage, file = paste0(dir, "\\transf_storage.Rdata"))

@@ -21,7 +21,7 @@
 # storage)! Editing for inclusion in the package must proceed in the _dvfromev
 # file as it contains the latest bug fixes.
 
-.dvfromev <- function(df, transformtype, allsplines, dir, jarpath) {
+.dvfromevstored <- function(df, transformtype, allsplines, dir, jarpath) {
 
   rv <- df[,1]
   ev <- df[,2]
