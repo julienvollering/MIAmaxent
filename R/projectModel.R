@@ -29,7 +29,7 @@ projectModel <- function(newdata, transf, model, clamping = FALSE) {
   dvnamesni <- dvnames[-grep(":", dvnames)]
   dvnamesi <- dvnames[grep(":", dvnames)]
 
-  transf <- load(transffile)
+  load(transffile)
 
   evnames <- unique(unname(sapply(dvnamesni, function(x) {
     colnames(newdata)[startsWith(x, colnames(newdata))]
@@ -48,25 +48,28 @@ projectModel <- function(newdata, transf, model, clamping = FALSE) {
   })
   names(Ranges) <- evnames
 
-  ranges <- list()
-  dvdatani <- list()
-  lapply(dvnamesni, function(x) {
-    evname <- colnames(newdata)[startsWith(x, colnames(newdata))]
+  dvdatani <- lapply(dvnamesni, function(x) {
+    evname <- evnames[startsWith(x, evnames)]
     evdata <- newdata[, evname]
     transffunction <- Storage[startsWith(names(Storage), x)][[1]]
-    xnull <- environment(transffunction)$xnull
-    if (class(xnull) == "numeric" || class(xnull) == "integer") {
-      L <- (evdata - range(xnull)[1])/diff(range(xnull))
-      ranges[[evname]] <- range(L)
+    y <- transffunction(evdata)
+    if (clamping == TRUE) {
+      y[y > 1] <- 1
+      y[y < 0] <- 0
     }
-    if (class(xnull) == "factor" || class(xnull) == "character") {
-      if (all(evdata %in% xnull)) {
-        ranges[[evname]] <- "inside"
-      } else {
-        ranges[[evname]] <- "outside"
-      }
-    }
-    dvdatani[[x]] <- transffunction(evdata)
-    return(list(ranges, dvdatani))
+    return(y)
   })
+  names(dvdatani) <- dvnamesni
+
+  prodlist <- strsplit(dvnamesi, ":")
+  dvdatai <- lapply(prodlist, function(x) {
+    dvdatani[[x[1]]] * dvdatani[[x[2]]]
+  })
+  names(dvdatai) <- dvnamesi
+
+  dvdata <- data.frame(c(dvdatani, dvdatai), check.names = FALSE)
+  modelfunction <- modelfromlambdasutil(model)
+  Output <- modelfunction(dvdata)
+
+  return(list(output = Output, ranges = Ranges))
 }
