@@ -20,7 +20,52 @@
 #' @export
 
 
-projectModel <- function(data, EV, intervals = 20, smoothwindow = 3,
-                    EVranging = FALSE) {
+projectModel <- function(newdata, transf, model) {
 
+  lambdas <- read.csv(model, header = FALSE)
+  dvnames <- as.character(lambdas[1:(nrow(lambdas)-4), 1])
+  m <- length(dvnames)
+  dvnamesni <- dvnames[-grep(":", dvnames)]
+  dvnamesi <- dvnames[grep(":", dvnames)]
+
+  transf <- load(transffile)
+
+  evnames <- unique(unname(sapply(dvnamesni, function(x) {
+    colnames(newdata)[startsWith(x, colnames(newdata))]
+    })))
+
+  Ranges <- lapply(evnames, function(x) {
+    evdata <- newdata[, x]
+    xnull <- environment(Storage[startsWith(names(Storage), x)][[1]])$xnull
+    if (class(xnull) == "numeric" || class(xnull) == "integer") {
+      L <- (evdata - range(xnull)[1])/diff(range(xnull))
+      return(range(L))
+    }
+    if (class(xnull) == "factor" || class(xnull) == "character") {
+      if (all(evdata %in% xnull)) {return("inside")} else {return("outside")}
+    }
+  })
+  names(Ranges) <- evnames
+
+  ranges <- list()
+  dvdatani <- list()
+  lapply(dvnamesni, function(x) {
+    evname <- colnames(newdata)[startsWith(x, colnames(newdata))]
+    evdata <- newdata[, evname]
+    transffunction <- Storage[startsWith(names(Storage), x)][[1]]
+    xnull <- environment(transffunction)$xnull
+    if (class(xnull) == "numeric" || class(xnull) == "integer") {
+      L <- (evdata - range(xnull)[1])/diff(range(xnull))
+      ranges[[evname]] <- range(L)
+    }
+    if (class(xnull) == "factor" || class(xnull) == "character") {
+      if (all(evdata %in% xnull)) {
+        ranges[[evname]] <- "inside"
+      } else {
+        ranges[[evname]] <- "outside"
+      }
+    }
+    dvdatani[[x]] <- transffunction(evdata)
+    return(list(ranges, dvdatani))
+  })
 }
