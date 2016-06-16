@@ -12,6 +12,7 @@
 #'   \code{deriveVars} function.
 #' @param model Pathway to the .lambdas file of the model in question. This file
 #'   is saved as a result of the \code{selectEV} function.
+#' @param clamping logical. Do clamping. Default is \code{FALSE}.
 #'
 #' @return 1) a data frame with the model output and the corresponding
 #'   explanatory data. 2) a data frame showing the range of the data compared to
@@ -20,7 +21,7 @@
 #' @export
 
 
-projectModel <- function(newdata, transf, model) {
+projectModel <- function(newdata, transf, model, clamping = FALSE) {
 
   lambdas <- read.csv(model, header = FALSE)
   dvnames <- as.character(lambdas[1:(nrow(lambdas)-4), 1])
