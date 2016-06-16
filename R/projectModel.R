@@ -6,7 +6,7 @@
 #' the model must be specified.
 #'
 #' @param newdata Data frame containing data for all the explanatory variables
-#'   included in the model.
+#'   (EVs) included in the model, with column names matching EV names.
 #' @param transf Pathway to the .Rdata file containing the named parameterized
 #'   transformations used in the model. This file is saved as a result of the
 #'   \code{deriveVars} function.
@@ -25,13 +25,18 @@ projectModel <- function(newdata, transf, model, clamping = FALSE) {
 
   lambdas <- read.csv(model, header = FALSE)
   dvnames <- as.character(lambdas[1:(nrow(lambdas)-4), 1])
-  m <- length(dvnames)
   dvnamesni <- dvnames[-grep(":", dvnames)]
   dvnamesi <- dvnames[grep(":", dvnames)]
 
+  check <- lapply(dvnamesni, function(x) { startsWith(x, colnames(newdata)) })
+  if (any(sapply(check, function(x) { all(x==FALSE) }))) {
+    stop("All EVs in the .lambdas file must be represented in newdata",
+      call. = FALSE)
+  }
+
   load(transffile)
 
-  evnames <- unique(unname(sapply(dvnamesni, function(x) {
+    evnames <- unique(unname(sapply(dvnamesni, function(x) {
     colnames(newdata)[startsWith(x, colnames(newdata))]
     })))
 
