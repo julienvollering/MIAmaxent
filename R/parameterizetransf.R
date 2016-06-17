@@ -92,7 +92,9 @@
 .transfB <- function(xnull, lvl) {
   force(lvl)
   function(x) {
-    y <- unname(sapply(x, function(x) {if (x == lvl) {1} else {0}}))
+    y <- unname(sapply(x, function(x) {
+      if (is.na(x)) {0} else {
+      if (x == lvl) {1} else {0}}}))
     return(y)
   }
 }
