@@ -28,10 +28,12 @@ subset selection of spline variables. Defaults to the working directory.}
 unspecified, the function looks for the file in the writedir.}
 }
 \value{
-List of length 2. The first item is a list of data frames, with each
+List of length 2. \enumerate{ \item A list of data frames, with each
   containing the derived variables produced for a given explanatory variable.
-  The second item is a list of all the transformation functions used to
-  produce the derived variables.
+  This item may be used as input for \code{\link{selectDV}}. \item A list of
+  all the transformation functions used to produce the derived variables.
+  This item may be used as input for \code{\link{plotResp}},
+  \code{\link{testAUC}}, and \code{\link{projectModel}} }
 }
 \description{
 \code{deriveVars} produces derived variables from explanatory variables by
@@ -43,7 +45,7 @@ the criteria described under Details.
 }
 \details{
 The monotonous transformation "M" performed in this function is a zero-skew
-transformation (Økland et al. 2001).
+transformation (Oekland et al. 2001).
 
 For spline transformations, DVs are created around 20 different break points
 (knots). Only DVs which satisfy all of the following criteria are retained:
@@ -58,9 +60,9 @@ Halvorsen, R., Mazzoni, S., Bryn, A., & Bakkestuen, V. (2015).
   Opportunities for improved distribution modelling practice via a strict
   maximum likelihood interpretation of MaxEnt. Ecography, 38(2), 172-183.
 
-Økland, R.H., Økland, T. & Rydgren, K. (2001)
+Oekland, R.H., Oekland, T. & Rydgren, K. (2001)
   Vegetation-environment relationships of boreal spruce swamp forests in
-  Østmarka Nature Reserve, SE Norway. Natural History Museums and Botanical
+  Oestmarka Nature Reserve, SE Norway. Natural History Museums and Botanical
   Garden, University of Oslo, Oslo.
 }
 
