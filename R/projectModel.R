@@ -52,7 +52,7 @@ projectModel <- function(data, transformation, model, clamping = FALSE) {
     evnames <- unique(unname(sapply(dvnamesni, function(x) {
     colnames(data)[startsWith(x, colnames(data))]
     })))
-    evnames <- sapply(evnames, best.match, b = dvnamesni)
+    evnames <- sapply(evnames, .best.match, b = dvnamesni)
 
   Ranges <- lapply(evnames, function(x) {
     evdata <- data[, x]

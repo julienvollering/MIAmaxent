@@ -11,19 +11,17 @@
 #'
 #' The \code{ev} specified in \code{dvdata} must not be an interaction term.
 #'
-#' @param rv Response variable vector used to train the model. The RV should
-#'   represent presence/background data, coded as: 1/NA.
+#' @param data Data frame of training data, with response variable (1/NA) in the
+#'   first column and explanatory variables in subsequenct columns.
 #' @param ev Name or list index of the explanatory variable in \code{dvdata} for
 #'   which the response curve is to be generated. Interaction terms not allowed.
-#' @param evdata Explanatory variables used to train the model, in their
-#'   original (untransformed) form. Data frame.
-#' @param dvdata Derived variables used to train the model. Named list of data
-#'   frames, with each data frame containing 1 or more DVs for a given EV. E.g.
-#'   output [[1]] of \code{selectEV}.
-#' @param writedir The directory to which Maxent files will be written during
-#'   subset selection of DVs. Defaults to the working directory.
+#' @param dvdata List of derived variables used to train the model, with each
+#'   list item a data frame containing 1 or more DVs for a given EV. E.g. output
+#'   [[1]] of \code{selectEV}.
+#' @param dir The directory to which Maxent files will be written. Defaults to
+#'   the working directory.
 #' @param jarpath The pathway to the maxent.jar executable jar file. If
-#'   unspecified, the function looks for the file in the writedir.
+#'   unspecified, the function looks for the file in \code{dir}.
 #'
 #' @return In addition to the graphical output, a data frame containing the
 #'   plotted data is returned.
@@ -31,41 +29,41 @@
 #' @export
 
 
-plotResp <- function(rv, ev, evdata, dvdata, writedir = NULL, jarpath = NULL) {
+plotResp <- function(data, ev, dvdata, dir = NULL, jarpath = NULL) {
 
-  altrMaxent:::.binaryrvcheck(rv)
+  .binaryrvcheck(data[, 1])
 
-  if (is.null(writedir)) {
-    writedir <- getwd()
+  if (is.null(dir)) {
+    dir <- getwd()
   }
 
   if (is.null(jarpath)) {
-    jarpath <- paste(writedir, "\\maxent.jar", sep="")
+    jarpath <- paste(dir, "\\maxent.jar", sep="")
   }
 
   if (file.exists(jarpath) == F) {
-    stop("maxent.jar file must be present in writedir, or its pathway must be
+    stop("maxent.jar file must be present in dir, or its pathway must be
        specified by the jarpath argument. \n ", call. = FALSE)
   }
 
-  dir <- paste(writedir, "\\plotResp", sep="")
+  dir <- paste(dir, "\\plotResp", sep="")
   dir.create(dir, showWarnings = FALSE)
   evname <- names(dvdata[ev])
-  if (!(evname %in% names(evdata))) {
-    stop("The specified EV must be present in the original evdata.
+  if (!(evname %in% colnames(data))) {
+    stop("The specified EV must be present in the untransformed data.
        E.g. interaction terms between multiple EVs are not supported. \n ",
       call. = FALSE)
   }
   modeldir <- paste(dir, "\\response", evname, sep="")
   if (file.exists(modeldir)) {
-    stop("The response to this EV has already been evaluated in the given writedir.
-       Please select a different EV or specify a different writedir. \n ",
+    stop("The response to this EV has already been evaluated in the given dir.
+       Please select a different EV or specify a different dir. \n ",
       call. = FALSE)
   } else {
     dir.create(modeldir)
   }
 
-  df <- data.frame("RV" = rv, "X" = -9999, "Y" = -9999, dvdata[[ev]])
+  df <- data.frame("RV" = data[, 1], "X" = -9999, "Y" = -9999, dvdata[[ev]])
   samplesdf <- na.omit(df)
   environlayersdf <- df
   csvfiles <- paste0(modeldir, c("\\samples.csv", "\\environlayers.csv"))
@@ -93,7 +91,7 @@ plotResp <- function(rv, ev, evdata, dvdata, writedir = NULL, jarpath = NULL) {
   system(paste(javacommand), wait=T)
 
   output <- read.csv(paste(modeldir, "\\1_backgroundPredictions.csv", sep=""))
-  plotdf <- data.frame(evdata[,evname], output[,3]*length(output[,3]))
+  plotdf <- data.frame(data[,evname], output[,3]*length(output[,3]))
   colnames(plotdf) <- c(evname, "PRO")
   plotdf <- plotdf[order(plotdf[,evname]),]
 
