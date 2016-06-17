@@ -17,6 +17,10 @@
 #' @param file pathway to the .lambdas file of a given Maxent model
 #'
 #' @return returns an R function (object).
+#'
+#' @keywords internal
+#'
+#' @export
 
 
 modelfromlambdasutil <- function(file) {

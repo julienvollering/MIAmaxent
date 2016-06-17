@@ -28,9 +28,10 @@ subset selection of spline variables. Defaults to the working directory.}
 unspecified, the function looks for the file in the writedir.}
 }
 \value{
-List of dataframes, with each data frame containing the derived
-  variables produced for a given explanatory variable by transformation.
-  Dimensions: [[EV]] [N, DV].
+List of length 2. The first item is a list of data frames, with each
+  containing the derived variables produced for a given explanatory variable.
+  The second item is a list of all the transformation functions used to
+  produce the derived variables.
 }
 \description{
 \code{deriveVars} produces derived variables from explanatory variables by

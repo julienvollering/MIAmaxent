@@ -2,6 +2,7 @@
 
 export(deriveVars)
 export(modelFromLambdas)
+export(modelfromlambdasutil)
 export(plotFOP)
 export(plotResp)
 export(projectModel)

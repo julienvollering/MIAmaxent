@@ -33,9 +33,10 @@
 #' @param jarpath The pathway to the maxent.jar executable jar file. If
 #'   unspecified, the function looks for the file in the writedir.
 #'
-#' @return List of dataframes, with each data frame containing the derived
-#'   variables produced for a given explanatory variable by transformation.
-#'   Dimensions: [[EV]] [N, DV].
+#' @return List of length 2. The first item is a list of data frames, with each
+#'   containing the derived variables produced for a given explanatory variable.
+#'   The second item is a list of all the transformation functions used to
+#'   produce the derived variables.
 #'
 #' @references Halvorsen, R., Mazzoni, S., Bryn, A., & Bakkestuen, V. (2015).
 #'   Opportunities for improved distribution modelling practice via a strict

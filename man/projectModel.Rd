@@ -8,7 +8,7 @@ projectModel(newdata, transf, model, clamping = FALSE)
 }
 \arguments{
 \item{newdata}{Data frame containing data for all the explanatory variables
-included in the model.}
+(EVs) included in the model, with column names matching EV names.}
 
 \item{transf}{Pathway to the .Rdata file containing the named parameterized
 transformations used in the model. This file is saved as a result of the
