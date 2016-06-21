@@ -18,8 +18,7 @@
     stop("The response variable must be numeric or integer class: presence (1)
       and background (NA/0)", call. = FALSE)
   }
-  }
-
+}
 
 #' Best prefix match.
 #'

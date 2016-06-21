@@ -33,20 +33,14 @@ plotResp <- function(data, ev, dvdata, dir = NULL, jarpath = NULL) {
 
   .binaryrvcheck(data[, 1])
 
-  if (is.null(dir)) {
-    dir <- getwd()
-  }
-
-  if (is.null(jarpath)) {
-    jarpath <- paste(dir, "\\maxent.jar", sep="")
-  }
-
+  if (is.null(dir)) {dir <- getwd()}
+  if (is.null(jarpath)) {jarpath <- file.path(dir, "maxent.jar")}
   if (file.exists(jarpath) == F) {
     stop("maxent.jar file must be present in dir, or its pathway must be
        specified by the jarpath argument. \n ", call. = FALSE)
   }
 
-  dir <- paste(dir, "\\plotResp", sep="")
+  dir <- file.path(dir, "plotResp")
   dir.create(dir, showWarnings = FALSE)
   evname <- names(dvdata[ev])
   if (!(evname %in% colnames(data))) {
@@ -54,7 +48,7 @@ plotResp <- function(data, ev, dvdata, dir = NULL, jarpath = NULL) {
        E.g. interaction terms between multiple EVs are not supported. \n ",
       call. = FALSE)
   }
-  modeldir <- paste(dir, "\\response", evname, sep="")
+  modeldir <- file.path(dir, paste0("response", evname))
   if (file.exists(modeldir)) {
     stop("The response to this EV has already been evaluated in the given dir.
        Please select a different EV or specify a different dir. \n ",
@@ -66,7 +60,7 @@ plotResp <- function(data, ev, dvdata, dir = NULL, jarpath = NULL) {
   df <- data.frame("RV" = data[, 1], "X" = -9999, "Y" = -9999, dvdata[[ev]])
   samplesdf <- na.omit(df)
   environlayersdf <- df
-  csvfiles <- paste0(modeldir, c("\\samples.csv", "\\environlayers.csv"))
+  csvfiles <- file.path(modeldir, c("samples.csv", "environlayers.csv"))
   write.csv(samplesdf, csvfiles[1], row.names = F)
   write.csv(environlayersdf, csvfiles[2], row.names = F)
 
@@ -90,16 +84,32 @@ plotResp <- function(data, ev, dvdata, dir = NULL, jarpath = NULL) {
   javacommand <- gsub("\\\\","/", command)
   system(paste(javacommand), wait=T)
 
-  output <- read.csv(paste(modeldir, "\\1_backgroundPredictions.csv", sep=""))
+  output <- read.csv(file.path(modeldir, "1_backgroundPredictions.csv"))
   plotdf <- data.frame(data[,evname], output[,3]*length(output[,3]))
-  colnames(plotdf) <- c(evname, "PRO")
-  plotdf <- plotdf[order(plotdf[,evname]),]
+  colnames(plotdf) <- c("EV", "PRO")
 
-  plot(plotdf[,"PRO"] ~ plotdf[,evname], pch = 20,
-    xlab = evname, ylab = "Probability Ratio Output (PRO)",
-    main = paste0("Single-effect model response to ", evname))
-  if (class(plotdf[,evname]) %in% c("numeric", "integer")) {
-    lines(plotdf[,"PRO"] ~ plotdf[,evname], col="red", lwd = 2)
+  if (class(plotdf[, "EV"]) %in% c("numeric", "integer")) {
+    smoothwindow <- 3
+    plot(plotdf[, "PRO"] ~ plotdf[, "EV"], pch = 20, col="grey",
+      xlab = evname, ylab = "Probability Ratio Output (PRO)",
+      main = paste0("Single-effect model response to ", evname))
+
+    intervals <- min(c(ceiling(nrow(plotdf) / 50), 100))
+    intwidth <- (max(plotdf[, 1]) - min(plotdf[, 1])) / intervals
+    cutpts <- seq(min(plotdf[, 1]), max(plotdf[, 1]), by = intwidth)
+    plotdf$int <- Hmisc::cut2(plotdf[, 1], cuts = cutpts, oneval = FALSE)
+    grouped <- dplyr::group_by(plotdf, int)
+    plotdf <- as.data.frame(dplyr::summarise(grouped, n = n(), intEV = mean(EV, na.rm = TRUE),
+      intPRO = mean(PRO, na.rm = TRUE)))
+    plotdf$smoothPRO <- .ewma(plotdf$intPRO, smoothwindow)
+    lines(plotdf$smoothPRO ~ plotdf$intEV, col="red", lwd = 2)
+    abline(h = 1, lty = 3)
+  }
+
+  if (class(plotdf[, "EV"]) %in% c("factor", "character")) {
+    plot(plotdf[,"PRO"] ~ plotdf[, evname], pch = 20,
+      xlab = evname, ylab = "Probability Ratio Output (PRO)",
+      main = paste0("Single-effect model response to ", evname))
   }
 
   return(plotdf)
