@@ -4,15 +4,17 @@
 \alias{projectModel}
 \title{Project model to data.}
 \usage{
-projectModel(newdata, transf, model, clamping = FALSE)
+projectModel(data, transformation, model, clamping = FALSE)
 }
 \arguments{
-\item{newdata}{Data frame containing data for all the explanatory variables
+\item{data}{Data frame containing data for all the explanatory variables
 (EVs) included in the model, with column names matching EV names.}
 
-\item{transf}{Pathway to the .Rdata file containing the named parameterized
-transformations used in the model. This file is saved as a result of the
-\code{deriveVars} function.}
+\item{transformation}{Pathway to the .Rdata file containing the named
+parameterized transformations used in the model. This file is saved as a
+result of the \code{\link{deriveVars}} function. Alternatively, a list
+object containing all of the named transformations (e.g. the second item in
+the list returned by \code{\link{deriveVars}}).}
 
 \item{model}{Pathway to the .lambdas file of the model in question. This file
 is saved as a result of the \code{selectEV} function.}
@@ -29,5 +31,10 @@ is saved as a result of the \code{selectEV} function.}
 model for any points where values of the explanatory variables in the model
 are known.The transformations performed on the explanatory variables to build
 the model must be specified.
+}
+\details{
+Missing data (NA) for a continuous variable will result in NA output for that
+point. Missing data for a categorical variable is treated as belonging to
+none of the categories.
 }
 

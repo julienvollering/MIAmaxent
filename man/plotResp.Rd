@@ -4,27 +4,24 @@
 \alias{plotResp}
 \title{Plot model response across a given explanatory variable.}
 \usage{
-plotResp(rv, ev, evdata, dvdata, writedir = NULL, jarpath = NULL)
+plotResp(data, ev, dvdata, dir = NULL, jarpath = NULL)
 }
 \arguments{
-\item{rv}{Response variable vector used to train the model. The RV should
-represent presence/background data, coded as: 1/NA.}
+\item{data}{Data frame of training data, with response variable (1/NA) in the
+first column and explanatory variables in subsequenct columns.}
 
 \item{ev}{Name or list index of the explanatory variable in \code{dvdata} for
 which the response curve is to be generated. Interaction terms not allowed.}
 
-\item{evdata}{Explanatory variables used to train the model, in their
-original (untransformed) form. Data frame.}
+\item{dvdata}{List of derived variables used to train the model, with each
+list item a data frame containing 1 or more DVs for a given EV. E.g. output
+[[1]] of \code{selectEV}.}
 
-\item{dvdata}{Derived variables used to train the model. Named list of data
-frames, with each data frame containing 1 or more DVs for a given EV. E.g.
-output [[1]] of \code{selectEV}.}
-
-\item{writedir}{The directory to which Maxent files will be written during
-subset selection of DVs. Defaults to the working directory.}
+\item{dir}{The directory to which Maxent files will be written. Defaults to
+the working directory.}
 
 \item{jarpath}{The pathway to the maxent.jar executable jar file. If
-unspecified, the function looks for the file in the writedir.}
+unspecified, the function looks for the file in \code{dir}.}
 }
 \value{
 In addition to the graphical output, a data frame containing the
