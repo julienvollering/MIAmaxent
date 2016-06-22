@@ -29,7 +29,8 @@
 #' @export
 
 
-plotResp <- function(data, ev, dvdata, dir = NULL, jarpath = NULL) {
+plotResp <- function(data, ev, dvdata, dir = NULL, jarpath = NULL,
+                     logscale = FALSE) {
 
   .binaryrvcheck(data[, 1])
 
@@ -82,36 +83,43 @@ plotResp <- function(data, ev, dvdata, dir = NULL, jarpath = NULL) {
     " environmentallayers=", "\"", csvfiles[2], "\"",
     " outputdirectory=", "\"", modeldir, "\\", "\"")
   javacommand <- gsub("\\\\","/", command)
-  system(paste(javacommand), wait=T)
+  system(paste(javacommand), wait = TRUE)
 
   output <- read.csv(file.path(modeldir, "1_backgroundPredictions.csv"))
-  plotdf <- data.frame(data[,evname], output[,3]*length(output[,3]))
-  colnames(plotdf) <- c("EV", "PRO")
+  respPts <- data.frame(data[,evname], output[,3]*length(output[,3]))
+  colnames(respPts) <- c("EV", "PRO")
+  if (logscale == TRUE) {respPts$PRO <- log10(respPts$PRO)}
 
-  if (class(plotdf[, "EV"]) %in% c("numeric", "integer")) {
-    smoothwindow <- 3
-    plot(plotdf[, "PRO"] ~ plotdf[, "EV"], pch = 20, col="grey",
-      xlab = evname, ylab = "Probability Ratio Output (PRO)",
-      main = paste0("Single-effect model response to ", evname))
+  if (class(respPts[, 1]) %in% c("numeric", "integer")) {
+    plot(respPts[, 2] ~ respPts[, 1], pch = 20, col="grey",
+      main = paste0("Single-effect model response to ", evname), xlab = evname,
+      ylab = ifelse(logscale == TRUE, "log Probability Ratio Output (logPRO)",
+        "Probability Ratio Output (PRO)"))
 
-    intervals <- min(c(ceiling(nrow(plotdf) / 50), 100))
-    intwidth <- (max(plotdf[, 1]) - min(plotdf[, 1])) / intervals
-    cutpts <- seq(min(plotdf[, 1]), max(plotdf[, 1]), by = intwidth)
-    plotdf$int <- Hmisc::cut2(plotdf[, 1], cuts = cutpts, oneval = FALSE)
-    grouped <- dplyr::group_by(plotdf, int)
-    plotdf <- as.data.frame(dplyr::summarise(grouped, n = n(), intEV = mean(EV, na.rm = TRUE),
+    intervals <- min(c(ceiling(nrow(respPts) / 50), 100))
+    intwidth <- (max(respPts[, 1]) - min(respPts[, 1])) / intervals
+    cutpts <- seq(min(respPts[, 1]), max(respPts[, 1]), by = intwidth)
+    respPts$int <- Hmisc::cut2(respPts[, 1], cuts = cutpts, oneval = FALSE)
+    grouped <- dplyr::group_by(respPts, int)
+    respLine <- as.data.frame(dplyr::summarise(grouped, n = n(),
+      intEV = mean(EV, na.rm = TRUE),
       intPRO = mean(PRO, na.rm = TRUE)))
-    plotdf$smoothPRO <- .ewma(plotdf$intPRO, smoothwindow)
-    lines(plotdf$smoothPRO ~ plotdf$intEV, col="red", lwd = 2)
-    abline(h = 1, lty = 3)
+    respLine$smoothPRO <- .ewma(respLine$intPRO, 3)
+    lines(respLine$smoothPRO ~ respLine$intEV, col="red", lwd = 2)
+
+    if (logscale == TRUE) {abline(h = 0, lty = 3)} else {abline(h = 1, lty = 3)}
+
+    result <- list("respPts" = respPts, "respLine" = respLine)
   }
 
-  if (class(plotdf[, "EV"]) %in% c("factor", "character")) {
-    plot(plotdf[,"PRO"] ~ plotdf[, evname], pch = 20,
-      xlab = evname, ylab = "Probability Ratio Output (PRO)",
-      main = paste0("Single-effect model response to ", evname))
+  if (class(respPts[, 1]) %in% c("factor", "character")) {
+    plot(respPts[, 2] ~ respPts[, 1],
+      main = paste0("Single-effect model response to ", evname), xlab = evname,
+      ylab = ifelse(logscale == TRUE, "log Probability Ratio Output (logPRO)",
+        "Probability Ratio Output (PRO)"))
+    if (logscale == TRUE) {abline(h = 0, lty = 3)} else {abline(h = 1, lty = 3)}
+    result <- respPts
   }
 
-  return(plotdf)
-
+  return(result)
 }
