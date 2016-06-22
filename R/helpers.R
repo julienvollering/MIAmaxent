@@ -55,7 +55,7 @@
 .fopoptimum <- function(data, smoothwindow = 5, intervals = NULL) {
 
   df <- data.frame(RV = data[, 1], EV = data[, 2])
-  altrMaxent:::.binaryrvcheck(df[, 1])
+  .binaryrvcheck(df[, 1])
   df[, 1][is.na(df[, 1])] <- 0
 
   if (!class(df[, 2]) %in% c("numeric", "integer")) {
@@ -69,10 +69,21 @@
   grouped <- dplyr::group_by(df, int)
   FOPdf <- dplyr::summarise(grouped, intEV = mean(EV), intRV = mean(RV, na.rm=F))
 
-  FOPdf$smoothRV <- altrMaxent:::.ewma(FOPdf$intRV, smoothwindow)
+  FOPdf$smoothRV <- .ewma(FOPdf$intRV, smoothwindow)
   maxRV <- FOPdf$smoothRV
   maxRV[is.na(maxRV)] <- FOPdf$intRV[is.na(maxRV)]
   EVoptimum <- FOPdf$intEV[which(maxRV == max(maxRV))]
+
+  while (length(EVoptimum) > 1) {
+    intervals <- intervals - 1
+    df$int <- .reg.interval(df[, 2], intervals)
+    grouped <- dplyr::group_by(df, int)
+    FOPdf <- dplyr::summarise(grouped, intEV = mean(EV), intRV = mean(RV, na.rm=F))
+    FOPdf$smoothRV <- .ewma(FOPdf$intRV, smoothwindow)
+    maxRV <- FOPdf$smoothRV
+    maxRV[is.na(maxRV)] <- FOPdf$intRV[is.na(maxRV)]
+    EVoptimum <- FOPdf$intEV[which(maxRV == max(maxRV))]
+  }
 
   return(EVoptimum)
 }

@@ -54,8 +54,8 @@ plotFOP <- function(data, EV, smoothwindow = 5, EVranging = FALSE,
     df$int <- .reg.interval(df[, 2], intervals)
 
     grouped <- dplyr::group_by(df, int)
-    FOPdf <- dplyr::summarise(grouped, n = n(), intEV = mean(EV),
-      intRV = mean(RV, na.rm=F))
+    FOPdf <- as.data.frame(dplyr::summarise(grouped, n = n(), intEV = mean(EV),
+      intRV = mean(RV, na.rm=F)))
 
     FOPdf$smoothRV <- .ewma(FOPdf$intRV, smoothwindow)
 
@@ -65,10 +65,21 @@ plotFOP <- function(data, EV, smoothwindow = 5, EVranging = FALSE,
 
     maxRV <- FOPdf$smoothRV
     maxRV[is.na(maxRV)] <- FOPdf$intRV[is.na(maxRV)]
+    EVoptimum = FOPdf$intEV[which(maxRV == max(maxRV))]
 
-    FOP <- list(EVoptimum = FOPdf$intEV[which(maxRV == max(maxRV))],
-      FOPdata = data.frame(n = FOPdf$n, meanEV = FOPdf$intEV,
-        freqRV = FOPdf$intRV, smooth_freqRV = FOPdf$smoothRV))
+    while (length(EVoptimum) > 1) {
+      intervals <- intervals - 1
+      df$int <- .reg.interval(df[, 2], intervals)
+      grouped <- dplyr::group_by(df, int)
+      FOPdf <- dplyr::summarise(grouped, intEV = mean(EV),
+        intRV = mean(RV, na.rm=F))
+      FOPdf$smoothRV <- .ewma(FOPdf$intRV, smoothwindow)
+      maxRV <- FOPdf$smoothRV
+      maxRV[is.na(maxRV)] <- FOPdf$intRV[is.na(maxRV)]
+      EVoptimum <- FOPdf$intEV[which(maxRV == max(maxRV))]
+    }
+
+    FOP <- list(EVoptimum = EVoptimum, FOPdata = FOPdf)
   }
 
   if (class(df[, 2]) %in% c("factor", "character")) {
