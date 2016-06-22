@@ -4,7 +4,8 @@
 \alias{plotResp}
 \title{Plot model response across a given explanatory variable.}
 \usage{
-plotResp(data, ev, dvdata, dir = NULL, jarpath = NULL)
+plotResp(data, ev, dvdata, dir = NULL, jarpath = NULL, logscale = FALSE,
+  ...)
 }
 \arguments{
 \item{data}{Data frame of training data, with response variable (1/NA) in the
@@ -22,10 +23,15 @@ the working directory.}
 
 \item{jarpath}{The pathway to the maxent.jar executable jar file. If
 unspecified, the function looks for the file in \code{dir}.}
+
+\item{logscale}{logical. Plot the common logarithm of PRO rather than PRO.}
+
+\item{...}{Arguments to be passed to \code{plot} to control the appearance of
+the points in the scatterplot. For example: \itemize{ \item \code{cex} for
+size \item \code{col} for color \item \code{pch} for type }}
 }
 \value{
-In addition to the graphical output, a data frame containing the
-  plotted data is returned.
+In addition to the graphical output, the plotted data is returned.
 }
 \description{
 \code{plotResp} plots  the response of a given Maxent model over any of the

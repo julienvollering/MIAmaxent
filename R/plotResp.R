@@ -22,15 +22,18 @@
 #'   the working directory.
 #' @param jarpath The pathway to the maxent.jar executable jar file. If
 #'   unspecified, the function looks for the file in \code{dir}.
+#' @param logscale logical. Plot the common logarithm of PRO rather than PRO.
+#' @param ... Arguments to be passed to \code{plot} to control the appearance of
+#'   the points in the scatterplot. For example: \itemize{ \item \code{cex} for
+#'   size \item \code{col} for color \item \code{pch} for type }
 #'
-#' @return In addition to the graphical output, a data frame containing the
-#'   plotted data is returned.
+#' @return In addition to the graphical output, the plotted data is returned.
 #'
 #' @export
 
 
 plotResp <- function(data, ev, dvdata, dir = NULL, jarpath = NULL,
-                     logscale = FALSE) {
+                     logscale = FALSE, ...) {
 
   .binaryrvcheck(data[, 1])
 
@@ -85,7 +88,7 @@ plotResp <- function(data, ev, dvdata, dir = NULL, jarpath = NULL,
   if (logscale == TRUE) {respPts$PRO <- log10(respPts$PRO)}
 
   if (class(respPts[, 1]) %in% c("numeric", "integer")) {
-    plot(respPts[, 2] ~ respPts[, 1], pch = 20, col="grey",
+    plot(respPts[, 2] ~ respPts[, 1], ...,
       main = paste0("Single-effect model response to ", evname), xlab = evname,
       ylab = ifelse(logscale == TRUE, "log Probability Ratio Output (logPRO)",
         "Probability Ratio Output (PRO)"))
@@ -107,7 +110,7 @@ plotResp <- function(data, ev, dvdata, dir = NULL, jarpath = NULL,
   }
 
   if (class(respPts[, 1]) %in% c("factor", "character")) {
-    plot(respPts[, 2] ~ respPts[, 1],
+    plot(respPts[, 2] ~ respPts[, 1], ...,
       main = paste0("Single-effect model response to ", evname), xlab = evname,
       ylab = ifelse(logscale == TRUE, "log Probability Ratio Output (logPRO)",
         "Probability Ratio Output (PRO)"))
