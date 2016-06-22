@@ -46,7 +46,7 @@ plotResp <- function(data, EV, dvdata, dir = NULL, jarpath = NULL,
 
   dir <- file.path(dir, "plotResp")
   dir.create(dir, showWarnings = FALSE)
-  evname <- names(dvdata[ev])
+  evname <- names(dvdata[EV])
   if (!(evname %in% colnames(data))) {
     stop("The specified EV must be present in the untransformed data.
        E.g. interaction terms between multiple EVs are not supported. \n ",
@@ -55,28 +55,25 @@ plotResp <- function(data, EV, dvdata, dir = NULL, jarpath = NULL,
   modeldir <- file.path(dir, paste0("response", evname))
   dir.create(modeldir, showWarnings = FALSE)
 
-  .runjar(data[, 1], dvdata[[ev]], maxbkg = nrow(data) + 1, modeldir, jarpath)
+  .runjar(data[, 1], dvdata[[EV]], maxbkg = nrow(data) + 1, modeldir, jarpath)
 
   output <- read.csv(file.path(modeldir, "1_backgroundPredictions.csv"))
-  respPts <- data.frame(data[,evname], output[,3]*length(output[,3]))
-  colnames(respPts) <- c("EV", "PRO")
+  respPts <- data.frame(EV = data[, evname], PRO = output[,3]*length(output[,3]))
   if (logscale == TRUE) {respPts$PRO <- log10(respPts$PRO)}
 
   if (class(respPts[, 1]) %in% c("numeric", "integer")) {
     plot(respPts[, 2] ~ respPts[, 1], ...,
-      main = paste0("Single-effect model response to ", evname), xlab = evname,
+      main = paste0("Single-effect response plot: ", evname), xlab = evname,
       ylab = ifelse(logscale == TRUE, "log Probability Ratio Output (logPRO)",
         "Probability Ratio Output (PRO)"))
 
     intervals <- min(c(ceiling(nrow(respPts) / 50), 100))
-    intwidth <- (max(respPts[, 1]) - min(respPts[, 1])) / intervals
-    cutpts <- seq(min(respPts[, 1]), max(respPts[, 1]), by = intwidth)
-    respPts$int <- Hmisc::cut2(respPts[, 1], cuts = cutpts, oneval = FALSE)
+    respPts$int <- .reg.interval(respPts[, 1], intervals)
     grouped <- dplyr::group_by(respPts, int)
     respLine <- as.data.frame(dplyr::summarise(grouped, n = n(),
       intEV = mean(EV, na.rm = TRUE),
       intPRO = mean(PRO, na.rm = TRUE)))
-    respLine$smoothPRO <- .ewma(respLine$intPRO, 3)
+    respLine$smoothPRO <- .ewma(respLine$intPRO, 5)
     lines(respLine$smoothPRO ~ respLine$intEV, col="red", lwd = 2)
 
     if (logscale == TRUE) {abline(h = 0, lty = 3)} else {abline(h = 1, lty = 3)}
@@ -85,12 +82,14 @@ plotResp <- function(data, EV, dvdata, dir = NULL, jarpath = NULL,
   }
 
   if (class(respPts[, 1]) %in% c("factor", "character")) {
-    plot(respPts[, 2] ~ respPts[, 1], ...,
-      main = paste0("Single-effect model response to ", evname), xlab = evname,
+    respBar <- as.data.frame(dplyr::summarise(dplyr::group_by(respPts, EV),
+      n = n(), intPRO = mean(PRO, na.rm = TRUE)))
+    barplot(respBar[, 3], names.arg = respBar[, 1], ...,
+      main = paste0("Single-effect response plot: ", evname), xlab = evname,
       ylab = ifelse(logscale == TRUE, "log Probability Ratio Output (logPRO)",
         "Probability Ratio Output (PRO)"))
     if (logscale == TRUE) {abline(h = 0, lty = 3)} else {abline(h = 1, lty = 3)}
-    result <- respPts
+    result <- respBar
   }
 
   return(result)

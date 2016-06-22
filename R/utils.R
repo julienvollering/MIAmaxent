@@ -20,6 +20,7 @@
   }
 }
 
+
 #' Best prefix match.
 #'
 #' Return only the string in 'a' which best matches any of the strings in 'b'
@@ -29,11 +30,24 @@
 #'
 #' @return single character string
 
-
 .best.match <- function(a, b) {
   score <- sapply(a, function(a) {
     reg <- regexpr(a, b)
     max(attr(reg, "match.length"))
   })
   a[which.max(score)]
+}
+
+
+#' Make regular intervals
+#'
+#' @param a Numeric vector
+#' @param b number of intervals
+#'
+#' @return factor variable with 1 level for each interval
+
+.reg.interval <- function(a, b) {
+  intwidth <- (max(a) - min(a)) / b
+  cutpts <- seq(min(a), max(a), by = intwidth)
+  Hmisc::cut2(a, cuts = cutpts, oneval = FALSE)
 }
