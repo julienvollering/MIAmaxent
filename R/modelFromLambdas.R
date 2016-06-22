@@ -15,36 +15,27 @@
 #' names in the .lambdas file used to reproduce the model.
 #'
 #' @param file pathway to the .lambdas file of a given Maxent model
-#' @param name Specifies the name of the function to be returned. Defaults to
-#'   the basename of the .lambdas file.
 #'
 #' @return returns an R function (object).
 #'
-#' @examples
-#' \dontrun{
-#' modelFromLambdas("D:\\tutorial-data\\bradypus_variegatus.lambdas", name="mymodel")
-#' mymodel(projection.df)
-#' }
+#' @keywords internal
 #'
 #' @export
-#' @keywords internal
 
-modelFromLambdas <- function(file, name = NULL) {
 
-  if (is.null(name)) {
-    name <- sub(".lambdas", "", basename(file))
-  }
+modelfromlambdas <- function(file) {
 
   lambdas <- read.csv(file, header = FALSE)
-  dvrows <- lambdas[1:(nrow(lambdas)-4),]
+  dvrows <- lambdas[1:(nrow(lambdas)-4), ]
   m <- nrow(dvrows)
-  thetas <- dvrows[,2]
-  xmins <- dvrows[,3]
-  xmaxs <- dvrows[,4]
-  linPredNorm <- lambdas[nrow(lambdas)-3,2]
-  densNorm <- lambdas[nrow(lambdas)-2,2]
+  thetas <- dvrows[, 2]
+  xmins <- dvrows[, 3]
+  xmaxs <- dvrows[, 4]
+  linPredNorm <- lambdas[nrow(lambdas)-3, 2]
+  densNorm <- lambdas[nrow(lambdas)-2, 2]
+  numbkgpts <- lambdas[nrow(lambdas)-1, 2]
   model <- function(X) {
-    matchorder <- match(as.character(dvrows[,1]), colnames(X))
+    matchorder <- match(as.character(dvrows[, 1]), colnames(X))
 
     if (ncol(X) != m) {
       stop("Input must have as many columns as there are variables in the model",
@@ -52,20 +43,23 @@ modelFromLambdas <- function(file, name = NULL) {
     }
 
     if (length((matchorder[!is.na(matchorder)])) < m) {
-      stop("Input column names must match the names of the variables in the model",
+      stop("Input column names must match the names of variables in the model",
         call. = F)
     }
 
-    orderedX <- as.matrix(X[,matchorder])
+    orderedX <- as.matrix(X[, matchorder])
     thetaX <- matrix(nrow = nrow(orderedX), ncol = m)
     for (j in 1:nrow(orderedX)) {
       for (i in 1:m) {
-        thetaX[j,i] <- thetas[i]*((orderedX[j,i]-xmins[i])/(xmaxs[i]-xmins[i]))
+        thetaX[j, i] <- thetas[i] * ((orderedX[j, i] - xmins[i]) /
+            (xmaxs[i] - xmins[i]))
       }
     }
-    rawoutput <- apply(thetaX, 1, function(x) ((exp(sum(x)-linPredNorm))/densNorm))
-    projection <- cbind(orderedX, rawoutput)
+    rawoutput <- apply(thetaX, 1, function(x) {(exp(sum(x) - linPredNorm)) /
+        densNorm})
+    PROutput <- rawoutput * numbkgpts
+    projection <- as.data.frame(cbind(PROutput, orderedX))
     return(projection)
   }
-  assign(name, model, pos = ".GlobalEnv")
+  return(model)
 }

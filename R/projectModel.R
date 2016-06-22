@@ -87,7 +87,7 @@ projectModel <- function(data, transformation, model, clamping = FALSE) {
   names(dvdatai) <- dvnamesi
 
   dvdata <- data.frame(c(dvdatani, dvdatai), check.names = FALSE)
-  modelfunction <- modelfromlambdasutil(model)
+  modelfunction <- modelfromlambdas(model)
   PRO <- modelfunction(dvdata)[, 1]
   Output <- cbind(PRO, data)
 
