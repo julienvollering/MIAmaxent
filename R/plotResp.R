@@ -50,13 +50,7 @@ plotResp <- function(data, ev, dvdata, dir = NULL, jarpath = NULL,
       call. = FALSE)
   }
   modeldir <- file.path(dir, paste0("response", evname))
-  if (file.exists(modeldir)) {
-    stop("The response to this EV has already been evaluated in the given dir.
-       Please select a different EV or specify a different dir. \n ",
-      call. = FALSE)
-  } else {
-    dir.create(modeldir)
-  }
+  dir.create(modeldir, showWarnings = FALSE)
 
   df <- data.frame("RV" = data[, 1], "X" = -9999, "Y" = -9999, dvdata[[ev]])
   samplesdf <- na.omit(df)
