@@ -57,7 +57,7 @@ deriveVars <- function(data,
                        allsplines = FALSE, writedir = NULL, jarpath = NULL) {
 
   if (any(c("HF", "HR", "T") %in% transformtype) && allsplines == F) {
-    altrMaxent:::.binaryrvcheck(data[,1])
+    altrMaxent:::.binaryrvcheck(data[, 1])
   }
 
   if (is.null(writedir)) {
@@ -68,7 +68,7 @@ deriveVars <- function(data,
     jarpath <- paste(writedir, "\\maxent.jar", sep="")
   }
 
-  if (file.exists(jarpath) == F) {
+  if (!file.exists(jarpath)) {
     stop("maxent.jar file must be present in writedir, or its pathway must be
 specified by the jarpath parameter. \n ")
   }
