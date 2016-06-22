@@ -23,12 +23,12 @@
 
 .dvfromevstored <- function(df, transformtype, allsplines, dir, jarpath) {
 
-  rv <- df[,1]
-  ev <- df[,2]
+  rv <- df[, 1]
+  ev <- df[, 2]
   evname <- colnames(df)[2]
   storage <- list()
 
-  if (class(ev) == "numeric" || class(ev) == "integer") {
+  if (class(ev) %in% c("numeric", "integer")) {
 
     if (any(c("HF", "HR", "T") %in% transformtype) && allsplines == F) {
       evdir <- paste(dir, "\\", evname, sep="")
