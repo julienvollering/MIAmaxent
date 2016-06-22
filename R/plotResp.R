@@ -18,9 +18,9 @@
 #' @param dvdata List of derived variables used to train the model, with each
 #'   list item a data frame containing 1 or more DVs for a given EV. E.g. output
 #'   [[1]] of \code{selectEV}.
-#' @param dir The directory to which Maxent files will be written. Defaults to
+#' @param dir Directory to which Maxent files will be written. Defaults to
 #'   the working directory.
-#' @param jarpath The pathway to the maxent.jar executable jar file. If
+#' @param jarpath Pathway to the maxent.jar executable jar file. If
 #'   unspecified, the function looks for the file in \code{dir}.
 #' @param logscale logical. Plot the common logarithm of PRO rather than PRO.
 #' @param ... Arguments to be passed to \code{plot} to control the appearance of
@@ -55,32 +55,7 @@ plotResp <- function(data, ev, dvdata, dir = NULL, jarpath = NULL,
   modeldir <- file.path(dir, paste0("response", evname))
   dir.create(modeldir, showWarnings = FALSE)
 
-  df <- data.frame("RV" = data[, 1], "X" = -9999, "Y" = -9999, dvdata[[ev]])
-  samplesdf <- na.omit(df)
-  environlayersdf <- df
-  csvfiles <- file.path(modeldir, c("samples.csv", "environlayers.csv"))
-  write.csv(samplesdf, csvfiles[1], row.names = F)
-  write.csv(environlayersdf, csvfiles[2], row.names = F)
-
-  jarflags1 <- " removeduplicates=FALSE addsamplestobackground=FALSE"
-  jarflags2 <- " maximumbackground=100000 autofeature=FALSE betamultiplier=0"
-  jarflags3 <- " quadratic=FALSE product=FALSE hinge=FALSE threshold=FALSE"
-  jarflags4 <- " outputformat=raw writebackgroundpredictions=TRUE"
-  jarflags5 <- " outputgrids=FALSE pictures=FALSE"
-  jarflags6 <- " extrapolate=FALSE writemess=FALSE plots=FALSE"
-  jarflags7 <- " doclamp=FALSE writeclampgrid=FALSE"
-  jarflags8 <- " autorun=TRUE threads=8 visible=FALSE warnings=FALSE"
-  jarflags <- paste0(jarflags1, jarflags2, jarflags3, jarflags4, jarflags5,
-    jarflags6, jarflags7, jarflags8)
-
-  command <- paste0("java -mx512m -jar ",
-    "\"", jarpath, "\"",
-    jarflags,
-    " samplesfile=","\"", csvfiles[1], "\"",
-    " environmentallayers=", "\"", csvfiles[2], "\"",
-    " outputdirectory=", "\"", modeldir, "\\", "\"")
-  javacommand <- gsub("\\\\","/", command)
-  system(paste(javacommand), wait = TRUE)
+  .runjar(data[, 1], dvdata[[ev]], maxbkg = nrow(data) + 1, modeldir, jarpath)
 
   output <- read.csv(file.path(modeldir, "1_backgroundPredictions.csv"))
   respPts <- data.frame(data[,evname], output[,3]*length(output[,3]))
