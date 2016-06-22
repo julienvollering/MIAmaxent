@@ -13,7 +13,7 @@
 #'
 #' @param data Data frame of training data, with response variable (1/NA) in the
 #'   first column and explanatory variables in subsequenct columns.
-#' @param ev Name or list index of the explanatory variable in \code{dvdata} for
+#' @param EV Name or list index of the explanatory variable in \code{dvdata} for
 #'   which the response curve is to be generated. Interaction terms not allowed.
 #' @param dvdata List of derived variables used to train the model, with each
 #'   list item a data frame containing 1 or more DVs for a given EV. E.g. output
@@ -32,7 +32,7 @@
 #' @export
 
 
-plotResp <- function(data, ev, dvdata, dir = NULL, jarpath = NULL,
+plotResp <- function(data, EV, dvdata, dir = NULL, jarpath = NULL,
                      logscale = FALSE, ...) {
 
   .binaryrvcheck(data[, 1])
