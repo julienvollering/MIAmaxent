@@ -4,24 +4,24 @@
 \alias{plotResp}
 \title{Plot model response across a given explanatory variable.}
 \usage{
-plotResp(data, ev, dvdata, dir = NULL, jarpath = NULL, logscale = FALSE,
+plotResp(data, EV, dvdata, dir = NULL, jarpath = NULL, logscale = FALSE,
   ...)
 }
 \arguments{
 \item{data}{Data frame of training data, with response variable (1/NA) in the
 first column and explanatory variables in subsequenct columns.}
 
-\item{ev}{Name or list index of the explanatory variable in \code{dvdata} for
+\item{EV}{Name or list index of the explanatory variable in \code{dvdata} for
 which the response curve is to be generated. Interaction terms not allowed.}
 
 \item{dvdata}{List of derived variables used to train the model, with each
 list item a data frame containing 1 or more DVs for a given EV. E.g. output
 [[1]] of \code{selectEV}.}
 
-\item{dir}{The directory to which Maxent files will be written. Defaults to
+\item{dir}{Directory to which Maxent files will be written. Defaults to
 the working directory.}
 
-\item{jarpath}{The pathway to the maxent.jar executable jar file. If
+\item{jarpath}{Pathway to the maxent.jar executable jar file. If
 unspecified, the function looks for the file in \code{dir}.}
 
 \item{logscale}{logical. Plot the common logarithm of PRO rather than PRO.}

@@ -4,7 +4,7 @@
 \alias{plotFOP}
 \title{Plot Frequency of Observed Presence (FOP)}
 \usage{
-plotFOP(data, EV, intervals = 20, smoothwindow = 3, EVranging = FALSE)
+plotFOP(data, EV, smoothwindow = 5, EVranging = FALSE, intervals = NULL)
 }
 \arguments{
 \item{data}{Dataframe containing the response variable in the first column
@@ -15,9 +15,6 @@ information regarding presence/absence data.}
 \item{EV}{Name or column index of the explanatory variable for which to
 calculate FOP.}
 
-\item{intervals}{Number of intervals into which the continuous EV is divided.
-Irrelevant for categorical EVs.}
-
 \item{smoothwindow}{Width of the smoothing window. Represents the number of
 intervals included in an exponentially weighted moving average. Should be
 odd, otherwise the window will be uncentered. Irrelevant for categorical
@@ -26,10 +23,13 @@ EVs.}
 \item{EVranging}{if \code{TRUE}, will range the EV scale to [0,1]. This is
 equivalent to plotting FOP over the linear transformation produced by
 deriveVars. Irrelevant for categorical EVs.}
+
+\item{intervals}{Number of intervals into which the continuous EV is divided.
+Defaults to the minimum of N/50 and 100. Irrelevant for categorical EVs.}
 }
 \value{
-In addition to the graphical output, a list is returned with 1)
-  the EV value at which FOP is highest (\code{EVoptimum}) and 2) a data frame
+In addition to the graphical output, a list is returned with 1) the
+  EV value at which FOP is highest (\code{EVoptimum}) and 2) a data frame
   containing the plotted data (\code{FOPdata}).
 }
 \description{
@@ -46,6 +46,6 @@ the response variable represents presence/absence data, the result is an
 empirical frequency of presence curve, rather than a observed frequency of
 presence curve (see Stoea et al. [in press], Sommerfeltia).
 
-\code{DESCRIPTION Imports}: dplyr, Hmisc, scales
+\code{DESCRIPTION Imports}: dplyr, Hmisc
 }
 
