@@ -8,7 +8,7 @@
 #' @param jarpath Pathway to the maxent.jar executable jar file
 
 .runjar <- function(rv, ev, maxbkg = 10000, dir, jarpath) {
-  df <- data.frame("RV" = rv, "X" = -9999, "Y" = -9999, ev)
+  df <- data.frame("RV" = rv, "X" = -9999, "Y" = -9999, ev, check.names = FALSE)
   samplesdf <- na.omit(df)
   environlayersdf <- df
   csvfiles <- file.path(dir, c("samples.csv", "environlayers.csv"))

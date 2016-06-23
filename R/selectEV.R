@@ -49,7 +49,7 @@
 selectEV <- function(rv, ev, alpha = 0.01, interaction = TRUE, writedir = NULL,
                      jarpath = NULL) {
 
-  altrMaxent:::.binaryrvcheck(rv)
+  .binaryrvcheck(rv)
 
   if (is.null(writedir)) {
     writedir <- getwd()
