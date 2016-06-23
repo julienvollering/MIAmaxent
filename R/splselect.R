@@ -18,41 +18,13 @@
 
   for (i in 1:n) {
     dvname <- names(dv)[[i]]
-    df <- data.frame("RV" = rv, "X" = -9999, "Y" = -9999, dv[[i]])
-    colnames(df)[4] <- dvname
-
     dvdir <- paste(dir, "\\", dvname, sep = "")
     dir.create(dvdir)
+    df <- data.frame(dv[[1]])
+    colnames(df) <- dvname
+    .runjar(rv, df, maxbkg = length(rv) + 1, dvdir, jarpath)
 
-    samplesdf <- na.omit(df)
-    environlayersdf <- df
-
-    csvfiles <- paste(dvdir, c("\\samples.csv", "\\environlayers.csv"), sep="")
-    write.csv(samplesdf, csvfiles[1], row.names = F)
-    write.csv(environlayersdf, csvfiles[2], row.names = F)
-
-    jarflags1 <- " removeduplicates=FALSE addsamplestobackground=FALSE"
-    jarflags2 <- " maximumbackground=100000 autofeature=FALSE betamultiplier=0"
-    jarflags3 <- " quadratic=FALSE product=FALSE hinge=FALSE threshold=FALSE"
-    jarflags4 <- " outputformat=raw writebackgroundpredictions=TRUE"
-    jarflags5 <- " outputgrids=FALSE pictures=FALSE"
-    jarflags6 <- " extrapolate=FALSE writemess=FALSE plots=FALSE"
-    jarflags7 <- " doclamp=FALSE writeclampgrid=FALSE"
-    jarflags8 <- " autorun=TRUE threads=8 visible=FALSE warnings=FALSE"
-    jarflags <- paste(jarflags1, jarflags2, jarflags3, jarflags4, jarflags5,
-      jarflags6, jarflags7, jarflags8, sep="")
-
-    command <- paste("java -mx512m -jar ",
-                     "\"", jarpath, "\"",
-                     jarflags,
-                     " samplesfile=","\"", csvfiles[1], "\"",
-                     " environmentallayers=", "\"", csvfiles[2], "\"",
-                     " outputdirectory=", "\"", dvdir, "\\", "\"",
-                     sep="")
-    javacommand <- gsub("\\\\","/", command)
-    system(paste(javacommand), wait=T)
-
-    maxRes <- read.csv(paste(dvdir, "\\maxentResults.csv", sep=""))
+    maxRes <- read.csv(file.path(dvdir, "maxentResults.csv"))
     comparison$DV[i] <- dvname
     comparison$KnotPosition[i] <- (2 * i - 1) / (2 * n)
     comparison$n[i] <- maxRes$X.Training.samples
