@@ -57,7 +57,7 @@ deriveVars <- function(data,
                        allsplines = FALSE, writedir = NULL, jarpath = NULL) {
 
   if (any(c("HF", "HR", "T") %in% transformtype) && allsplines == F) {
-    altrMaxent:::.binaryrvcheck(data[, 1])
+    .binaryrvcheck(data[, 1])
   }
 
   if (is.null(writedir)) {
@@ -86,7 +86,7 @@ Please specify a different writedir. \n ", call. = FALSE)
   EVDV <- list()
   for (i in 2:ncol(data)) {
     df <- data[, c(1,i)]
-    result <- .dvfromevstored(df, transformtype, allsplines, dir, jarpath)
+    result <- .dvsfromev(df, transformtype, allsplines, dir, jarpath)
     Storage <- c(Storage, result$storage)
     EVDV[[colnames(df)[2]]] <- result$evdv
   }

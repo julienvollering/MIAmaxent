@@ -1,7 +1,7 @@
-#' produces dvs from a given ev by different transformations.
+#' Produces DVs from a given EV by different transformations.
 #'
 #' In MIAT, "D" transformation is only performed if the optimum occurs in the
-#' middle 80\% of the EV range. \code{dvfromev} does not currently specify this
+#' middle 80\% of the EV range. \code{dvsfromev} does not currently specify this
 #' condition.
 #'
 #' @param df Dataframe with 2 columns: response variable and explanatory
@@ -17,11 +17,7 @@
 #' @return Dataframe with one column for each DV.
 
 
-# IMPORTANT: This file is for testing purposes only (e.g. transformation
-# storage)! Editing for inclusion in the package must proceed in the _dvfromev
-# file as it contains the latest bug fixes.
-
-.dvfromevstored <- function(df, transformtype, allsplines, dir, jarpath) {
+.dvsfromev <- function(df, transformtype, allsplines, dir, jarpath) {
 
   rv <- df[, 1]
   ev <- df[, 2]
