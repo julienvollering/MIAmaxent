@@ -15,8 +15,8 @@
 #' amount of variation. When \code{interaction = FALSE}, interactions are not
 #' considered.
 #'
-#' Each item in the EV list must be uniquely named, and the names must not
-#' contain spaces.
+#' Variables should be uniquely named, and the names should not contain spaces
+#' or colons.
 #'
 #' @param rv Response variable vector. The RV should represent
 #'   presence/background data, coded as: 1/NA.
@@ -30,6 +30,9 @@
 #'   subset selection of DVs. Defaults to the working directory.
 #' @param jarpath The pathway to the maxent.jar executable jar file. If
 #'   unspecified, the function looks for the file in the writedir.
+#' @param trainmax Integer. Maximum number of uninformed background points to be
+#'   used to train the models. May be used to reduce computation time for data
+#'   sets with very large numbers of points. Default is no maximum.
 #'
 #' @return List of length two. The first item is a list of data frames, with one
 #'   data frame for each \emph{selected} EV. The second item is a data frame
@@ -47,7 +50,7 @@
 
 
 selectEV <- function(rv, ev, alpha = 0.01, interaction = TRUE, writedir = NULL,
-                     jarpath = NULL) {
+                     jarpath = NULL, trainmax = NULL) {
 
   .binaryrvcheck(rv)
 
@@ -70,6 +73,13 @@ specified by the jarpath argument. \n ", call. = FALSE)
 Please specify a different writedir. \n ", call. = FALSE)
   } else {
     dir.create(dir)
+  }
+
+  if (!is.null(trainmax)) {
+    ub <- min(sum(is.na(rv)), trainmax)
+    trainindex <- c(which(!is.na(rv)), sample(which(is.na(rv)), ub))
+    rv <- rv[trainindex]
+    ev <- lapply(ev, function(x) {x[trainindex, , drop = FALSE]})
   }
 
   message(paste0("Forward selection of ", length(ev), " EVs"))

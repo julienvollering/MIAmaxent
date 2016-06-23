@@ -5,7 +5,7 @@
 \title{Select parsimonious sets of explanatory variables.}
 \usage{
 selectEV(rv, ev, alpha = 0.01, interaction = TRUE, writedir = NULL,
-  jarpath = NULL)
+  jarpath = NULL, trainmax = NULL)
 }
 \arguments{
 \item{rv}{Response variable vector. The RV should represent
@@ -25,6 +25,10 @@ subset selection of DVs. Defaults to the working directory.}
 
 \item{jarpath}{The pathway to the maxent.jar executable jar file. If
 unspecified, the function looks for the file in the writedir.}
+
+\item{trainmax}{Integer. Maximum number of uninformed background points to be
+used to train the models. May be used to reduce computation time for data
+sets with very large numbers of points. Default is no maximum.}
 }
 \value{
 List of length two. The first item is a list of data frames, with one
@@ -49,8 +53,8 @@ only explored between terms which are individually explain a significant
 amount of variation. When \code{interaction = FALSE}, interactions are not
 considered.
 
-Each item in the EV list must be uniquely named, and the names must not
-contain spaces.
+Variables should be uniquely named, and the names should not contain spaces
+or colons.
 }
 \references{
 Halvorsen, R. (2013). A strict maximum likelihood explanation of

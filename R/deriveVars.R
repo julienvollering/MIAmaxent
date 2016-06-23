@@ -18,6 +18,9 @@
 #' from the given DV shows a local maximum in fraction of variation explained
 #' (FVA) compared to DVs from the neighboring 4 knots.}
 #'
+#' Variables should be uniquely named, and the names should not contain spaces
+#' or colons.
+#'
 #' @param data Dataframe containing the response variable in the first column
 #'   and explanatory variables in subsequent columns. The response variable
 #'   should represent presence/background data, coded as: 1/NA.
@@ -35,9 +38,9 @@
 #'
 #' @return List of length 2. \enumerate{ \item A list of data frames, with each
 #'   containing the derived variables produced for a given explanatory variable.
-#'   This item may be used as input for \code{\link{selectDVforEV}}. \item A list of
-#'   all the transformation functions used to produce the derived variables.
-#'   This item may be used as input for \code{\link{plotResp}},
+#'   This item may be used as input for \code{\link{selectDVforEV}}. \item A
+#'   list of all the transformation functions used to produce the derived
+#'   variables. This item may be used as input for \code{\link{plotResp}},
 #'   \code{\link{testAUC}}, and \code{\link{projectModel}} }
 #'
 #' @references Halvorsen, R., Mazzoni, S., Bryn, A., & Bakkestuen, V. (2015).

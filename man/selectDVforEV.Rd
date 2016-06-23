@@ -4,7 +4,8 @@
 \alias{selectDVforEV}
 \title{Select parsimonious sets of derived variables.}
 \usage{
-selectDVforEV(rv, dv, alpha = 0.01, writedir = NULL, jarpath = NULL)
+selectDVforEV(rv, dv, alpha = 0.01, writedir = NULL, jarpath = NULL,
+  trainmax = NULL)
 }
 \arguments{
 \item{rv}{Response variable vector. The RV should represent
@@ -21,6 +22,10 @@ subset selection of DVs. Defaults to the working directory.}
 
 \item{jarpath}{The pathway to the maxent.jar executable jar file. If
 unspecified, the function looks for maxent.jar in the writedir.}
+
+\item{trainmax}{Integer. Maximum number of uninformed background points to be
+used to train the models. May be used to reduce computation time for data
+sets with very large numbers of points. Default is no maximum.}
 }
 \value{
 List of length two. The first item is a list of data frames, with
@@ -29,19 +34,21 @@ List of length two. The first item is a list of data frames, with
   of forward selection for a given EV.
 }
 \description{
-For each explanatory variable (EV), \code{selectDVforEV} selects the parsimonious
-set of derived variables (DV) which best explains variation in a given
-response variable. The function uses a process of forward selection based on
-comparison of nested models by the F-test, where the F-statistic is
+For each explanatory variable (EV), \code{selectDVforEV} selects the
+parsimonious set of derived variables (DV) which best explains variation in a
+given response variable. The function uses a process of forward selection
+based on comparison of nested models by the F-test, where the F-statistic is
 calculated using equation 59 in Halvorsen (2013). See Halvorsen et al. (2015)
 for an explanation of the forward selection procedure.
 }
 \details{
 If the derived variables were created using \code{\link{deriveVars}}, the
-same response variable should be used in \code{selectDVforEV}, as the deviation
-and spline transformations produced by \code{deriveVars} are RV-specific.
+same response variable should be used in \code{selectDVforEV}, as the
+deviation and spline transformations produced by \code{deriveVars} are
+RV-specific.
 
-DVs must be uniquely named, and the names must not contain spaces.
+Variables should be uniquely named, and the names should not contain spaces
+or colons.
 }
 \references{
 Halvorsen, R. (2013). A strict maximum likelihood explanation of
