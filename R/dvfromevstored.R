@@ -68,8 +68,10 @@
         message(paste0("Selecting forward hinge transformations of ", evname))
         dvs <- lapply(splall, function(x) {x(ev)})
         names(dvs) <- gsub("_transf", "", names(splall))
-        selected <- altrMaxent:::.splselect(rv, dvs, hfdir, jarpath)
-        storage <- c(storage, splall[paste0(selected, "_transf")])
+        selected <- .splselect(rv, dvs, hfdir, jarpath)
+        if (length(selected) > 0) {
+          storage <- c(storage, splall[paste0(selected, "_transf")])
+        }
       }
     }
 
@@ -90,7 +92,9 @@
         dvs <- lapply(splall, function(x) {x(ev)})
         names(dvs) <- gsub("_transf", "", names(splall))
         selected <- altrMaxent:::.splselect(rv, dvs, hrdir, jarpath)
-        storage <- c(storage, splall[paste0(selected, "_transf")])
+        if (length(selected) > 0) {
+          storage <- c(storage, splall[paste0(selected, "_transf")])
+        }
       }
     }
 
@@ -111,12 +115,14 @@
         dvs <- lapply(splall, function(x) {x(ev)})
         names(dvs) <- gsub("_transf", "", names(splall))
         selected <- altrMaxent:::.splselect(rv, dvs, tdir, jarpath)
-        storage <- c(storage, splall[paste0(selected, "_transf")])
+        if (length(selected) > 0) {
+          storage <- c(storage, splall[paste0(selected, "_transf")])
+        }
       }
     }
   }
 
-  if (class(ev) == "factor" || class(ev) == "character") {
+  if (class(ev) %in% c("factor", "character")) {
     ev <- as.factor(ev)
 
     if ("B" %in% transformtype) {

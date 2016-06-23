@@ -85,7 +85,7 @@ Please specify a different writedir. \n ", call. = FALSE)
   Storage <- list()
   EVDV <- list()
   for (i in 2:ncol(data)) {
-    df <- data[,c(1,i)]
+    df <- data[, c(1,i)]
     result <- .dvfromevstored(df, transformtype, allsplines, dir, jarpath)
     Storage <- c(Storage, result$storage)
     EVDV[[colnames(df)[2]]] <- result$evdv
