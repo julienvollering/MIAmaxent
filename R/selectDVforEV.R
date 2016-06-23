@@ -1,6 +1,6 @@
 #' Select parsimonious sets of derived variables.
 #'
-#' For each explanatory variable (EV), \code{selectDV} selects the parsimonious
+#' For each explanatory variable (EV), \code{selectDVforEV} selects the parsimonious
 #' set of derived variables (DV) which best explains variation in a given
 #' response variable. The function uses a process of forward selection based on
 #' comparison of nested models by the F-test, where the F-statistic is
@@ -8,7 +8,7 @@
 #' for an explanation of the forward selection procedure.
 #'
 #' If the derived variables were created using \code{\link{deriveVars}}, the
-#' same response variable should be used in \code{selectDV}, as the deviation
+#' same response variable should be used in \code{selectDVforEV}, as the deviation
 #' and spline transformations produced by \code{deriveVars} are RV-specific.
 #'
 #' DVs must be uniquely named, and the names must not contain spaces.
@@ -39,7 +39,7 @@
 #' @export
 
 
-selectDV <- function(rv, dv, alpha = 0.01, writedir = NULL, jarpath = NULL) {
+selectDVforEV <- function(rv, dv, alpha = 0.01, writedir = NULL, jarpath = NULL) {
 
   altrMaxent:::.binaryrvcheck(rv)
 
@@ -56,7 +56,7 @@ selectDV <- function(rv, dv, alpha = 0.01, writedir = NULL, jarpath = NULL) {
 specified by the jarpath argument. \n ")
   }
 
-  dir <- paste(writedir, "\\selectDV", sep="")
+  dir <- paste(writedir, "\\selectDVforEV", sep="")
   if (file.exists(dir)) {
     stop("The specified writedir already contains a selection of DVs.
 Please specify a different writedir. \n ")
