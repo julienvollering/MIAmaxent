@@ -61,13 +61,13 @@ selectEV <- function(rv, ev, alpha = 0.01, interaction = TRUE, writedir = NULL,
 
   if (file.exists(jarpath) == F) {
     stop("maxent.jar file must be present in writedir, or its pathway must be
-specified by the jarpath argument. \n ")
+specified by the jarpath argument. \n ", call. = FALSE)
   }
 
   dir <- paste(writedir, "\\selectEV", sep="")
   if (file.exists(dir)) {
     stop("The specified writedir already contains a selection of EVs.
-Please specify a different writedir. \n ")
+Please specify a different writedir. \n ", call. = FALSE)
   } else {
     dir.create(dir)
   }

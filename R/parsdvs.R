@@ -31,41 +31,15 @@
       Pvalue=numeric(nrows), Directory=character(nrows),
       stringsAsFactors = F)
 
-    for (i in 1:length(cyclemodels)) { #JV: consider replacing with lapply + function
+    for (i in 1:length(cyclemodels)) {
       dvnames <- cyclemodels[[i]]
-      df <- data.frame("RV" = rv, "X" = -9999, "Y" = -9999, dv[,dvnames])
-      colnames(df)[4:ncol(df)] <- dvnames
-
-      modeldir <- paste(cycledir, paste0("model", i), sep = "\\")
+      modeldir <- file.path(cycledir, paste0("model", i))
       dir.create(modeldir)
+      df <- data.frame(dv[, dvnames])
+      colnames(df) <- dvnames
+      .runjar(rv, df, maxbkg = length(rv) + 1, modeldir, jarpath)
 
-      samplesdf <- na.omit(df)
-      environlayersdf <- df
-      csvfiles <- paste0(modeldir, c("\\samples.csv", "\\environlayers.csv"))
-      write.csv(samplesdf, csvfiles[1], row.names = F)
-      write.csv(environlayersdf, csvfiles[2], row.names = F)
-
-      jarflags1 <- " removeduplicates=FALSE addsamplestobackground=FALSE"
-      jarflags2 <- " maximumbackground=100000 autofeature=FALSE betamultiplier=0"
-      jarflags3 <- " quadratic=FALSE product=FALSE hinge=FALSE threshold=FALSE"
-      jarflags4 <- " outputformat=raw writebackgroundpredictions=TRUE"
-      jarflags5 <- " outputgrids=FALSE pictures=FALSE"
-      jarflags6 <- " extrapolate=FALSE writemess=FALSE plots=FALSE"
-      jarflags7 <- " doclamp=FALSE writeclampgrid=FALSE"
-      jarflags8 <- " autorun=TRUE threads=8 visible=FALSE warnings=FALSE"
-      jarflags <- paste0(jarflags1, jarflags2, jarflags3, jarflags4, jarflags5,
-        jarflags6, jarflags7, jarflags8)
-
-      command <- paste0("java -mx512m -jar ",
-        "\"", jarpath, "\"",
-        jarflags,
-        " samplesfile=","\"", csvfiles[1], "\"",
-        " environmentallayers=", "\"", csvfiles[2], "\"",
-        " outputdirectory=", "\"", modeldir, "\\", "\"")
-      javacommand <- gsub("\\\\","/", command)
-      system(paste(javacommand), wait=T)
-
-      maxRes <- read.csv(paste(modeldir, "\\maxentResults.csv", sep=""))
+      maxRes <- read.csv(file.path(modeldir, "maxentResults.csv"))
       ctable$cycle[i] <- cyclenumber
       ctable$model[i] <- i
       ctable$DV[i] <- paste(dvnames, collapse = " ")
