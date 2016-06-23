@@ -65,7 +65,7 @@
   }
   weights <- expwindow/sum(expwindow)
   as.numeric(stats::filter(x, weights, sides=2))
-
+}
 
 
 #' Make regular intervals
