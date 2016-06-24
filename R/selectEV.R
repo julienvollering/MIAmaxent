@@ -21,7 +21,8 @@
 #' @param rv Response variable vector. The RV should represent
 #'   presence/background data, coded as: 1/NA.
 #' @param ev Named list of data frames, with each data frame containing 1 or
-#'   more DVs for a given EV. E.g. output [[1]] of \code{selectDVforEV}.
+#'   more DVs for a given EV (e.g. the first item in the list returned by
+#'   \code{\link{selectDVforEV}})
 #' @param alpha Alpha-level used in F-test comparison of models. Default is
 #'   0.01.
 #' @param interaction Logical. Allows interaction terms between pairs of EVs.

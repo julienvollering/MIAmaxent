@@ -18,7 +18,8 @@
 #' @param rv Response variable vector. The RV should represent
 #'   presence/background data, coded as: 1/NA.
 #' @param dv List of data frames, with each data frame containing DVs for a
-#'   given EV. E.g. output of \code{deriveVars}.
+#'   given EV (e.g. the first item in the list returned by
+#'   \code{\link{deriveVars}})
 #' @param alpha Alpha-level used in F-test comparison of models. Default is
 #'   0.01.
 #' @param writedir The directory to which Maxent files will be written during

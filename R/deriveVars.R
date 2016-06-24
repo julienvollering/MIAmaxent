@@ -21,7 +21,7 @@
 #' Variables should be uniquely named, and the names should not contain spaces
 #' or colons.
 #'
-#' @param data Dataframe containing the response variable in the first column
+#' @param data Data frame containing the response variable in the first column
 #'   and explanatory variables in subsequent columns. The response variable
 #'   should represent presence/background data, coded as: 1/NA.
 #' @param transformtype Specifies the types of transformations types to be
