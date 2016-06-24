@@ -78,7 +78,7 @@ Please specify a different dir. \n ", call. = FALSE)
 
   message(paste0("Forward selection of ", length(dvdata), " EVs"))
 
-  result <- altrMaxent:::.parsevs(rv, dvdata, alpha, interaction, fdir, jar)
+  result <- .parsevs(rv, dvdata, alpha, interaction, fdir, jar)
   write.csv(result[[2]], file = paste(fdir, "evselection.csv", sep="\\"),
     row.names = FALSE)
 

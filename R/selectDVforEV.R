@@ -50,7 +50,7 @@ selectDVforEV <- function(data, dvdata, alpha = 0.01, dir = NULL, jar = NULL,
                           trainmax = NULL) {
 
   rv <- data[, 1]
-  altrMaxent:::.binaryrvcheck(rv)
+  .binaryrvcheck(rv)
 
   if (is.null(dir)) { dir <- getwd()}
   jar <- .jar.check(dir, jar)
@@ -81,7 +81,7 @@ Please specify a different dir. \n ")
     evdir <- paste(fdir, "\\", evname, sep="")
     dir.create(evdir)
     df <- dvdata[[i]]
-    result <- altrMaxent:::.parsdvs(rv, df, alpha, evdir, jar)
+    result <- .parsdvs(rv, df, alpha, evdir, jar)
     write.csv(result[[2]], file = paste(evdir, "dvselection.csv", sep="\\"),
       row.names = FALSE)
     EVDV[[i]] <- result[[1]]

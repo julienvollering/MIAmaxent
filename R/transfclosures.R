@@ -21,12 +21,12 @@
 
 .transfM <- function(xnull) {
   Lnull <- (xnull - range(xnull)[1])/diff(range(xnull))
-  c <- altrMaxent:::.minskew(Lnull)$c
-  ZSknull <- altrMaxent:::.scalex(Lnull, Lnull, c)
+  c <- .minskew(Lnull)$c
+  ZSknull <- .scalex(Lnull, Lnull, c)
 
   function(x) {
     L <- (x - range(xnull)[1])/diff(range(xnull))
-    ZSk <- altrMaxent:::.scalex(Lnull, L, c)
+    ZSk <- .scalex(Lnull, L, c)
     y <- (ZSk - range(ZSknull)[1])/diff(range(ZSknull))
     return(y)
   }

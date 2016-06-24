@@ -87,7 +87,7 @@
         message(paste0("Selecting reverse hinge transformations of ", evname))
         dvs <- lapply(splall, function(x) {x(ev)})
         names(dvs) <- gsub("_transf", "", names(splall))
-        selected <- altrMaxent:::.splselect(rv, dvs, hrdir, jarpath)
+        selected <- .splselect(rv, dvs, hrdir, jarpath)
         if (length(selected) > 0) {
           storage <- c(storage, splall[paste0(selected, "_transf")])
         }
@@ -110,7 +110,7 @@
         message(paste0("Selecting threshold transformations of ", evname))
         dvs <- lapply(splall, function(x) {x(ev)})
         names(dvs) <- gsub("_transf", "", names(splall))
-        selected <- altrMaxent:::.splselect(rv, dvs, tdir, jarpath)
+        selected <- .splselect(rv, dvs, tdir, jarpath)
         if (length(selected) > 0) {
           storage <- c(storage, splall[paste0(selected, "_transf")])
         }
