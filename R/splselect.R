@@ -20,7 +20,7 @@
     dvname <- names(dv)[[i]]
     dvdir <- paste(dir, "\\", dvname, sep = "")
     dir.create(dvdir)
-    df <- data.frame(dv[[1]])
+    df <- data.frame(dv[[i]])
     colnames(df) <- dvname
     .runjar(rv, df, maxbkg = length(rv) + 1, dvdir, jarpath)
 
