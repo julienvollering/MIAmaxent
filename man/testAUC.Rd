@@ -4,14 +4,21 @@
 \alias{testAUC}
 \title{Calculate model AUC with test data}
 \usage{
-testAUC(predictions = NULL, test)
+testAUC(data, transformation, model)
 }
 \arguments{
-\item{predictions}{Pathway to the "backgroundPredictions.csv" file of the
-model in question.}
+\item{data}{Data frame containing test data in the first column and
+corresponding explanatory variables in subsequent columns. The test data
+should be coded as: 1/0/NA, representing presence, absence, and unknown.}
 
-\item{test}{Vector of test data (1/0/NA), with identical length and order as
-training data.}
+\item{transformation}{Pathway to the .Rdata file containing the
+transformations used to build the model. This file is saved as a result of
+the \code{\link{deriveVars}} function. Alternatively, a list object
+containing all of the named transformations (e.g. the second item in the
+list returned by \code{\link{deriveVars}}).}
+
+\item{model}{Pathway to the .lambdas file of the model in question. This file
+is saved as a result of the \code{selectEV} function.}
 }
 \description{
 For a given model, \code{testAUC} calculates the Area Under the Curve (AUC)

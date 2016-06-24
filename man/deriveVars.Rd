@@ -8,7 +8,7 @@ deriveVars(data, transformtype = c("L", "M", "D", "HF", "HR", "T", "B"),
   allsplines = FALSE, writedir = NULL, jarpath = NULL)
 }
 \arguments{
-\item{data}{Dataframe containing the response variable in the first column
+\item{data}{Data frame containing the response variable in the first column
 and explanatory variables in subsequent columns. The response variable
 should represent presence/background data, coded as: 1/NA.}
 

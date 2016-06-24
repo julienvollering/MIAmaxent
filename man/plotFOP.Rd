@@ -7,7 +7,7 @@
 plotFOP(data, EV, smoothwindow = 5, EVranging = FALSE, intervals = NULL)
 }
 \arguments{
-\item{data}{Dataframe containing the response variable in the first column
+\item{data}{Data frame containing the response variable in the first column
 and explanatory variables in subsequent columns. The response variable
 should represent presence or background, coded as: 1/NA. See Details for
 information regarding presence/absence data.}
@@ -40,11 +40,13 @@ returns a list containing the optimum EV value, and a data frame containing
 the plotted data (for customizable graphics).
 }
 \details{
-The EVoptimum that is retuned is based on the smoothed data, unless a maximum
-exists at the extremes of the EV (outside the smoothing window). Note that if
-the response variable represents presence/absence data, the result is an
-empirical frequency of presence curve, rather than a observed frequency of
-presence curve (see Stoea et al. [in press], Sommerfeltia).
+If the response variable in \code{data} represents presence/absence data, the
+result is an empirical frequency of presence curve, rather than a observed
+frequency of presence curve (see Stoea et al. [in press], Sommerfeltia).
+
+The returned value of 'EVoptimum' is based on the smoothed FOP values, such
+that an outlying maximum in FOP may, in some cases, not be considered the
+optimal value of EV.
 
 \code{DESCRIPTION Imports}: dplyr, Hmisc
 }

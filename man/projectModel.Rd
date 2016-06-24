@@ -10,11 +10,11 @@ projectModel(data, transformation, model, clamping = FALSE)
 \item{data}{Data frame containing data for all the explanatory variables
 (EVs) included in the model, with column names matching EV names.}
 
-\item{transformation}{Pathway to the .Rdata file containing the named
-parameterized transformations used in the model. This file is saved as a
-result of the \code{\link{deriveVars}} function. Alternatively, a list
-object containing all of the named transformations (e.g. the second item in
-the list returned by \code{\link{deriveVars}}).}
+\item{transformation}{Pathway to the .Rdata file containing the
+transformations used to build the model. This file is saved as a result of
+the \code{\link{deriveVars}} function. Alternatively, a list object
+containing all of the named transformations (e.g. the second item in the
+list returned by \code{\link{deriveVars}}).}
 
 \item{model}{Pathway to the .lambdas file of the model in question. This file
 is saved as a result of the \code{selectEV} function.}

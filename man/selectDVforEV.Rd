@@ -12,7 +12,8 @@ selectDVforEV(rv, dv, alpha = 0.01, writedir = NULL, jarpath = NULL,
 presence/background data, coded as: 1/NA.}
 
 \item{dv}{List of data frames, with each data frame containing DVs for a
-given EV. E.g. output of \code{deriveVars}.}
+given EV (e.g. the first item in the list returned by
+\code{\link{deriveVars}})}
 
 \item{alpha}{Alpha-level used in F-test comparison of models. Default is
 0.01.}
