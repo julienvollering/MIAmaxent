@@ -11,13 +11,17 @@ testAUC(data, transformation, model)
 corresponding explanatory variables in subsequent columns. The test data
 should be coded as: 1/0/NA, representing presence, absence, and unknown.}
 
-\item{transformation}{Pathway to the 'transformation.Rdata' file containing the
-transformations used to build the model. This file is saved as a result of
-the \code{\link{deriveVars}} function. Equivalently, the second item in the
-list returned by \code{\link{deriveVars}} can be used directly.}
+\item{transformation}{Pathway to the 'transformation.Rdata' file containing
+the transformations used to build the model. This file is saved as a result
+of the \code{\link{deriveVars}} function. Equivalently, the second item in
+the list returned by \code{\link{deriveVars}} can be used directly.}
 
-\item{model}{Pathway to the '.lambdas' file of the model in question. This file
-is saved as a result of \code{\link{selectEV}}.}
+\item{model}{Pathway to the '.lambdas' file of the model in question. This
+file is saved as a result of \code{\link{selectEV}}.}
+}
+\value{
+In addition to returning the testAUC value, graphical output showing
+  the corresponding ROC plot is produced.
 }
 \description{
 For a given model, \code{testAUC} calculates the Area Under the Curve (AUC)

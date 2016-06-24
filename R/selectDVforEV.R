@@ -23,18 +23,18 @@
 #'   returned by \code{\link{deriveVars}}: \code{deriveVars(...)[[1]]})
 #' @param alpha Alpha-level used in F-test comparison of models. Default is
 #'   0.01.
-#' @param dir Directory to which files will be written during subset
-#'   selection of derived variables. Defaults to the working directory.
-#' @param jar Pathway to the 'maxent.jar' executable jar file. If
-#'   unspecified, the function looks for the file in \code{dir}.
+#' @param dir Directory to which files will be written during subset selection
+#'   of derived variables. Defaults to the working directory.
+#' @param jar Pathway to the 'maxent.jar' executable jar file. If unspecified,
+#'   the function looks for the file in \code{dir}.
 #' @param trainmax Integer. Maximum number of uninformed background points to be
 #'   used to train the models. May be used to reduce computation time for data
 #'   sets with very large numbers of points. Default is no maximum.
 #'
-#' @return List of length two. The first item is a list of data frames, with
-#'   each data frame containing \emph{selected} DVs for a given EV. The second
-#'   item is also a list of data frames, where each data frame shows the trail
-#'   of forward selection for a given EV.
+#' @return List of 2: \enumerate{ \item A list of data frames, with each data
+#'   frame containing \emph{selected} DVs for a given EV. \item A list of data
+#'   frames, where each data frame shows the trail of forward selection for a
+#'   given EV.}
 #'
 #' @references Halvorsen, R. (2013). A strict maximum likelihood explanation of
 #'   MaxEnt, and some implications for distribution modelling. Sommerfeltia, 36,

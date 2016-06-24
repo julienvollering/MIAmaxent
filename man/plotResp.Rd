@@ -18,13 +18,13 @@ list item a data frame containing 1 or more DVs for a given EV. E.g. output
 \item{EV}{Name or list index of the explanatory variable in \code{dvdata} for
 which the response curve is to be generated. Interaction terms not allowed.}
 
-\item{dir}{Directory to which files will be written. Defaults to the
-working directory.}
+\item{dir}{Directory to which files will be written. Defaults to the working
+directory.}
 
-\item{jar}{Pathway to the 'maxent.jar' executable jar file. If
-unspecified, the function looks for the file in \code{dir}.}
+\item{jar}{Pathway to the 'maxent.jar' executable jar file. If unspecified,
+the function looks for the file in \code{dir}.}
 
-\item{logscale}{logical. Plot the common logarithm of PRO rather than PRO
+\item{logscale}{Logical. Plot the common logarithm of PRO rather than PRO
 itself.}
 
 \item{...}{Arguments to be passed to \code{plot} to control the appearance of
@@ -32,7 +32,10 @@ the points in the scatterplot. For example: \itemize{ \item \code{cex} for
 size \item \code{col} for color \item \code{pch} for type }}
 }
 \value{
-In addition to the graphical output, the plotted data is returned.
+In addition to the graphical output, the plotted data is returned. In
+  the case of a continuous EV, the plotted data consists of both individual
+  points ('respPts') and the smoothed moving average of those points
+  ('respLine').
 }
 \description{
 \code{plotResp} plots  the response of a given Maxent model over any of the

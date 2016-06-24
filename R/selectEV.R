@@ -37,10 +37,10 @@
 #'   used to train the models. May be used to reduce computation time for data
 #'   sets with very large numbers of points. Default is no maximum.
 #'
-#' @return List of length two. The first item is a list of data frames, with one
-#'   data frame for each \emph{selected} EV. The second item is a data frame
+#' @return List of 2: \enumerate{ \item A list of data frames, with one
+#'   data frame for each \emph{selected} EV. \item A data frame
 #'   showing the trail of forward selection of individual EVs (and interaction
-#'   terms if necessary).
+#'   terms if necessary).}
 #'
 #' @references Halvorsen, R. (2013). A strict maximum likelihood explanation of
 #'   MaxEnt, and some implications for distribution modelling. Sommerfeltia, 36,

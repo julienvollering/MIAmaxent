@@ -28,7 +28,7 @@ spline-type derived variables. Defaults to the working directory.}
 the function looks for the file in \code{dir}.}
 }
 \value{
-List of length 2. \enumerate{ \item A list of data frames, with each
+List of 2: \enumerate{ \item A list of data frames, with each
   containing the derived variables produced for a given explanatory variable.
   This item may be used as input for \code{\link{selectDVforEV}}. \item A
   list of all the transformation functions used to produce the derived

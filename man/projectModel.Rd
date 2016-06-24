@@ -10,20 +10,22 @@ projectModel(data, transformation, model, clamping = FALSE)
 \item{data}{Data frame containing data for all the explanatory variables
 (EVs) included in the model, with column names matching EV names.}
 
-\item{transformation}{Pathway to the 'transformation.Rdata' file containing the
-transformations used to build the model. This file is saved as a result of
-the \code{\link{deriveVars}} function. Equivalently, the second item in the
-list returned by \code{\link{deriveVars}} can be used directly.}
+\item{transformation}{Pathway to the 'transformation.Rdata' file containing
+the transformations used to build the model. This file is saved as a result
+of the \code{\link{deriveVars}} function. Equivalently, the second item in
+the list returned by \code{\link{deriveVars}} can be used directly.}
 
-\item{model}{Pathway to the '.lambdas' file of the model in question. This file
-is saved as a result of \code{\link{selectEV}}.}
+\item{model}{Pathway to the '.lambdas' file of the model in question. This
+file is saved as a result of \code{\link{selectEV}}.}
 
-\item{clamping}{logical. Do clamping. Default is \code{FALSE}.}
+\item{clamping}{Logical. Do clamping \emph{sensu} maxent.jar. Default is
+\code{FALSE}.}
 }
 \value{
-1) a data frame with the model output and the corresponding
-  explanatory data. 2) a data frame showing the range of the data compared to
-  the training data, on a 0-1 scale.
+List of 2: \enumerate{ \item A data frame with the model output in
+  column 1 and the corresponding explanatory data in subsequent columns.
+  \item A data frame showing the range of \code{data} compared to the
+  training data, on a 0-1 scale.}
 }
 \description{
 \code{projectModel} Calculates the probability ratio output (PRO) of a given

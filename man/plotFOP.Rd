@@ -20,17 +20,17 @@ intervals included in an exponentially weighted moving average. Should be
 odd, otherwise the window will be uncentered. Irrelevant for categorical
 EVs.}
 
-\item{EVranging}{if \code{TRUE}, will range the EV scale to [0,1]. This is
-equivalent to plotting FOP over the linear transformation produced by
-deriveVars. Irrelevant for categorical EVs.}
+\item{EVranging}{Logical. If \code{TRUE}, will range the EV scale to [0,1].
+This is equivalent to plotting FOP over the linear transformation produced
+by deriveVars. Irrelevant for categorical EVs.}
 
 \item{intervals}{Number of intervals into which the continuous EV is divided.
 Defaults to the minimum of N/50 and 100. Irrelevant for categorical EVs.}
 }
 \value{
-In addition to the graphical output, a list is returned with 1) the
-  EV value at which FOP is highest (\code{EVoptimum}) and 2) a data frame
-  containing the plotted data (\code{FOPdata}).
+In addition to the graphical output, a list of 2: \enumerate{ \item
+  The EV value at which FOP is highest (\code{EVoptimum}) \item a data
+  frame containing the plotted data (\code{FOPdata}).}
 }
 \description{
 \code{plotFOP} produces a Frequency of Observed Presence (FOP) plot for a
