@@ -11,11 +11,11 @@
 #'
 #' @param data Data frame containing data for all the explanatory variables
 #'   (EVs) included in the model, with column names matching EV names.
-#' @param transformation Pathway to the .Rdata file containing the named
-#'   parameterized transformations used in the model. This file is saved as a
-#'   result of the \code{\link{deriveVars}} function. Alternatively, a list
-#'   object containing all of the named transformations (e.g. the second item in
-#'   the list returned by \code{\link{deriveVars}}).
+#' @param transformation Pathway to the .Rdata file containing the
+#'   transformations used to build the model. This file is saved as a result of
+#'   the \code{\link{deriveVars}} function. Alternatively, a list object
+#'   containing all of the named transformations (e.g. the second item in the
+#'   list returned by \code{\link{deriveVars}}).
 #' @param model Pathway to the .lambdas file of the model in question. This file
 #'   is saved as a result of the \code{selectEV} function.
 #' @param clamping logical. Do clamping. Default is \code{FALSE}.
@@ -40,28 +40,27 @@ projectModel <- function(data, transformation, model, clamping = FALSE) {
       call. = FALSE)
   }
 
-  if (class(transformation) == "character") {
-    alltransf <- get(load(transformation))
-  } else {
-    alltransf <- transformation
-  }
-  if (!all(sapply(alltransf, class) == "function")) {
-    stop("transformation argument should contain functions only", call. = FALSE)
-  }
+  alltransf <- .load.transf(transformation)
 
-    evnames <- unique(unname(sapply(dvnamesni, function(x) {
+  evnames <- unique(unname(sapply(dvnamesni, function(x) {
     colnames(data)[startsWith(x, colnames(data))]
-    })))
-    evnames <- sapply(evnames, .best.match, b = dvnamesni)
+  })))
+  evnames <- sapply(evnames, .best.match, b = dvnamesni)
+
+  check2 <- lapply(evnames, function(x) { startsWith(names(alltransf), x) })
+  if (any(sapply(check2, function(x) { all(x==FALSE) }))) {
+    stop("All EVs in the .lambdas file must be represented in transformation",
+      call. = FALSE)
+  }
 
   Ranges <- lapply(evnames, function(x) {
     evdata <- data[, x]
     xnull <- environment(alltransf[startsWith(names(alltransf), x)][[1]])$xnull
-    if (class(xnull) == "numeric" || class(xnull) == "integer") {
-      L <- (evdata - range(xnull)[1])/diff(range(xnull))
+    if (class(xnull) %in% c("numeric", "integer")) {
+      L <- (evdata - range(xnull)[1]) / diff(range(xnull))
       return(range(L))
     }
-    if (class(xnull) == "factor" || class(xnull) == "character") {
+    if (class(xnull) %in% c("factor", "character")) {
       if (all(evdata %in% xnull)) {return("inside")} else {return("outside")}
     }
   })
