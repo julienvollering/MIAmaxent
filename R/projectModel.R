@@ -36,7 +36,7 @@ projectModel <- function(data, transformation, model, clamping = FALSE) {
 
   check <- lapply(dvnamesni, function(x) { startsWith(x, colnames(data)) })
   if (any(sapply(check, function(x) { all(x==FALSE) }))) {
-    stop("All EVs in the .lambdas file must be represented in data",
+    stop("All EVs in the model must be represented in data",
       call. = FALSE)
   }
 
@@ -47,9 +47,9 @@ projectModel <- function(data, transformation, model, clamping = FALSE) {
   })))
   evnames <- sapply(evnames, .best.match, b = dvnamesni)
 
-  check2 <- lapply(evnames, function(x) { startsWith(names(alltransf), x) })
-  if (any(sapply(check2, function(x) { all(x==FALSE) }))) {
-    stop("All EVs in the .lambdas file must be represented in transformation",
+  check2 <- lapply(dvnamesni, function(x) { startsWith(names(alltransf), x) })
+  if (any(sapply(check2, sum) != 1)) {
+    stop("All DVs in the model must be represented in transformation",
       call. = FALSE)
   }
 
