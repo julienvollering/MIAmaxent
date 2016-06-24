@@ -12,8 +12,8 @@ and explanatory variables in subsequent columns. The response variable
 should represent presence or background, coded as: 1/NA. See Details for
 information regarding presence/absence data.}
 
-\item{EV}{Name or column index of the explanatory variable for which to
-calculate FOP.}
+\item{EV}{Name or column index of the explanatory variable in \code{data} for
+which to calculate FOP.}
 
 \item{smoothwindow}{Width of the smoothing window. Represents the number of
 intervals included in an exponentially weighted moving average. Should be

@@ -18,19 +18,21 @@
 #' Variables should be uniquely named, and the names should not contain spaces
 #' or colons.
 #'
-#' @param rv Response variable vector. The RV should represent
-#'   presence/background data, coded as: 1/NA.
-#' @param ev Named list of data frames, with each data frame containing 1 or
-#'   more DVs for a given EV (e.g. the first item in the list returned by
-#'   \code{\link{selectDVforEV}})
+#' @param data Data frame containing the response variable in the first column
+#'   and explanatory variables in subsequent columns. The response variable
+#'   should represent presence/background data, coded as: 1/NA.
+#' @param dvdata List of data frames, with each data frame containing a
+#'   parsimonious group of derived variables for a given explanatory variable
+#'   (e.g. the first item in the list returned by \code{\link{selectDVforEV}}:
+#'   \code{selectDVforEV(...)[[1]]})
 #' @param alpha Alpha-level used in F-test comparison of models. Default is
 #'   0.01.
 #' @param interaction Logical. Allows interaction terms between pairs of EVs.
 #'   Default is \code{TRUE}.
-#' @param writedir The directory to which Maxent files will be written during
-#'   subset selection of DVs. Defaults to the working directory.
-#' @param jarpath The pathway to the maxent.jar executable jar file. If
-#'   unspecified, the function looks for the file in the writedir.
+#' @param dir Directory to which files will be written during subset
+#'   selection of explanatory variables. Defaults to the working directory.
+#' @param jar Pathway to the 'maxent.jar' executable jar file. If
+#'   unspecified, the function looks for the file in \code{dir}.
 #' @param trainmax Integer. Maximum number of uninformed background points to be
 #'   used to train the models. May be used to reduce computation time for data
 #'   sets with very large numbers of points. Default is no maximum.
@@ -50,43 +52,44 @@
 #' @export
 
 
-selectEV <- function(rv, ev, alpha = 0.01, interaction = TRUE, writedir = NULL,
-                     jarpath = NULL, trainmax = NULL) {
+selectEV <- function(data, dvdata, alpha = 0.01, interaction = TRUE, dir = NULL,
+                     jar = NULL, trainmax = NULL) {
 
+  rv <- data[, 1]
   .binaryrvcheck(rv)
 
-  if (is.null(writedir)) {
-    writedir <- getwd()
+  if (is.null(dir)) {
+    dir <- getwd()
   }
 
-  if (is.null(jarpath)) {
-    jarpath <- paste(writedir, "\\maxent.jar", sep="")
+  if (is.null(jar)) {
+    jar <- paste(dir, "\\maxent.jar", sep="")
   }
 
-  if (file.exists(jarpath) == F) {
-    stop("maxent.jar file must be present in writedir, or its pathway must be
-specified by the jarpath argument. \n ", call. = FALSE)
+  if (file.exists(jar) == F) {
+    stop("maxent.jar file must be present in dir, or its pathway must be
+specified by the jar argument. \n ", call. = FALSE)
   }
 
-  dir <- paste(writedir, "\\selectEV", sep="")
-  if (file.exists(dir)) {
-    stop("The specified writedir already contains a selection of EVs.
-Please specify a different writedir. \n ", call. = FALSE)
+  fdir <- paste(dir, "\\selectEV", sep="")
+  if (file.exists(fdir)) {
+    stop("The specified dir already contains a selection of EVs.
+Please specify a different dir. \n ", call. = FALSE)
   } else {
-    dir.create(dir)
+    dir.create(fdir)
   }
 
   if (!is.null(trainmax)) {
     ub <- min(sum(is.na(rv)), trainmax)
     trainindex <- c(which(!is.na(rv)), sample(which(is.na(rv)), ub))
     rv <- rv[trainindex]
-    ev <- lapply(ev, function(x) {x[trainindex, , drop = FALSE]})
+    dvdata <- lapply(dvdata, function(x) {x[trainindex, , drop = FALSE]})
   }
 
-  message(paste0("Forward selection of ", length(ev), " EVs"))
+  message(paste0("Forward selection of ", length(dvdata), " EVs"))
 
-  result <- altrMaxent:::.parsevs(rv, ev, alpha, interaction, dir, jarpath)
-  write.csv(result[[2]], file = paste(dir, "evselection.csv", sep="\\"),
+  result <- altrMaxent:::.parsevs(rv, dvdata, alpha, interaction, fdir, jar)
+  write.csv(result[[2]], file = paste(fdir, "evselection.csv", sep="\\"),
     row.names = FALSE)
 
   Result <- list(selectedEV = result[[1]], selection = result[[2]])

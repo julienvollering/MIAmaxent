@@ -4,25 +4,26 @@
 \alias{selectDVforEV}
 \title{Select parsimonious sets of derived variables.}
 \usage{
-selectDVforEV(rv, dv, alpha = 0.01, writedir = NULL, jarpath = NULL,
+selectDVforEV(data, dvdata, alpha = 0.01, dir = NULL, jar = NULL,
   trainmax = NULL)
 }
 \arguments{
-\item{rv}{Response variable vector. The RV should represent
-presence/background data, coded as: 1/NA.}
+\item{data}{Data frame containing the response variable in the first column
+and explanatory variables in subsequent columns. The response variable
+should represent presence/background data, coded as: 1/NA.}
 
-\item{dv}{List of data frames, with each data frame containing DVs for a
-given EV (e.g. the first item in the list returned by
-\code{\link{deriveVars}})}
+\item{dvdata}{List of data frames, with each data frame containing derived
+variables for a given explanatory variable (e.g. the first item in the list
+returned by \code{\link{deriveVars}}: \code{deriveVars(...)[[1]]})}
 
 \item{alpha}{Alpha-level used in F-test comparison of models. Default is
 0.01.}
 
-\item{writedir}{The directory to which Maxent files will be written during
-subset selection of DVs. Defaults to the working directory.}
+\item{dir}{Directory to which files will be written during subset
+selection of derived variables. Defaults to the working directory.}
 
-\item{jarpath}{The pathway to the maxent.jar executable jar file. If
-unspecified, the function looks for maxent.jar in the writedir.}
+\item{jar}{Pathway to the 'maxent.jar' executable jar file. If
+unspecified, the function looks for the file in \code{dir}.}
 
 \item{trainmax}{Integer. Maximum number of uninformed background points to be
 used to train the models. May be used to reduce computation time for data

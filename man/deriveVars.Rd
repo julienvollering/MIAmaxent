@@ -5,7 +5,7 @@
 \title{Derive variables by transformation.}
 \usage{
 deriveVars(data, transformtype = c("L", "M", "D", "HF", "HR", "T", "B"),
-  allsplines = FALSE, writedir = NULL, jarpath = NULL)
+  allsplines = FALSE, dir = NULL, jar = NULL)
 }
 \arguments{
 \item{data}{Data frame containing the response variable in the first column
@@ -21,11 +21,11 @@ hinge), T (threshold), and B (binary).}
 than selecting particular splines based on fraction of total variation
 explained.}
 
-\item{writedir}{The directory to which Maxent files will be written during
-subset selection of spline variables. Defaults to the working directory.}
+\item{dir}{Directory to which files will be written during selection of
+spline-type derived variables. Defaults to the working directory.}
 
-\item{jarpath}{The pathway to the maxent.jar executable jar file. If
-unspecified, the function looks for the file in the writedir.}
+\item{jar}{Pathway to the 'maxent.jar' executable jar file. If unspecified,
+the function looks for the file in \code{dir}.}
 }
 \value{
 List of length 2. \enumerate{ \item A list of data frames, with each

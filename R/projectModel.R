@@ -11,13 +11,12 @@
 #'
 #' @param data Data frame containing data for all the explanatory variables
 #'   (EVs) included in the model, with column names matching EV names.
-#' @param transformation Pathway to the .Rdata file containing the
+#' @param transformation Pathway to the 'transformation.Rdata' file containing the
 #'   transformations used to build the model. This file is saved as a result of
-#'   the \code{\link{deriveVars}} function. Alternatively, a list object
-#'   containing all of the named transformations (e.g. the second item in the
-#'   list returned by \code{\link{deriveVars}}).
-#' @param model Pathway to the .lambdas file of the model in question. This file
-#'   is saved as a result of the \code{selectEV} function.
+#'   the \code{\link{deriveVars}} function. Equivalently, the second item in the
+#'   list returned by \code{\link{deriveVars}} can be used directly.
+#' @param model Pathway to the '.lambdas' file of the model in question. This file
+#'   is saved as a result of \code{\link{selectEV}}.
 #' @param clamping logical. Do clamping. Default is \code{FALSE}.
 #'
 #' @return 1) a data frame with the model output and the corresponding

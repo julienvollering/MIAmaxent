@@ -15,17 +15,18 @@
 #' Variables should be uniquely named, and the names should not contain spaces
 #' or colons.
 #'
-#' @param rv Response variable vector. The RV should represent
-#'   presence/background data, coded as: 1/NA.
-#' @param dv List of data frames, with each data frame containing DVs for a
-#'   given EV (e.g. the first item in the list returned by
-#'   \code{\link{deriveVars}})
+#' @param data Data frame containing the response variable in the first column
+#'   and explanatory variables in subsequent columns. The response variable
+#'   should represent presence/background data, coded as: 1/NA.
+#' @param dvdata List of data frames, with each data frame containing derived
+#'   variables for a given explanatory variable (e.g. the first item in the list
+#'   returned by \code{\link{deriveVars}}: \code{deriveVars(...)[[1]]})
 #' @param alpha Alpha-level used in F-test comparison of models. Default is
 #'   0.01.
-#' @param writedir The directory to which Maxent files will be written during
-#'   subset selection of DVs. Defaults to the working directory.
-#' @param jarpath The pathway to the maxent.jar executable jar file. If
-#'   unspecified, the function looks for maxent.jar in the writedir.
+#' @param dir Directory to which files will be written during subset
+#'   selection of derived variables. Defaults to the working directory.
+#' @param jar Pathway to the 'maxent.jar' executable jar file. If
+#'   unspecified, the function looks for the file in \code{dir}.
 #' @param trainmax Integer. Maximum number of uninformed background points to be
 #'   used to train the models. May be used to reduce computation time for data
 #'   sets with very large numbers of points. Default is no maximum.
@@ -45,59 +46,60 @@
 #' @export
 
 
-selectDVforEV <- function(rv, dv, alpha = 0.01, writedir = NULL, jarpath = NULL,
+selectDVforEV <- function(data, dvdata, alpha = 0.01, dir = NULL, jar = NULL,
                           trainmax = NULL) {
 
+  rv <- data[, 1]
   altrMaxent:::.binaryrvcheck(rv)
 
-  if (is.null(writedir)) {
-    writedir <- getwd()
+  if (is.null(dir)) {
+    dir <- getwd()
   }
 
-  if (is.null(jarpath)) {
-    jarpath <- paste(writedir, "\\maxent.jar", sep="")
+  if (is.null(jar)) {
+    jar <- paste(dir, "\\maxent.jar", sep="")
   }
 
-  if (file.exists(jarpath) == F) {
-    stop("maxent.jar file must be present in writedir, or its pathway must be
-specified by the jarpath argument. \n ")
+  if (file.exists(jar) == F) {
+    stop("maxent.jar file must be present in dir, or its pathway must be
+specified by the jar argument. \n ")
   }
 
-  dir <- paste(writedir, "\\selectDVforEV", sep="")
-  if (file.exists(dir)) {
-    stop("The specified writedir already contains a selection of DVs.
-Please specify a different writedir. \n ")
+  fdir <- paste(dir, "\\selectDVforEV", sep="")
+  if (file.exists(fdir)) {
+    stop("The specified dir already contains a selection of DVs.
+Please specify a different dir. \n ")
   } else {
-    dir.create(dir)
+    dir.create(fdir)
   }
 
   if (!is.null(trainmax)) {
     ub <- min(sum(is.na(rv)), trainmax)
     trainindex <- c(which(!is.na(rv)), sample(which(is.na(rv)), ub))
     rv <- rv[trainindex]
-    dv <- lapply(dv, function(x) {x[trainindex, , drop = FALSE]})
+    dvdata <- lapply(dvdata, function(x) {x[trainindex, , drop = FALSE]})
   }
 
   EVDV <- list()
   trail <- list()
 
-  message(paste0("Forward selection of DVs for ", length(dv), " EVs"))
-  pb <- txtProgressBar(min = 0, max = length(dv), style = 3)
+  message(paste0("Forward selection of DVs for ", length(dvdata), " EVs"))
+  pb <- txtProgressBar(min = 0, max = length(dvdata), style = 3)
 
-  for (i in 1:length(dv)) {
-    evname <- names(dv)[i]
-    evdir <- paste(dir, "\\", evname, sep="")
+  for (i in 1:length(dvdata)) {
+    evname <- names(dvdata)[i]
+    evdir <- paste(fdir, "\\", evname, sep="")
     dir.create(evdir)
-    df <- dv[[i]]
-    result <- altrMaxent:::.parsdvs(rv, df, alpha, evdir, jarpath)
+    df <- dvdata[[i]]
+    result <- altrMaxent:::.parsdvs(rv, df, alpha, evdir, jar)
     write.csv(result[[2]], file = paste(evdir, "dvselection.csv", sep="\\"),
       row.names = FALSE)
     EVDV[[i]] <- result[[1]]
     trail[[i]] <- result[[2]]
     setTxtProgressBar(pb, i)
   }
-  names(EVDV) <- names(dv)
-  names(trail) <- names(dv)
+  names(EVDV) <- names(dvdata)
+  names(trail) <- names(dvdata)
   EVDV <- EVDV[sapply(EVDV, function(x) {dim(x)[2] != 0})]
 
   Result <- list(selectedDV = EVDV, selection = trail)

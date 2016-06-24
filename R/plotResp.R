@@ -11,18 +11,20 @@
 #'
 #' The \code{ev} specified in \code{dvdata} must not be an interaction term.
 #'
-#' @param data Data frame of training data, with response variable (1/NA) in the
-#'   first column and explanatory variables in subsequenct columns.
-#' @param EV Name or list index of the explanatory variable in \code{dvdata} for
-#'   which the response curve is to be generated. Interaction terms not allowed.
+#' @param data Data frame containing the response variable in the first column
+#'   and explanatory variables in subsequent columns. The response variable
+#'   should represent presence/background data, coded as: 1/NA.
 #' @param dvdata List of derived variables used to train the model, with each
 #'   list item a data frame containing 1 or more DVs for a given EV. E.g. output
 #'   [[1]] of \code{selectEV}.
-#' @param dir Directory to which Maxent files will be written. Defaults to
-#'   the working directory.
-#' @param jarpath Pathway to the maxent.jar executable jar file. If
+#' @param EV Name or list index of the explanatory variable in \code{dvdata} for
+#'   which the response curve is to be generated. Interaction terms not allowed.
+#' @param dir Directory to which files will be written. Defaults to the
+#'   working directory.
+#' @param jar Pathway to the 'maxent.jar' executable jar file. If
 #'   unspecified, the function looks for the file in \code{dir}.
-#' @param logscale logical. Plot the common logarithm of PRO rather than PRO.
+#' @param logscale logical. Plot the common logarithm of PRO rather than PRO
+#'   itself.
 #' @param ... Arguments to be passed to \code{plot} to control the appearance of
 #'   the points in the scatterplot. For example: \itemize{ \item \code{cex} for
 #'   size \item \code{col} for color \item \code{pch} for type }
@@ -32,16 +34,16 @@
 #' @export
 
 
-plotResp <- function(data, EV, dvdata, dir = NULL, jarpath = NULL,
+plotResp <- function(data, dvdata, EV, dir = NULL, jar = NULL,
                      logscale = FALSE, ...) {
 
   .binaryrvcheck(data[, 1])
 
   if (is.null(dir)) {dir <- getwd()}
-  if (is.null(jarpath)) {jarpath <- file.path(dir, "maxent.jar")}
-  if (file.exists(jarpath) == F) {
+  if (is.null(jar)) {jar <- file.path(dir, "maxent.jar")}
+  if (file.exists(jar) == F) {
     stop("maxent.jar file must be present in dir, or its pathway must be
-       specified by the jarpath argument. \n ", call. = FALSE)
+       specified by the jar argument. \n ", call. = FALSE)
   }
 
   dir <- file.path(dir, "plotResp")
@@ -55,7 +57,7 @@ plotResp <- function(data, EV, dvdata, dir = NULL, jarpath = NULL,
   modeldir <- file.path(dir, paste0("response", evname))
   dir.create(modeldir, showWarnings = FALSE)
 
-  .runjar(data[, 1], dvdata[[EV]], maxbkg = nrow(data) + 1, modeldir, jarpath)
+  .runjar(data[, 1], dvdata[[EV]], maxbkg = nrow(data) + 1, modeldir, jar)
 
   output <- read.csv(file.path(modeldir, "1_backgroundPredictions.csv"))
   respPts <- data.frame(EV = data[, evname], PRO = output[,3]*length(output[,3]))

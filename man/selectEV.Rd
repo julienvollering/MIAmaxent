@@ -4,16 +4,18 @@
 \alias{selectEV}
 \title{Select parsimonious sets of explanatory variables.}
 \usage{
-selectEV(rv, ev, alpha = 0.01, interaction = TRUE, writedir = NULL,
-  jarpath = NULL, trainmax = NULL)
+selectEV(data, dvdata, alpha = 0.01, interaction = TRUE, dir = NULL,
+  jar = NULL, trainmax = NULL)
 }
 \arguments{
-\item{rv}{Response variable vector. The RV should represent
-presence/background data, coded as: 1/NA.}
+\item{data}{Data frame containing the response variable in the first column
+and explanatory variables in subsequent columns. The response variable
+should represent presence/background data, coded as: 1/NA.}
 
-\item{ev}{Named list of data frames, with each data frame containing 1 or
-more DVs for a given EV (e.g. the first item in the list returned by
-\code{\link{selectDVforEV}})}
+\item{dvdata}{List of data frames, with each data frame containing a
+parsimonious group of derived variables for a given explanatory variable
+(e.g. the first item in the list returned by \code{\link{selectDVforEV}}:
+\code{selectDVforEV(...)[[1]]})}
 
 \item{alpha}{Alpha-level used in F-test comparison of models. Default is
 0.01.}
@@ -21,11 +23,11 @@ more DVs for a given EV (e.g. the first item in the list returned by
 \item{interaction}{Logical. Allows interaction terms between pairs of EVs.
 Default is \code{TRUE}.}
 
-\item{writedir}{The directory to which Maxent files will be written during
-subset selection of DVs. Defaults to the working directory.}
+\item{dir}{Directory to which files will be written during subset
+selection of explanatory variables. Defaults to the working directory.}
 
-\item{jarpath}{The pathway to the maxent.jar executable jar file. If
-unspecified, the function looks for the file in the writedir.}
+\item{jar}{Pathway to the 'maxent.jar' executable jar file. If
+unspecified, the function looks for the file in \code{dir}.}
 
 \item{trainmax}{Integer. Maximum number of uninformed background points to be
 used to train the models. May be used to reduce computation time for data

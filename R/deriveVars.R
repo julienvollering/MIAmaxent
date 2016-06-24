@@ -31,10 +31,10 @@
 #' @param allsplines Logical. Keep all spline transformations created, rather
 #'   than selecting particular splines based on fraction of total variation
 #'   explained.
-#' @param writedir The directory to which Maxent files will be written during
-#'   subset selection of spline variables. Defaults to the working directory.
-#' @param jarpath The pathway to the maxent.jar executable jar file. If
-#'   unspecified, the function looks for the file in the writedir.
+#' @param dir Directory to which files will be written during selection of
+#'   spline-type derived variables. Defaults to the working directory.
+#' @param jar Pathway to the 'maxent.jar' executable jar file. If unspecified,
+#'   the function looks for the file in \code{dir}.
 #'
 #' @return List of length 2. \enumerate{ \item A list of data frames, with each
 #'   containing the derived variables produced for a given explanatory variable.
@@ -57,31 +57,31 @@
 
 deriveVars <- function(data,
                        transformtype = c("L", "M", "D", "HF", "HR", "T", "B"),
-                       allsplines = FALSE, writedir = NULL, jarpath = NULL) {
+                       allsplines = FALSE, dir = NULL, jar = NULL) {
 
   if (any(c("HF", "HR", "T") %in% transformtype) && allsplines == F) {
     .binaryrvcheck(data[, 1])
   }
 
-  if (is.null(writedir)) {
-    writedir <- getwd()
+  if (is.null(dir)) {
+    dir <- getwd()
   }
 
-  if (is.null(jarpath)) {
-    jarpath <- paste(writedir, "\\maxent.jar", sep="")
+  if (is.null(jar)) {
+    jar <- paste(dir, "\\maxent.jar", sep="")
   }
 
-  if (!file.exists(jarpath)) {
-    stop("maxent.jar file must be present in writedir, or its pathway must be
-specified by the jarpath parameter. \n ")
+  if (!file.exists(jar)) {
+    stop("maxent.jar file must be present in dir, or its pathway must be
+specified by the jar parameter. \n ")
   }
 
-  dir <- paste(writedir, "\\deriveVars", sep="")
-  if (file.exists(dir)) {
-    stop("The specified writedir already contains a selection of spline DVs.
-Please specify a different writedir. \n ", call. = FALSE)
+  fdir <- paste(dir, "\\deriveVars", sep="")
+  if (file.exists(fdir)) {
+    stop("The specified dir already contains a selection of spline DVs.
+Please specify a different dir. \n ", call. = FALSE)
   } else {
-    dir.create(dir)
+    dir.create(fdir)
   }
 
 
@@ -89,11 +89,11 @@ Please specify a different writedir. \n ", call. = FALSE)
   EVDV <- list()
   for (i in 2:ncol(data)) {
     df <- data[, c(1,i)]
-    result <- .dvsfromev(df, transformtype, allsplines, dir, jarpath)
+    result <- .dvsfromev(df, transformtype, allsplines, fdir, jar)
     Storage <- c(Storage, result$storage)
     EVDV[[colnames(df)[2]]] <- result$evdv
   }
 
-  save(Storage, file = paste0(dir, "\\transf_storage.Rdata"))
+  save(Storage, file = paste0(dir, "\\transformations.Rdata"))
   return(list("EVDV" = EVDV, "transformations" = Storage))
 }
