@@ -42,12 +42,8 @@ plotResp <- function(data, dvdata, EV, dir = NULL, jar = NULL,
 
   .binaryrvcheck(data[, 1])
 
-  if (is.null(dir)) {dir <- getwd()}
-  if (is.null(jar)) {jar <- file.path(dir, "maxent.jar")}
-  if (file.exists(jar) == F) {
-    stop("maxent.jar file must be present in dir, or its pathway must be
-       specified by the jar argument. \n ", call. = FALSE)
-  }
+  if (is.null(dir)) { dir <- getwd()}
+  jar <- .jar.check(dir, jar)
 
   dir <- file.path(dir, "plotResp")
   dir.create(dir, showWarnings = FALSE)

@@ -63,18 +63,8 @@ deriveVars <- function(data,
     .binaryrvcheck(data[, 1])
   }
 
-  if (is.null(dir)) {
-    dir <- getwd()
-  }
-
-  if (is.null(jar)) {
-    jar <- paste(dir, "\\maxent.jar", sep="")
-  }
-
-  if (!file.exists(jar)) {
-    stop("maxent.jar file must be present in dir, or its pathway must be
-specified by the jar parameter. \n ")
-  }
+  if (is.null(dir)) { dir <- getwd()}
+  jar <- .jar.check(dir, jar)
 
   fdir <- paste(dir, "\\deriveVars", sep="")
   if (file.exists(fdir)) {
