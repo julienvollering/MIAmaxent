@@ -121,6 +121,26 @@
 
 
 
+#' Loads a transformation object
+#'
+#' From .Rdata file or from existing object
+#'
+#' @param transformation Vector of data. Must have scale [0,1]!
+
+.load.transf <- function(transformation) {
+  if (class(transformation) == "character") {
+    alltransf <- get(load(transformation))
+  } else {
+    alltransf <- transformation
+  }
+  if (!all(sapply(alltransf, class) == "function")) {
+    stop("transformation argument should contain functions only", call. = FALSE)
+  }
+  return(alltransf)
+}
+
+
+
 #' calculates skewness of a vector
 #'
 #' Also calculates the constant 'c' needed for zero-skewness transformation in
