@@ -41,7 +41,8 @@
     setTxtProgressBar(pb, i)
   }
 
-  write.csv(comparison, paste(dir, "\\splineselection.csv", sep=""), row.names = F)
+  write.csv(comparison, file = file.path(dir, "splineselection.csv"),
+    row.names = F)
 
   selected <- character()
   for (i in 3:(nrow(comparison)-2)) {
@@ -57,7 +58,7 @@
   ptsx <- comparison$KnotPosition[names(dv) %in% selected]
   ptsy <- comparison$FVA[names(dv) %in% selected]
 
-  png(paste(dir, "\\Vknotplot.png", sep=""))
+  png(filename = file.path(dir, "Vknotplot.png"))
   plot(comparison$KnotPosition, comparison$FVA, lty = "solid",
     main = "V-knot plot",
     xlab = "Position of knot",

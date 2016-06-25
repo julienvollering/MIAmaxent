@@ -61,7 +61,7 @@ selectEV <- function(data, dvdata, alpha = 0.01, interaction = TRUE, dir = NULL,
   if (is.null(dir)) { dir <- getwd()}
   jar <- .jar.check(dir, jar)
 
-  fdir <- paste(dir, "\\selectEV", sep="")
+  fdir <- file.path(dir, "selectEV")
   if (file.exists(fdir)) {
     stop("The specified dir already contains a selection of EVs.
 Please specify a different dir. \n ", call. = FALSE)
@@ -79,7 +79,7 @@ Please specify a different dir. \n ", call. = FALSE)
   message(paste0("Forward selection of ", length(dvdata), " EVs"))
 
   result <- .parsevs(rv, dvdata, alpha, interaction, fdir, jar)
-  write.csv(result[[2]], file = paste(fdir, "evselection.csv", sep="\\"),
+  write.csv(result[[2]], file = file.path(fdir, "evselection.csv"),
     row.names = FALSE)
 
   Result <- list(selectedEV = result[[1]], selection = result[[2]])

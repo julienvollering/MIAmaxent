@@ -131,7 +131,7 @@
       colnames(df) <- dvnames
       .runjar(rv, df, maxbkg = length(rv) + 1, modeldir, jarpath)
 
-      maxRes <- read.csv(paste(modeldir, "\\maxentResults.csv", sep=""))
+      maxRes <- read.csv(file.path(modeldir, "maxentResults.csv"))
       ctable$cycle[i] <- cyclenumber
       ctable$model[i] <- i
       ctable$EV[i] <- paste(evnames, collapse = " ")

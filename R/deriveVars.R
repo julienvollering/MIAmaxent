@@ -66,7 +66,7 @@ deriveVars <- function(data,
   if (is.null(dir)) { dir <- getwd()}
   jar <- .jar.check(dir, jar)
 
-  fdir <- paste(dir, "\\deriveVars", sep="")
+  fdir <- file.path(dir, "deriveVars")
   if (file.exists(fdir)) {
     stop("The specified dir already contains a selection of spline DVs.
 Please specify a different dir. \n ", call. = FALSE)
@@ -84,6 +84,6 @@ Please specify a different dir. \n ", call. = FALSE)
     EVDV[[colnames(df)[2]]] <- result$evdv
   }
 
-  save(Storage, file = paste0(dir, "\\transformations.Rdata"))
+  save(Storage, file = file.path(dir, "transformations.Rdata"))
   return(list("EVDV" = EVDV, "transformations" = Storage))
 }

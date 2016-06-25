@@ -55,7 +55,7 @@ selectDVforEV <- function(data, dvdata, alpha = 0.01, dir = NULL, jar = NULL,
   if (is.null(dir)) { dir <- getwd()}
   jar <- .jar.check(dir, jar)
 
-  fdir <- paste(dir, "\\selectDVforEV", sep="")
+  fdir <- file.path(dir, "selectDVforEV")
   if (file.exists(fdir)) {
     stop("The specified dir already contains a selection of DVs.
 Please specify a different dir. \n ")
@@ -81,7 +81,7 @@ Please specify a different dir. \n ")
     evdir <- .dirpath.create(fdir, evname)
     df <- dvdata[[i]]
     result <- .parsdvs(rv, df, alpha, evdir, jar)
-    write.csv(result[[2]], file = paste(evdir, "dvselection.csv", sep="\\"),
+    write.csv(result[[2]], file = file.path(evdir, "dvselection.csv"),
       row.names = FALSE)
     EVDV[[i]] <- result[[1]]
     trail[[i]] <- result[[2]]
