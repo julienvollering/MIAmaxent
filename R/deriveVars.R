@@ -38,7 +38,7 @@
 #'
 #' @return List of 2: \enumerate{ \item A list of data frames, with each
 #'   containing the derived variables produced for a given explanatory variable.
-#'   This item may be used as input for \code{\link{selectDVforEV}}. \item A
+#'   This item is recommended as input for \code{\link{selectDVforEV}}. \item A
 #'   list of all the transformation functions used to produce the derived
 #'   variables. This item may be used as input for \code{\link{plotResp}},
 #'   \code{\link{testAUC}}, and \code{\link{projectModel}} }
