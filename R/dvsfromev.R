@@ -59,7 +59,7 @@
         storage <- c(storage, splall)
       } else {
         hfdir <- .dirpath.create(evdir, "HF")
-        message(paste0("Selecting forward hinge transformations of ", evname))
+        message(paste0("Pre-selecting forward hinge transformations of ", evname))
         dvs <- lapply(splall, function(x) {x(ev)})
         names(dvs) <- gsub("_transf", "", names(splall))
         selected <- .splselect(rv, dvs, hfdir, jarpath)
@@ -81,7 +81,7 @@
         storage <- c(storage, splall)
       } else {
         hrdir <- .dirpath.create(evdir, "HR")
-        message(paste0("Selecting reverse hinge transformations of ", evname))
+        message(paste0("Pre-selecting reverse hinge transformations of ", evname))
         dvs <- lapply(splall, function(x) {x(ev)})
         names(dvs) <- gsub("_transf", "", names(splall))
         selected <- .splselect(rv, dvs, hrdir, jarpath)
@@ -103,7 +103,7 @@
         storage <- c(storage, splall)
       } else {
         tdir <- .dirpath.create(evdir, "T")
-        message(paste0("Selecting threshold transformations of ", evname))
+        message(paste0("Pre-selecting threshold transformations of ", evname))
         dvs <- lapply(splall, function(x) {x(ev)})
         names(dvs) <- gsub("_transf", "", names(splall))
         selected <- .splselect(rv, dvs, tdir, jarpath)
