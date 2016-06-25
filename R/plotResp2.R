@@ -5,7 +5,7 @@
 #' variables, a box plot is returned rather than a scatter plot.
 #' \code{plotResp2} also returns a data frame containing the plotted data (for
 #' customizable graphics). The response curves generated in this function are
-#' marginal-effect response curves, presenting the response of the model when
+#' marginal-effect response curves, which present the response of the model when
 #' all other explanatory variables are held constant at their mean values (cf.
 #' single-effect response curves; \code{\link{plotResp}}).
 #'
