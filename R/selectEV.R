@@ -78,6 +78,7 @@ Please specify a different dir. \n ", call. = FALSE)
     dir.create(fdir)
   }
 
+  returndata <- FALSE
   if (!is.null(trainmax) && trainmax < sum(is.na(rv))) {
     nub <- min(sum(is.na(rv)), trainmax)
     trainindex <- c(which(!is.na(rv)), sample(which(is.na(rv)), nub))
