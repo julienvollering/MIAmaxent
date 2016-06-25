@@ -57,7 +57,8 @@
 
 #' checks and (if necessary) assigns jar
 #'
-#' @param jar
+#' @param dir directory in which jar is searched for
+#' @param jar pathway to maxent.jar, which may also be NULL
 
 .jar.check <- function(dir, jar) {
   if (is.null(jar)) { jar <- file.path(dir, "maxent.jar") }
