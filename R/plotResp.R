@@ -1,13 +1,13 @@
-#' Plot model response across a given explanatory variable.
+#' Plot single-effect model response.
 #'
 #' \code{plotResp} plots  the response of a given Maxent model over any of the
 #' included explanatory variables (EVs) in that model. For categorical
-#' variables, a box plot is returned rather than a curve. \code{plotResp} also
-#' returns a data frame containing the plotted data (for customizable graphics).
-#'
-#' The response curves generated in this function are single-effect response
-#' curves, presenting the response of a model containing the explanatory
-#' variable of interest only (cf. marginal-effect response curves).
+#' variables, a box plot is returned rather than a scatter plot. \code{plotResp}
+#' also returns a data frame containing the plotted data (for customizable
+#' graphics). The response curves generated in this function are single-effect
+#' response curves, presenting the response of a model containing the
+#' explanatory variable of interest only (cf. marginal-effect response curves;
+#' \code{\link{plotResp2}}).
 #'
 #' The \code{ev} specified in \code{dvdata} must not be an interaction term.
 #'
