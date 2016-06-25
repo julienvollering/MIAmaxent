@@ -3,17 +3,25 @@
 #' For each explanatory variable (EV), \code{selectDVforEV} selects the
 #' parsimonious set of derived variables (DV) which best explains variation in a
 #' given response variable. The function uses a process of forward selection
-#' based on comparison of nested models by the F-test, where the F-statistic is
+#' based on comparison of nested models by the F-test.
+#'
+#' The F-statistic that \code{selectDVforEV} uses for nested model comparison is
 #' calculated using equation 59 in Halvorsen (2013). See Halvorsen et al. (2015)
-#' for an explanation of the forward selection procedure.
+#' for a more detailed explanation of the forward selection procedure.
 #'
 #' If the derived variables were created using \code{\link{deriveVars}}, the
 #' same response variable should be used in \code{selectDVforEV}, as the
 #' deviation and spline transformations produced by \code{deriveVars} are
 #' RV-specific.
 #'
-#' Variables should be uniquely named, and the names should not contain spaces
-#' or colons.
+#' If \code{trainmax} reduces the number of uninformed background points in the
+#' training data, a new \code{data} object is returned as part of the function
+#' output. This \code{data} object shows which of the uninformed background
+#' points were randomly selected, and should be used together with the selected
+#' DVs in \code{\link{selectEV}} during continued model selection.
+#'
+#' Variables should be uniquely named, and the names must not contain spaces or
+#' colons. Colons are reserved as the designator for interaction terms.
 #'
 #' @param data Data frame containing the response variable in the first column
 #'   and explanatory variables in subsequent columns. The response variable
@@ -29,7 +37,8 @@
 #'   the function looks for the file in \code{dir}.
 #' @param trainmax Integer. Maximum number of uninformed background points to be
 #'   used to train the models. May be used to reduce computation time for data
-#'   sets with very large numbers of points. Default is no maximum.
+#'   sets with very large numbers of points. Default is no maximum. See Details
+#'   for more information.
 #'
 #' @return List of 2: \enumerate{ \item A list of data frames, with each data
 #'   frame containing \emph{selected} DVs for a given EV. \item A list of data
@@ -63,11 +72,13 @@ Please specify a different dir. \n ")
     dir.create(fdir)
   }
 
-  if (!is.null(trainmax)) {
-    ub <- min(sum(is.na(rv)), trainmax)
-    trainindex <- c(which(!is.na(rv)), sample(which(is.na(rv)), ub))
-    rv <- rv[trainindex]
+  if (!is.null(trainmax) && trainmax < sum(is.na(rv))) {
+    nub <- min(sum(is.na(rv)), trainmax)
+    trainindex <- c(which(!is.na(rv)), sample(which(is.na(rv)), nub))
+    data <- data[trainindex, ]
     dvdata <- lapply(dvdata, function(x) {x[trainindex, , drop = FALSE]})
+    rv <- rv[trainindex]
+    returndata <- TRUE
   }
 
   EVDV <- list()
@@ -91,7 +102,11 @@ Please specify a different dir. \n ")
   names(trail) <- names(dvdata)
   EVDV <- EVDV[sapply(EVDV, function(x) {dim(x)[2] != 0})]
 
-  Result <- list(selectedDV = EVDV, selection = trail)
+  if (returndata == TRUE) {
+    Result <- list(selectedDV = EVDV, selection = trail, data = data)
+  } else {
+    Result <- list(selectedDV = EVDV, selection = trail)
+  }
 
   return(Result)
 }
