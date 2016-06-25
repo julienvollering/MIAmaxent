@@ -27,8 +27,7 @@
   if (class(ev) %in% c("numeric", "integer")) {
 
     if (any(c("HF", "HR", "T") %in% transformtype) && allsplines == F) {
-      evdir <- paste(dir, "\\", evname, sep="")
-      dir.create(evdir)
+      evdir <- .dirpath.create(dir, evname)
     }
 
     if ("L" %in% transformtype) {
@@ -59,8 +58,7 @@
       if (allsplines == T) {
         storage <- c(storage, splall)
       } else {
-        hfdir <- paste(evdir, "\\HF", sep="")
-        dir.create(hfdir)
+        hfdir <- .dirpath.create(evdir, "HF")
         message(paste0("Selecting forward hinge transformations of ", evname))
         dvs <- lapply(splall, function(x) {x(ev)})
         names(dvs) <- gsub("_transf", "", names(splall))
@@ -82,8 +80,7 @@
       if (allsplines == T) {
         storage <- c(storage, splall)
       } else {
-        hrdir <- paste(evdir, "\\HR", sep="")
-        dir.create(hrdir)
+        hrdir <- .dirpath.create(evdir, "HR")
         message(paste0("Selecting reverse hinge transformations of ", evname))
         dvs <- lapply(splall, function(x) {x(ev)})
         names(dvs) <- gsub("_transf", "", names(splall))
@@ -105,8 +102,7 @@
       if (allsplines == T) {
         storage <- c(storage, splall)
       } else {
-        tdir <- paste(evdir, "\\T", sep="")
-        dir.create(tdir)
+        tdir <- .dirpath.create(evdir, "T")
         message(paste0("Selecting threshold transformations of ", evname))
         dvs <- lapply(splall, function(x) {x(ev)})
         names(dvs) <- gsub("_transf", "", names(splall))

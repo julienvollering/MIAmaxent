@@ -21,8 +21,7 @@
   while (iterationexit == FALSE) {
 
     cyclenumber <- cyclenumber + 1
-    cycledir <- paste(dir, paste0("cycle", cyclenumber), sep="\\")
-    dir.create(cycledir)
+    cycledir <- .dirpath.create(dir, paste0("cycle", cyclenumber))
     cyclemodels <- lapply(remainingset, function(x) c(selectedset, x))
 
     nrows <- length(cyclemodels)
@@ -36,8 +35,7 @@
     for (i in 1:length(cyclemodels)) {
       evnames <- cyclemodels[[i]]
       dvnames <- unlist(lapply(ev[evnames], names), use.names = FALSE)
-      modeldir <- file.path(cycledir, paste0("model", i))
-      dir.create(modeldir)
+      modeldir <- .dirpath.create(cycledir, paste0("model", i))
       df <- data.frame(ev[evnames])
       colnames(df) <- dvnames
       .runjar(rv, df, maxbkg = length(rv) + 1, modeldir, jarpath)
@@ -114,8 +112,7 @@
   while (iterationexit == FALSE) {
 
     cyclenumber <- cyclenumber + 1
-    cycledir <- paste(dir, paste0("cycle", cyclenumber), sep="\\")
-    dir.create(cycledir)
+    cycledir <- .dirpath.create(dir, paste0("cycle", cyclenumber))
     cyclemodels <- lapply(remainingset, function(x) c(selectedset, x))
 
     nrows <- length(cyclemodels)
@@ -129,8 +126,7 @@
     for (i in 1:length(cyclemodels)) {
       evnames <- cyclemodels[[i]]
       dvnames <- unlist(lapply(ev[evnames], names), use.names = FALSE)
-      modeldir <- file.path(cycledir, paste0("model", i))
-      dir.create(modeldir)
+      modeldir <- .dirpath.create(cycledir, paste0("model", i))
       df <- data.frame(ev[evnames])
       colnames(df) <- dvnames
       .runjar(rv, df, maxbkg = length(rv) + 1, modeldir, jarpath)

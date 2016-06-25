@@ -78,8 +78,7 @@ Please specify a different dir. \n ")
 
   for (i in 1:length(dvdata)) {
     evname <- names(dvdata)[i]
-    evdir <- paste(fdir, "\\", evname, sep="")
-    dir.create(evdir)
+    evdir <- .dirpath.create(fdir, evname)
     df <- dvdata[[i]]
     result <- .parsdvs(rv, df, alpha, evdir, jar)
     write.csv(result[[2]], file = paste(evdir, "dvselection.csv", sep="\\"),

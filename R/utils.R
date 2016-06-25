@@ -41,6 +41,20 @@
 
 
 
+#' Name and create directory
+#'
+#' Simultaneuosly pastes arguments into pathway and creates the directory
+#'
+#' @param ... Arguments to be pasted together into directory pathway
+
+.dirpath.create <- function(...) {
+  path <- file.path(...)
+  dir.create(path)
+  return(path)
+}
+
+
+
 #' checks and (if necessary) assigns jar
 #'
 #' @param jar
