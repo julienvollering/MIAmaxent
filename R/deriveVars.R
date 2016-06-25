@@ -84,6 +84,6 @@ Please specify a different dir. \n ", call. = FALSE)
     EVDV[[colnames(df)[2]]] <- result$evdv
   }
 
-  save(Storage, file = file.path(dir, "transformations.Rdata"))
+  save(Storage, file = file.path(fdir, "transformations.Rdata"))
   return(list("EVDV" = EVDV, "transformations" = Storage))
 }
