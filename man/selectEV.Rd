@@ -2,7 +2,7 @@
 % Please edit documentation in R/selectEV.R
 \name{selectEV}
 \alias{selectEV}
-\title{Select parsimonious sets of explanatory variables.}
+\title{Select parsimonious set of explanatory variables.}
 \usage{
 selectEV(data, dvdata, alpha = 0.01, interaction = TRUE, dir = NULL,
   jar = NULL, trainmax = NULL)

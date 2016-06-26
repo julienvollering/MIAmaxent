@@ -1,4 +1,4 @@
-#' Select parsimonious sets of explanatory variables.
+#' Select parsimonious set of explanatory variables.
 #'
 #' \code{selectEV} selects the parsimonious set of explanatory variables (EVs)
 #' which best explains variation in a given response variable (RV). Each EV can
@@ -100,6 +100,9 @@ Please specify a different dir. \n ", call. = FALSE)
   } else {
     Result <- list(selectedEV = result[[1]], selection = result[[2]])
   }
+  selectedEV <- result[[1]]
+  save(selectedEV, file = file.path(fdir, "selectedEV.Rdata"))
+
 
   return(Result)
 }

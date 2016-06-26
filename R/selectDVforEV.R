@@ -110,6 +110,8 @@ Please specify a different dir. \n ")
   } else {
     Result <- list(selectedDV = EVDV, selection = trail)
   }
+  selectedDV <- Result[[1]]
+  save(selectedDV, file = file.path(fdir, "selectedDV.Rdata"))
 
   return(Result)
 }

@@ -75,15 +75,16 @@ Please specify a different dir. \n ", call. = FALSE)
   }
 
 
-  Storage <- list()
+  transformations <- list()
   EVDV <- list()
   for (i in 2:ncol(data)) {
     df <- data[, c(1,i)]
     result <- .dvsfromev(df, transformtype, allsplines, fdir, jar)
-    Storage <- c(Storage, result$storage)
+    transformations <- c(transformations, result$storage)
     EVDV[[colnames(df)[2]]] <- result$evdv
   }
 
-  save(Storage, file = file.path(fdir, "transformations.Rdata"))
-  return(list("EVDV" = EVDV, "transformations" = Storage))
+  save(EVDV, file = file.path(fdir, "EVDV.Rdata"))
+  save(transformations, file = file.path(fdir, "transformations.Rdata"))
+  return(list("EVDV" = EVDV, "transformations" = transformations))
 }
