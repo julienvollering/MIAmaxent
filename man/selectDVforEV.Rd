@@ -40,7 +40,9 @@ List of 2: \enumerate{ \item A list of data frames, with each data
 For each explanatory variable (EV), \code{selectDVforEV} selects the
 parsimonious set of derived variables (DV) which best explains variation in a
 given response variable. The function uses a process of forward selection
-based on comparison of nested models by the F-test.
+based on comparison of nested models by the F-test. A DV is selected for
+inclusion when, during nested model comparison, it accounts for a significant
+amount of remaining variation, under the alpha value specified by the user.
 }
 \details{
 The F-statistic that \code{selectDVforEV} uses for nested model comparison is

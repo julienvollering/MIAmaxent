@@ -23,11 +23,11 @@ parsimonious group of derived variables for a given explanatory variable
 \item{interaction}{Logical. Allows interaction terms between pairs of EVs.
 Default is \code{TRUE}.}
 
-\item{dir}{Directory to which files will be written during subset
-selection of explanatory variables. Defaults to the working directory.}
+\item{dir}{Directory to which files will be written during subset selection
+of explanatory variables. Defaults to the working directory.}
 
-\item{jar}{Pathway to the 'maxent.jar' executable jar file. If
-unspecified, the function looks for the file in \code{dir}.}
+\item{jar}{Pathway to the 'maxent.jar' executable jar file. If unspecified,
+the function looks for the file in \code{dir}.}
 
 \item{trainmax}{Integer. Maximum number of uninformed background points to be
 used to train the models. May be used to reduce computation time for data
@@ -35,17 +35,18 @@ sets with very large numbers of points. Default is no maximum. See Details
 for more information.}
 }
 \value{
-List of 2: \enumerate{ \item A list of data frames, with one
-  data frame for each \emph{selected} EV. \item A data frame
-  showing the trail of forward selection of individual EVs (and interaction
-  terms if necessary).}
+List of 2: \enumerate{ \item A list of data frames, with one data
+  frame for each \emph{selected} EV. \item A data frame showing the trail of
+  forward selection of individual EVs (and interaction terms if necessary).}
 }
 \description{
 \code{selectEV} selects the parsimonious set of explanatory variables (EVs)
 which best explains variation in a given response variable (RV). Each EV can
 be represented by 1 or more derived variables (see \code{\link{deriveVars}}).
 The function uses a process of forward selection based on comparison of
-nested models by the F-test.
+nested models by the F-test. An EV is selected for inclusion when, during
+nested model comparison, it accounts for a significant amount of remaining
+variation, under the alpha value specified by the user.
 }
 \details{
 The F-statistic that \code{selectEV} uses for nested model comparison is

@@ -4,7 +4,9 @@
 #' which best explains variation in a given response variable (RV). Each EV can
 #' be represented by 1 or more derived variables (see \code{\link{deriveVars}}).
 #' The function uses a process of forward selection based on comparison of
-#' nested models by the F-test.
+#' nested models by the F-test. An EV is selected for inclusion when, during
+#' nested model comparison, it accounts for a significant amount of remaining
+#' variation, under the alpha value specified by the user.
 #'
 #' The F-statistic that \code{selectEV} uses for nested model comparison is
 #' calculated using equation 59 in Halvorsen (2013). See Halvorsen et al. (2015)
@@ -37,19 +39,18 @@
 #'   0.01.
 #' @param interaction Logical. Allows interaction terms between pairs of EVs.
 #'   Default is \code{TRUE}.
-#' @param dir Directory to which files will be written during subset
-#'   selection of explanatory variables. Defaults to the working directory.
-#' @param jar Pathway to the 'maxent.jar' executable jar file. If
-#'   unspecified, the function looks for the file in \code{dir}.
+#' @param dir Directory to which files will be written during subset selection
+#'   of explanatory variables. Defaults to the working directory.
+#' @param jar Pathway to the 'maxent.jar' executable jar file. If unspecified,
+#'   the function looks for the file in \code{dir}.
 #' @param trainmax Integer. Maximum number of uninformed background points to be
 #'   used to train the models. May be used to reduce computation time for data
 #'   sets with very large numbers of points. Default is no maximum. See Details
 #'   for more information.
 #'
-#' @return List of 2: \enumerate{ \item A list of data frames, with one
-#'   data frame for each \emph{selected} EV. \item A data frame
-#'   showing the trail of forward selection of individual EVs (and interaction
-#'   terms if necessary).}
+#' @return List of 2: \enumerate{ \item A list of data frames, with one data
+#'   frame for each \emph{selected} EV. \item A data frame showing the trail of
+#'   forward selection of individual EVs (and interaction terms if necessary).}
 #'
 #' @references Halvorsen, R. (2013). A strict maximum likelihood explanation of
 #'   MaxEnt, and some implications for distribution modelling. Sommerfeltia, 36,

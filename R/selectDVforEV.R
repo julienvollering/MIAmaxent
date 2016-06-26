@@ -3,7 +3,9 @@
 #' For each explanatory variable (EV), \code{selectDVforEV} selects the
 #' parsimonious set of derived variables (DV) which best explains variation in a
 #' given response variable. The function uses a process of forward selection
-#' based on comparison of nested models by the F-test.
+#' based on comparison of nested models by the F-test. A DV is selected for
+#' inclusion when, during nested model comparison, it accounts for a significant
+#' amount of remaining variation, under the alpha value specified by the user.
 #'
 #' The F-statistic that \code{selectDVforEV} uses for nested model comparison is
 #' calculated using equation 59 in Halvorsen (2013). See Halvorsen et al. (2015)
