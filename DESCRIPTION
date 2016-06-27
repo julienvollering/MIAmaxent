@@ -1,8 +1,11 @@
 Package: maxentmodelselectr
 Type: Package
 Title: Maxent Distribution Model Selection
-Version: 0.1.0
-Author: Who wrote it
+Version: 0.0.0.9000
+Authors@R: as.person(c(
+    "Julien Vollering <julien.vollering@hisf.no> [aut, cre]",
+    "Sabrina Mazzoni <sabrina.mazzoni@nhm.uio.no> [aut]",
+    "Rune Halvorsen <rune.halvorsen@nhm.uio.no> [aut]"))
 Maintainer: Who to complain to <yourfault@somewhere.net>
 Description: Tools for training, selecting, and evaluating maximum entropy
     (Maxent) distribution models. This package provides tools for user-
@@ -10,7 +13,7 @@ Description: Tools for training, selecting, and evaluating maximum entropy
     by nested model comparison,  and flexible model evaluation and projection.
     It is based on the strict maximum likelihood interpretation of maximum
     entropy modelling.
-License: What license is it under?
+License: MIT + file LICENSE
 LazyData: TRUE
 URL: https://github.com/julienvollering/maxentmodelselectr
 BugReports: https://github.com/julienvollering/maxentmodelselectr/issues
