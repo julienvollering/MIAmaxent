@@ -4,7 +4,12 @@ Title: Maxent Distribution Model Selection
 Version: 0.1.0
 Author: Who wrote it
 Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
+Description: Tools for training, selecting, and evaluating maximum entropy
+    (Maxent) distribution models. This package provides tools for user-
+    controlled transformation of explanatory variables, selection of variables
+    by nested model comparison,  and flexible model evaluation and projection.
+    It is based on the strict maximum likelihood interpretation of maximum
+    entropy modelling.
 License: What license is it under?
 LazyData: TRUE
 URL: https://github.com/julienvollering/altrMaxent
