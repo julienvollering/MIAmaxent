@@ -22,5 +22,6 @@ Imports:
     dplyr (>= 0.4.3),
     e1071 (>= 1.6-7),
     Hmisc (>= 3.17-2),
+    PresenceAbsence (>= 1.1.9),
     stats (>= 3.2.3),
 
