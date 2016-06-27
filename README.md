@@ -1,5 +1,5 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-altrMaxent
+maxentmodelselectr
 ==========
 
-altrMaxent is an R package under development (pre-release). The contents of this repository are not currently intended for public use.
+maxentmodelselectr is an R package under development (pre-release). The contents of this repository are not currently intended for public use.

@@ -1,4 +1,4 @@
-Package: altrMaxent
+Package: maxentmodelselectr
 Type: Package
 Title: Maxent Distribution Model Selection
 Version: 0.1.0
@@ -12,8 +12,8 @@ Description: Tools for training, selecting, and evaluating maximum entropy
     entropy modelling.
 License: What license is it under?
 LazyData: TRUE
-URL: https://github.com/julienvollering/altrMaxent
-BugReports: https://github.com/julienvollering/altrMaxent/issues
+URL: https://github.com/julienvollering/maxentmodelselectr
+BugReports: https://github.com/julienvollering/maxentmodelselectr/issues
 RoxygenNote: 5.0.1
 Imports:
     dplyr (>= 0.4.3),
