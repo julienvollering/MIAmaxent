@@ -8,7 +8,9 @@ maxentmodelselectr is an R package under development (pre-release). The contents
 
 Training, selecting, and evaluating maximum entropy (Maxent) distributionmodels. This package provides tools for user-controlled transformation of explanatory variables, selection of variables by nested model comparison, and flexible model evaluation and projection. The methods implemented here are based on the strict maximum likelihood interpretation of maximum entropy modelling (Halvorsen, 2013, Halvorsen et al., 2015).
 
-The predecessor to this package is the MIA Toolbox, which is described in detail in Mazzoni et al. (2015). The maximum entropy algorithm utilized in this package is provided by the MaxEnt java program (Phillips et al., 2006).
+The predecessor to this package is the MIA Toolbox, which is described in detail in Mazzoni et al. (2015).
+
+The maximum entropy algorithm utilized in this package is provided by the MaxEnt java program (Phillips et al., 2006).
 
 ### References
 
