@@ -2,7 +2,7 @@
 % Please edit documentation in R/testAUC.R
 \name{testAUC}
 \alias{testAUC}
-\title{Calculate model AUC with test data}
+\title{Calculate model AUC with test data.}
 \usage{
 testAUC(data, transformation, model)
 }

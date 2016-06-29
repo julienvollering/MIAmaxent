@@ -1,4 +1,4 @@
-#' Calculate model AUC with test data
+#' Calculate model AUC with test data.
 #'
 #' For a given model, \code{testAUC} calculates the Area Under the Curve (AUC)
 #' of the Receiver Operating Characteristic (ROC) as a threshold-independent

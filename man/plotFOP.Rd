@@ -2,9 +2,10 @@
 % Please edit documentation in R/plotFOP.R
 \name{plotFOP}
 \alias{plotFOP}
-\title{Plot Frequency of Observed Presence (FOP)}
+\title{Plot Frequency of Observed Presence (FOP).}
 \usage{
-plotFOP(data, EV, smoothwindow = 5, EVranging = FALSE, intervals = NULL)
+plotFOP(data, EV, smoothwindow = 5, EVranging = FALSE, intervals = NULL,
+  ...)
 }
 \arguments{
 \item{data}{Data frame containing the response variable in the first column
@@ -26,11 +27,15 @@ by deriveVars. Irrelevant for categorical EVs.}
 
 \item{intervals}{Number of intervals into which the continuous EV is divided.
 Defaults to the minimum of N/50 and 100. Irrelevant for categorical EVs.}
+
+\item{...}{Arguments to be passed to \code{plot} to control the appearance of
+the plot. For example: \itemize{ \item \code{cex} for size of points \item
+\code{col} for color \item \code{xlim} for range of the x-axis }}
 }
 \value{
 In addition to the graphical output, a list of 2: \enumerate{ \item
-  The EV value at which FOP is highest (\code{EVoptimum}) \item a data
-  frame containing the plotted data (\code{FOPdata}).}
+  The EV value at which FOP is highest (\code{EVoptimum}) \item a data frame
+  containing the plotted data (\code{FOPdata}).}
 }
 \description{
 \code{plotFOP} produces a Frequency of Observed Presence (FOP) plot for a

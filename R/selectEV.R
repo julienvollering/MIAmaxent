@@ -48,9 +48,11 @@
 #'   sets with very large numbers of points. Default is no maximum. See Details
 #'   for more information.
 #'
-#' @return List of 2: \enumerate{ \item A list of data frames, with one data
+#' @return List of 2 (3): \enumerate{ \item A list of data frames, with one data
 #'   frame for each \emph{selected} EV. \item A data frame showing the trail of
-#'   forward selection of individual EVs (and interaction terms if necessary).}
+#'   forward selection of individual EVs (and interaction terms if necessary).
+#'   \item (If \code{trainmax} reduces the number of uninformed background
+#'   points) a new \code{data} object.}
 #'
 #' @references Halvorsen, R. (2013). A strict maximum likelihood explanation of
 #'   MaxEnt, and some implications for distribution modelling. Sommerfeltia, 36,

@@ -1,13 +1,12 @@
 #' Plot marginal-effect model response.
 #'
-#' \code{plotResp2} plots  the response of a given Maxent model over any of the
-#' included explanatory variables (EVs) in that model. For categorical
-#' variables, a box plot is returned rather than a scatter plot.
+#' \code{plotResp2} plots the marginal-effect response of a given Maxent model
+#' over any of the included explanatory variables (EVs) in that model. For
+#' categorical variables, a bar plot is returned rather than a scatter plot.
 #' \code{plotResp2} also returns a data frame containing the plotted data (for
-#' customizable graphics). The response curves generated in this function are
-#' marginal-effect response curves, which present the response of the model when
-#' all other explanatory variables are held constant at their mean values (cf.
-#' single-effect response curves; \code{\link{plotResp}}).
+#' customizable graphics). Marginal-effect response curves present the response
+#' of the model when all other explanatory variables are held constant at their
+#' mean values (cf. single-effect response curves; \code{\link{plotResp}}).
 #'
 #' @param data Data frame containing the response variable in the first column
 #'   and explanatory variables in subsequent columns. The response variable
@@ -23,8 +22,8 @@
 #' @param logscale Logical. Plot the common logarithm of PRO rather than PRO
 #'   itself.
 #' @param ... Arguments to be passed to \code{plot} to control the appearance of
-#'   the points in the scatterplot. For example: \itemize{ \item \code{cex} for
-#'   size \item \code{col} for color \item \code{pch} for type }
+#'   the plot. For example: \itemize{ \item \code{cex} for size of points \item
+#'   \code{col} for color \item \code{pch} for type }
 #'
 #' @return In addition to the graphical output, the plotted data is returned. In
 #'   the case of a continuous EV, the plotted data consists of both individual

@@ -35,9 +35,11 @@ sets with very large numbers of points. Default is no maximum. See Details
 for more information.}
 }
 \value{
-List of 2: \enumerate{ \item A list of data frames, with one data
+List of 2 (3): \enumerate{ \item A list of data frames, with one data
   frame for each \emph{selected} EV. \item A data frame showing the trail of
-  forward selection of individual EVs (and interaction terms if necessary).}
+  forward selection of individual EVs (and interaction terms if necessary).
+  \item (If \code{trainmax} reduces the number of uninformed background
+  points) a new \code{data} object.}
 }
 \description{
 \code{selectEV} selects the parsimonious set of explanatory variables (EVs)
