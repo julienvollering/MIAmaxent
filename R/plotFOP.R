@@ -1,4 +1,4 @@
-#' Plot Frequency of Observed Presence (FOP)
+#' Plot Frequency of Observed Presence (FOP).
 #'
 #' \code{plotFOP} produces a Frequency of Observed Presence (FOP) plot for a
 #' given explanatory variable. For continuous variables, the exponetially
@@ -31,16 +31,19 @@
 #'   by deriveVars. Irrelevant for categorical EVs.
 #' @param intervals Number of intervals into which the continuous EV is divided.
 #'   Defaults to the minimum of N/50 and 100. Irrelevant for categorical EVs.
+#' @param ... Arguments to be passed to \code{plot} to control the appearance of
+#'   the plot. For example: \itemize{ \item \code{cex} for size of points \item
+#'   \code{col} for color \item \code{xlim} for range of the x-axis }
 #'
 #' @return In addition to the graphical output, a list of 2: \enumerate{ \item
-#'   The EV value at which FOP is highest (\code{EVoptimum}) \item a data
-#'   frame containing the plotted data (\code{FOPdata}).}
+#'   The EV value at which FOP is highest (\code{EVoptimum}) \item a data frame
+#'   containing the plotted data (\code{FOPdata}).}
 #'
 #' @export
 
 
 plotFOP <- function(data, EV, smoothwindow = 5, EVranging = FALSE,
-                    intervals = NULL) {
+                    intervals = NULL, ...) {
 
   df <- data.frame(RV = data[, 1], EV = data[, EV])
   EVname <- colnames(data[, EV, drop = FALSE])
@@ -62,7 +65,7 @@ plotFOP <- function(data, EV, smoothwindow = 5, EVranging = FALSE,
     FOPdf$smoothRV <- .ewma(FOPdf$intRV, smoothwindow)
 
     plot(FOPdf$intRV ~ FOPdf$intEV, main = paste0("FOP plot: ", EVname),
-      xlab = EVname, ylab = "Frequency of Observed Presence (FOP)")
+      xlab = EVname, ylab = "Frequency of Observed Presence (FOP)", ...)
     lines(FOPdf$intEV, FOPdf$smoothRV, col="grey")
 
     maxRV <- FOPdf$smoothRV
@@ -90,7 +93,7 @@ plotFOP <- function(data, EV, smoothwindow = 5, EVranging = FALSE,
 
     barplot(FOPdf$intRV, names.arg = FOPdf$EV,
       main = paste0("FOP plot: ", EVname), xlab = EVname,
-      ylab = "Frequency of Observed Presence (FOP)")
+      ylab = "Frequency of Observed Presence (FOP)", ...)
 
     FOP <- list(EVoptimum = FOPdf$EV[which(FOPdf$intRV == max(FOPdf$intRV))],
       FOPdata = data.frame(n = FOPdf$n, level = FOPdf$EV,
