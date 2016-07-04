@@ -6,7 +6,7 @@ Authors@R: as.person(c(
     "Julien Vollering <julien.vollering@hisf.no> [aut, cre]",
     "Sabrina Mazzoni <sabrina.mazzoni@nhm.uio.no> [aut]",
     "Rune Halvorsen <rune.halvorsen@nhm.uio.no> [aut]"))
-Maintainer: person("Julien", "Vollering", email = "julien.vollering@hisf.no")
+Maintainer: Julien Vollering <julien.vollering@hisf.no>
 Description: Tools for training, selecting, and evaluating maximum entropy
     (Maxent) distribution models. This package provides tools for user-
     controlled transformation of explanatory variables, selection of variables
