@@ -10,10 +10,12 @@
 #' (2015).
 #'
 #' The maximum entropy algorithm utilized in this package is provided by the
-#' MaxEnt java program (Phillips et al., 2006). You must have a Java Runtime
-#' Environment installed on your computer for this program (and the
-#' maxentmodelselectr package) to function properly. Java Runtime Environment
-#' can be downloaded and installed from \url{java.com/download}.
+#' MaxEnt java program (Phillips et al., 2006).
+#'
+#' @section System Requirements: You must have a Java Runtime Environment
+#'   installed on your computer for this program (and the maxentmodelselectr
+#'   package) to function properly. Java Runtime Environment can be downloaded
+#'   and installed from \url{java.com/download}.
 #'
 #' @references Halvorsen, R. (2013) A strict maximum likelihood explanation of
 #'   MaxEnt, and some implications for distribution modelling. Sommerfeltia, 36,

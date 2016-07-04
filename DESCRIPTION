@@ -18,6 +18,7 @@ LazyData: TRUE
 URL: https://github.com/julienvollering/maxentmodelselectr
 BugReports: https://github.com/julienvollering/maxentmodelselectr/issues
 RoxygenNote: 5.0.1
+SystemRequirements: Java Runtime Environment (JRE)
 Imports:
     dplyr (>= 0.4.3),
     e1071 (>= 1.6-7),

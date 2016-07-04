@@ -2,7 +2,7 @@
 maxentmodelselectr
 ==================
 
-maxentmodelselectr is an R package under development (pre-release). The contents of this repository are not currently intended for public use.
+**maxentmodelselectr** is an R package under development (pre-release). The contents of this repository are not currently intended for public use.
 
 ### Description
 
@@ -10,7 +10,11 @@ Training, selecting, and evaluating maximum entropy (Maxent) distribution models
 
 The predecessor to this package is the MIA Toolbox, which is described in detail in Mazzoni et al. (2015).
 
-The maximum entropy algorithm utilized in this package is provided by the MaxEnt java program (Phillips et al., 2006). You must have a Java Runtime Environment installed on your computer for this program (and the maxentmodelselectr package) to function properly. Java Runtime Environment can be downloaded and installed from .
+The maximum entropy algorithm utilized in this package is provided by the MaxEnt java program (Phillips et al., 2006).
+
+### System Requirements
+
+You must have a Java Runtime Environment (JRE) installed on your computer for **maxentmodelselectr** to function properly. Java Runtime Environment can be downloaded and installed from <http://java.com/download>.
 
 ### References
 
