@@ -57,7 +57,7 @@
   ptsx <- comparison$KnotPosition[names(dv) %in% selected]
   ptsy <- comparison$FVA[names(dv) %in% selected]
 
-  png(filename = file.path(dir, "Vknotplot.png"))
+  grDevices::png(filename = file.path(dir, "Vknotplot.png"))
   plot(comparison$KnotPosition, comparison$FVA, lty = "solid",
     main = "V-knot plot",
     xlab = "Position of knot",
@@ -67,7 +67,7 @@
     text(ptsx, ptsy, labels=selected, cex= 0.9, pos=1)
   }
 
-  dev.off()
+  grDevices::dev.off()
 
   return(selected)
 }
