@@ -1,9 +1,9 @@
 #' Maxent model from .lambdas file.
 #'
 #' \code{modelFromLambdas} returns an R function for a given Maxent model, using
-#' the .lambdas file produced by Maxent.jar to parameterize the model. The
-#' returned function gives predictions of the model in "raw output" format from
-#' values of explanatory variables.
+#' the .lambdas file produced by the MaxEnt program to parameterize the model.
+#' The returned function gives predictions of the model in "raw output" format
+#' from values of explanatory variables.
 #'
 #' The \code{modelFromLambdas} function returns a Maxent model, in the form of a
 #' function that calculates Maxent predictions for given values of explanatory

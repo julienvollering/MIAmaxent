@@ -4,8 +4,7 @@
 \alias{selectDVforEV}
 \title{Select parsimonious sets of derived variables.}
 \usage{
-selectDVforEV(data, dvdata, alpha = 0.01, dir = NULL, jar = NULL,
-  trainmax = NULL)
+selectDVforEV(data, dvdata, alpha = 0.01, dir = NULL, trainmax = NULL)
 }
 \arguments{
 \item{data}{Data frame containing the response variable in the first column
@@ -21,9 +20,6 @@ returned by \code{\link{deriveVars}}: \code{deriveVars(...)[[1]]})}
 
 \item{dir}{Directory to which files will be written during subset selection
 of derived variables. Defaults to the working directory.}
-
-\item{jar}{Pathway to the 'maxent.jar' executable jar file. If unspecified,
-the function looks for the file in \code{dir}.}
 
 \item{trainmax}{Integer. Maximum number of uninformed background points to be
 used to train the models. May be used to reduce computation time for data

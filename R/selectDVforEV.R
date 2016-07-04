@@ -35,8 +35,6 @@
 #'   0.01.
 #' @param dir Directory to which files will be written during subset selection
 #'   of derived variables. Defaults to the working directory.
-#' @param jar Pathway to the 'maxent.jar' executable jar file. If unspecified,
-#'   the function looks for the file in \code{dir}.
 #' @param trainmax Integer. Maximum number of uninformed background points to be
 #'   used to train the models. May be used to reduce computation time for data
 #'   sets with very large numbers of points. Default is no maximum. See Details
@@ -58,14 +56,13 @@
 #' @export
 
 
-selectDVforEV <- function(data, dvdata, alpha = 0.01, dir = NULL, jar = NULL,
+selectDVforEV <- function(data, dvdata, alpha = 0.01, dir = NULL,
                           trainmax = NULL) {
 
   rv <- data[, 1]
   .binaryrvcheck(rv)
 
   if (is.null(dir)) { dir <- getwd()}
-  jar <- .jar.check(dir, jar)
 
   fdir <- file.path(dir, "selectDVforEV")
   if (file.exists(fdir)) {
@@ -95,7 +92,7 @@ Please specify a different dir. \n ")
     evname <- names(dvdata)[i]
     evdir <- .dirpath.create(fdir, evname)
     df <- dvdata[[i]]
-    result <- .parsdvs(rv, df, alpha, evdir, jar)
+    result <- .parsdvs(rv, df, alpha, evdir)
     write.csv(result[[2]], file = file.path(evdir, "dvselection.csv"),
       row.names = FALSE)
     EVDV[[i]] <- result[[1]]

@@ -55,22 +55,6 @@
 
 
 
-#' checks and (if necessary) assigns jar
-#'
-#' @param dir directory in which jar is searched for
-#' @param jar pathway to maxent.jar, which may also be NULL
-
-.jar.check <- function(dir, jar) {
-  if (is.null(jar)) { jar <- file.path(dir, "maxent.jar") }
-  if (!file.exists(jar)) {
-    stop("'maxent.jar' file must be present in dir, or its pathway must be
-       specified by the jar argument. \n ", call. = FALSE)
-  }
-  return(jar)
-}
-
-
-
 #' calculates exponentially weighted moving average
 #'
 #' @param x numeric. Vector across which the moving average is to be applied.

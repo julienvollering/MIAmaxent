@@ -5,7 +5,7 @@
 \title{Derive variables by transformation.}
 \usage{
 deriveVars(data, transformtype = c("L", "M", "D", "HF", "HR", "T", "B"),
-  allsplines = FALSE, dir = NULL, jar = NULL)
+  allsplines = FALSE, dir = NULL)
 }
 \arguments{
 \item{data}{Data frame containing the response variable in the first column
@@ -23,9 +23,6 @@ explained.}
 
 \item{dir}{Directory to which files will be written during selection of
 spline-type derived variables. Defaults to the working directory.}
-
-\item{jar}{Pathway to the 'maxent.jar' executable jar file. If unspecified,
-the function looks for the file in \code{dir}.}
 }
 \value{
 List of 2: \enumerate{ \item A list of data frames, with each

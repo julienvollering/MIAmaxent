@@ -17,13 +17,17 @@
 #'   the list returned by \code{\link{deriveVars}} can be used directly.
 #' @param model Pathway to the '.lambdas' file of the model in question. This
 #'   file is saved as a result of \code{\link{selectEV}}.
-#' @param clamping Logical. Do clamping \emph{sensu} maxent.jar. Default is
-#'   \code{FALSE}.
+#' @param clamping Logical. Do clamping \emph{sensu} Phillips et al. (2006).
+#'   Default is \code{FALSE}.
 #'
 #' @return List of 2: \enumerate{ \item A data frame with the model output in
 #'   column 1 and the corresponding explanatory data in subsequent columns.
 #'   \item A data frame showing the range of \code{data} compared to the
 #'   training data, on a 0-1 scale.}
+#'
+#' @references Phillips, S.J., Anderson, R.P. & Schapire, R.E. (2006) Maximum
+#'   entropy modeling of species geographic distributions. Ecological Modelling,
+#'   190, 231-259.
 #'
 #' @export
 

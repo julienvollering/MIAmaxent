@@ -41,8 +41,6 @@
 #'   Default is \code{TRUE}.
 #' @param dir Directory to which files will be written during subset selection
 #'   of explanatory variables. Defaults to the working directory.
-#' @param jar Pathway to the 'maxent.jar' executable jar file. If unspecified,
-#'   the function looks for the file in \code{dir}.
 #' @param trainmax Integer. Maximum number of uninformed background points to be
 #'   used to train the models. May be used to reduce computation time for data
 #'   sets with very large numbers of points. Default is no maximum. See Details
@@ -65,13 +63,12 @@
 
 
 selectEV <- function(data, dvdata, alpha = 0.01, interaction = TRUE, dir = NULL,
-                     jar = NULL, trainmax = NULL) {
+                     trainmax = NULL) {
 
   rv <- data[, 1]
   .binaryrvcheck(rv)
 
   if (is.null(dir)) { dir <- getwd()}
-  jar <- .jar.check(dir, jar)
 
   fdir <- file.path(dir, "selectEV")
   if (file.exists(fdir)) {
@@ -93,7 +90,7 @@ Please specify a different dir. \n ", call. = FALSE)
 
   message(paste0("Forward selection of ", length(dvdata), " EVs"))
 
-  result <- .parsevs(rv, dvdata, alpha, interaction, fdir, jar)
+  result <- .parsevs(rv, dvdata, alpha, interaction, fdir)
   write.csv(result[[2]], file = file.path(fdir, "evselection.csv"),
     row.names = FALSE)
 

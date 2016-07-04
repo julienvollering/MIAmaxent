@@ -4,11 +4,10 @@
 #' @param ev List of EVs to be selected from.
 #' @param alpha Alpha level for F-test.
 #' @param interaction Logical. Allows interaction terms.
-#' @param dir Directory to which Maxent runs are written.
-#' @param jarpath Pathway to maxent.jar
+#' @param dir Directory to which MaxEnt runs are written.
 #'
 
-.parsevs <- function(rv, ev, alpha, interaction, dir, jarpath) {
+.parsevs <- function(rv, ev, alpha, interaction, dir) {
 
   selectedset <- character(length=0)
   remainingset <- names(ev)
@@ -38,7 +37,7 @@
       modeldir <- .dirpath.create(cycledir, paste0("model", i))
       df <- data.frame(ev[evnames])
       colnames(df) <- dvnames
-      .runjar(rv, df, maxbkg = length(rv) + 1, modeldir, jarpath)
+      .runjar(rv, df, maxbkg = length(rv) + 1, modeldir)
 
       maxRes <- read.csv(file.path(modeldir, "maxentResults.csv"))
       ctable$cycle[i] <- cyclenumber
@@ -129,7 +128,7 @@
       modeldir <- .dirpath.create(cycledir, paste0("model", i))
       df <- data.frame(ev[evnames])
       colnames(df) <- dvnames
-      .runjar(rv, df, maxbkg = length(rv) + 1, modeldir, jarpath)
+      .runjar(rv, df, maxbkg = length(rv) + 1, modeldir)
 
       maxRes <- read.csv(file.path(modeldir, "maxentResults.csv"))
       ctable$cycle[i] <- cyclenumber

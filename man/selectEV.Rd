@@ -5,7 +5,7 @@
 \title{Select parsimonious set of explanatory variables.}
 \usage{
 selectEV(data, dvdata, alpha = 0.01, interaction = TRUE, dir = NULL,
-  jar = NULL, trainmax = NULL)
+  trainmax = NULL)
 }
 \arguments{
 \item{data}{Data frame containing the response variable in the first column
@@ -25,9 +25,6 @@ Default is \code{TRUE}.}
 
 \item{dir}{Directory to which files will be written during subset selection
 of explanatory variables. Defaults to the working directory.}
-
-\item{jar}{Pathway to the 'maxent.jar' executable jar file. If unspecified,
-the function looks for the file in \code{dir}.}
 
 \item{trainmax}{Integer. Maximum number of uninformed background points to be
 used to train the models. May be used to reduce computation time for data

@@ -20,8 +20,6 @@
 #'   which the response curve is to be generated. Interaction terms not allowed.
 #' @param dir Directory to which files will be written. Defaults to the working
 #'   directory.
-#' @param jar Pathway to the 'maxent.jar' executable jar file. If unspecified,
-#'   the function looks for the file in \code{dir}.
 #' @param logscale Logical. Plot the common logarithm of PRO rather than PRO
 #'   itself.
 #' @param ... Arguments to be passed to \code{plot} to control the appearance of
@@ -36,13 +34,11 @@
 #' @export
 
 
-plotResp <- function(data, dvdata, EV, dir = NULL, jar = NULL,
-                     logscale = FALSE, ...) {
+plotResp <- function(data, dvdata, EV, dir = NULL, logscale = FALSE, ...) {
 
   .binaryrvcheck(data[, 1])
 
   if (is.null(dir)) { dir <- getwd()}
-  jar <- .jar.check(dir, jar)
 
   dir <- file.path(dir, "plotResp")
   dir.create(dir, showWarnings = FALSE)
@@ -55,7 +51,7 @@ plotResp <- function(data, dvdata, EV, dir = NULL, jar = NULL,
   modeldir <- file.path(dir, paste0("response", evname))
   dir.create(modeldir, showWarnings = FALSE)
 
-  .runjar(data[, 1], dvdata[[EV]], maxbkg = nrow(data) + 1, modeldir, jar)
+  .runjar(data[, 1], dvdata[[EV]], maxbkg = nrow(data) + 1, modeldir)
 
   output <- read.csv(file.path(modeldir, "1_backgroundPredictions.csv"))
   respPts <- data.frame(EV = data[, evname], PRO = output[,3]*length(output[,3]))

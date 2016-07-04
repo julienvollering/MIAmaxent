@@ -18,8 +18,8 @@ the list returned by \code{\link{deriveVars}} can be used directly.}
 \item{model}{Pathway to the '.lambdas' file of the model in question. This
 file is saved as a result of \code{\link{selectEV}}.}
 
-\item{clamping}{Logical. Do clamping \emph{sensu} maxent.jar. Default is
-\code{FALSE}.}
+\item{clamping}{Logical. Do clamping \emph{sensu} Phillips et al. (2006).
+Default is \code{FALSE}.}
 }
 \value{
 List of 2: \enumerate{ \item A data frame with the model output in
@@ -37,5 +37,10 @@ the model must be specified.
 Missing data (NA) for a continuous variable will result in NA output for that
 point. Missing data for a categorical variable is treated as belonging to
 none of the categories.
+}
+\references{
+Phillips, S.J., Anderson, R.P. & Schapire, R.E. (2006) Maximum
+  entropy modeling of species geographic distributions. Ecological Modelling,
+  190, 231-259.
 }
 

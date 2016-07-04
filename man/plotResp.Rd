@@ -4,7 +4,7 @@
 \alias{plotResp}
 \title{Plot single-effect model response.}
 \usage{
-plotResp(data, dvdata, EV, dir = NULL, jar = NULL, logscale = FALSE, ...)
+plotResp(data, dvdata, EV, dir = NULL, logscale = FALSE, ...)
 }
 \arguments{
 \item{data}{Data frame containing the response variable in the first column
@@ -20,9 +20,6 @@ which the response curve is to be generated. Interaction terms not allowed.}
 
 \item{dir}{Directory to which files will be written. Defaults to the working
 directory.}
-
-\item{jar}{Pathway to the 'maxent.jar' executable jar file. If unspecified,
-the function looks for the file in \code{dir}.}
 
 \item{logscale}{Logical. Plot the common logarithm of PRO rather than PRO
 itself.}

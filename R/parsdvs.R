@@ -4,10 +4,9 @@
 #' @param dv Dataframe of DVs to be selected from.
 #' @param alpha Alpha level for F-test.
 #' @param dir Directory to which Maxent runs are written
-#' @param jarpath Pathway to maxent.jar
 #'
 
-.parsdvs <- function(rv, dv, alpha, dir, jarpath) {
+.parsdvs <- function(rv, dv, alpha, dir) {
 
   selectedset <- character(length=0)
   remainingset <- colnames(dv)
@@ -35,7 +34,7 @@
       modeldir <- .dirpath.create(cycledir, paste0("model", i))
       df <- data.frame(dv[, dvnames])
       colnames(df) <- dvnames
-      .runjar(rv, df, maxbkg = length(rv) + 1, modeldir, jarpath)
+      .runjar(rv, df, maxbkg = length(rv) + 1, modeldir)
 
       maxRes <- read.csv(file.path(modeldir, "maxentResults.csv"))
       ctable$cycle[i] <- cyclenumber
