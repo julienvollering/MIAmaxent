@@ -3,10 +3,9 @@
 #' @param rv Vector of response variable values
 #' @param dv List of spline dvs to be selected from (HF, HR, or Th)
 #' @param dir Directory to which Maxent runs are written
-#' @param jarpath Pathway to maxent.jar
 #'
 
-.splselect <- function(rv, dv, dir, jarpath) {
+.splselect <- function(rv, dv, dir) {
 
   n <- length(dv)
   comparison <- data.frame(DV=character(n), KnotPosition=numeric(n),
@@ -21,7 +20,7 @@
     dvdir <- .dirpath.create(dir, dvname)
     df <- data.frame(dv[[i]])
     colnames(df) <- dvname
-    .runjar(rv, df, maxbkg = length(rv) + 1, dvdir, jarpath)
+    .runjar(rv, df, maxbkg = length(rv) + 1, dvdir)
 
     maxRes <- read.csv(file.path(dvdir, "maxentResults.csv"))
     comparison$DV[i] <- dvname

@@ -12,12 +12,11 @@
 #' @param allsplines Logical. Keep all spline transformations.
 #' @param dir Directory to which Maxent runs of spline transformations are
 #'   written
-#' @param jarpath Pathway to maxent.jar
 #'
 #' @return Dataframe with one column for each DV.
 
 
-.dvsfromev <- function(df, transformtype, allsplines, dir, jarpath) {
+.dvsfromev <- function(df, transformtype, allsplines, dir) {
 
   rv <- df[, 1]
   ev <- df[, 2]
@@ -62,7 +61,7 @@
         message(paste0("Pre-selecting forward hinge transformations of ", evname))
         dvs <- lapply(splall, function(x) {x(ev)})
         names(dvs) <- gsub("_transf", "", names(splall))
-        selected <- .splselect(rv, dvs, hfdir, jarpath)
+        selected <- .splselect(rv, dvs, hfdir)
         if (length(selected) > 0) {
           storage <- c(storage, splall[paste0(selected, "_transf")])
         }
@@ -84,7 +83,7 @@
         message(paste0("Pre-selecting reverse hinge transformations of ", evname))
         dvs <- lapply(splall, function(x) {x(ev)})
         names(dvs) <- gsub("_transf", "", names(splall))
-        selected <- .splselect(rv, dvs, hrdir, jarpath)
+        selected <- .splselect(rv, dvs, hrdir)
         if (length(selected) > 0) {
           storage <- c(storage, splall[paste0(selected, "_transf")])
         }
@@ -106,7 +105,7 @@
         message(paste0("Pre-selecting threshold transformations of ", evname))
         dvs <- lapply(splall, function(x) {x(ev)})
         names(dvs) <- gsub("_transf", "", names(splall))
-        selected <- .splselect(rv, dvs, tdir, jarpath)
+        selected <- .splselect(rv, dvs, tdir)
         if (length(selected) > 0) {
           storage <- c(storage, splall[paste0(selected, "_transf")])
         }

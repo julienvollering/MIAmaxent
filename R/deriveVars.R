@@ -33,8 +33,6 @@
 #'   explained.
 #' @param dir Directory to which files will be written during selection of
 #'   spline-type derived variables. Defaults to the working directory.
-#' @param jar Pathway to the 'maxent.jar' executable jar file. If unspecified,
-#'   the function looks for the file in \code{dir}.
 #'
 #' @return List of 2: \enumerate{ \item A list of data frames, with each
 #'   containing the derived variables produced for a given explanatory variable.
@@ -57,14 +55,13 @@
 
 deriveVars <- function(data,
                        transformtype = c("L", "M", "D", "HF", "HR", "T", "B"),
-                       allsplines = FALSE, dir = NULL, jar = NULL) {
+                       allsplines = FALSE, dir = NULL) {
 
   if (any(c("HF", "HR", "T") %in% transformtype) && allsplines == F) {
     .binaryrvcheck(data[, 1])
   }
 
   if (is.null(dir)) { dir <- getwd()}
-  jar <- .jar.check(dir, jar)
 
   fdir <- file.path(dir, "deriveVars")
   if (file.exists(fdir)) {
@@ -79,7 +76,7 @@ Please specify a different dir. \n ", call. = FALSE)
   EVDV <- list()
   for (i in 2:ncol(data)) {
     df <- data[, c(1,i)]
-    result <- .dvsfromev(df, transformtype, allsplines, fdir, jar)
+    result <- .dvsfromev(df, transformtype, allsplines, fdir)
     transformations <- c(transformations, result$storage)
     EVDV[[colnames(df)[2]]] <- result$evdv
   }

@@ -234,9 +234,9 @@
 #' @param maxbkg Maximum number of uninformed background points to use for
 #'   training
 #' @param dir Directory to which Maxent files will be written
-#' @param jarpath Pathway to the maxent.jar executable jar file
 
-.runjar <- function(rv, ev, maxbkg = 10000, dir, jarpath) {
+.runjar <- function(rv, ev, maxbkg = 10000, dir) {
+  jarpath <- system.file("maxent.jar", package = "maxentmodelselectr")
   df <- data.frame("RV" = rv, "X" = -9999, "Y" = -9999, ev, check.names = FALSE)
   samplesdf <- na.omit(df)
   environlayersdf <- df
