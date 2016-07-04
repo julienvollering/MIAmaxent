@@ -43,8 +43,8 @@ testAUC <- function(data, transformation, model) {
   PRO1thresh <- PresenceAbsence::roc.plot.calculate(df, PRO1)
   x <- 1 - PRO1thresh$specificity
   y <- PRO1thresh$sensitivity
-  points(x, y, pch = 19, col = "#999999")
-  text(x, y, "PRO = 1", pos = 3, col = "#999999", cex = 0.9)
+  graphics::points(x, y, pch = 19, col = "#999999")
+  graphics::text(x, y, "PRO = 1", pos = 3, col = "#999999", cex = 0.9)
 
   return(AUC)
 }

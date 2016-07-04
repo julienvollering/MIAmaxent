@@ -58,13 +58,13 @@
   ptsy <- comparison$FVA[names(dv) %in% selected]
 
   grDevices::png(filename = file.path(dir, "Vknotplot.png"))
-  plot(comparison$KnotPosition, comparison$FVA, lty = "solid",
+  graphics::plot(comparison$KnotPosition, comparison$FVA, lty = "solid",
     main = "V-knot plot",
     xlab = "Position of knot",
     ylab = "Fraction of variation accounted for (FVA)")
   if (length(selected) > 0) {
-    points(ptsx, ptsy, col="red", pch=16)
-    text(ptsx, ptsy, labels=selected, cex= 0.9, pos=1)
+    graphics::points(ptsx, ptsy, col="red", pch=16)
+    graphics::text(ptsx, ptsy, labels=selected, cex= 0.9, pos=1)
   }
 
   grDevices::dev.off()

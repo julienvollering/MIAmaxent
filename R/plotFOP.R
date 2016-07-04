@@ -64,9 +64,10 @@ plotFOP <- function(data, EV, smoothwindow = 5, EVranging = FALSE,
 
     FOPdf$smoothRV <- .ewma(FOPdf$intRV, smoothwindow)
 
-    plot(FOPdf$intRV ~ FOPdf$intEV, main = paste0("FOP plot: ", EVname),
+    graphics::plot(FOPdf$intRV ~ FOPdf$intEV,
+      main = paste0("FOP plot: ", EVname),
       xlab = EVname, ylab = "Frequency of Observed Presence (FOP)", ...)
-    lines(FOPdf$intEV, FOPdf$smoothRV, col="grey")
+    graphics::lines(FOPdf$intEV, FOPdf$smoothRV, col="grey")
 
     maxRV <- FOPdf$smoothRV
     maxRV[is.na(maxRV)] <- FOPdf$intRV[is.na(maxRV)]
@@ -91,7 +92,7 @@ plotFOP <- function(data, EV, smoothwindow = 5, EVranging = FALSE,
     grouped <- dplyr::group_by(df, EV)
     FOPdf <- dplyr::summarise(grouped, n = n(), intRV = mean(RV, na.rm=F))
 
-    barplot(FOPdf$intRV, names.arg = FOPdf$EV,
+    graphics::barplot(FOPdf$intRV, names.arg = FOPdf$EV,
       main = paste0("FOP plot: ", EVname), xlab = EVname,
       ylab = "Frequency of Observed Presence (FOP)", ...)
 

@@ -58,7 +58,7 @@ plotResp <- function(data, dvdata, EV, dir = NULL, logscale = FALSE, ...) {
   if (logscale == TRUE) {respPts$PRO <- log10(respPts$PRO)}
 
   if (class(respPts[, 1]) %in% c("numeric", "integer")) {
-    plot(respPts[, 2] ~ respPts[, 1], ...,
+    graphics::plot(respPts[, 2] ~ respPts[, 1], ...,
       main = paste0("Single-effect response plot: ", evname), xlab = evname,
       ylab = ifelse(logscale == TRUE, "log Probability Ratio Output (logPRO)",
         "Probability Ratio Output (PRO)"))
@@ -70,9 +70,13 @@ plotResp <- function(data, dvdata, EV, dir = NULL, logscale = FALSE, ...) {
       intEV = mean(EV, na.rm = TRUE),
       intPRO = mean(PRO, na.rm = TRUE)))
     respLine$smoothPRO <- .ewma(respLine$intPRO, 5)
-    lines(respLine$smoothPRO ~ respLine$intEV, col="red", lwd = 2)
+    graphics::lines(respLine$smoothPRO ~ respLine$intEV, col="red", lwd = 2)
 
-    if (logscale == TRUE) {abline(h = 0, lty = 3)} else {abline(h = 1, lty = 3)}
+    if (logscale == TRUE) {
+      graphics::abline(h = 0, lty = 3)
+    } else {
+      graphics::abline(h = 1, lty = 3)
+    }
 
     result <- list("respPts" = respPts, "respLine" = respLine)
   }
@@ -80,11 +84,15 @@ plotResp <- function(data, dvdata, EV, dir = NULL, logscale = FALSE, ...) {
   if (class(respPts[, 1]) %in% c("factor", "character")) {
     respBar <- as.data.frame(dplyr::summarise(dplyr::group_by(respPts, EV),
       n = n(), intPRO = mean(PRO, na.rm = TRUE)))
-    barplot(respBar[, 3], names.arg = respBar[, 1], ...,
+    graphics::barplot(respBar[, 3], names.arg = respBar[, 1], ...,
       main = paste0("Single-effect response plot: ", evname), xlab = evname,
       ylab = ifelse(logscale == TRUE, "log Probability Ratio Output (logPRO)",
         "Probability Ratio Output (PRO)"))
-    if (logscale == TRUE) {abline(h = 0, lty = 3)} else {abline(h = 1, lty = 3)}
+    if (logscale == TRUE) {
+      graphics::abline(h = 0, lty = 3)
+    } else {
+      graphics::abline(h = 1, lty = 3)
+    }
     result <- respBar
   }
 
