@@ -13,7 +13,7 @@
     FVA=numeric(n), df=integer(n), Fstatistic=numeric(n), Pvalue=numeric(n),
     Directory=character(n), stringsAsFactors = F)
 
-  pb <- txtProgressBar(min = 0, max = n, style = 3)
+  pb <- utils::txtProgressBar(min = 0, max = n, style = 3)
 
   for (i in 1:n) {
     dvname <- names(dv)[[i]]
@@ -22,7 +22,7 @@
     colnames(df) <- dvname
     .runjar(rv, df, maxbkg = length(rv) + 1, dvdir)
 
-    maxRes <- read.csv(file.path(dvdir, "maxentResults.csv"))
+    maxRes <- utils::read.csv(file.path(dvdir, "maxentResults.csv"))
     comparison$DV[i] <- dvname
     comparison$KnotPosition[i] <- (2 * i - 1) / (2 * n)
     comparison$n[i] <- maxRes$X.Training.samples
@@ -37,10 +37,10 @@
     comparison$Pvalue[i] <- 1 - stats::pf(comparison$Fstatistic[i], 1, comparison$df[i])
     comparison$Directory[i] <- dvdir
 
-    setTxtProgressBar(pb, i)
+    utils::setTxtProgressBar(pb, i)
   }
 
-  write.csv(comparison, file = file.path(dir, "splineselection.csv"),
+  utils::write.csv(comparison, file = file.path(dir, "splineselection.csv"),
     row.names = F)
 
   selected <- character()

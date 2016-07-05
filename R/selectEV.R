@@ -91,7 +91,7 @@ Please specify a different dir. \n ", call. = FALSE)
   message(paste0("Forward selection of ", length(dvdata), " EVs"))
 
   result <- .parsevs(rv, dvdata, alpha, interaction, fdir)
-  write.csv(result[[2]], file = file.path(fdir, "evselection.csv"),
+  utils::write.csv(result[[2]], file = file.path(fdir, "evselection.csv"),
     row.names = FALSE)
 
   if (returndata == TRUE) {

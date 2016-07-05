@@ -39,7 +39,7 @@
       colnames(df) <- dvnames
       .runjar(rv, df, maxbkg = length(rv) + 1, modeldir)
 
-      maxRes <- read.csv(file.path(modeldir, "maxentResults.csv"))
+      maxRes <- utils::read.csv(file.path(modeldir, "maxentResults.csv"))
       ctable$cycle[i] <- cyclenumber
       ctable$model[i] <- i
       ctable$EV[i] <- paste(evnames, collapse = " ")
@@ -88,7 +88,7 @@
   message(paste0("Forward selection of interaction terms between ",
     length(selectedset), " EVs"))
 
-  combos <- t(combn(selectedset, 2))
+  combos <- t(utils::combn(selectedset, 2))
   products <- vector("list", nrow(combos))
   names(products) <- apply(combos, 1, function(x) {paste(x, collapse=":")})
   for (i in 1:nrow(combos)) {
@@ -130,7 +130,7 @@
       colnames(df) <- dvnames
       .runjar(rv, df, maxbkg = length(rv) + 1, modeldir)
 
-      maxRes <- read.csv(file.path(modeldir, "maxentResults.csv"))
+      maxRes <- utils::read.csv(file.path(modeldir, "maxentResults.csv"))
       ctable$cycle[i] <- cyclenumber
       ctable$model[i] <- i
       ctable$EV[i] <- paste(evnames, collapse = " ")

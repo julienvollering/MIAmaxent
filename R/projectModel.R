@@ -34,7 +34,7 @@
 
 projectModel <- function(data, transformation, model, clamping = FALSE) {
 
-  lambdas <- read.csv(model, header = FALSE)
+  lambdas <- utils::read.csv(model, header = FALSE)
   dvnames <- as.character(lambdas[1:(nrow(lambdas)-4), 1])
   dvnamesni <- dvnames[-grep(":", dvnames)]
   dvnamesi <- dvnames[grep(":", dvnames)]

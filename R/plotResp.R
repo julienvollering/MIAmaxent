@@ -53,7 +53,7 @@ plotResp <- function(data, dvdata, EV, dir = NULL, logscale = FALSE, ...) {
 
   .runjar(data[, 1], dvdata[[EV]], maxbkg = nrow(data) + 1, modeldir)
 
-  output <- read.csv(file.path(modeldir, "1_backgroundPredictions.csv"))
+  output <- utils::read.csv(file.path(modeldir, "1_backgroundPredictions.csv"))
   respPts <- data.frame(EV = data[, evname], PRO = output[,3]*length(output[,3]))
   if (logscale == TRUE) {respPts$PRO <- log10(respPts$PRO)}
 

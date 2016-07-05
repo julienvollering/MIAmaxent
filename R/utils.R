@@ -225,8 +225,8 @@
   samplesdf <- stats::na.omit(df)
   environlayersdf <- df
   csvfiles <- file.path(dir, c("samples.csv", "environlayers.csv"))
-  write.csv(samplesdf, csvfiles[1], row.names = F)
-  write.csv(environlayersdf, csvfiles[2], row.names = F)
+  utils::write.csv(samplesdf, csvfiles[1], row.names = F)
+  utils::write.csv(environlayersdf, csvfiles[2], row.names = F)
 
   jarflags1 <- " removeduplicates=FALSE addsamplestobackground=FALSE"
   jarflags2 <- " autofeature=FALSE betamultiplier=0"

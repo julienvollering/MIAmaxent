@@ -86,18 +86,18 @@ Please specify a different dir. \n ")
   trail <- list()
 
   message(paste0("Forward selection of DVs for ", length(dvdata), " EVs"))
-  pb <- txtProgressBar(min = 0, max = length(dvdata), style = 3)
+  pb <- utils::txtProgressBar(min = 0, max = length(dvdata), style = 3)
 
   for (i in 1:length(dvdata)) {
     evname <- names(dvdata)[i]
     evdir <- .dirpath.create(fdir, evname)
     df <- dvdata[[i]]
     result <- .parsdvs(rv, df, alpha, evdir)
-    write.csv(result[[2]], file = file.path(evdir, "dvselection.csv"),
+    utils::write.csv(result[[2]], file = file.path(evdir, "dvselection.csv"),
       row.names = FALSE)
     EVDV[[i]] <- result[[1]]
     trail[[i]] <- result[[2]]
-    setTxtProgressBar(pb, i)
+    utils::setTxtProgressBar(pb, i)
   }
   names(EVDV) <- names(dvdata)
   names(trail) <- names(dvdata)

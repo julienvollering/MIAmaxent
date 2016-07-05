@@ -25,7 +25,7 @@
 
 modelfromlambdas <- function(file) {
 
-  lambdas <- read.csv(file, header = FALSE)
+  lambdas <- utils::read.csv(file, header = FALSE)
   dvrows <- lambdas[1:(nrow(lambdas)-4), ]
   m <- nrow(dvrows)
   thetas <- dvrows[, 2]
