@@ -59,8 +59,8 @@ plotFOP <- function(data, EV, smoothwindow = 5, EVranging = FALSE,
     df$int <- .reg.interval(df[, 2], intervals)
 
     grouped <- dplyr::group_by(df, int)
-    FOPdf <- as.data.frame(dplyr::summarise(grouped, n = n(), intEV = mean(EV),
-      intRV = mean(RV, na.rm=F)))
+    FOPdf <- as.data.frame(dplyr::summarise(grouped, n = dplyr::n(),
+      intEV = mean(EV), intRV = mean(RV, na.rm=F)))
 
     FOPdf$smoothRV <- .ewma(FOPdf$intRV, smoothwindow)
 
@@ -90,7 +90,7 @@ plotFOP <- function(data, EV, smoothwindow = 5, EVranging = FALSE,
 
   if (class(df[, 2]) %in% c("factor", "character")) {
     grouped <- dplyr::group_by(df, EV)
-    FOPdf <- dplyr::summarise(grouped, n = n(), intRV = mean(RV, na.rm=F))
+    FOPdf <- dplyr::summarise(grouped, n = dplyr::n(), intRV = mean(RV, na.rm=F))
 
     graphics::barplot(FOPdf$intRV, names.arg = FOPdf$EV,
       main = paste0("FOP plot: ", EVname), xlab = EVname,
