@@ -121,7 +121,7 @@ plotResp2 <- function(data, EV, transformation, model, logscale = FALSE,
     intervals <- min(c(ceiling(nrow(respPts) / 50), 100))
     respPts$int <- .reg.interval(respPts[, 1], intervals)
     grouped <- dplyr::group_by(respPts, int)
-    respLine <- as.data.frame(dplyr::summarise(grouped, n = dplyr::n(),
+    respLine <- as.data.frame(dplyr::summarise(grouped, n = n(),
       intEV = mean(EV, na.rm = TRUE),
       intPRO = mean(PRO, na.rm = TRUE)))
     respLine$smoothPRO <- .ewma(respLine$intPRO, 5)
@@ -138,7 +138,7 @@ plotResp2 <- function(data, EV, transformation, model, logscale = FALSE,
 
   if (class(respPts[, 1]) %in% c("factor", "character")) {
     respBar <- as.data.frame(dplyr::summarise(dplyr::group_by(respPts, EV),
-      n = dplyr::n(), intPRO = mean(PRO, na.rm = TRUE)))
+      n = n(), intPRO = mean(PRO, na.rm = TRUE)))
     graphics::barplot(respBar[, 3], names.arg = respBar[, 1], ...,
       main = paste0("Marginal-effect response plot: ", EV), xlab = EV,
       ylab = ifelse(logscale == TRUE, "log Probability Ratio Output (logPRO)",
