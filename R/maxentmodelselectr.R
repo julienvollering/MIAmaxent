@@ -18,7 +18,7 @@
 #'   located by the following R command: \code{system.file("java", package =
 #'   "maxentmodelselectr")}.
 #'
-#'   You must have a Java Runtime Environment (JRE) installed on your computer
+#'   You must have the Java Runtime Environment (JRE) installed on your computer
 #'   for the MaxEnt program to function. You can check if you have Java
 #'   installed, and download it if necessary, from
 #'   \url{http://java.com/download}.

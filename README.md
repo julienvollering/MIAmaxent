@@ -14,7 +14,7 @@ The predecessor to this package is the MIA Toolbox, which is described in detail
 
 The maximum entropy algorithm utilized in this package is provided by the MaxEnt Java program (Phillips et al., 2006). This software is freely available, but may not be distributed further. Therefore, you must download the MaxEnt program (v3.3.3k) from <https://www.cs.princeton.edu/~schapire/maxent/>, and place the 'maxent.jar' file in the 'java' folder of this package. This folder can be located by the following R command: system.file("java", package = "maxentmodelselectr").
 
-You must have a Java Runtime Environment (JRE) installed on your computer for the MaxEnt program to function. You can check if you have Java installed, and download it if necessary, from <http://java.com/download>.
+You must have the Java Runtime Environment (JRE) installed on your computer for the MaxEnt program to function. You can check if you have Java installed, and download it if necessary, from <http://java.com/download>.
 
 ### References
 

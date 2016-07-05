@@ -226,7 +226,7 @@ if(getRversion() >= "2.15.1") {
 #' @param dir Directory to which Maxent files will be written
 
 .runjar <- function(rv, ev, maxbkg = 10000, dir) {
-  jarpath <- system.file("maxent.jar", package = "maxentmodelselectr")
+  jarpath <- system.file("java/maxent.jar", package = "maxentmodelselectr")
   df <- data.frame("RV" = rv, "X" = -9999, "Y" = -9999, ev, check.names = FALSE)
   samplesdf <- stats::na.omit(df)
   environlayersdf <- df
