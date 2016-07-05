@@ -1,3 +1,9 @@
+if(getRversion() >= "2.15.1") {
+  utils::globalVariables(c("EV", "int", "PRO", "RV"))
+}
+
+
+
 #' Best prefix match.
 #'
 #' Return only the string in 'a' which best matches any of the strings in 'b'
