@@ -56,7 +56,7 @@
         ((1 - ctable$FVA[i]) * dfe)
       ctable$dfe[i] <- dfe
       ctable$dfu[i] <- dfu
-      ctable$Pvalue[i] <- 1 - pf(ctable$Fstatistic[i], dfe, dfu)
+      ctable$Pvalue[i] <- 1 - stats::pf(ctable$Fstatistic[i], dfe, dfu)
       ctable$Directory[i] <- modeldir
     }
 
@@ -147,7 +147,7 @@
         ((1 - ctable$FVA[i]) * dfe)
       ctable$dfe[i] <- dfe
       ctable$dfu[i] <- dfu
-      ctable$Pvalue[i] <- 1 - pf(ctable$Fstatistic[i], dfe, dfu)
+      ctable$Pvalue[i] <- 1 - stats::pf(ctable$Fstatistic[i], dfe, dfu)
       ctable$Directory[i] <- modeldir
     }
 

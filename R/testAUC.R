@@ -26,7 +26,7 @@
 
 testAUC <- function(data, transformation, model) {
 
-  data <- na.omit(data)
+  data <- stats::na.omit(data)
   test <- data[, 1]
   PRO <- projectModel(data, transformation, model)[[1]][, 1]
   rangedoutput <- (PRO - min(PRO)) / diff(range(PRO))

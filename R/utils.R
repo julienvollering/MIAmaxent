@@ -73,9 +73,9 @@
   }
 
   if (n %% 2 != 0) {
-    expwindow <- dexp(c(((n-1)/2):0,1:((n-1)/2)))
+    expwindow <- stats::dexp(c(((n-1)/2):0,1:((n-1)/2)))
   } else {
-    expwindow <- dexp(c((n/2):0,1:((n-2)/2)))
+    expwindow <- stats::dexp(c((n/2):0,1:((n-2)/2)))
   }
   weights <- expwindow/sum(expwindow)
   as.numeric(stats::filter(x, weights, sides=2))
@@ -222,7 +222,7 @@
 .runjar <- function(rv, ev, maxbkg = 10000, dir) {
   jarpath <- system.file("maxent.jar", package = "maxentmodelselectr")
   df <- data.frame("RV" = rv, "X" = -9999, "Y" = -9999, ev, check.names = FALSE)
-  samplesdf <- na.omit(df)
+  samplesdf <- stats::na.omit(df)
   environlayersdf <- df
   csvfiles <- file.path(dir, c("samples.csv", "environlayers.csv"))
   write.csv(samplesdf, csvfiles[1], row.names = F)

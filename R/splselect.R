@@ -34,7 +34,7 @@
     comparison$df[i] <- comparison$N[i] - comparison$n[i] - 3
     comparison$Fstatistic[i] <- (comparison$FVA[i] * comparison$df[i]) /
                                 ((1-comparison$FVA[i]) * 1)
-    comparison$Pvalue[i] <- 1 - pf(comparison$Fstatistic[i], 1, comparison$df[i])
+    comparison$Pvalue[i] <- 1 - stats::pf(comparison$Fstatistic[i], 1, comparison$df[i])
     comparison$Directory[i] <- dvdir
 
     setTxtProgressBar(pb, i)
