@@ -241,7 +241,7 @@ if(getRversion() >= "2.15.1") {
   jarflags5 <- " outputgrids=FALSE pictures=FALSE"
   jarflags6 <- " extrapolate=FALSE writemess=FALSE plots=FALSE"
   jarflags7 <- " doclamp=FALSE writeclampgrid=FALSE"
-  jarflags8 <- " autorun=TRUE threads=8 visible=FALSE warnings=FALSE"
+  jarflags8 <- " autorun=TRUE threads=2 visible=FALSE warnings=FALSE"
   jarflags <- paste0(jarflags1, jarflags2, jarflags3, jarflags4, jarflags5,
     jarflags6, jarflags7, jarflags8)
 
