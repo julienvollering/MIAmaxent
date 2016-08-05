@@ -10,13 +10,14 @@ projectModel(data, transformation, model, clamping = FALSE)
 \item{data}{Data frame containing data for all the explanatory variables
 (EVs) included in the model, with column names matching EV names.}
 
-\item{transformation}{Pathway to the 'transformations.Rdata' file containing
-the transformations used to build the model. This file is saved as a result
-of the \code{\link{deriveVars}} function. Equivalently, the second item in
-the list returned by \code{\link{deriveVars}} can be used directly.}
+\item{transformation}{Full pathway of the 'transformations.Rdata' file
+containing the transformations used to build the model. This file is saved
+as a result of the \code{\link{deriveVars}} function. Equivalently, the
+second item in the list returned by \code{\link{deriveVars}} can be used
+directly.}
 
-\item{model}{Pathway to the '.lambdas' file of the model in question. This
-file is saved as a result of \code{\link{selectEV}}.}
+\item{model}{Full pathway of the '.lambdas' file of the model in question.
+This file is saved as a result of \code{\link{selectEV}}.}
 
 \item{clamping}{Logical. Do clamping \emph{sensu} Phillips et al. (2006).
 Default is \code{FALSE}.}

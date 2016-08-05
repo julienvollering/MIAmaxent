@@ -14,13 +14,14 @@ should represent presence/background data, coded as: 1/NA.}
 \item{EV}{Name or column index of the explanatory variable in \code{data} for
 which the response curve is to be generated.}
 
-\item{transformation}{Pathway to the 'transformations.Rdata' file containing
-the transformations used to build the model. This file is saved as a result
-of the \code{\link{deriveVars}} function. Equivalently, the second item in
-the list returned by \code{\link{deriveVars}} can be used directly.}
+\item{transformation}{Full pathway of the 'transformations.Rdata' file
+containing the transformations used to build the model. This file is saved
+as a result of the \code{\link{deriveVars}} function. Equivalently, the
+second item in the list returned by \code{\link{deriveVars}} can be used
+directly.}
 
-\item{model}{Pathway to the '.lambdas' file of the model in question. This
-file is saved as a result of \code{\link{selectEV}}.}
+\item{model}{Full pathway of the '.lambdas' file of the model in question.
+This file is saved as a result of \code{\link{selectEV}}.}
 
 \item{logscale}{Logical. Plot the common logarithm of PRO rather than PRO
 itself.}
