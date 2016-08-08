@@ -34,14 +34,15 @@ the plot. For example: \itemize{ \item \code{cex} for size of points \item
 }
 \value{
 In addition to the graphical output, a list of 2: \enumerate{ \item
-  The EV value at which FOP is highest (\code{EVoptimum}) \item a data frame
-  containing the plotted data (\code{FOPdata}). Columns in this data frame
-  represent the following: EV interval ("int"), number of points in the
-  interval ("n"), mean EV value of the points in the interval ("intEV"), mean
-  RV value of the points in the interval ("intRV"), and exponentially
-  weighted moving average of intRV ("smoothRV"). For categorical variables,
-  only the number of points in the interval ("n"), the level name ("level"),
-  and the mean RV value of the points at the level ("levelRV") are used.}
+  \code{EVoptimum}. The EV value (or level, for categorical EVs) at which FOP
+  is highest \item  \code{FOPdata}. A data frame containing the plotted data.
+  Columns in this data frame represent the following: EV interval ("int"),
+  number of points in the interval ("n"), mean EV value of the points in the
+  interval ("intEV"), mean RV value of the points in the interval ("intRV"),
+  and exponentially weighted moving average of intRV ("smoothRV"). For
+  categorical variables, only the number of points in the level ("n"), the
+  level name ("level"), and the mean RV value of the level ("levelRV") are
+  used.}
 }
 \description{
 \code{plotFOP} produces a Frequency of Observed Presence (FOP) plot for a

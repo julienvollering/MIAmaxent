@@ -30,16 +30,20 @@ the plot. For example: \itemize{ \item \code{cex} for size of points \item
 }
 \value{
 In addition to the graphical output, the plotted data is returned. In
-  the case of a continuous EV, the plotted data is contained in a list of 2:
-  \enumerate{ \item Model response across individual data points
-  (\code{respPts}). Columns in this data frame represent the following: EV
-  value ("EV"), Probability Ration Output of the model ("PRO"), and
-  corresponding EV interval ("int"). \item Model response across intervals of
-  the EV (\code{respLine}). Columns in this data frame represent the
-  following: EV interval ("int"), number of points in the interval ("n"),
-  mean EV value of the points in the interval ("intEV"), mean Probability Ratio Output value of the
-  points in the interval ("intPRO"), and exponentially weighted moving average
-  of intPRO ("smoothPRO").}
+  the case of a continuous EV, the plotted data is a list of 2: \enumerate{
+  \item \code{respPts}. Model response across individual data points. Columns
+  in this data frame represent the following: EV value ("EV"), Probability
+  Ratio Output of the model ("PRO"), and corresponding EV interval ("int").
+  \item \code{respLine}. Model response across intervals of the EV. Columns
+  in this data frame represent the following: EV interval ("int"), number of
+  points in the interval ("n"), mean EV value of the points in the interval
+  ("intEV"), mean Probability Ratio Output of the points in the interval
+  ("intPRO"), and exponentially weighted moving average of intPRO
+  ("smoothPRO").}
+
+  In the case of a categorical EV, the plotted data is a data frame containing
+  the number of points in the level ("n"), the level name ("level"), and the
+  mean Probability Ratio Output of the level ("levelRV").
 }
 \description{
 \code{plotResp} plots the single-effect response of a given Maxent model over
