@@ -14,8 +14,6 @@
 #' that an outlying maximum in FOP may, in some cases, not be considered the
 #' optimal value of EV.
 #'
-#' \code{DESCRIPTION Imports}: dplyr, Hmisc
-#'
 #' @param data Data frame containing the response variable in the first column
 #'   and explanatory variables in subsequent columns. The response variable
 #'   should represent presence or background, coded as: 1/NA. See Details for
@@ -37,7 +35,13 @@
 #'
 #' @return In addition to the graphical output, a list of 2: \enumerate{ \item
 #'   The EV value at which FOP is highest (\code{EVoptimum}) \item a data frame
-#'   containing the plotted data (\code{FOPdata}).}
+#'   containing the plotted data (\code{FOPdata}). Columns in this data frame
+#'   represent the following: EV interval ("int"), number of points in the
+#'   interval ("n"), mean EV value of the points in the interval ("intEV"), mean
+#'   RV value of the points in the interval ("intRV"), and exponentially
+#'   weighted moving average of intRV ("smoothRV"). For categorical variables,
+#'   only the number of points in the interval ("n"), the level name ("level"),
+#'   and the mean RV value of the points at the level ("levelRV") are used.}
 #'
 #' @export
 
@@ -98,7 +102,7 @@ plotFOP <- function(data, EV, smoothwindow = 5, EVranging = FALSE,
 
     FOP <- list(EVoptimum = FOPdf$EV[which(FOPdf$intRV == max(FOPdf$intRV))],
       FOPdata = data.frame(n = FOPdf$n, level = FOPdf$EV,
-        freqRV = FOPdf$intRV))
+        levelRV = FOPdf$intRV))
   }
 
   return(FOP)

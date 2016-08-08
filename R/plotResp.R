@@ -8,7 +8,11 @@
 #' a model containing the explanatory variable of interest only (cf.
 #' marginal-effect response curves; \code{\link{plotResp2}}).
 #'
-#' The \code{ev} specified in \code{dvdata} must not be an interaction term.
+#' The plot contains points, representing the model response across individual
+#' data points, as well as a line, representing an exponentially weighted moving
+#' average of the model response over intervals of the EV.
+#'
+#' The \code{EV} specified in \code{dvdata} must not be an interaction term.
 #'
 #' @param data Data frame containing the response variable in the first column
 #'   and explanatory variables in subsequent columns. The response variable
@@ -27,9 +31,16 @@
 #'   \code{col} for color \item \code{pch} for type }
 #'
 #' @return In addition to the graphical output, the plotted data is returned. In
-#'   the case of a continuous EV, the plotted data consists of both individual
-#'   points ('respPts') and the smoothed moving average of those points
-#'   ('respLine').
+#'   the case of a continuous EV, the plotted data is contained in a list of 2:
+#'   \enumerate{ \item Model response across individual data points
+#'   (\code{respPts}). Columns in this data frame represent the following: EV
+#'   value ("EV"), Probability Ration Output of the model ("PRO"), and
+#'   corresponding EV interval ("int"). \item Model response across intervals of
+#'   the EV (\code{respLine}). Columns in this data frame represent the
+#'   following: EV interval ("int"), number of points in the interval ("n"),
+#'   mean EV value of the points in the interval ("intEV"), mean Probability Ratio Output value of the
+#'   points in the interval ("intPRO"), and exponentially weighted moving average
+#'   of intPRO ("smoothPRO").}
 #'
 #' @export
 
