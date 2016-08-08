@@ -227,6 +227,9 @@ if(getRversion() >= "2.15.1") {
 
 .runjar <- function(rv, ev, maxbkg = 10000, dir) {
   jarpath <- system.file("java/maxent.jar", package = "maxentmodelselectr")
+  if (file.exists(jarpath) == FALSE) {
+    stop("Missing 'maxent.jar' file. Place this file in the java folder of the
+       package (see System Requirements in package description).", call. = FALSE)}
   df <- data.frame("RV" = rv, "X" = -9999, "Y" = -9999, ev, check.names = FALSE)
   samplesdf <- stats::na.omit(df)
   environlayersdf <- df
