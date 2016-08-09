@@ -6,8 +6,6 @@
 #' used with occurence data that is independent from the data used to train the
 #' model, to obtain an unbiased measure of model performance.
 #'
-#' \code{DESCRIPTION Imports}: PresenceAbsence
-#'
 #' @param data Data frame containing test data in the first column and
 #'   corresponding explanatory variables in subsequent columns. The test data
 #'   should be coded as: 1/0/NA, representing presence, absence, and unknown.

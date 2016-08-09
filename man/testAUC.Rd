@@ -31,7 +31,4 @@ measure of binary classification performance. This function is intended to be
 used with occurence data that is independent from the data used to train the
 model, to obtain an unbiased measure of model performance.
 }
-\details{
-\code{DESCRIPTION Imports}: PresenceAbsence
-}
 

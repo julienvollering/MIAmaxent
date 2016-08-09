@@ -67,7 +67,6 @@ if(getRversion() >= "2.15.1") {
 #' @param n integer. Width of the moving average window. Should be odd,
 #'   otherwise the window will be uncentered.
 #'
-#' \code{DESCRIPTION Imports}: stats
 #' @return vector of moving average values
 
 .ewma <- function(x, n) {
@@ -166,8 +165,6 @@ if(getRversion() >= "2.15.1") {
 #' Also calculates the constant 'c' needed for zero-skewness transformation in
 #' \code{scalex}
 #'
-#' \code{DESCRIPTION Imports}: e1071
-#'
 #' @param x Vector of data. Must have scale [0,1]!
 
 .minskew <- function(x) {
@@ -261,8 +258,6 @@ if(getRversion() >= "2.15.1") {
 
 
 #' skewness transformation using constant c
-#'
-#' \code{DESCRIPTION Imports}: e1071
 #'
 #' @param x Vector of data.
 #' @param c Constant
