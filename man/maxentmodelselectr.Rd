@@ -33,9 +33,10 @@ package is the MIA Toolbox, which is described in detail in Mazzoni et al.
 
 \section{User Workflow}{
  This diagram outlines the most common workflow for
-  the analyses possible using this package. Functions are shown in red.
+  users this package. Functions are shown in red.
 
-  \if{html}{\figure{workflow-flowchart.png}{options: width="60\%" alt="Figure: workflow-flowchart.png"}}
+  \if{html}{\figure{workflow-flowchart.png}{options: width="70\%"
+  alt="Figure: workflow-flowchart.png"}}
   \if{latex}{\figure{workflow-flowchart.pdf}{options: width=7cm}}
 }
 \references{
