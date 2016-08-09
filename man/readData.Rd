@@ -2,15 +2,16 @@
 % Please edit documentation in R/readData.R
 \name{readData}
 \alias{readData}
-\title{Read in data from files.}
+\title{Read in data object from files.}
 \usage{
-readData(presence, contEV, catEV, maxbkg = 10000)
+readData(occurrence, contEV, catEV, maxbkg = 10000, PA = FALSE)
 }
 \arguments{
-\item{presence}{Full pathway of the '.csv' file of occurrence data. The first
-column codes presence of the model target, while the second and third
-columns should contain X and Y coordinates cooresponding to the ASCII
-raster coordinate system. The first row is read as a header column.}
+\item{occurrence}{Full pathway of the '.csv' file of occurrence data. The
+first column of the CSV should code occurrence (see Details), while the
+second and third columns should contain X and Y coordinates cooresponding
+to the ASCII raster coordinate system. The first row is read as a header
+row.}
 
 \item{contEV}{Pathway to a directory containing continuous environmental
 variables in '.asc' file format.}
@@ -19,24 +20,35 @@ variables in '.asc' file format.}
 variables in '.asc' file format.}
 
 \item{maxbkg}{Integer. Maximum number of grid cells selected as unknown
-background points for the response varaible. Default is 10,000.}
+background points for the response variable. Default is 10,000.}
+
+\item{PA}{Logical. Does \code{occurrence} represent presence/absence data?
+When \code{TRUE}, rows in \code{occurrence} with the value 0 in the first
+column are treated as absences, and all others are treated as presences.}
 }
 \value{
 Data frame with the Response Variable (RV) in the first column, and
-  Explanatory Variables (EVs) in subsequent columns.
+  Explanatory Variables (EVs) in subsequent columns. When \code{PA = FALSE},
+  RV values are 1/NA, and when \code{PA = TRUE}, RV values are 1/0.
 }
 \description{
-\code{readData} reads in occurence data in CSV format and environmental data
+\code{readData} reads in occurrence data in CSV format and environmental data
 in ASCII raster format and produces a data object which can be used as the
-starting point for many analyses in this package. This function is intended
+starting point for the functions in this package. This function is intended
 to make reading in data easy for users familiar with the maxent.jar program.
-It emphasized that important considerations for data preparation (e.g.
+It is emphasized that important considerations for data preparation (e.g.
 cleaning, sampling bias removal, etc.) are not treated in this package and
 must be dealt with separately!
 }
 \details{
-Background points are randomly selected from the full extent of the grid
-files, and may include presence locations. Only cells which contain data for
-all variables are selected.
+When \code{occurrence} represents presence-only data (\code{PA = FALSE}), all
+rows are treated as presences, and the values in column 1 of the CSV are
+irrelevant. Conversely, when \code{occurrence} represents presence/absence
+data (\code{PA = TRUE}), rows with value 0 in column 1 of the CSV are treated
+as absences, and all other rows are treated as presences.
+
+For presence-only occurrence data, background points are randomly selected
+from the full extent of the grid files, and may include presence locations.
+Only cells which contain data for all variables are selected.
 }
 
