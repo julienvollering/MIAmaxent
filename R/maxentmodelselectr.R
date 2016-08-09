@@ -23,6 +23,12 @@
 #'   installed, and download it if necessary, from
 #'   \url{http://java.com/download}.
 #'
+#' @section User Workflow: This diagram outlines the most common workflow for
+#'   the analyses possible using this package. Functions are shown in red.
+#'
+#'   \if{html}{\figure{workflow-flowchart.png}{options: width="60\%" alt="Figure: workflow-flowchart.png"}}
+#'   \if{latex}{\figure{workflow-flowchart.pdf}{options: width=7cm}}
+#'
 #' @references Halvorsen, R. (2013) A strict maximum likelihood explanation of
 #'   MaxEnt, and some implications for distribution modelling. Sommerfeltia, 36,
 #'   1-132.
