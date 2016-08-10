@@ -4,7 +4,7 @@
 \alias{projectModel}
 \title{Project model to data.}
 \usage{
-projectModel(data, transformation, model, clamping = FALSE)
+projectModel(data, transformation, model, clamping = FALSE, rescale = FALSE)
 }
 \arguments{
 \item{data}{Data frame of all the explanatory variables (EVs) included in the
@@ -21,6 +21,11 @@ This file is saved as a result of \code{\link{selectEV}}.}
 
 \item{clamping}{Logical. Do clamping \emph{sensu} Phillips et al. (2006).
 Default is \code{FALSE}.}
+
+\item{rescale}{Logical. Linearly rescale the probability ratio output (PRO)
+to the range of values in \code{data}? This has implications for the
+interpretation of model output with respect to reference value PRO = 1. See
+details.}
 }
 \value{
 List of 2: \enumerate{ \item A data frame with the model output in
@@ -38,8 +43,25 @@ the model must be specified.
 Missing data (NA) for a continuous variable will result in NA output for that
 point. Missing data for a categorical variable is treated as belonging to
 none of the categories.
+
+When \code{rescale = FALSE}  the scale of the probability ratio output (PRO)
+returned by this function is dependent on the data used to train the model.
+As a result, values of PRO > 1 can be interpreted as higher relative
+probability of presence than an average site in the \emph{training} data
+(Halvorsen, 2013, Halvorsen et al., 2015). When \code{rescale = TRUE}, the
+output is linearly rescaled so that values of PRO > 1 can be interpreted as
+higher relative probability of presence than an average site in the
+\emph{projection} data.
 }
 \references{
+Halvorsen, R. (2013) A strict maximum likelihood explanation of
+  MaxEnt, and some implications for distribution modelling. Sommerfeltia, 36,
+  1-132.
+
+Halvorsen, R., Mazzoni, S., Bryn, A. & Bakkestuen, V. (2015)
+  Opportunities for improved distribution modelling practice via a strict
+  maximum likelihood interpretation of MaxEnt. Ecography, 38, 172-183.
+
 Phillips, S.J., Anderson, R.P. & Schapire, R.E. (2006) Maximum
   entropy modeling of species geographic distributions. Ecological Modelling,
   190, 231-259.

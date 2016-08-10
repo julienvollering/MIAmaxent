@@ -9,6 +9,15 @@
 #' point. Missing data for a categorical variable is treated as belonging to
 #' none of the categories.
 #'
+#' When \code{rescale = FALSE}  the scale of the probability ratio output (PRO)
+#' returned by this function is dependent on the data used to train the model.
+#' As a result, values of PRO > 1 can be interpreted as higher relative
+#' probability of presence than an average site in the \emph{training} data
+#' (Halvorsen, 2013, Halvorsen et al., 2015). When \code{rescale = TRUE}, the
+#' output is linearly rescaled so that values of PRO > 1 can be interpreted as
+#' higher relative probability of presence than an average site in the
+#' \emph{projection} data.
+#'
 #' @param data Data frame of all the explanatory variables (EVs) included in the
 #'   model, with column names matching EV names. See \code{\link{readData}}.
 #' @param transformation Full pathway of the 'transformations.Rdata' file
@@ -20,12 +29,23 @@
 #'   This file is saved as a result of \code{\link{selectEV}}.
 #' @param clamping Logical. Do clamping \emph{sensu} Phillips et al. (2006).
 #'   Default is \code{FALSE}.
+#' @param rescale Logical. Linearly rescale the probability ratio output (PRO)
+#'   to the range of values in \code{data}? This has implications for the
+#'   interpretation of model output with respect to reference value PRO = 1. See
+#'   details.
 #'
 #' @return List of 2: \enumerate{ \item A data frame with the model output in
 #'   column 1 and the corresponding explanatory data in subsequent columns.
 #'   \item A data frame showing the range of \code{data} compared to the
 #'   training data, on a 0-1 scale.}
 #'
+#'
+#' @references Halvorsen, R. (2013) A strict maximum likelihood explanation of
+#'   MaxEnt, and some implications for distribution modelling. Sommerfeltia, 36,
+#'   1-132.
+#' @references Halvorsen, R., Mazzoni, S., Bryn, A. & Bakkestuen, V. (2015)
+#'   Opportunities for improved distribution modelling practice via a strict
+#'   maximum likelihood interpretation of MaxEnt. Ecography, 38, 172-183.
 #' @references Phillips, S.J., Anderson, R.P. & Schapire, R.E. (2006) Maximum
 #'   entropy modeling of species geographic distributions. Ecological Modelling,
 #'   190, 231-259.
@@ -33,7 +53,8 @@
 #' @export
 
 
-projectModel <- function(data, transformation, model, clamping = FALSE) {
+projectModel <- function(data, transformation, model, clamping = FALSE,
+                         rescale = FALSE) {
 
   lambdas <- utils::read.csv(model, header = FALSE)
   dvnames <- as.character(lambdas[1:(nrow(lambdas)-4), 1])
@@ -94,6 +115,9 @@ projectModel <- function(data, transformation, model, clamping = FALSE) {
   dvdf <- data.frame(c(dvdatani, dvdatai), check.names = FALSE)
   modelfunction <- modelfromlambdas(model)
   PRO <- modelfunction(dvdf)[, 1]
+  if (rescale == TRUE) {
+   PRO <- (PRO/sum(PRO))*length(PRO)
+  }
   Output <- cbind(PRO, data)
 
   return(list(output = Output, ranges = Ranges))
