@@ -10,12 +10,12 @@ selectEV(data, dvdata, alpha = 0.01, interaction = TRUE, dir = NULL,
 \arguments{
 \item{data}{Data frame containing the response variable in the first column
 and explanatory variables in subsequent columns. The response variable
-should represent presence/background data, coded as: 1/NA.}
+should represent presence/background data, coded as: 1/NA. See
+\code{\link{readData}}.}
 
 \item{dvdata}{List of data frames, with each data frame containing a
 parsimonious group of derived variables for a given explanatory variable
-(e.g. the first item in the list returned by \code{\link{selectDVforEV}}:
-\code{selectDVforEV(...)[[1]]})}
+(e.g. the first item in the list returned by \code{\link{selectDVforEV}}.)}
 
 \item{alpha}{Alpha-level used in F-test comparison of models. Default is
 0.01.}
@@ -33,10 +33,11 @@ for more information.}
 }
 \value{
 List of 2 (3): \enumerate{ \item A list of data frames, with one data
-  frame for each \emph{selected} EV. \item A data frame showing the trail of
-  forward selection of individual EVs (and interaction terms if necessary).
-  \item (If \code{trainmax} reduces the number of uninformed background
-  points) a new \code{data} object.}
+  frame for each \emph{selected} EV. This item is recommended as input for
+  \code{dvdata} in \code{\link{plotResp}}. \item A data frame showing the
+  trail of forward selection of individual EVs (and interaction terms if
+  necessary). \item (If \code{trainmax} reduces the number of uninformed
+  background points) a new \code{data} object. See details.}
 }
 \description{
 \code{selectEV} selects the parsimonious set of explanatory variables (EVs)
