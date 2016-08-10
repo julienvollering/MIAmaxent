@@ -11,33 +11,33 @@
   selectedset <- character(length=0)
   remainingset <- colnames(dv)
   evtable <- data.frame()
-  cyclenumber <- 0
+  roundnumber <- 0
   bestFVA <- 0
 
   iterationexit <- FALSE
   while (iterationexit == FALSE) {
 
-    cyclenumber <- cyclenumber + 1
-    cycledir <- .dirpath.create(dir, paste0("cycle", cyclenumber))
-    cyclemodels <- lapply(remainingset, function(x) c(selectedset, x))
+    roundnumber <- roundnumber + 1
+    rounddir <- .dirpath.create(dir, paste0("round", roundnumber))
+    roundmodels <- lapply(remainingset, function(x) c(selectedset, x))
 
-    nrows <- length(cyclemodels)
-    ctable <- data.frame(cycle=integer(nrows), model=integer(nrows),
+    nrows <- length(roundmodels)
+    ctable <- data.frame(round=integer(nrows), model=integer(nrows),
       DV=character(nrows), m=integer(nrows), trainAUC=numeric(nrows),
       Entropy=numeric(nrows), FVA=numeric(nrows), addedFVA=numeric(nrows),
       Fstatistic=numeric(nrows), dfe=integer(nrows), dfu=integer(nrows),
       Pvalue=numeric(nrows), Directory=character(nrows),
       stringsAsFactors = F)
 
-    for (i in 1:length(cyclemodels)) {
-      dvnames <- cyclemodels[[i]]
-      modeldir <- .dirpath.create(cycledir, paste0("model", i))
+    for (i in 1:length(roundmodels)) {
+      dvnames <- roundmodels[[i]]
+      modeldir <- .dirpath.create(rounddir, paste0("model", i))
       df <- data.frame(dv[, dvnames])
       colnames(df) <- dvnames
       .runjar(rv, df, maxbkg = length(rv) + 1, modeldir)
 
       maxRes <- utils::read.csv(file.path(modeldir, "maxentResults.csv"))
-      ctable$cycle[i] <- cyclenumber
+      ctable$round[i] <- roundnumber
       ctable$model[i] <- i
       ctable$DV[i] <- paste(dvnames, collapse = " ")
       ctable$m[i] <- length(dvnames)
@@ -64,7 +64,7 @@
       selectedset <- unlist(strsplit(ctable$DV[1], split=" "))
       bestFVA <- ctable$FVA[1]
       addedDV <- sapply(strsplit(ctable$DV[seq(nrow(ctable))[-1]], split=" "),
-        function(x) {x[cyclenumber]})
+        function(x) {x[roundnumber]})
       remainingset <- addedDV[ctable$Pvalue[seq(nrow(ctable))[-1]] < alpha]
     }
 

@@ -64,6 +64,6 @@ Model response is commonly plotted across EV values of the training data, but
 it is possible to plot the model response over any EV values supplied in
 \code{data}.
 
-The \code{EV} specified in \code{dvdata} must not be an interaction term.
+The \code{EV} specified in \code{data} must not be an interaction term.
 }
 

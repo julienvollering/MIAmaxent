@@ -12,35 +12,35 @@
   selectedset <- character(length=0)
   remainingset <- names(ev)
   modeltable <- data.frame()
-  cyclenumber <- 0
+  roundnumber <- 0
   mnull <- 0
   bestFVA <- 0
 
   iterationexit <- FALSE
   while (iterationexit == FALSE) {
 
-    cyclenumber <- cyclenumber + 1
-    cycledir <- .dirpath.create(dir, paste0("cycle", cyclenumber))
-    cyclemodels <- lapply(remainingset, function(x) c(selectedset, x))
+    roundnumber <- roundnumber + 1
+    rounddir <- .dirpath.create(dir, paste0("round", roundnumber))
+    roundmodels <- lapply(remainingset, function(x) c(selectedset, x))
 
-    nrows <- length(cyclemodels)
-    ctable <- data.frame(cycle=integer(nrows), model=integer(nrows),
+    nrows <- length(roundmodels)
+    ctable <- data.frame(round=integer(nrows), model=integer(nrows),
       EV=character(nrows), m=integer(nrows), trainAUC=numeric(nrows),
       Entropy=numeric(nrows), FVA=numeric(nrows), addedFVA=numeric(nrows),
       Fstatistic=numeric(nrows), dfe=integer(nrows), dfu=integer(nrows),
       Pvalue=numeric(nrows), Directory=character(nrows),
       stringsAsFactors = F)
 
-    for (i in 1:length(cyclemodels)) {
-      evnames <- cyclemodels[[i]]
+    for (i in 1:length(roundmodels)) {
+      evnames <- roundmodels[[i]]
       dvnames <- unlist(lapply(ev[evnames], names), use.names = FALSE)
-      modeldir <- .dirpath.create(cycledir, paste0("model", i))
+      modeldir <- .dirpath.create(rounddir, paste0("model", i))
       df <- data.frame(ev[evnames])
       colnames(df) <- dvnames
       .runjar(rv, df, maxbkg = length(rv) + 1, modeldir)
 
       maxRes <- utils::read.csv(file.path(modeldir, "maxentResults.csv"))
-      ctable$cycle[i] <- cyclenumber
+      ctable$round[i] <- roundnumber
       ctable$model[i] <- i
       ctable$EV[i] <- paste(evnames, collapse = " ")
       ctable$m[i] <- length(dvnames)
@@ -68,11 +68,11 @@
       mnull <- ctable$m[1]
       bestFVA <- ctable$FVA[1]
       addedEV <- sapply(strsplit(ctable$EV[seq(nrow(ctable))[-1]], split=" "),
-        function(x) {x[cyclenumber]})
+        function(x) {x[roundnumber]})
       remainingset <- addedEV[ctable$Pvalue[seq(nrow(ctable))[-1]] < alpha]
     }
 
-    message(paste0("Cycle ", cyclenumber, " complete."))
+    message(paste0("Round ", roundnumber, " complete."))
 
     if (nrow(ctable) == 1 || ctable$Pvalue[1] > alpha ||
         (ctable$Pvalue[1] < alpha &&
@@ -110,28 +110,28 @@
   iterationexit <- FALSE
   while (iterationexit == FALSE) {
 
-    cyclenumber <- cyclenumber + 1
-    cycledir <- .dirpath.create(dir, paste0("cycle", cyclenumber))
-    cyclemodels <- lapply(remainingset, function(x) c(selectedset, x))
+    roundnumber <- roundnumber + 1
+    rounddir <- .dirpath.create(dir, paste0("round", roundnumber))
+    roundmodels <- lapply(remainingset, function(x) c(selectedset, x))
 
-    nrows <- length(cyclemodels)
-    ctable <- data.frame(cycle=integer(nrows), model=integer(nrows),
+    nrows <- length(roundmodels)
+    ctable <- data.frame(round=integer(nrows), model=integer(nrows),
       EV=character(nrows), m=integer(nrows), trainAUC=numeric(nrows),
       Entropy=numeric(nrows), FVA=numeric(nrows), addedFVA=numeric(nrows),
       Fstatistic=numeric(nrows), dfe=integer(nrows), dfu=integer(nrows),
       Pvalue=numeric(nrows), Directory=character(nrows),
       stringsAsFactors = F)
 
-    for (i in 1:length(cyclemodels)) {
-      evnames <- cyclemodels[[i]]
+    for (i in 1:length(roundmodels)) {
+      evnames <- roundmodels[[i]]
       dvnames <- unlist(lapply(ev[evnames], names), use.names = FALSE)
-      modeldir <- .dirpath.create(cycledir, paste0("model", i))
+      modeldir <- .dirpath.create(rounddir, paste0("model", i))
       df <- data.frame(ev[evnames])
       colnames(df) <- dvnames
       .runjar(rv, df, maxbkg = length(rv) + 1, modeldir)
 
       maxRes <- utils::read.csv(file.path(modeldir, "maxentResults.csv"))
-      ctable$cycle[i] <- cyclenumber
+      ctable$round[i] <- roundnumber
       ctable$model[i] <- i
       ctable$EV[i] <- paste(evnames, collapse = " ")
       ctable$m[i] <- length(dvnames)
@@ -159,11 +159,11 @@
       mnull <- ctable$m[1]
       bestFVA <- ctable$FVA[1]
       addedEV <- sapply(strsplit(ctable$EV[seq(nrow(ctable))[-1]], split=" "),
-        function(x) {x[cyclenumber]})
+        function(x) {x[roundnumber]})
       remainingset <- addedEV[ctable$Pvalue[seq(nrow(ctable))[-1]] < alpha]
     }
 
-    message(paste0("Cycle ", cyclenumber, " complete."))
+    message(paste0("Round ", roundnumber, " complete."))
 
     if (nrow(ctable) == 1 || ctable$Pvalue[1] > alpha ||
         (ctable$Pvalue[1] < alpha &&

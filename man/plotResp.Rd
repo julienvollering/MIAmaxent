@@ -12,9 +12,9 @@ and explanatory variables in subsequent columns. The response variable
 should represent presence/background data, coded as: 1/NA. See
 \code{\link{readData}}.}
 
-\item{dvdata}{List of explanatory variables used to train the model, with
-each list item a data frame containing 1 or more DVs for a given EV (e.g.
-the first item in the list returned by \code{\link{selectEV}}).}
+\item{dvdata}{List of explanatory variables used to train the model, where
+each list item is a data frame containing selected DVs for a selected EV
+(e.g. the first item in the list returned by \code{\link{selectEV}}).}
 
 \item{EV}{Name or list index of the explanatory variable in \code{dvdata} for
 which the response curve is to be generated. Interaction terms not allowed.}

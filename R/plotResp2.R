@@ -16,7 +16,7 @@
 #' it is possible to plot the model response over any EV values supplied in
 #' \code{data}.
 #'
-#' The \code{EV} specified in \code{dvdata} must not be an interaction term.
+#' The \code{EV} specified in \code{data} must not be an interaction term.
 #'
 #' @param data Data frame of explanatory variables (EVs) included in the model,
 #'   with column names matching EV names. See \code{\link{readData}}.
