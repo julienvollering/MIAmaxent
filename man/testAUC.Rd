@@ -9,7 +9,8 @@ testAUC(data, transformation, model)
 \arguments{
 \item{data}{Data frame containing test data in the first column and
 corresponding explanatory variables in subsequent columns. The test data
-should be coded as: 1/0/NA, representing presence, absence, and unknown.}
+should be coded as: 1/0/NA, representing presence, absence, and unknown.
+See \code{\link{readData}}.}
 
 \item{transformation}{Full pathway of the 'transformation.Rdata' file
 containing the transformations used to build the model. This file is saved
@@ -22,7 +23,8 @@ This file is saved as a result of \code{\link{selectEV}}.}
 }
 \value{
 In addition to returning the testAUC value, graphical output showing
-  the corresponding ROC plot is produced.
+  the corresponding ROC plot is produced. The point along the ROC curve where
+  the discrimination threshold is PRO = 1 is shown for reference.
 }
 \description{
 For a given model, \code{testAUC} calculates the Area Under the Curve (AUC)
