@@ -8,7 +8,7 @@ projectModel(data, transformation, model, clamping = FALSE)
 }
 \arguments{
 \item{data}{Data frame of all the explanatory variables (EVs) included in the
-model, with column names matching EV names.}
+model, with column names matching EV names. See \code{\link{readData}}.}
 
 \item{transformation}{Full pathway of the 'transformations.Rdata' file
 containing the transformations used to build the model. This file is saved
