@@ -23,7 +23,8 @@
 #'
 #' @param data Data frame containing the response variable in the first column
 #'   and explanatory variables in subsequent columns. The response variable
-#'   should represent presence/background data, coded as: 1/NA.
+#'   should represent presence/background data, coded as: 1/NA. See
+#'   \code{\link{readData}}.
 #' @param transformtype Specifies the types of transformations types to be
 #'   performed. Default is the full set of the following transfomation types: L
 #'   (linear), M (monotonous), D (deviation), HF (forward hinge), HR (reverse
@@ -36,10 +37,11 @@
 #'
 #' @return List of 2: \enumerate{ \item A list of data frames, with each
 #'   containing the derived variables produced for a given explanatory variable.
-#'   This item is recommended as input for \code{\link{selectDVforEV}}. \item A
-#'   list of all the transformation functions used to produce the derived
-#'   variables. This item may be used as input for \code{\link{plotResp}},
-#'   \code{\link{testAUC}}, and \code{\link{projectModel}} }
+#'   This item is recommended as input for \code{dvdata} in
+#'   \code{\link{selectDVforEV}}. \item A list of all the transformation
+#'   functions used to produce the derived variables. This item is recommended
+#'   as input for \code{transformation} in \code{\link{plotResp2}},
+#'   \code{\link{testAUC}}, and \code{\link{projectModel}}. }
 #'
 #' @references Halvorsen, R., Mazzoni, S., Bryn, A., & Bakkestuen, V. (2015).
 #'   Opportunities for improved distribution modelling practice via a strict

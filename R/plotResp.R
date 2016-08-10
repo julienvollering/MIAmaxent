@@ -17,7 +17,7 @@
 #' @param data Data frame containing the response variable in the first column
 #'   and explanatory variables in subsequent columns. The response variable
 #'   should represent presence/background data, coded as: 1/NA.
-#' @param dvdata List of derived variables used to train the model, with each
+#' @param dvdata List of explanatory variables used to train the model, with each
 #'   list item a data frame containing 1 or more DVs for a given EV. E.g. output
 #'   [[1]] of \code{selectEV}.
 #' @param EV Name or list index of the explanatory variable in \code{dvdata} for
