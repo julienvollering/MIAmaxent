@@ -20,8 +20,7 @@
 #'
 #'   You must have the Java Runtime Environment (JRE) installed on your computer
 #'   for the MaxEnt program to function. You can check if you have Java
-#'   installed, and download it if necessary, from
-#'   \url{http://java.com/download}.
+#'   installed, and download it if necessary, at \url{http://java.com/download}.
 #'
 #' @section User Workflow: This diagram outlines a common workflow for users of
 #'   this package. Functions are shown in red.
