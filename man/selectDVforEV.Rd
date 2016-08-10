@@ -9,11 +9,12 @@ selectDVforEV(data, dvdata, alpha = 0.01, dir = NULL, trainmax = NULL)
 \arguments{
 \item{data}{Data frame containing the response variable in the first column
 and explanatory variables in subsequent columns. The response variable
-should represent presence/background data, coded as: 1/NA.}
+should represent presence/background data, coded as: 1/NA. See
+\code{\link{readData}}.}
 
 \item{dvdata}{List of data frames, with each data frame containing derived
 variables for a given explanatory variable (e.g. the first item in the list
-returned by \code{\link{deriveVars}}: \code{deriveVars(...)[[1]]})}
+returned by \code{\link{deriveVars}}).}
 
 \item{alpha}{Alpha-level used in F-test comparison of models. Default is
 0.01.}
@@ -27,11 +28,13 @@ sets with very large numbers of points. Default is no maximum. See Details
 for more information.}
 }
 \value{
-List of 2 (3): \enumerate{ \item A list of data frames, with each data
-  frame containing \emph{selected} DVs for a given EV. \item A list of data
-  frames, where each data frame shows the trail of forward selection for a
-  given EV. \item (If \code{trainmax} reduces the number of uninformed
-  background points) a new \code{data} object. }
+List of 2 (3): \enumerate{ \item A list of data frames, with each
+  data frame containing \emph{selected} DVs for a given EV. This item is
+  recommended as input for \code{dvdata} in \code{\link{selectEV}}. \item A
+  list of data frames, where each data frame shows the trail of forward
+  selection of DVs for a given EV. \item (If \code{trainmax} reduces the
+  number of uninformed background points) a new \code{data} object. See
+  details. }
 }
 \description{
 For each explanatory variable (EV), \code{selectDVforEV} selects the

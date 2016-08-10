@@ -27,10 +27,11 @@
 #'
 #' @param data Data frame containing the response variable in the first column
 #'   and explanatory variables in subsequent columns. The response variable
-#'   should represent presence/background data, coded as: 1/NA.
+#'   should represent presence/background data, coded as: 1/NA. See
+#'   \code{\link{readData}}.
 #' @param dvdata List of data frames, with each data frame containing derived
 #'   variables for a given explanatory variable (e.g. the first item in the list
-#'   returned by \code{\link{deriveVars}}: \code{deriveVars(...)[[1]]})
+#'   returned by \code{\link{deriveVars}}).
 #' @param alpha Alpha-level used in F-test comparison of models. Default is
 #'   0.01.
 #' @param dir Directory to which files will be written during subset selection
@@ -40,11 +41,13 @@
 #'   sets with very large numbers of points. Default is no maximum. See Details
 #'   for more information.
 #'
-#' @return List of 2 (3): \enumerate{ \item A list of data frames, with each data
-#'   frame containing \emph{selected} DVs for a given EV. \item A list of data
-#'   frames, where each data frame shows the trail of forward selection for a
-#'   given EV. \item (If \code{trainmax} reduces the number of uninformed
-#'   background points) a new \code{data} object. }
+#' @return List of 2 (3): \enumerate{ \item A list of data frames, with each
+#'   data frame containing \emph{selected} DVs for a given EV. This item is
+#'   recommended as input for \code{dvdata} in \code{\link{selectEV}}. \item A
+#'   list of data frames, where each data frame shows the trail of forward
+#'   selection of DVs for a given EV. \item (If \code{trainmax} reduces the
+#'   number of uninformed background points) a new \code{data} object. See
+#'   details. }
 #'
 #' @references Halvorsen, R. (2013). A strict maximum likelihood explanation of
 #'   MaxEnt, and some implications for distribution modelling. Sommerfeltia, 36,
