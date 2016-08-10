@@ -37,7 +37,7 @@ projectModel <- function(data, transformation, model, clamping = FALSE) {
 
   lambdas <- utils::read.csv(model, header = FALSE)
   dvnames <- as.character(lambdas[1:(nrow(lambdas)-4), 1])
-  dvnamesni <- dvnames[-grep(":", dvnames)]
+  dvnamesni <- dvnames[grep(":", dvnames, invert = TRUE)]
   dvnamesi <- dvnames[grep(":", dvnames)]
 
   check <- lapply(dvnamesni, function(x) { startsWith(x, colnames(data)) })
@@ -91,9 +91,9 @@ projectModel <- function(data, transformation, model, clamping = FALSE) {
   })
   names(dvdatai) <- dvnamesi
 
-  dvdata <- data.frame(c(dvdatani, dvdatai), check.names = FALSE)
+  dvdf <- data.frame(c(dvdatani, dvdatai), check.names = FALSE)
   modelfunction <- modelfromlambdas(model)
-  PRO <- modelfunction(dvdata)[, 1]
+  PRO <- modelfunction(dvdf)[, 1]
   Output <- cbind(PRO, data)
 
   return(list(output = Output, ranges = Ranges))
