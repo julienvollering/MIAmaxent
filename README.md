@@ -16,6 +16,10 @@ The maximum entropy algorithm utilized in this package is provided by the MaxEnt
 
 You must have the Java Runtime Environment (JRE) installed on your computer for the MaxEnt program to function. You can check if you have Java installed, and download it if necessary, from <http://java.com/download>.
 
+### User Workflow
+
+This diagram outlines the most common workflow for users of this package. Functions are shown in red. ![User workflow](/man/figures/workflow-flowchart.png)
+
 ### References
 
 Halvorsen, R. (2013) A strict maximum likelihood explanation of MaxEnt, and some implications for distribution modelling. Sommerfeltia, 36, 1-132.

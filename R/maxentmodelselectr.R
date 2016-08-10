@@ -24,7 +24,7 @@
 #'   \url{http://java.com/download}.
 #'
 #' @section User Workflow: This diagram outlines the most common workflow for
-#'   users this package. Functions are shown in red.
+#'   users of this package. Functions are shown in red.
 #'
 #'   \if{html}{\figure{workflow-flowchart.png}{options: width="70\%"
 #'   alt="Figure: workflow-flowchart.png"}}
