@@ -18,6 +18,10 @@
 #' from the full extent of the grid files, and may include presence locations.
 #' Only cells which contain data for all variables are selected.
 #'
+#' The names of the ASCII raster files are used as the names of the explanatory
+#' variables, so these files should be uniquely named, and the names must not
+#' contain spaces or colons.
+#'
 #' @param occurrence Full pathway of the '.csv' file of occurrence data. The
 #'   first column of the CSV should code occurrence (see Details), while the
 #'   second and third columns should contain X and Y coordinates cooresponding
