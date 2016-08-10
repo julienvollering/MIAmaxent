@@ -34,7 +34,7 @@
 #'   \code{\link{readData}}.
 #' @param dvdata List of data frames, with each data frame containing a
 #'   parsimonious group of derived variables for a given explanatory variable
-#'   (e.g. the first item in the list returned by \code{\link{selectDVforEV}}.)
+#'   (e.g. the first item in the list returned by \code{\link{selectDVforEV}}).
 #' @param alpha Alpha-level used in F-test comparison of models. Default is
 #'   0.01.
 #' @param interaction Logical. Allows interaction terms between pairs of EVs.

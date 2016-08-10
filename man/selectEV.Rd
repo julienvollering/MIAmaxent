@@ -15,7 +15,7 @@ should represent presence/background data, coded as: 1/NA. See
 
 \item{dvdata}{List of data frames, with each data frame containing a
 parsimonious group of derived variables for a given explanatory variable
-(e.g. the first item in the list returned by \code{\link{selectDVforEV}}.)}
+(e.g. the first item in the list returned by \code{\link{selectDVforEV}}).}
 
 \item{alpha}{Alpha-level used in F-test comparison of models. Default is
 0.01.}

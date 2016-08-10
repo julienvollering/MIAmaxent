@@ -16,10 +16,11 @@
 #'
 #' @param data Data frame containing the response variable in the first column
 #'   and explanatory variables in subsequent columns. The response variable
-#'   should represent presence/background data, coded as: 1/NA.
-#' @param dvdata List of explanatory variables used to train the model, with each
-#'   list item a data frame containing 1 or more DVs for a given EV. E.g. output
-#'   [[1]] of \code{selectEV}.
+#'   should represent presence/background data, coded as: 1/NA. See
+#'   \code{\link{readData}}.
+#' @param dvdata List of explanatory variables used to train the model, with
+#'   each list item a data frame containing 1 or more DVs for a given EV (e.g.
+#'   the first item in the list returned by \code{\link{selectEV}}).
 #' @param EV Name or list index of the explanatory variable in \code{dvdata} for
 #'   which the response curve is to be generated. Interaction terms not allowed.
 #' @param dir Directory to which files will be written. Defaults to the working
@@ -42,9 +43,9 @@
 #'   ("intPRO"), and exponentially weighted moving average of intPRO
 #'   ("smoothPRO").}
 #'
-#'   In the case of a categorical EV, the plotted data is a data frame containing
-#'   the number of points in the level ("n"), the level name ("level"), and the
-#'   mean Probability Ratio Output of the level ("levelRV").
+#'   In the case of a categorical EV, the plotted data is a data frame
+#'   containing the number of points in the level ("n"), the level name
+#'   ("level"), and the mean Probability Ratio Output of the level ("levelRV").
 #'
 #' @export
 
