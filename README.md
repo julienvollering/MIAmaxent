@@ -18,7 +18,9 @@ You must have the Java Runtime Environment (JRE) installed on your computer for 
 
 ### User Workflow
 
-This diagram outlines the most common workflow for users of this package. Functions are shown in red. ![User workflow](/man/figures/workflow-flowchart.png)
+This diagram outlines the most common workflow for users of this package. Functions are shown in red.
+
+![User workflow](/man/figures/workflow-flowchart.png)
 
 ### References
 
