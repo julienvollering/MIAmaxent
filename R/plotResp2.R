@@ -12,10 +12,14 @@
 #' data points, as well as a line, representing an exponentially weighted moving
 #' average of the model response over intervals of the EV.
 #'
+#' Model response is commonly plotted across EV values of the training data, but
+#' it is possible to plot the model response over any EV values supplied in
+#' \code{data}.
+#'
 #' The \code{EV} specified in \code{dvdata} must not be an interaction term.
 #'
 #' @param data Data frame of explanatory variables (EVs) included in the model,
-#'   with column names matching EV names.
+#'   with column names matching EV names. See \code{\link{readData}}.
 #' @param EV Name or column index of the explanatory variable in \code{data} for
 #'   which the response curve is to be generated.
 #' @param transformation  Full pathway of the 'transformations.Rdata' file
