@@ -9,8 +9,8 @@
 #' point. Missing data for a categorical variable is treated as belonging to
 #' none of the categories.
 #'
-#' @param data Data frame containing data for all the explanatory variables
-#'   (EVs) included in the model, with column names matching EV names.
+#' @param data Data frame of all the explanatory variables (EVs) included in the
+#'   model, with column names matching EV names.
 #' @param transformation Full pathway of the 'transformations.Rdata' file
 #'   containing the transformations used to build the model. This file is saved
 #'   as a result of the \code{\link{deriveVars}} function. Equivalently, the

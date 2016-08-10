@@ -37,6 +37,15 @@
 #'   Explanatory Variables (EVs) in subsequent columns. When \code{PA = FALSE},
 #'   RV values are 1/NA, and when \code{PA = TRUE}, RV values are 1/0.
 #'
+#'   With presence-only occurrence data, the returned output can be used as the
+#'   \code{data} argument for \code{\link{plotFOP}}, \code{\link{deriveVars}},
+#'   \code{\link{selectDVforEV}}, \code{\link{selectEV}}, and
+#'   \code{\link{plotResp}}. With presence/absence occurrence data, the returned
+#'   output can be used as the \code{data} argument for \code{\link{testAUC}}.
+#'   Output from \code{readData} can also be used as the \code{data} argument
+#'   for \code{\link{plotResp2}}, and \code{\link{projectModel}}, but for these
+#'   functions the values of RV are irrelevant.
+#'
 #' @export
 
 

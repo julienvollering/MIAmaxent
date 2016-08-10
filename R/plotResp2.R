@@ -14,9 +14,8 @@
 #'
 #' The \code{EV} specified in \code{dvdata} must not be an interaction term.
 #'
-#' @param data Data frame containing the response variable in the first column
-#'   and explanatory variables in subsequent columns. The response variable
-#'   should represent presence/background data, coded as: 1/NA.
+#' @param data Data frame of explanatory variables (EVs) included in the model,
+#'   with column names matching EV names.
 #' @param EV Name or column index of the explanatory variable in \code{data} for
 #'   which the response curve is to be generated.
 #' @param transformation  Full pathway of the 'transformations.Rdata' file
@@ -44,9 +43,9 @@
 #'   ("intPRO"), and exponentially weighted moving average of intPRO
 #'   ("smoothPRO").}
 #'
-#'   In the case of a categorical EV, the plotted data is a data frame containing
-#'   the number of points in the level ("n"), the level name ("level"), and the
-#'   mean Probability Ratio Output of the level ("levelRV").
+#'   In the case of a categorical EV, the plotted data is a data frame
+#'   containing the number of points in the level ("n"), the level name
+#'   ("level"), and the mean Probability Ratio Output of the level ("levelRV").
 #'
 #' @export
 
