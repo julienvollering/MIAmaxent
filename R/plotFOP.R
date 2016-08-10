@@ -17,7 +17,8 @@
 #' @param data Data frame containing the response variable in the first column
 #'   and explanatory variables in subsequent columns. The response variable
 #'   should represent presence or background, coded as: 1/NA. See Details for
-#'   information regarding presence/absence data.
+#'   information regarding presence/absence data. See also
+#'   \code{\link{readData}}.
 #' @param EV Name or column index of the explanatory variable in \code{data} for
 #'   which to calculate FOP.
 #' @param smoothwindow Width of the smoothing window. Represents the number of
@@ -43,6 +44,11 @@
 #'   categorical variables, only the number of points in the level ("n"), the
 #'   level name ("level"), and the mean RV value of the level ("levelRV") are
 #'   used.}
+#'
+#' @references Stoea, B., Halvorsen, R., Mazzoni, S. & Gusarov, V. (2016)
+#'   Sampling bias in presence-only data used for species distribution
+#'   modelling: assessment and effects on models. Sommerfeltia, submitted
+#'   manuscript.
 #'
 #' @export
 

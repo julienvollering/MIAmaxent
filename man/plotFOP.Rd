@@ -11,7 +11,8 @@ plotFOP(data, EV, smoothwindow = 5, EVranging = FALSE, intervals = NULL,
 \item{data}{Data frame containing the response variable in the first column
 and explanatory variables in subsequent columns. The response variable
 should represent presence or background, coded as: 1/NA. See Details for
-information regarding presence/absence data.}
+information regarding presence/absence data. See also
+\code{\link{readData}}.}
 
 \item{EV}{Name or column index of the explanatory variable in \code{data} for
 which to calculate FOP.}
@@ -59,5 +60,11 @@ frequency of presence curve (see Stoea et al. [in press], Sommerfeltia).
 The returned value of 'EVoptimum' is based on the smoothed FOP values, such
 that an outlying maximum in FOP may, in some cases, not be considered the
 optimal value of EV.
+}
+\references{
+Stoea, B., Halvorsen, R., Mazzoni, S. & Gusarov, V. (2016)
+  Sampling bias in presence-only data used for species distribution
+  modelling: assessment and effects on models. Sommerfeltia, submitted
+  manuscript.
 }
 
