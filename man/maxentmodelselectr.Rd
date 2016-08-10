@@ -32,8 +32,8 @@ package is the MIA Toolbox, which is described in detail in Mazzoni et al.
 }
 
 \section{User Workflow}{
- This diagram outlines the most common workflow for
-  users this package. Functions are shown in red.
+ This diagram outlines a common workflow for users of
+  this package. Functions are shown in red.
 
   \if{html}{\figure{workflow-flowchart.png}{options: width="70\%"
   alt="Figure: workflow-flowchart.png"}}

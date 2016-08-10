@@ -23,8 +23,8 @@
 #'   installed, and download it if necessary, from
 #'   \url{http://java.com/download}.
 #'
-#' @section User Workflow: This diagram outlines the most common workflow for
-#'   users of this package. Functions are shown in red.
+#' @section User Workflow: This diagram outlines a common workflow for users of
+#'   this package. Functions are shown in red.
 #'
 #'   \if{html}{\figure{workflow-flowchart.png}{options: width="70\%"
 #'   alt="Figure: workflow-flowchart.png"}}
