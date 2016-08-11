@@ -19,13 +19,15 @@ variables in '.asc' file format.}
 \item{catEV}{Pathway to a directory containing categorical environmental
 variables in '.asc' file format.}
 
-\item{maxbkg}{Integer. Maximum number of grid cells selected as unknown
-background points for the response variable. Default is 10,000.}
+\item{maxbkg}{Integer. Maximum number of grid cells randomly selected as
+unknown background points for the response variable. Default is 10,000.
+Irrelevant for presence/absence data (\code{PA = TRUE}) and ignored for
+presence-only data (\code{PA = FALSE}) if \code{occurrence} contains 'NA'
+values.}
 
 \item{PA}{Logical. Does \code{occurrence} represent presence/absence data?
-When \code{TRUE}, rows in \code{occurrence} with the value 0 in the first
-column are treated as absences, and all others are treated as presences.
-Default is \code{FALSE}.}
+This argument affects how the values in \code{occurrence} are interpreted,
+and controls what type of data object is produced. See details.}
 }
 \value{
 Data frame with the Response Variable (RV) in the first column, and
@@ -42,25 +44,29 @@ Data frame with the Response Variable (RV) in the first column, and
   functions the values of RV are irrelevant.
 }
 \description{
-\code{readData} reads in occurrence data in CSV format and environmental data
-in ASCII raster format and produces a data object which can be used as the
-starting point for the functions in this package. This function is intended
-to make reading in data easy for users familiar with the maxent.jar program.
-It is emphasized that important considerations for data preparation (e.g.
-cleaning, sampling bias removal, etc.) are not treated in this package and
-must be dealt with separately!
+\code{readData} reads in occurrence data in CSV file format and environmental
+data in ASCII raster file format and produces a data object which can be used
+as the starting point for the functions in this package. This function is
+intended to make reading in data easy for users familiar with the maxent.jar
+program. It is emphasized that important considerations for data preparation
+(e.g. cleaning, sampling bias removal, etc.) are not treated in this package
+and must be dealt with separately!
 }
 \details{
 When \code{occurrence} represents presence-only data (\code{PA = FALSE}), all
-rows are treated as presences, and the values in column 1 of the CSV are
-irrelevant. Conversely, when \code{occurrence} represents presence/absence
-data (\code{PA = TRUE}), rows with value 0 in column 1 of the CSV are treated
-as absences, and all other rows are treated as presences.
+rows with values other than 'NA' in column 1 of the CSV file are treated as
+presence locations. If column 1 contains any values of 'NA', these rows are
+treated as the unknown background locations for the response variable. Thus,
+'NA' can be used to specify a specific set of background locations if
+desired. Otherwise background points are randomly selected from the full
+extent of the raster cells which are not already included as presence
+locations. Only cells which contain data for all environmental variables are
+selected as background locations.
 
-For presence-only occurrence data, background points are randomly selected
-from the full extent of the raster cells which are not already included as
-presence locations. Only cells which contain data for all variables are
-selected as background.
+When \code{occurrence} represents presence/absence data (\code{PA = TRUE}),
+rows with value '0' in column 1 of the CSV are treated as absence locations,
+rows with value 'NA' are excluded, and all other rows are treated as
+presences.
 
 The names of the ASCII raster files are used as the names of the explanatory
 variables, so these files should be uniquely named, and the names must not
