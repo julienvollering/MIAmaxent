@@ -15,8 +15,9 @@
 #' as absences, and all other rows are treated as presences.
 #'
 #' For presence-only occurrence data, background points are randomly selected
-#' from the full extent of the grid files, and may include presence locations.
-#' Only cells which contain data for all variables are selected.
+#' from the full extent of the raster cells which are not already included as
+#' presence locations. Only cells which contain data for all variables are
+#' selected as background.
 #'
 #' The names of the ASCII raster files are used as the names of the explanatory
 #' variables, so these files should be uniquely named, and the names must not
@@ -24,7 +25,7 @@
 #'
 #' @param occurrence Full pathway of the '.csv' file of occurrence data. The
 #'   first column of the CSV should code occurrence (see Details), while the
-#'   second and third columns should contain X and Y coordinates cooresponding
+#'   second and third columns should contain X and Y coordinates corresponding
 #'   to the ASCII raster coordinate system. The first row is read as a header
 #'   row.
 #' @param contEV Pathway to a directory containing continuous environmental
@@ -36,6 +37,7 @@
 #' @param PA Logical. Does \code{occurrence} represent presence/absence data?
 #'   When \code{TRUE}, rows in \code{occurrence} with the value 0 in the first
 #'   column are treated as absences, and all others are treated as presences.
+#'   Default is \code{FALSE}.
 #'
 #' @return Data frame with the Response Variable (RV) in the first column, and
 #'   Explanatory Variables (EVs) in subsequent columns. When \code{PA = FALSE},
@@ -60,13 +62,15 @@ readData <- function(occurrence, contEV, catEV, maxbkg = 10000, PA = FALSE) {
   stack <- raster::stack(c(contfiles, catfiles))
 
   if (PA == FALSE) {
-    presdf <- data.frame(RV = 1, raster::extract(stack, occ[, 2:3]))
-    bkg <- raster::as.matrix(stack)
+    pres <- raster::extract(stack, occ[, 2:3], cellnumbers = TRUE)
+    presdf <- data.frame(RV = 1, pres[,-1])
+    bkg <- raster::extract(stack, raster::extent(stack), cellnumbers = TRUE)
     bkg <- bkg[!apply(bkg, 1, function(x) any(is.na(x))), ]
+    bkg <- bkg[!(bkg[, 1] %in% pres[, 1]), ]
     if (nrow(bkg) > maxbkg) {
-      bkgdf <- data.frame(RV = NA, bkg[sample(nrow(bkg), maxbkg), ])
+      bkgdf <- data.frame(RV = NA, bkg[sample(nrow(bkg), maxbkg), -1])
     } else {
-      bkgdf <- data.frame(RV = NA, bkg)
+      bkgdf <- data.frame(RV = NA, bkg[, -1])
     }
     data <- rbind(presdf, bkgdf)
     catindex <- seq(ncol(data) - length(catfiles) + 1, ncol(data))

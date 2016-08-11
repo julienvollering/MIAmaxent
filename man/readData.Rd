@@ -9,7 +9,7 @@ readData(occurrence, contEV, catEV, maxbkg = 10000, PA = FALSE)
 \arguments{
 \item{occurrence}{Full pathway of the '.csv' file of occurrence data. The
 first column of the CSV should code occurrence (see Details), while the
-second and third columns should contain X and Y coordinates cooresponding
+second and third columns should contain X and Y coordinates corresponding
 to the ASCII raster coordinate system. The first row is read as a header
 row.}
 
@@ -24,7 +24,8 @@ background points for the response variable. Default is 10,000.}
 
 \item{PA}{Logical. Does \code{occurrence} represent presence/absence data?
 When \code{TRUE}, rows in \code{occurrence} with the value 0 in the first
-column are treated as absences, and all others are treated as presences.}
+column are treated as absences, and all others are treated as presences.
+Default is \code{FALSE}.}
 }
 \value{
 Data frame with the Response Variable (RV) in the first column, and
@@ -57,8 +58,9 @@ data (\code{PA = TRUE}), rows with value 0 in column 1 of the CSV are treated
 as absences, and all other rows are treated as presences.
 
 For presence-only occurrence data, background points are randomly selected
-from the full extent of the grid files, and may include presence locations.
-Only cells which contain data for all variables are selected.
+from the full extent of the raster cells which are not already included as
+presence locations. Only cells which contain data for all variables are
+selected as background.
 
 The names of the ASCII raster files are used as the names of the explanatory
 variables, so these files should be uniquely named, and the names must not
