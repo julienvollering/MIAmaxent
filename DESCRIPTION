@@ -29,4 +29,7 @@ Imports:
     raster (>= 2.5-8),
     stats (>= 3.3.0),
     utils (>= 3.3.0)
-
+Suggests:
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

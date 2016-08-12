@@ -1,10 +1,12 @@
 #' Plot Frequency of Observed Presence (FOP).
 #'
 #' \code{plotFOP} produces a Frequency of Observed Presence (FOP) plot for a
-#' given explanatory variable. For continuous variables, the exponetially
-#' weighted moving average of the FOP values is added. \code{plotFOP} also
-#' returns a list containing the optimum EV value, and a data frame containing
-#' the plotted data (for customizable graphics).
+#' given explanatory variable. An FOP plot shows the rate of occurrence of the
+#' response variable across intervals or levels of the explanatory variable. For
+#' continuous variables, the exponentially weighted moving average of the FOP
+#' values is added to the plot as a line. \code{plotFOP} also returns a list
+#' containing the optimum EV value, and a data frame containing the plotted
+#' data (for customizable plotting).
 #'
 #' If the response variable in \code{data} represents presence/absence data, the
 #' result is an empirical frequency of presence curve, rather than a observed
@@ -76,8 +78,8 @@ plotFOP <- function(data, EV, smoothwindow = 5, EVranging = FALSE,
     FOPdf$smoothRV <- .ewma(FOPdf$intRV, smoothwindow)
 
     graphics::plot(FOPdf$intRV ~ FOPdf$intEV,
-      main = paste0("FOP plot: ", EVname),
-      xlab = EVname, ylab = "Frequency of Observed Presence (FOP)", ...)
+      main = paste0("FOP plot: ", EVname), xlab = EVname,
+      ylab = "Frequency of Observed Presence (FOP)", ...)
     graphics::lines(FOPdf$intEV, FOPdf$smoothRV, col="grey")
 
     maxRV <- FOPdf$smoothRV
