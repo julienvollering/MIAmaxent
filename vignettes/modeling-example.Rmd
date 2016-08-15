@@ -195,6 +195,11 @@ grasslandDVselect$selection$terdem[, -13]
 ```
 Of all the derived variables produced from "terdem", "terdem\_HR18" explained the most variation in the response variable. Furthermore, "terdem\_HR4" explained enough of the remaining variation to be selected as well. 
 
+##### selectEV(...)
+
+Part 2 of variable selection using `MIAmaxent` is performed by the `selectEV` function. This function is similar to the `selectDVforEV` function, but instead of selecting parsimonius groups of derived variables to represent each explanatory variable, `selectEV` selects explanatory variables. This proceeds in the same manner as `selectDVforEV`, with nested model comparison using the F-test. Where `selectDVforEV` adds a single DV at a time, `selectEV` adds a single _group of DVs_, representing a single EV, at a time. 
+
+The `selectEV` function also differs from `selectDVforEV` in one other very important way; it includes the option of including interation terms between selected explanatory variables in the model (`interaction = TRUE`). Interaction terms between variables are useful when one explanatory variable changes the effect of another explanatory variable on the modeled target. In `MIAmaxent` interaction terms are produced by simple multiplication between all pairs of derived variables representing the two interacting explanatory variables. Interaction terms are only allowed between EVs which are both included in the model. 
 
 
 
