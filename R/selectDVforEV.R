@@ -70,7 +70,7 @@ selectDVforEV <- function(data, dvdata, alpha = 0.01, dir = NULL,
   fdir <- file.path(dir, "selectDVforEV")
   if (file.exists(fdir)) {
     stop("The specified dir already contains a selection of DVs.
-Please specify a different dir. \n ")
+Please specify a different dir. \n ", call. = FALSE)
   } else {
     dir.create(fdir)
   }

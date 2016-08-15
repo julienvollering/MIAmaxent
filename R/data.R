@@ -31,3 +31,18 @@
 #' @source produced from \code{\link{grasslandPO}} using
 #'   \code{\link{deriveVars}}
 "grasslandDVs"
+
+
+#' Selected derived variables accompanying selection trails.
+#'
+#' Selected derived variables and tables showing forward model selection of
+#' derived variables for modeling the distribution of semi-natural grasslands in
+#' Oestfold County, Norway.
+#'
+#' @format List with 2 elements: \enumerate{ \item A list of 10 data frames,
+#'   with each containing the derived variables selected for a given explanatory
+#'   variable. \item A list of forward model selection trails used to select
+#'   derived variables. }
+#' @source produced from \code{\link{grasslandDVs}} and \code{\link{grasslandPO}} using
+#'   \code{\link{selectDVforEV}}
+"grasslandDVselect"

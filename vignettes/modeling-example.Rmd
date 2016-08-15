@@ -125,9 +125,16 @@ grasslandDVs <- deriveVars(grasslandPO, transformtype = c("L", "M", "D", "HF", "
 
 >__Use the `dir` argument to specify the directory to which files will be written in the `deriveVars`, `selectDVforEV`, `selectEV`, and `plotResp` functions.__
 
-The models used to select spline-type derived variables are written to file and the process of spline selection can be inspected by navigating to the directory to which the files were written (default is the working directory). Inside the "deriveVars" folder are folders for each explanatory variable, inside of which are folders for the spline transformation types. Inside each of these folders are 2 files of particular interest: the "splineselection.csv" file gives the model details for each of the 20 candidate derived variables, while the "Vknotplot.png" file shows the variation explained by the 20 candidate variables. Selected candidates are marked in red. Below is an example of one of the V-knot plots:
+The console output of `deriveVars` (that which is saved above as `grasslandDVs`) consists of 2 parts:
 
-![V-knot plot of forward hinge variables derived from terslpdg](figures/Vknotplot.png)
+* data frames of DVs for each EV (named "EVDV")  
+* the transformation function used to produce each DV (named "transformations")
+In our grasslands analysis, the contents of these two items look like this:
+```{r}
+summary(grasslandDVs$EVDV) # alternatively: summary(grasslandDVs[[1]])
+head(summary(grasslandDVs$transformations)) # alternatively: head(summary(grasslandDVs[[2]]))
+length(grasslandDVs$transformations)
+```
 
 ***
 
@@ -139,13 +146,55 @@ plot(grasslandPO$terslpdg, grasslandDVs$EVDV$terslpdg$terslpdg_D2, pch = 20)
 plot(grasslandPO$terslpdg, grasslandDVs$EVDV$terslpdg$terslpdg_HR4, pch = 20)
 ```
 
+***
+
+The models used to select spline-type derived variables are written to file and the process of spline selection can be inspected by navigating to the directory to which the files were written (default is the working directory). Inside the "deriveVars" folder are folders for each explanatory variable, inside of which are folders for the spline transformation types. Inside each of these folders are 2 files of particular interest: the "splineselection.csv" file gives the model details for each of the 20 candidate derived variables, while the "Vknotplot.png" file shows the variation explained by the 20 candidate variables. Selected candidates are marked in red. Below is an example of one of the V-knot plots:
+
+![V-knot plot of forward hinge variables derived from terslpdg](figures/Vknotplot.png)
+
+
+
+
+
 ## Selecting variables
 
 With derived variables ready, we are ready to begin the process of choosing which variables to include in the model. This is arguably the most critical process in building a model. Following the principle of parsimony, the aim in selecting variables is to explain as much variation in the response variable as efficiently as possible. The greater the number of explanatory or derived variables included in the model, the more variation in the response variable we can explain, but at the cost of model complexity. In the `MIAmaxent` package, the benefit of additional variation explained is weighed against the cost in model complexity using an F-test. Variables are added to the model one by one in a process of forward selection, and each new model is compared to its predecessor. Another term for this process is "nested model comparison". 
 
-Rather than selecting from the full pool of derived variables one by one, `MIAmaxent` performs variable selection in two parts: 
-1. First, a group of derived variables is selected separately for each individual explanatory variable. This is done using the `selectDVforEV` function. 
+Rather than selecting from the full pool of derived variables one by one, `MIAmaxent` performs variable selection in two parts:  
+
+1. First, a group of derived variables is selected separately for each individual explanatory variable. This is done using the `selectDVforEV` function.  
 2. Second, the explanatory variables themselves, each represented by a group of derived variables, are selected. This is done using the `selectEV` function. 
+
+##### selectDVforEV(...)
+
+The `selectDVforEV` function performs forward selection of individual derived variables (DVs) for each explanatory variable (EV). In other words, the function takes each EV one by one, and narrows the group of DVs produced from that EV (by `deriveVars`) to a group which explains variation in the response variable most efficiently.
+
+The alpha-value specified in the function is used in the F-test during forward selection, and sets the threshold for how much variation a DV must explain to be retained. Lower alpha values signify a more conservative test, such that DVs must explain more variation to be included.  
+
+Here we use `selectEVforDV` on the grassland data set. Note the "[[1]]" following grasslandsDV, which specifies the list of DVs in the `deriveVars` output.
+```{r, eval=FALSE}
+grasslandDVselect <- selectDVforEV(grasslandPO, grasslandDVs[[1]], alpha = 0.001)
+```
+
+The output of selectEVforDV consists of 2 main parts:  
+
+* the DVs that were selected for each EV (named "selectedDV")  
+* the trails of nested models that were built and compared for each explanatory variable during the selection process (named "selection")
+
+We can see that `selectDVforEV` has reduced the number of derived variables by comparing the list of DVs before and after:
+```{r}
+summary(grasslandDVs$EVDV)
+sum(sapply(grasslandDVs$EVDV, length))
+summary(grasslandDVselect$selectedDV)
+sum(sapply(grasslandDVselect$selectedDV, length))
+```
+
+Here is an example of one of the trails of forward DV selection. Shown is the trail for the "terdem" EV:
+```{r}
+grasslandDVselect$selection$terdem[, -13]
+```
+Of all the derived variables produced from "terdem", "terdem\_HR18" explained the most variation in the response variable. Furthermore, "terdem\_HR4" explained enough of the remaining variation to be selected as well. 
+
 
 
 
