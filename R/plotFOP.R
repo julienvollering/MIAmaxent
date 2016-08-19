@@ -90,8 +90,8 @@ plotFOP <- function(data, EV, smoothwindow = 5, EVranging = FALSE,
       intervals <- intervals - 1
       df$int <- .reg.interval(df[, 2], intervals)
       grouped <- dplyr::group_by(df, int)
-      FOPdf <- dplyr::summarise(grouped, intEV = mean(EV),
-        intRV = mean(RV, na.rm=F))
+      FOPdf <- as.data.frame(dplyr::summarise(grouped, n = n(),
+        intEV = mean(EV), intRV = mean(RV, na.rm=F)))
       FOPdf$smoothRV <- .ewma(FOPdf$intRV, smoothwindow)
       maxRV <- FOPdf$smoothRV
       maxRV[is.na(maxRV)] <- FOPdf$intRV[is.na(maxRV)]

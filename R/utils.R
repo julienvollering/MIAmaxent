@@ -23,6 +23,29 @@ if(getRversion() >= "2.15.1") {
 
 
 
+#' Index of best prefix match.
+#'
+#' Return the index of the string in 'a' which best matches any of the strings
+#' in 'b'
+#'
+#' @param a Vector of character strings to be matched
+#' @param b vector of character strings to match
+#'
+#' @return single character string
+
+.best.match.ind <- function(a, b) {
+  score <- sapply(a, function(a) {
+    reg <- regexpr(b, a)
+    max(attr(reg, "match.length"))
+  })
+  maxs <- score[score == max(score)]
+  best <- names(maxs[nchar(names(maxs)) == min(nchar(names(maxs)))])
+  best.ind <- which(a == best)
+  return(best.ind)
+}
+
+
+
 #' checks the validity of RV values
 #'
 #' Presence-only data should be coded as: 1/NA (preferred) or 1/0 (danger of

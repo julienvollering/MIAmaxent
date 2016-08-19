@@ -118,7 +118,7 @@ projectModel <- function(data, transformation, model, clamping = FALSE,
   if (rescale == TRUE) {
    PRO <- (PRO/sum(PRO))*length(PRO)
   }
-  Output <- cbind(PRO, data)
+  Output <- as.data.frame(cbind(PRO, data))
 
   return(list(output = Output, ranges = Ranges))
 }

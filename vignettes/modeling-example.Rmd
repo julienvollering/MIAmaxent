@@ -165,18 +165,20 @@ Rather than selecting from the full pool of derived variables one by one, `MIAma
 1. First, a group of derived variables is selected separately for each individual explanatory variable. This is done using the `selectDVforEV` function.  
 2. Second, the explanatory variables themselves, each represented by a group of derived variables, are selected. This is done using the `selectEV` function. 
 
+>__Variable selection occurs heirarchically: first derived variables within each explanatory variable, then explanatory variables within the full model.__
+
 ##### selectDVforEV(...)
 
 The `selectDVforEV` function performs forward selection of individual derived variables (DVs) for each explanatory variable (EV). In other words, the function takes each EV one by one, and narrows the group of DVs produced from that EV (by `deriveVars`) to a group which explains variation in the response variable most efficiently.
 
 The alpha-value specified in the function is used in the F-test during forward selection, and sets the threshold for how much variation a DV must explain to be retained. Lower alpha values signify a more conservative test, such that DVs must explain more variation to be included.  
 
-Here we use `selectEVforDV` on the grassland data set. Note the "[[1]]" following grasslandsDV, which specifies the list of DVs in the `deriveVars` output.
+Here we use `selectDVforEV` on the grassland data set. Note the "[[1]]" following grasslandsDV, which specifies the list of DVs in the `deriveVars` output.
 ```{r, eval=FALSE}
 grasslandDVselect <- selectDVforEV(grasslandPO, grasslandDVs[[1]], alpha = 0.001)
 ```
 
-The output of selectEVforDV consists of 2 main parts:  
+The output of selectDVforEV consists of 2 main parts:  
 
 * the DVs that were selected for each EV (named "selectedDV")  
 * the trails of nested models that were built and compared for each explanatory variable during the selection process (named "selection")
@@ -188,18 +190,146 @@ sum(sapply(grasslandDVs$EVDV, length))
 summary(grasslandDVselect$selectedDV)
 sum(sapply(grasslandDVselect$selectedDV, length))
 ```
+Note also that the number of explanatory variables was reduced from 13 to 10. Explanatory variables for which none of the derived variables explained a significant amount of variance are dropped. 
 
 Here is an example of one of the trails of forward DV selection. Shown is the trail for the "terdem" EV:
 ```{r}
 grasslandDVselect$selection$terdem[, -13]
 ```
-Of all the derived variables produced from "terdem", "terdem\_HR18" explained the most variation in the response variable. Furthermore, "terdem\_HR4" explained enough of the remaining variation to be selected as well. 
+The columns in this data frame represent: the round of variable selection (round), the name of the model per round (model), the names of the derived variables included in the model (DV), the number of variables in the model (m), the training AUC (trainAUC), the Entropy or log loss of the model (Entropy), the fraction of variation explained (FVA), the additional variation explained compared to the best model of the previous round (addedFVA), the degrees of freedom of the explained variance (dfe), the degrees of freedom of the unexplained variance (dfu), and the p-value of the F-test comparing the model to the previous round's best model (Pvalue). The model directory, recorded in column 13, is not shown. 
+
+This table shows, for example, that in the first round of selection, one model was built for each of the 8 derived variables, and that all of these explained enough variation to be retained for the second round of selection. Of all the derived variables produced from "terdem", "terdem\_HR18" explained the most variation in the response variable. Furthermore, "terdem\_HR4" explained enough of the remaining variation to be selected as well (Pvalue < alpha). 
 
 ##### selectEV(...)
 
 Part 2 of variable selection using `MIAmaxent` is performed by the `selectEV` function. This function is similar to the `selectDVforEV` function, but instead of selecting parsimonius groups of derived variables to represent each explanatory variable, `selectEV` selects explanatory variables. This proceeds in the same manner as `selectDVforEV`, with nested model comparison using the F-test. Where `selectDVforEV` adds a single DV at a time, `selectEV` adds a single _group of DVs_, representing a single EV, at a time. 
 
 The `selectEV` function also differs from `selectDVforEV` in one other very important way; it includes the option of including interation terms between selected explanatory variables in the model (`interaction = TRUE`). Interaction terms between variables are useful when one explanatory variable changes the effect of another explanatory variable on the modeled target. In `MIAmaxent` interaction terms are produced by simple multiplication between all pairs of derived variables representing the two interacting explanatory variables. Interaction terms are only allowed between EVs which are both included in the model. 
+
+Here we use `selectEV` on the grassland data set. Note the "[[1]]" following grasslandsDVselect, which specifies the list of selected DVs in the `selectDVforEV` output.
+```{r, eval=FALSE}
+grasslandEVselect <- selectEV(grasslandPO, grasslandDVselect[[1]], alpha = 0.001, interaction = TRUE)
+```
+
+The output of selectEV consists of 2 main parts:  
+
+* the EVs that were selected (named "selectedEV"), each represented by a group of selected DVs.  
+* the trail of nested models that were built and compared during the selection process (named "selection")
+
+Now compare the list of EVs before and after:
+```{r}
+summary(grasslandDVselect[[1]])
+length(grasslandDVselect[[1]])
+summary(grasslandEVselect[[1]])
+length(grasslandEVselect[[1]])
+```
+We can see that `selectEV` has reduced the number of explanatory variables, but it has also added new interaction terms between explanatory variables selected for the model.
+
+Here we show the best model of each round in the trail of forward selection of EVs and interaction terms, hiding a few columns for readability:
+```{r}
+roundbests <- grasslandEVselect$selection[-(1:nrow(grasslandEVselect$selection)),]
+for (i in unique(grasslandEVselect$selection$round)) {
+  roundbest <- grasslandEVselect[[2]][grasslandEVselect$selection$round == i, ][1,]
+  roundbests <- rbind(roundbests, roundbest)
+}
+roundbests[, -c(3, 6, 10, 11, 13)]
+```
+The full selection trail is automatically saved as a CSV-format file in the directory specified by the `dir` argument in `selectEV`. It is recommended to open this file (named: "evselection.csv") using spreadsheet software to inspect the trail of forward selection more closely. This allows the user to make an informed decision about what is the best model. 
+
+>__The trail of forward variable selection is automatically written to file (in the specified `dir`), and should be examined using spreadsheet software.__
+
+We can also look at the selection trail in graphical form. For example, we may plot additional variation explained across round number, to see how much better the model fit is for each round of adding a variable:
+```{r, fig.width=5, fig.height=5}
+plot(grasslandEVselect$selection$round, grasslandEVselect$selection$addedFVA)
+```
+
+For example, we may decide that a simple model with only 5 explanatory varibles is best, since rounds 6-13 explain only small amounts of additional variation. Thus, we choose the best model in round 5:
+```{r}
+grasslandEVselect[[2]][grasslandEVselect$selection$round == 5, ][1, -13]
+```
+The variables included in this model are: pr_bygall, terslpps15, pca1, lcucor1, and geoberg.
+
+
+
+
+
+## Exploring the model
+
+After building a model by selecting which explanatory variable to include, it is useful to explore what the model actually looks like. A straightforward way to do this is to look at model predictions over a range of explanatory data. This gives the modeler a sense of the relationships that the model has captured between explanatory variables and response variables, and can also help the modeler understand strengths and weaknesses in the model.  
+
+##### plotResp(...)
+
+We can use the `plotResp` function to create a so-called response plot. A response plot graphs model output across the range of one particular explanatory variable. When other variables are excluded from the model entirely, this is called a "single-effect response plot".
+
+Here we examine a single-effect response plot for the most important explanatory variable included in the model chosen above:
+```{r, fig.width=5, fig.height=5}
+pr_bygallResp <- plotResp(grasslandPO, grasslandEVselect[[1]], "pr_bygall")
+```
+
+To assess how well the relationship between the explanatory variable and the response variable is captured by the model, it can be useful to examine FOP plots and response plots side-by-side:
+```{r, fig.show='hold'}
+pr_bygallFOP <- plotFOP(grasslandPO, "pr_bygall", intervals=50)
+pr_bygallResp <- plotResp(grasslandPO, grasslandEVselect[[1]], "pr_bygall")
+```
+
+The values on the y-axes of the plots are not directly comparable, but one can expect that the shape of the response plot curve should mirror, more or less closely, the shape of the FOP plot curve.
+
+Here is the same comparison for one of the categorical variables included in the model:
+```{r, fig.show='hold'}
+terslpps15FOP <- plotFOP(grasslandPO, "terslpps15")
+terslpps15Resp <- plotResp(grasslandPO, grasslandEVselect[[1]], "terslpps15")
+```
+
+##### plotResp2(...)
+
+The `plotResp2` function in `MIAmaxent` is very similar to the `plotResp` function in that it is used to produce model response plots. However, `plotResp2` produces "marginal-effect response plots" instead of "single-effect response plots". A marginal-effect response plot graphs model output across the range of one particular explanatory variable _while holding all other variables in the model constant at their mean value_. 
+
+The two response plot functions also work in distinctly different ways, so the input to the functions differs.
+
+Here is the marginal-effect response plot for the same continuous explanatory variable shown above (note that `model` and `transformation` file pathways will normally lead to files in the user-specified directory): 
+```{r, fig.width=5, fig.height=5}
+pr_bygallResp2 <- plotResp2(grasslandPO, "pr_bygall", transformation = system.file("extdata", "transformations.Rdata", package = "maxentmodelselectr"), model = system.file("extdata", "1.lambdas", package = "maxentmodelselectr"))
+```
+
+
+
+
+## Using the model
+
+For many modeling applications the ultimate motivation for building a model is to obtain model predictions. Model predictions, or model output, can be used in many different ways: to make predictions about parts of the study area for which there exist no occurrence data, to predict relative probability of occurrence outside the study area, or to predict relative probability of occurrence in the past or future. In other words, any form of spatial or temporal interpolation or extrapolation is possible (although not always recommended!). The only requirement is that the values of the explanatory variables are known for the time or space for which model output is desired. 
+
+##### projectModel(...)
+
+The `projectModel` function in `MIAmaxent` can be used to obtain model output for any kind of modeling application. As input it takes values for he explanatory variables in the model (`data`), the transformation functions used by the model (`transformations`), and the model parameters (`model`). It returns model predictions in probability ratio output (PRO) format for each location represented in `data`. 
+
+Here, we obtain model output across the extent of the study area as represented by the training data (note again that `model` and `transformation` file pathways will normally lead to files in the user-specified directory):
+```{r}
+grasslandPrediction <- projectModel(grasslandPO, transformation = system.file("extdata", "transformations.Rdata", package = "maxentmodelselectr"), model = system.file("extdata", "1.lambdas", package = "maxentmodelselectr"))
+```
+
+Model predictions are appended to the `data` in column 1:
+```{r}
+head(grasslandPrediction$output)
+```
+
+Additionally, the `projectModel` function automatically checks how the range of the input explanatory data compares to the range of the data used to train the model. This is important because if the range of the input data lies outside the range of the training data (called model extrapolation), the model is less reliable. The range of continuous variables is reported on the training data scale from 0 to 1, and the range of categorical variables is reported as "inside" if all categories are represented in the training data:
+```{r}
+head(grasslandPrediction$ranges)
+```
+Since we projected the model over the training data, it makes sense that all the ranges are reported as [0,1] or "inside".
+
+Here is some code (using the `raster` package again) that shows how to plot model predictions spatially:
+```{r, fig.show='hold', fig.width=5, fig.height=5, warning=FALSE, message =FALSE, results='hide', fig.cap="Model predictions in probability ratio output (PRO) across the study area"}
+library(raster)
+contfiles <- list.files(system.file("extdata", "EV_continuous", package = "maxentmodelselectr"), full.names = TRUE)
+catfiles <- list.files(system.file("extdata", "EV_categorical", package = "maxentmodelselectr"), full.names = TRUE)
+stack <- raster::stack(c(contfiles, catfiles))
+stackpts <- rasterToPoints(stack)
+spatialPrediction <- projectModel(stackpts, transformation = system.file("extdata", "transformations.Rdata", package = "maxentmodelselectr"), model = system.file("extdata", "1.lambdas", package = "maxentmodelselectr"))
+Predictionraster <- raster(stack, layer=0)
+Predictionraster <- rasterize(spatialPrediction$output[, c("x", "y")], Predictionraster, field = spatialPrediction$output$PRO)
+plot(Predictionraster, colNA="black")
+```
 
 
 
