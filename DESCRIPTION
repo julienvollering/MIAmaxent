@@ -1,7 +1,7 @@
 Package: maxentmodelselectr
 Type: Package
 Title: Maxent Distribution Model Selection
-Version: 0.3.2.9000
+Version: 0.3.3.9000
 Authors@R: as.person(c(
     "Julien Vollering <julien.vollering@hisf.no> [aut, cre]",
     "Sabrina Mazzoni <sabrina.mazzoni@nhm.uio.no> [aut]",
