@@ -75,7 +75,7 @@ projectModel <- function(data, transformation, model, clamping = FALSE,
   evnames <- sapply(evnames, .best.match, b = dvnamesni)
 
   check2 <- lapply(dvnamesni, function(x) { startsWith(names(alltransf), x) })
-  if (any(sapply(check2, sum) != 1)) {
+  if (any(sapply(check2, sum) < 1)) {
     stop("All DVs in the model must be represented in transformation",
       call. = FALSE)
   }
@@ -96,7 +96,7 @@ projectModel <- function(data, transformation, model, clamping = FALSE,
   dvdatani <- lapply(dvnamesni, function(x) {
     evname <- evnames[startsWith(x, evnames)]
     evdata <- data[, evname]
-    transffunction <- alltransf[startsWith(names(alltransf), x)][[1]]
+    transffunction <- alltransf[.best.match.ind(names(alltransf), x)][[1]]
     y <- transffunction(evdata)
     if (clamping == TRUE) {
       y[y > 1] <- 1

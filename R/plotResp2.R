@@ -59,7 +59,7 @@ plotResp2 <- function(data, EV, transformation, model, logscale = FALSE,
 
   lambdas <- utils::read.csv(model, header = FALSE)
   dvnames <- as.character(lambdas[1:(nrow(lambdas)-4), 1])
-  dvnamesni <- dvnames[-grep(":", dvnames)]
+  dvnamesni <- dvnames[grep(":", dvnames, invert = TRUE)]
   dvnamesi <- dvnames[grep(":", dvnames)]
 
   check <- lapply(dvnamesni, function(x) { startsWith(x, colnames(data)) })
@@ -76,7 +76,7 @@ plotResp2 <- function(data, EV, transformation, model, logscale = FALSE,
   evnames <- sapply(evnames, .best.match, b = dvnamesni)
 
   check2 <- lapply(dvnamesni, function(x) { startsWith(names(alltransf), x) })
-  if (any(sapply(check2, sum) != 1)) {
+  if (any(sapply(check2, sum) < 1)) {
     stop("All DVs in the model must be represented in transformation",
       call. = FALSE)
   }
@@ -100,7 +100,7 @@ plotResp2 <- function(data, EV, transformation, model, logscale = FALSE,
   margdvdatani <- lapply(margdvnamesni, function(x) {
     evname <- evnames[startsWith(x, evnames)]
     evdata <- data[, evname]
-    transffunction <- alltransf[startsWith(names(alltransf), x)][[1]]
+    transffunction <- alltransf[.best.match.ind(names(alltransf), x)][[1]]
     y <- transffunction(evdata)
     return(y)
   })
@@ -114,7 +114,7 @@ plotResp2 <- function(data, EV, transformation, model, logscale = FALSE,
     if (class(xnull) %in% c("factor", "character")) {
       evdata <- rep(names(which.max(table(xnull))), nrow(data))
     }
-    transffunction <- alltransf[startsWith(names(alltransf), x)][[1]]
+    transffunction <- alltransf[.best.match.ind(names(alltransf), x)][[1]]
     y <- transffunction(evdata)
     return(y)
   })
@@ -128,9 +128,9 @@ plotResp2 <- function(data, EV, transformation, model, logscale = FALSE,
   })
   names(dvdatai) <- dvnamesi
 
-  dvdata <- data.frame(c(dvdatani, dvdatai), check.names = FALSE)
+  dvdf <- data.frame(c(dvdatani, dvdatai), check.names = FALSE)
   modelfunction <- modelfromlambdas(model)
-  respPts <- data.frame(EV = evdata, PRO = modelfunction(dvdata)[, 1])
+  respPts <- data.frame(EV = evdata, PRO = modelfunction(dvdf)[, 1])
   if (logscale == TRUE) {respPts$PRO <- log10(respPts$PRO)}
 
   if (class(respPts[, 1]) %in% c("numeric", "integer")) {
