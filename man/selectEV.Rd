@@ -69,6 +69,20 @@ EVs in \code{\link{plotResp}} if plotting single-effect model response.
 Variables should be uniquely named, and the names must not contain spaces or
 colons. Colons are reserved as the designator for interaction terms.
 }
+\examples{
+\dontrun{
+selectedevs <- selectEV(dat, selectedderiveddat, alpha = 0.0001,
+   dir = "D:/path/to/modeling/directory", interaction = TRUE)
+}
+
+grasslandEVselect <- selectEV(grasslandPO, grasslandDVselect[[1]], alpha = 0.001, interaction = TRUE)
+summary(grasslandDVselect[[1]])
+length(grasslandDVselect[[1]])
+summary(grasslandEVselect[[1]])
+length(grasslandEVselect[[1]])
+plot(grasslandEVselect$selection$round, grasslandEVselect$selection$addedFVA)
+
+}
 \references{
 Halvorsen, R. (2013). A strict maximum likelihood explanation of
   MaxEnt, and some implications for distribution modelling. Sommerfeltia, 36,

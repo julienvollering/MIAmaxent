@@ -61,6 +61,27 @@
 #'   for \code{\link{plotResp2}}, and \code{\link{projectModel}}, but for these
 #'   functions the values of RV are irrelevant.
 #'
+#' @examples
+#' \dontrun{
+#' dat <- readData(occurrence = "D:/path/to/occurrence/data.csv",
+#'    contEV = "D:/path/to/continuousEV/directory",
+#'    catEV = "D:/path/to/categoricalEV/directory", maxbkg = 100000, XY = TRUE)
+#' }
+#'
+#' grasslandPO <- readData(
+#'    occurrence = system.file("extdata", "occurrence_PO.csv", package = "maxentmodelselectr"),
+#'    contEV = system.file("extdata", "EV_continuous", package = "maxentmodelselectr"),
+#'    catEV = system.file("extdata", "EV_categorical", package = "maxentmodelselectr"),
+#'    maxbkg = 20000)
+#' head(grasslandPO)
+#'
+#' grasslandPA <- readData(
+#'    occurrence = system.file("extdata", "occurrence_PA.csv", package = "maxentmodelselectr"),
+#'    contEV = system.file("extdata", "EV_continuous", package = "maxentmodelselectr"),
+#'    catEV = system.file("extdata", "EV_categorical", package = "maxentmodelselectr"),
+#'    PA = TRUE, XY = TRUE)
+#' tail(grasslandPA)
+#'
 #' @export
 
 

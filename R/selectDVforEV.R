@@ -56,6 +56,18 @@
 #'   Opportunities for improved distribution modelling practice via a strict
 #'   maximum likelihood interpretation of MaxEnt. Ecography, 38(2), 172-183.
 #'
+#' @examples
+#' \dontrun{
+#' selecteddvs <- selectDVforEV(dat, deriveddat, alpha = 0.0001,
+#'    dir = "D:/path/to/modeling/directory")
+#' }
+#'
+#' grasslandDVselect <- selectDVforEV(grasslandPO, grasslandDVs[[1]], alpha = 0.001)
+#' summary(grasslandDVs$EVDV)
+#' sum(sapply(grasslandDVs$EVDV, length))
+#' summary(grasslandDVselect$selectedDV)
+#' sum(sapply(grasslandDVselect$selectedDV, length)
+#'
 #' @export
 
 

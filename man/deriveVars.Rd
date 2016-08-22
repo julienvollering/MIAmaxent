@@ -57,6 +57,20 @@ from the given DV shows a local maximum in fraction of variation explained
 Variables should be uniquely named, and the names should not contain spaces
 or colons.
 }
+\examples{
+\dontrun{
+deriveddat <- deriveVars(dat, transformtype = c("HF", "HR", "T"), allsplines = TRUE,
+   dir = "D:/path/to/modeling/directory")
+}
+
+grasslandDVs <- deriveVars(grasslandPO, transformtype = c("L", "M", "D", "HF", "HR", "T", "B"))
+summary(grasslandDVs$EVDV) # alternatively: summary(grasslandDVs[[1]])
+head(summary(grasslandDVs$transformations)) # alternatively: head(summary(grasslandDVs[[2]]))
+length(grasslandDVs$transformations)
+plot(grasslandPO$terslpdg, grasslandDVs$EVDV$terslpdg$terslpdg_D2, pch = 20)
+plot(grasslandPO$terslpdg, grasslandDVs$EVDV$terslpdg$terslpdg_HR4, pch = 20)
+
+}
 \references{
 Halvorsen, R., Mazzoni, S., Bryn, A., & Bakkestuen, V. (2015).
   Opportunities for improved distribution modelling practice via a strict

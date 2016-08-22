@@ -51,8 +51,8 @@ given explanatory variable. An FOP plot shows the rate of occurrence of the
 response variable across intervals or levels of the explanatory variable. For
 continuous variables, the exponentially weighted moving average of the FOP
 values is added to the plot as a line. \code{plotFOP} also returns a list
-containing the optimum EV value, and a data frame containing the plotted
-data (for customizable plotting).
+containing the optimum EV value, and a data frame containing the plotted data
+(for customizable plotting).
 }
 \details{
 If the response variable in \code{data} represents presence/absence data, the
@@ -62,6 +62,16 @@ frequency of presence curve (see Stoea et al. [in press], Sommerfeltia).
 The returned value of 'EVoptimum' is based on the smoothed FOP values, such
 that an outlying maximum in FOP may, in some cases, not be considered the
 optimal value of EV.
+}
+\examples{
+teraspifFOP <- plotFOP(grasslandPO, "teraspif")
+
+terslpdgFOP <- plotFOP(grasslandPO, "terslpdg", intervals = 25,  pch=20, cex=1.1, col = "red")
+terslpdgFOP$EVoptimum
+terslpdgFOP$FOPdata
+
+geobergFOP <- plotFOP(grasslandPO, 10)
+
 }
 \references{
 Stoea, B., Halvorsen, R., Mazzoni, S. & Gusarov, V. (2016)

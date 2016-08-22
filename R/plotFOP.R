@@ -5,8 +5,8 @@
 #' response variable across intervals or levels of the explanatory variable. For
 #' continuous variables, the exponentially weighted moving average of the FOP
 #' values is added to the plot as a line. \code{plotFOP} also returns a list
-#' containing the optimum EV value, and a data frame containing the plotted
-#' data (for customizable plotting).
+#' containing the optimum EV value, and a data frame containing the plotted data
+#' (for customizable plotting).
 #'
 #' If the response variable in \code{data} represents presence/absence data, the
 #' result is an empirical frequency of presence curve, rather than a observed
@@ -51,6 +51,15 @@
 #'   Sampling bias in presence-only data used for species distribution
 #'   modelling: assessment and effects on models. Sommerfeltia, submitted
 #'   manuscript.
+#'
+#' @examples
+#' teraspifFOP <- plotFOP(grasslandPO, "teraspif")
+#'
+#' terslpdgFOP <- plotFOP(grasslandPO, "terslpdg", intervals = 25,  pch=20, cex=1.1, col = "red")
+#' terslpdgFOP$EVoptimum
+#' terslpdgFOP$FOPdata
+#'
+#' geobergFOP <- plotFOP(grasslandPO, 10)
 #'
 #' @export
 
