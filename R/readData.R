@@ -44,6 +44,9 @@
 #' @param PA Logical. Does \code{occurrence} represent presence/absence data?
 #'   This argument affects how the values in \code{occurrence} are interpreted,
 #'   and controls what type of data object is produced. See details.
+#' @param XY Logical. Include XY coordinates in the output. May be useful for
+#'   spatial plotting. Note that coordinates included in the training data used
+#'   to build the model will be treated as explanatory variables.
 #'
 #' @return Data frame with the Response Variable (RV) in the first column, and
 #'   Explanatory Variables (EVs) in subsequent columns. When \code{PA = FALSE},
@@ -61,7 +64,9 @@
 #' @export
 
 
-readData <- function(occurrence, contEV, catEV, maxbkg = 10000, PA = FALSE) {
+readData <- function(occurrence, contEV, catEV, maxbkg = 10000, PA = FALSE,
+                     XY = FALSE) {
+
   occ <- utils::read.csv(occurrence, header = TRUE, na.strings = "NA")
   contfiles <- list.files(contEV, pattern = "\\.asc$", full.names = TRUE)
   catfiles <- list.files(catEV, pattern = "\\.asc$", full.names = TRUE)
@@ -69,35 +74,38 @@ readData <- function(occurrence, contEV, catEV, maxbkg = 10000, PA = FALSE) {
 
   if (PA == FALSE) {
     if (any(is.na(occ[, 1]))) {
-      presev <- raster::extract(stack, occ[!is.na(occ[, 1]), 2:3])
-      presdf <- data.frame(RV = rep(1, nrow(presev)), presev)
-      bkgdf <- data.frame(RV = NA, raster::extract(stack,
-        occ[is.na(occ[, 1]), 2:3]))
+      pres <- raster::extract(stack, occ[!is.na(occ[, 1]), 2:3], cellnumbers = TRUE)
+      bkg <- raster::extract(stack, occ[is.na(occ[, 1]), 2:3], cellnumbers =TRUE)
     } else {
       pres <- raster::extract(stack, occ[, 2:3], cellnumbers = TRUE)
-      presdf <- data.frame(RV = 1, pres[,-1])
       bkg <- raster::extract(stack, raster::extent(stack), cellnumbers = TRUE)
       bkg <- bkg[!apply(bkg, 1, function(x) any(is.na(x))), ]
       bkg <- bkg[!(bkg[, 1] %in% pres[, 1]), ]
-      if (nrow(bkg) > maxbkg) {
-        bkgdf <- data.frame(RV = NA, bkg[sample(nrow(bkg), maxbkg), -1])
-      } else {
-        bkgdf <- data.frame(RV = NA, bkg[, -1])
-      }
+      if (nrow(bkg) > maxbkg) {bkg <- bkg[sample(nrow(bkg), maxbkg), ]}
     }
+    presXY <- raster::xyFromCell(stack, pres[, 1])
+    presdf <- data.frame(RV = 1, presXY, pres[, -1])
+    bkgXY <- raster::xyFromCell(stack, bkg[, 1])
+    bkgdf <- data.frame(RV = NA, bkgXY, bkg[, -1])
+
     data <- rbind(presdf, bkgdf)
   }
 
   if (PA == TRUE) {
     presabs <- occ[!is.na(occ[, 1]), ]
     absindex <- presabs[, 1] == 0
-    presev <- raster::extract(stack, presabs[!absindex, 2:3])
-    presdf <- data.frame(RV = rep(1, nrow(presev)), presev)
-    absev <- raster::extract(stack, presabs[absindex, 2:3])
-    absdf <- data.frame(RV = rep(0, nrow(absev)), absev)
+    pres <- raster::extract(stack, presabs[!absindex, 2:3], cellnumbers = TRUE)
+    abs <- raster::extract(stack, presabs[absindex, 2:3], cellnumbers = TRUE)
+    presXY <- raster::xyFromCell(stack, pres[, 1])
+    presdf <- data.frame(RV = 1, presXY, pres[, -1])
+    absXY <- raster::xyFromCell(stack, abs[, 1])
+    absdf <- data.frame(RV = 0, absXY, abs[, -1])
     data <- rbind(presdf, absdf)
   }
 
+  if (XY == FALSE) {
+    data <- data[, -c(2:3)]
+  }
   catindex <- seq(ncol(data) - length(catfiles) + 1, ncol(data))
   data[catindex] <- lapply(data[catindex], function(x) as.factor(x))
   return(data)
