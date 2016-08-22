@@ -6,10 +6,10 @@
 #' used with occurence data that is independent from the data used to train the
 #' model, to obtain an unbiased measure of model performance.
 #'
-#' @param data Data frame containing test data in the first column and
-#'   corresponding explanatory variables in subsequent columns. The test data
-#'   should be coded as: 1/0/NA, representing presence, absence, and unknown.
-#'   See \code{\link{readData}}.
+#' @param data Data frame containing test occurrence data in the first column
+#'   and corresponding explanatory variables in subsequent columns. The test
+#'   data should be coded as: 1/0/NA, representing presence, absence, and
+#'   unknown. See \code{\link{readData}}.
 #' @param transformation Full pathway of the 'transformation.Rdata' file
 #'   containing the transformations used to build the model. This file is saved
 #'   as a result of the \code{\link{deriveVars}} function. Equivalently, the

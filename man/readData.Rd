@@ -4,7 +4,8 @@
 \alias{readData}
 \title{Read in data object from files.}
 \usage{
-readData(occurrence, contEV, catEV, maxbkg = 10000, PA = FALSE)
+readData(occurrence, contEV, catEV, maxbkg = 10000, PA = FALSE,
+  XY = FALSE)
 }
 \arguments{
 \item{occurrence}{Full pathway of the '.csv' file of occurrence data. The
@@ -28,6 +29,10 @@ values.}
 \item{PA}{Logical. Does \code{occurrence} represent presence/absence data?
 This argument affects how the values in \code{occurrence} are interpreted,
 and controls what type of data object is produced. See details.}
+
+\item{XY}{Logical. Include XY coordinates in the output. May be useful for
+spatial plotting. Note that coordinates included in the training data used
+to build the model will be treated as explanatory variables.}
 }
 \value{
 Data frame with the Response Variable (RV) in the first column, and
