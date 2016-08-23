@@ -67,13 +67,14 @@ colons. Colons are reserved as the designator for interaction terms.
 \dontrun{
 selecteddvs <- selectDVforEV(dat, deriveddat, alpha = 0.0001,
    dir = "D:/path/to/modeling/directory")
-}
 
+# From vignette:
 grasslandDVselect <- selectDVforEV(grasslandPO, grasslandDVs[[1]], alpha = 0.001)
 summary(grasslandDVs$EVDV)
 sum(sapply(grasslandDVs$EVDV, length))
 summary(grasslandDVselect$selectedDV)
-sum(sapply(grasslandDVselect$selectedDV, length)
+sum(sapply(grasslandDVselect$selectedDV, length))
+}
 
 }
 \references{

@@ -38,18 +38,13 @@ model, to obtain an unbiased measure of model performance.
 AUC <- testAUC(testdat,
    transformation = "D:/path/to/modeling/directory/deriveVars/transformations.Rdata",
    model = "D:/path/to/modeling/directory/selectEV/round/model/1.lambdas")
-}
 
-grasslandPA <- readData(occurrence = system.file("extdata", "occurrence_PA.csv", package = "maxentmodelselectr"),
-   contEV = system.file("extdata", "EV_continuous", package = "maxentmodelselectr"),
-   catEV = system.file("extdata", "EV_categorical", package = "maxentmodelselectr"),
-   PA = TRUE, XY = TRUE)
-head(grasslandPA)
-tail(grasslandPA)
+From vignette:
 grasslandAUC <- testAUC(grasslandPA,
    transformation = system.file("extdata", "transformations.Rdata", package = "maxentmodelselectr"),
    model = system.file("extdata", "1.lambdas", package = "maxentmodelselectr"))
 grasslandAUC
+}
 
 }
 

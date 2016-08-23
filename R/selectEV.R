@@ -64,14 +64,16 @@
 #' \dontrun{
 #' selectedevs <- selectEV(dat, selectedderiveddat, alpha = 0.0001,
 #'    dir = "D:/path/to/modeling/directory", interaction = TRUE)
-#' }
 #'
-#' grasslandEVselect <- selectEV(grasslandPO, grasslandDVselect[[1]], alpha = 0.001, interaction = TRUE)
+#' # From vignette:
+#' grasslandEVselect <- selectEV(grasslandPO, grasslandDVselect[[1]], alpha = 0.001,
+#'    interaction = TRUE)
 #' summary(grasslandDVselect[[1]])
 #' length(grasslandDVselect[[1]])
 #' summary(grasslandEVselect[[1]])
 #' length(grasslandEVselect[[1]])
 #' plot(grasslandEVselect$selection$round, grasslandEVselect$selection$addedFVA)
+#' }
 #'
 #' @export
 

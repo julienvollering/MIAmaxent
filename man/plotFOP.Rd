@@ -64,13 +64,14 @@ that an outlying maximum in FOP may, in some cases, not be considered the
 optimal value of EV.
 }
 \examples{
+\dontrun{
+# From vignette:
 teraspifFOP <- plotFOP(grasslandPO, "teraspif")
-
 terslpdgFOP <- plotFOP(grasslandPO, "terslpdg", intervals = 25,  pch=20, cex=1.1, col = "red")
 terslpdgFOP$EVoptimum
 terslpdgFOP$FOPdata
-
 geobergFOP <- plotFOP(grasslandPO, 10)
+}
 
 }
 \references{

@@ -55,14 +55,15 @@
 #' \dontrun{
 #' deriveddat <- deriveVars(dat, transformtype = c("HF", "HR", "T"), allsplines = TRUE,
 #'    dir = "D:/path/to/modeling/directory")
-#' }
 #'
+#' # From vignette:
 #' grasslandDVs <- deriveVars(grasslandPO, transformtype = c("L", "M", "D", "HF", "HR", "T", "B"))
 #' summary(grasslandDVs$EVDV) # alternatively: summary(grasslandDVs[[1]])
 #' head(summary(grasslandDVs$transformations)) # alternatively: head(summary(grasslandDVs[[2]]))
 #' length(grasslandDVs$transformations)
 #' plot(grasslandPO$terslpdg, grasslandDVs$EVDV$terslpdg$terslpdg_D2, pch = 20)
 #' plot(grasslandPO$terslpdg, grasslandDVs$EVDV$terslpdg$terslpdg_HR4, pch = 20)
+#' }
 #'
 #' @export
 
