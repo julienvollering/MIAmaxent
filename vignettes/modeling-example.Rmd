@@ -123,7 +123,7 @@ The `deriveVars` function produces derived variables from explanatory variables 
 For the spline-type transformations (forward hinge, reverse hinge, threshold) an endless number of different transformations are possible, so the function produces 20 of each, and then chooses those which explain the most variation in the response variable. This means that 20 models are built and evaluated for each combination of explanatory variable and spline transformation. Therefore, running `deriveVars` with these transformation types turned on may take some time.
 
 Here we produce all types of derived variables from our explanatory variables:
-```{r, eval=FALSE}
+```{r}
 grasslandDVs <- deriveVars(grasslandPO, transformtype = c("L", "M", "D", "HF", "HR", "T", "B"))
 ```
 
@@ -178,7 +178,7 @@ The `selectDVforEV` function performs forward selection of individual derived va
 The alpha-value specified in the function is used in the F-test during forward selection, and sets the threshold for how much variation a DV must explain to be retained. Lower alpha values signify a more conservative test, such that DVs must explain more variation to be included.  
 
 Here we use `selectDVforEV` on the grassland data set. Note the "[[1]]" following grasslandsDV, which specifies the list of DVs in the `deriveVars` output.
-```{r, eval=FALSE}
+```{r}
 grasslandDVselect <- selectDVforEV(grasslandPO, grasslandDVs[[1]], alpha = 0.001)
 ```
 
@@ -211,7 +211,7 @@ Part 2 of variable selection using `MIAmaxent` is performed by the `selectEV` fu
 The `selectEV` function also differs from `selectDVforEV` in one other very important way; it includes the option of including interation terms between selected explanatory variables in the model (`interaction = TRUE`). Interaction terms between variables are useful when one explanatory variable changes the effect of another explanatory variable on the modeled target. In `MIAmaxent` interaction terms are produced by simple multiplication between all pairs of derived variables representing the two interacting explanatory variables. Interaction terms are only allowed between EVs which are both included in the model. 
 
 Here we use `selectEV` on the grassland data set. Note the "[[1]]" following grasslandsDVselect, which specifies the list of selected DVs in the `selectDVforEV` output.
-```{r, eval=FALSE}
+```{r}
 grasslandEVselect <- selectEV(grasslandPO, grasslandDVselect[[1]], alpha = 0.001, interaction = TRUE)
 ```
 
