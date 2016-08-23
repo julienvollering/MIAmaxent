@@ -43,7 +43,7 @@ par(mar=c(5.1,4.1,4.1,2.1))
 
 ##### readData(...)
 
-The starting point for modeling using `MIAmaxent` is a simple data object that contains occurrence data for the modeled target as well as all of the environmental data. The format of this data object is a data frame with the response variable of the model (occurrence) in the first column, and explanatory variables of the model (environmental variables) in subsequent columns. In generative maxent modeling, the response variable (RV) is binary, and can be either presence or unknown background. These values are coded as "1" and "NA" respectively in the data object. Explanatory variables (EVs) may be continuous or categorical, and these types are denoted by numeric class and factor class respectively. 
+The starting point for modeling using `MIAmaxent` is a simple data object that contains occurrence data for the modeled target as well as all of the environmental data. The format of this data object is a data frame with the response variable of the model (occurrence) in the first column, and explanatory variables of the model (environmental variables) in subsequent columns. In generative Maxent modeling, the response variable (RV) is binary, and can be either presence or unknown background. These values are coded as "1" and "NA" respectively in the data object. Explanatory variables (EVs) may be continuous or categorical, and these types are denoted by numeric class and factor class respectively. 
 
 >__The `readData(...)` function transforms data in CSV and ASCII raster file formats into a single data frame which serves as the starting point for modeling.__  
 
@@ -76,7 +76,7 @@ _IMPORTANT: Important considerations for distribution modeling, such as accounti
 
 ## Occurrence-environment relationships
 
-By its simplist definition, a distribution model examines the relationship between the modeled target and its environment. In this way, distribution modeling follows the long tradition of gradient analysis in ecology[^1]. Therefore, before building an actual model, we should have some idea about what influence the environmental variables have on the occurence of the target.
+By its simplest definition, a distribution model examines the relationship between the modeled target and its environment. In this way, distribution modeling follows the long tradition of gradient analysis in ecology[^1]. Therefore, before building an actual model, we should have some idea about what influence the environmental variables have on the occurrence of the target.
 
 ##### plotFOP(...)
 
@@ -169,7 +169,7 @@ Rather than selecting from the full pool of derived variables one by one, `MIAma
 1. First, a group of derived variables is selected separately for each individual explanatory variable. This is done using the `selectDVforEV` function.  
 2. Second, the explanatory variables themselves, each represented by a group of derived variables, are selected. This is done using the `selectEV` function. 
 
->__Variable selection occurs heirarchically: first derived variables within each explanatory variable, then explanatory variables within the full model.__
+>__Variable selection occurs hierarchically: first derived variables within each explanatory variable, then explanatory variables within the full model.__
 
 ##### selectDVforEV(...)
 
@@ -206,9 +206,9 @@ This table shows, for example, that in the first round of selection, one model w
 
 ##### selectEV(...)
 
-Part 2 of variable selection using `MIAmaxent` is performed by the `selectEV` function. This function is similar to the `selectDVforEV` function, but instead of selecting parsimonius groups of derived variables to represent each explanatory variable, `selectEV` selects explanatory variables. This proceeds in the same manner as `selectDVforEV`, with nested model comparison using the F-test. Where `selectDVforEV` adds a single DV at a time, `selectEV` adds a single _group of DVs_, representing a single EV, at a time. 
+Part 2 of variable selection using `MIAmaxent` is performed by the `selectEV` function. This function is similar to the `selectDVforEV` function, but instead of selecting parsimonious groups of derived variables to represent each explanatory variable, `selectEV` selects explanatory variables. This proceeds in the same manner as `selectDVforEV`, with nested model comparison using the F-test. Where `selectDVforEV` adds a single DV at a time, `selectEV` adds a single _group of DVs_, representing a single EV, at a time. 
 
-The `selectEV` function also differs from `selectDVforEV` in one other very important way; it includes the option of including interation terms between selected explanatory variables in the model (`interaction = TRUE`). Interaction terms between variables are useful when one explanatory variable changes the effect of another explanatory variable on the modeled target. In `MIAmaxent` interaction terms are produced by simple multiplication between all pairs of derived variables representing the two interacting explanatory variables. Interaction terms are only allowed between EVs which are both included in the model. 
+The `selectEV` function also differs from `selectDVforEV` in one other very important way; it includes the option of including interaction terms between selected explanatory variables in the model (`interaction = TRUE`). Interaction terms between variables are useful when one explanatory variable changes the effect of another explanatory variable on the modeled target. In `MIAmaxent` interaction terms are produced by simple multiplication between all pairs of derived variables representing the two interacting explanatory variables. Interaction terms are only allowed between EVs which are both included in the model. 
 
 Here we use `selectEV` on the grassland data set. Note the "[[1]]" following grasslandsDVselect, which specifies the list of selected DVs in the `selectDVforEV` output.
 ```{r}
@@ -247,7 +247,7 @@ We can also look at the selection trail in graphical form. For example, we may p
 plot(grasslandEVselect$selection$round, grasslandEVselect$selection$addedFVA)
 ```
 
-For example, we may decide that a simple model with only 5 explanatory varibles is best, since rounds 6-13 explain only small amounts of additional variation. Thus, we choose the best model in round 5:
+For example, we may decide that a simple model with only 5 explanatory variables is best, since rounds 6-13 explain only small amounts of additional variation. Thus, we choose the best model in round 5:
 ```{r}
 grasslandEVselect[[2]][grasslandEVselect$selection$round == 5, ][1, -13]
 ```
@@ -328,7 +328,7 @@ grasslandPrediction$ranges
 ```
 Since we projected the model over the training data, it makes sense that all the ranges are reported as [0,1] or "inside".
 
-Note that `MIAmaxent` never uses any location data in the modelling process -- maxent distribution modelling is not spatially explicit. Therefore, if model predictions are to be used in a spatial context (mapped), it can be helpful to include spatial coordinates in the `data` input to the `projectModel`. Here is some code (using the `raster` package again) that shows an example of how to plot model predictions spatially:
+Note that `MIAmaxent` never uses any location data in the modelling process -- Maxent distribution modelling is not spatially explicit. Therefore, if model predictions are to be used in a spatial context (mapped), it can be helpful to include spatial coordinates in the `data` input to the `projectModel`. Here is some code (using the `raster` package again) that shows an example of how to plot model predictions spatially:
 ```{r, fig.show='hold', fig.width=5, fig.height=5, fig.cap="Model predictions in probability ratio output (PRO) across the study area"}
 contfiles <- list.files(system.file("extdata", "EV_continuous", package = "maxentmodelselectr"), full.names = TRUE)
 catfiles <- list.files(system.file("extdata", "EV_categorical", package = "maxentmodelselectr"), full.names = TRUE)
@@ -347,7 +347,7 @@ plot(Predictionraster, colNA="black")
 
 
 ## Evaluating the model
-There are many ways of evaluating the quality of a model, including assesing the explanatory variables selected and gauging the realism of response curves. Arguably the best way to evaluate a model, however, is to test how often its predictions are correct using occurrence data which are independent from the data used to train the model. This gives a precise metric of model accuracy, and ensures that the model success is not the result of peculiarities of the training data (such as sampling bias). Independent, presence-absence test data are not always available, for example when projecting a model into the future, but when they are, they represent a gold standard in model evaluation.
+There are many ways of evaluating the quality of a model, including assessing the explanatory variables selected and gauging the realism of response curves. Arguably the best way to evaluate a model, however, is to test how often its predictions are correct using occurrence data which are independent from the data used to train the model. This gives a precise metric of model accuracy, and ensures that the model success is not the result of peculiarities of the training data (such as sampling bias). Independent, presence-absence test data are not always available, for example when projecting a model into the future, but when they are, they represent a gold standard in model evaluation.
 
 ##### testAUC(...)
 
