@@ -1,5 +1,5 @@
 if(getRversion() >= "2.15.1") {
-  utils::globalVariables(c("EV", "int", "PRO", "RV"))
+  utils::globalVariables(c("EV", "int", "PRO", "RV", "n"))
 }
 
 
