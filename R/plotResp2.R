@@ -59,8 +59,8 @@
 #'
 #' # From vignette:
 #' pr_bygallResp2 <- plotResp2(grasslandPO, "pr_bygall",
-#'    transformation = system.file("extdata", "transformations.Rdata", package = "maxentmodelselectr"),
-#'    model = system.file("extdata", "1.lambdas", package = "maxentmodelselectr"))
+#' transformation = grasslandDVs[[2]],
+#' model = system.file("extdata", "1.lambdas", package = "maxentmodelselectr"))
 #' }
 #'
 #' @export

@@ -58,7 +58,7 @@
 #'
 #' # From vignette:
 #' grasslandPrediction <- projectModel(grasslandPO,
-#'    transformation = system.file("extdata", "transformations.Rdata", package = "maxentmodelselectr"),
+#'    transformation = grasslandDVs[[2]],
 #'    model = system.file("extdata", "1.lambdas", package = "maxentmodelselectr"))
 #' head(grasslandPrediction$output)
 #' grasslandPrediction$ranges
@@ -72,7 +72,7 @@
 #' stack <- raster::stack(c(contfiles, catfiles))
 #' stackpts <- rasterToPoints(stack)
 #' spatialPrediction <- projectModel(stackpts,
-#'    transformation = system.file("extdata", "transformations.Rdata", package = "maxentmodelselectr"),
+#'    transformation = grasslandDVs[[2]],
 #'    model = system.file("extdata", "1.lambdas", package = "maxentmodelselectr"))
 #' Predictionraster <- raster(stack, layer=0)
 #' Predictionraster <- rasterize(spatialPrediction$output[, c("x", "y")], Predictionraster,

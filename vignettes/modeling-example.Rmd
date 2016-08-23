@@ -292,7 +292,9 @@ The two response plot functions also work in distinctly different ways, so the i
 
 Here is the marginal-effect response plot for the same continuous explanatory variable shown above (note that `model` and `transformation` file pathways will normally lead to files in the user-specified directory): 
 ```{r, fig.show='hold', fig.width=5, fig.height=5, fig.align = "center"}
-pr_bygallResp2 <- plotResp2(grasslandPO, "pr_bygall", transformation = system.file("extdata", "transformations.Rdata", package = "maxentmodelselectr"), model = system.file("extdata", "1.lambdas", package = "maxentmodelselectr"))
+pr_bygallResp2 <- plotResp2(grasslandPO, "pr_bygall", 
+  transformation = grasslandDVs[[2]], 
+  model = system.file("extdata", "1.lambdas", package = "maxentmodelselectr"))
 ```
 
 
@@ -310,7 +312,9 @@ The `projectModel` function in `MIAmaxent` can be used to obtain model output fo
 
 Here, we obtain model output across the extent of the study area as represented by the training data (note again that `model` and `transformation` file pathways will normally lead to files in the user-specified directory):
 ```{r}
-grasslandPrediction <- projectModel(grasslandPO, transformation = system.file("extdata", "transformations.Rdata", package = "maxentmodelselectr"), model = system.file("extdata", "1.lambdas", package = "maxentmodelselectr"))
+grasslandPrediction <- projectModel(grasslandPO, 
+    transformation = grasslandDVs[[2]], 
+    model = system.file("extdata", "1.lambdas", package = "maxentmodelselectr"))
 ```
 
 Model predictions are appended to the `data` in column 1:
@@ -330,7 +334,9 @@ contfiles <- list.files(system.file("extdata", "EV_continuous", package = "maxen
 catfiles <- list.files(system.file("extdata", "EV_categorical", package = "maxentmodelselectr"), full.names = TRUE)
 stack <- raster::stack(c(contfiles, catfiles))
 stackpts <- rasterToPoints(stack)
-spatialPrediction <- projectModel(stackpts, transformation = system.file("extdata", "transformations.Rdata", package = "maxentmodelselectr"), model = system.file("extdata", "1.lambdas", package = "maxentmodelselectr"))
+spatialPrediction <- projectModel(stackpts, 
+  transformation = grasslandDVs[[2]], 
+  model = system.file("extdata", "1.lambdas", package = "maxentmodelselectr"))
 Predictionraster <- raster(stack, layer=0)
 Predictionraster <- rasterize(spatialPrediction$output[, c("x", "y")], Predictionraster, field = spatialPrediction$output$PRO)
 plot(Predictionraster, colNA="black")
@@ -352,9 +358,9 @@ The `testAUC` function takes a data frame of presence or absence locations, alon
 In our example, 122 test locations in Øsfold County, Norway, were visited to record presence or absence of semi-natural grasslands. Plotted on the raster of model predictions these data look like this:
 ```{r, fig.show='hold', fig.width=5, fig.height=5, fig.cap="Presence (red) and absence (blue) test data plotted over model predictions"}
 grasslandPA <- readData(occurrence = system.file("extdata", "occurrence_PA.csv", package = "maxentmodelselectr"), 
-                  contEV = system.file("extdata", "EV_continuous", package = "maxentmodelselectr"),
-                  catEV = system.file("extdata", "EV_categorical", package = "maxentmodelselectr"),
-                  PA = TRUE, XY = TRUE)
+  contEV = system.file("extdata", "EV_continuous", package = "maxentmodelselectr"),
+  catEV = system.file("extdata", "EV_categorical", package = "maxentmodelselectr"),
+  PA = TRUE, XY = TRUE)
 head(grasslandPA)
 tail(grasslandPA)
 
@@ -367,7 +373,9 @@ points(absences$x, absences$y, pch = 20, cex = 0.5, col = 'blue')
 
 We can use these data to calculate testAUC for our distribution model:
 ```{r, fig.show='hold', fig.width=5, fig.height=5, fig.align = "center"}
-grasslandAUC <- testAUC(grasslandPA, transformation = system.file("extdata", "transformations.Rdata", package = "maxentmodelselectr"), model = system.file("extdata", "1.lambdas", package = "maxentmodelselectr"))
+grasslandAUC <- testAUC(grasslandPA, 
+  transformation = grasslandDVs[[2]], 
+  model = system.file("extdata", "1.lambdas", package = "maxentmodelselectr"))
 grasslandAUC
 ```
 

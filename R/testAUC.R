@@ -29,8 +29,7 @@
 #'    model = "D:/path/to/modeling/directory/selectEV/round/model/1.lambdas")
 #'
 #' From vignette:
-#' grasslandAUC <- testAUC(grasslandPA,
-#'    transformation = system.file("extdata", "transformations.Rdata", package = "maxentmodelselectr"),
+#' grasslandAUC <- testAUC(grasslandPA, transformation = grasslandDVs[[2]],
 #'    model = system.file("extdata", "1.lambdas", package = "maxentmodelselectr"))
 #' grasslandAUC
 #' }
