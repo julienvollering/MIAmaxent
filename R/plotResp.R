@@ -47,6 +47,18 @@
 #'   containing the number of points in the level ("n"), the level name
 #'   ("level"), and the mean Probability Ratio Output of the level ("levelRV").
 #'
+#' @examples
+#' \dontrun{
+#' responseEV1 <- plotResp(dat, deriveddat, "EV1", dir = "D:/path/to/modeling/directory")
+#' }
+#'
+#' pr_bygallResp <- plotResp(grasslandPO, grasslandEVselect[[1]], "pr_bygall")
+#'
+#' par(mfrow = c(1,2))
+#' pr_bygallFOP <- plotFOP(grasslandPO, "pr_bygall", intervals=50)
+#' pr_bygallResp <- plotResp(grasslandPO, grasslandEVselect[[1]], "pr_bygall")
+#' par(mfrow = c(1,1))
+#'
 #' @export
 
 

@@ -50,6 +50,31 @@
 #'   entropy modeling of species geographic distributions. Ecological Modelling,
 #'   190, 231-259.
 #'
+#' @examples
+#' \dontrun{
+#' modeloutput <- projectModel(newdat,
+#'    transformation = "D:/path/to/modeling/directory/deriveVars/transformations.Rdata",
+#'    model = "D:/path/to/modeling/directory/selectEV/round/model/1.lambdas")
+#' }
+#'
+#' grasslandPrediction <- projectModel(grasslandPO,
+#'    transformation = system.file("extdata", "transformations.Rdata", package = "maxentmodelselectr"),
+#'    model = system.file("extdata", "1.lambdas", package = "maxentmodelselectr"))
+#' head(grasslandPrediction$output)
+#' grasslandPrediction$ranges
+#'
+#' library(raster)
+#' contfiles <- list.files(system.file("extdata", "EV_continuous", package = "maxentmodelselectr"), full.names = TRUE)
+#' catfiles <- list.files(system.file("extdata", "EV_categorical", package = "maxentmodelselectr"), full.names = TRUE)
+#' stack <- raster::stack(c(contfiles, catfiles))
+#' stackpts <- rasterToPoints(stack)
+#' spatialPrediction <- projectModel(stackpts,
+#'    transformation = system.file("extdata", "transformations.Rdata", package = "maxentmodelselectr"),
+#'    model = system.file("extdata", "1.lambdas", package = "maxentmodelselectr"))
+#' Predictionraster <- raster(stack, layer=0)
+#' Predictionraster <- rasterize(spatialPrediction$output[, c("x", "y")], Predictionraster, field = spatialPrediction$output$PRO)
+#' plot(Predictionraster, colNA="black")
+#'
 #' @export
 
 

@@ -51,6 +51,17 @@
 #'   containing the number of points in the level ("n"), the level name
 #'   ("level"), and the mean Probability Ratio Output of the level ("levelRV").
 #'
+#' @examples
+#' \dontrun{
+#' responseEV1 <- plotResp2(dat, "EV1",
+#'    transformation = "D:/path/to/modeling/directory/deriveVars/transformations.Rdata",
+#'    model = "D:/path/to/modeling/directory/selectEV/round/model/1.lambdas")
+#' }
+#'
+#' pr_bygallResp2 <- plotResp2(grasslandPO, "pr_bygall",
+#'    transformation = system.file("extdata", "transformations.Rdata", package = "maxentmodelselectr"),
+#'    model = system.file("extdata", "1.lambdas", package = "maxentmodelselectr"))
+#'
 #' @export
 
 

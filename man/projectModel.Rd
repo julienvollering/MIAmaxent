@@ -53,6 +53,32 @@ output is linearly rescaled so that values of PRO > 1 can be interpreted as
 higher relative probability of presence than an average site in the
 \emph{projection} data.
 }
+\examples{
+\dontrun{
+modeloutput <- projectModel(newdat,
+   transformation = "D:/path/to/modeling/directory/deriveVars/transformations.Rdata",
+   model = "D:/path/to/modeling/directory/selectEV/round/model/1.lambdas")
+}
+
+grasslandPrediction <- projectModel(grasslandPO,
+   transformation = system.file("extdata", "transformations.Rdata", package = "maxentmodelselectr"),
+   model = system.file("extdata", "1.lambdas", package = "maxentmodelselectr"))
+head(grasslandPrediction$output)
+grasslandPrediction$ranges
+
+library(raster)
+contfiles <- list.files(system.file("extdata", "EV_continuous", package = "maxentmodelselectr"), full.names = TRUE)
+catfiles <- list.files(system.file("extdata", "EV_categorical", package = "maxentmodelselectr"), full.names = TRUE)
+stack <- raster::stack(c(contfiles, catfiles))
+stackpts <- rasterToPoints(stack)
+spatialPrediction <- projectModel(stackpts,
+   transformation = system.file("extdata", "transformations.Rdata", package = "maxentmodelselectr"),
+   model = system.file("extdata", "1.lambdas", package = "maxentmodelselectr"))
+Predictionraster <- raster(stack, layer=0)
+Predictionraster <- rasterize(spatialPrediction$output[, c("x", "y")], Predictionraster, field = spatialPrediction$output$PRO)
+plot(Predictionraster, colNA="black")
+
+}
 \references{
 Halvorsen, R. (2013) A strict maximum likelihood explanation of
   MaxEnt, and some implications for distribution modelling. Sommerfeltia, 36,

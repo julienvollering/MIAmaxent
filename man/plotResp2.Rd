@@ -66,4 +66,16 @@ it is possible to plot the model response over any EV values supplied in
 
 The \code{EV} specified in \code{data} must not be an interaction term.
 }
+\examples{
+\dontrun{
+responseEV1 <- plotResp2(dat, "EV1",
+   transformation = "D:/path/to/modeling/directory/deriveVars/transformations.Rdata",
+   model = "D:/path/to/modeling/directory/selectEV/round/model/1.lambdas")
+}
+
+pr_bygallResp2 <- plotResp2(grasslandPO, "pr_bygall",
+   transformation = system.file("extdata", "transformations.Rdata", package = "maxentmodelselectr"),
+   model = system.file("extdata", "1.lambdas", package = "maxentmodelselectr"))
+
+}
 

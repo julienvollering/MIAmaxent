@@ -356,7 +356,7 @@ grasslandPA <- readData(occurrence = system.file("extdata", "occurrence_PA.csv",
                   catEV = system.file("extdata", "EV_categorical", package = "maxentmodelselectr"),
                   PA = TRUE, XY = TRUE)
 head(grasslandPA)
-nrow(grasslandPA)
+tail(grasslandPA)
 
 plot(Predictionraster, colNA="black")
 presences <- grasslandPA[grasslandPA$RV==1, ]
