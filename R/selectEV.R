@@ -32,9 +32,9 @@
 #'   and explanatory variables in subsequent columns. The response variable
 #'   should represent presence/background data, coded as: 1/NA. See
 #'   \code{\link{readData}}.
-#' @param dvdata List of data frames, with each data frame containing selected
-#'   derived variables for a given explanatory variable (e.g. the first item in
-#'   the list returned by \code{\link{selectDVforEV}}).
+#' @param dvdata List of data frames, with each data frame containing
+#'   \emph{selected} derived variables for a given explanatory variable (e.g.
+#'   the first item in the list returned by \code{\link{selectDVforEV}}).
 #' @param alpha Alpha-level used in F-test comparison of models. Default is
 #'   0.01.
 #' @param interaction Logical. Allows interaction terms between pairs of EVs.

@@ -19,8 +19,9 @@
 #'   should represent presence/background data, coded as: 1/NA. See
 #'   \code{\link{readData}}.
 #' @param dvdata List of explanatory variables used to train the model, where
-#'   each list item is a data frame containing selected DVs for a selected EV
-#'   (e.g. the first item in the list returned by \code{\link{selectEV}}).
+#'   each list item is a data frame containing \emph{selected} DVs for a
+#'   \emph{selected} EV (e.g. the first item in the list returned by
+#'   \code{\link{selectEV}}).
 #' @param EV Name or list index of the explanatory variable in \code{dvdata} for
 #'   which the response curve is to be generated. Interaction terms not allowed.
 #' @param dir Directory to which files will be written. Defaults to the working
