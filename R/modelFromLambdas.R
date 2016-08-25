@@ -15,6 +15,8 @@
 #' names in the .lambdas file used to reproduce the model.
 #'
 #' @param file pathway to the .lambdas file of a given Maxent model
+#' @param raw Logical. Should the function return raw Maxent output instead of
+#'   PRO?
 #'
 #' @return returns an R function (object).
 #'
@@ -23,7 +25,7 @@
 #' @export
 
 
-modelfromlambdas <- function(file) {
+modelfromlambdas <- function(file, raw = FALSE) {
 
   lambdas <- utils::read.csv(file, header = FALSE)
   dvrows <- lambdas[1:(nrow(lambdas)-4), ]
@@ -58,8 +60,13 @@ modelfromlambdas <- function(file) {
     rawoutput <- apply(thetaX, 1, function(x) {(exp(sum(x) - linPredNorm)) /
         densNorm})
     PROutput <- rawoutput * numbkgpts
-    projection <- as.data.frame(cbind(PROutput, orderedX))
+    if (raw == TRUE) {
+      projection <- as.data.frame(cbind(rawoutput, orderedX))
+    } else {
+      projection <- as.data.frame(cbind(PROutput, orderedX))
+    }
     return(projection)
   }
+
   return(model)
 }

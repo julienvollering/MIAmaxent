@@ -4,10 +4,13 @@
 \alias{modelfromlambdas}
 \title{Maxent model from .lambdas file.}
 \usage{
-modelfromlambdas(file)
+modelfromlambdas(file, raw = FALSE)
 }
 \arguments{
 \item{file}{pathway to the .lambdas file of a given Maxent model}
+
+\item{raw}{Logical. Should the function return raw Maxent output instead of
+PRO?}
 }
 \value{
 returns an R function (object).

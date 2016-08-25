@@ -9,14 +9,17 @@
 #' point. Missing data for a categorical variable is treated as belonging to
 #' none of the categories.
 #'
-#' When \code{rescale = FALSE}  the scale of the probability ratio output (PRO)
+#' When \code{rescale = FALSE} the scale of the model output (PRO or raw)
 #' returned by this function is dependent on the data used to train the model.
-#' As a result, values of PRO > 1 can be interpreted as higher relative
-#' probability of presence than an average site in the \emph{training} data
-#' (Halvorsen, 2013, Halvorsen et al., 2015). When \code{rescale = TRUE}, the
-#' output is linearly rescaled so that values of PRO > 1 can be interpreted as
-#' higher relative probability of presence than an average site in the
-#' \emph{projection} data.
+#' For example, a location with PRO = 2 can be interpreted as having a
+#' probability of presence twice as high as an average site in the
+#' \emph{training} data (Halvorsen, 2013, Halvorsen et al., 2015). When
+#' \code{rescale = TRUE}, the output is linearly rescaled with respect to the
+#' data onto which the model is projected. In this case, a location with PRO = 2
+#' can be interpreted as having a probability of presence twice as high as an
+#' average site in the \emph{projection} data. Similarly, raw values are on a
+#' scale which is dependent on the size of either the training data extent
+#' (\code{rescale = FALSE}) or projection data extent (\code{rescale = TRUE}).
 #'
 #' @param data Data frame of all the explanatory variables (EVs) included in the
 #'   model, with column names matching EV names. See \code{\link{readData}}.
@@ -29,10 +32,12 @@
 #'   This file is saved as a result of \code{\link{selectEV}}.
 #' @param clamping Logical. Do clamping \emph{sensu} Phillips et al. (2006).
 #'   Default is \code{FALSE}.
-#' @param rescale Logical. Linearly rescale the probability ratio output (PRO)
-#'   to the range of values in \code{data}? This has implications for the
-#'   interpretation of model output with respect to reference value PRO = 1. See
-#'   details.
+#' @param rescale Logical. Linearly rescale model output (PRO or raw) with
+#'   respect to the projection \code{data}? This has implications for the
+#'   interpretation of output values with respect to reference values (e.g. PRO
+#'   = 1). See details.
+#' @param raw Logical. Return raw Maxent output instead of Probability Ratio
+#'   Output (PRO)? Default is FALSE.
 #'
 #' @return List of 2: \enumerate{ \item A data frame with the model output in
 #'   column 1 and the corresponding explanatory data in subsequent columns.
@@ -84,7 +89,7 @@
 
 
 projectModel <- function(data, transformation, model, clamping = FALSE,
-                         rescale = FALSE) {
+                         rescale = FALSE, raw = FALSE) {
 
   lambdas <- utils::read.csv(model, header = FALSE)
   dvnames <- as.character(lambdas[1:(nrow(lambdas)-4), 1])
@@ -143,12 +148,21 @@ projectModel <- function(data, transformation, model, clamping = FALSE,
   names(dvdatai) <- dvnamesi
 
   dvdf <- data.frame(c(dvdatani, dvdatai), check.names = FALSE)
-  modelfunction <- modelfromlambdas(model)
-  PRO <- modelfunction(dvdf)[, 1]
+  modelfunction <- modelfromlambdas(model, raw)
+  modeloutput <- modelfunction(dvdf)[, 1]
   if (rescale == TRUE) {
-   PRO <- (PRO/sum(PRO))*length(PRO)
+    if (raw == TRUE) {
+      modeloutput <- modeloutput/sum(modeloutput)
+    } else {
+      modeloutput <- (modeloutput/sum(modeloutput))*length(modeloutput)
+    }
   }
-  Output <- as.data.frame(cbind(PRO, data))
+
+  if (raw == TRUE) {
+    Output <- as.data.frame(cbind(raw = modeloutput, data))
+  } else {
+    Output <- as.data.frame(cbind(PRO = modeloutput, data))
+  }
 
   return(list(output = Output, ranges = Ranges))
 }
