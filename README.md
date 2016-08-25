@@ -31,3 +31,7 @@ Halvorsen, R., Mazzoni, S., Bryn, A. & Bakkestuen, V. (2015) Opportunities for i
 Mazzoni, S., Halvorsen, R. & Bakkestuen, V. (2015) MIAT: Modular R-wrappers for flexible implementation of MaxEnt distribution modelling. Ecological Informatics, 30, 215-221.
 
 Phillips, S.J., Anderson, R.P. & Schapire, R.E. (2006) Maximum entropy modeling of species geographic distributions. Ecological Modelling, 190, 231-259.
+
+------------------------------------------------------------------------
+
+[![Travis-CI Build Status](https://travis-ci.org/julienvollering/maxentmodelselectr.svg?branch=master)](https://travis-ci.org/julienvollering/maxentmodelselectr)
