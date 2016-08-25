@@ -81,7 +81,7 @@
     }
   }
 
-  if (interaction == FALSE) {
+  if (interaction == FALSE || length(selectedset) < 2) {
     return(list(ev[selectedset], modeltable))
   }
 
