@@ -88,12 +88,21 @@
 #' @export
 
 
-readData <- function(occurrence, contEV, catEV, maxbkg = 10000, PA = FALSE,
-                     XY = FALSE) {
+readData <- function(occurrence, contEV = NULL, catEV = NULL, maxbkg = 10000,
+                     PA = FALSE, XY = FALSE) {
+
+  if (is.null(contEV) && is.null(catEV)) {
+    stop("Please specify at least 1 explanatory variable directory.
+       (contEV, catEV, or both)", call. = FALSE)
+  }
 
   occ <- utils::read.csv(occurrence, header = TRUE, na.strings = "NA")
-  contfiles <- list.files(contEV, pattern = "\\.asc$", full.names = TRUE)
-  catfiles <- list.files(catEV, pattern = "\\.asc$", full.names = TRUE)
+  if (is.null(contEV)) {contfiles <- NULL} else {
+    contfiles <- list.files(contEV, pattern = "\\.asc$", full.names = TRUE)
+  }
+  if (is.null(catEV)) {catfiles <- NULL} else {
+    catfiles <- list.files(catEV, pattern = "\\.asc$", full.names = TRUE)
+  }
   stack <- raster::stack(c(contfiles, catfiles))
 
   if (PA == FALSE) {
@@ -130,7 +139,10 @@ readData <- function(occurrence, contEV, catEV, maxbkg = 10000, PA = FALSE,
   if (XY == FALSE) {
     data <- data[, -c(2:3)]
   }
-  catindex <- seq(ncol(data) - length(catfiles) + 1, ncol(data))
-  data[catindex] <- lapply(data[catindex], function(x) as.factor(x))
+  if (!is.null(catEV)) {
+    catindex <- seq(ncol(data) - length(catfiles) + 1, ncol(data))
+    data[catindex] <- lapply(data[catindex], function(x) as.factor(x))
+  }
+
   return(data)
 }

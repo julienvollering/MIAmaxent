@@ -4,8 +4,8 @@
 \alias{readData}
 \title{Read in data object from files.}
 \usage{
-readData(occurrence, contEV, catEV, maxbkg = 10000, PA = FALSE,
-  XY = FALSE)
+readData(occurrence, contEV = NULL, catEV = NULL, maxbkg = 10000,
+  PA = FALSE, XY = FALSE)
 }
 \arguments{
 \item{occurrence}{Full pathway of the '.csv' file of occurrence data. The
