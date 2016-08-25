@@ -237,6 +237,17 @@ if(getRversion() >= "2.15.1") {
 
 
 
+#' Reminders when using devtools::release
+#'
+release_questions <- function() {
+  c(
+    "Have you reknitted the static vignette and copied the html file into /vignettes?",
+    "Have you removed the vignitte-produced files?"
+  )
+}
+
+
+
 #' Executes basic maxent.jar run from R
 #'
 #' @param rv Vector of response variable values
