@@ -13,7 +13,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 
 This short vignette is meant to introduce users to the `MIAmaxent` package by providing a worked example of a distribution modeling exercise. It shows how to use all of the main functions included in `MIAmaxent` in the order of a typical analysis. This vignette does NOT describe the theoretical underpinnings of the package. To learn more about the theory behind `MIAmaxent`, the user is referred to Halvorsen (2013) and Halvorsen et al. (2015), as well as other references listed in the documentation of the package. 
 
->__Help pages for the package and for individual functions in the package can be accessed in R using the help command: `?('MIAmaxent')`.__ 
+>__Help pages for the package and for individual functions in the package can be accessed in R using the help command: `?'MIAmaxent'`.__ 
 
 
 ***
@@ -26,11 +26,11 @@ The data used for demonstration in this vignette are a set of data that have bee
 >__The data used in this vignette are included in the package as an example data set, so the code and results shown here can be directly replicated.__  
 
 Before beginning the modeling exercise, it may be useful to see what the data look like in their geographical representation. We can use the `raster` package to plot the 1059 recorded presences on top of one of the environmental variable rasters:
-```{r, fig.width=5, fig.height=5, fig.align='center', fig.cap="Presence-only occurrence across the study area"}
+```{r}
 library(raster)
 EV1 <- raster(list.files(system.file("extdata", "EV_continuous", package = "maxentmodelselectr"), full.names = TRUE)[1])
 PO <- read.csv(system.file("extdata", "occurrence_PO.csv", package = "maxentmodelselectr"))
-
+```{r, fig.show='hold', fig.width=7, fig.height=7, fig.align='center', fig.cap="Presence-only occurrence across the study area"}
 par(mar=c(3.1,3.1,2.1,0.1))
 plot(EV1, colNA = 'black', legend=FALSE)
 points(PO$POINT_X, PO$POINT_Y, pch = 20, cex = 0.5, col = 'blue')
@@ -64,7 +64,7 @@ sum(grasslandPO$RV == 1, na.rm = TRUE)
 sum(is.na(grasslandPO$RV))
 ```
 
-_IMPORTANT: Important considerations for distribution modeling, such as accounting for sampling bias and setting study area extent, are not dealt with in `MIAmaxent`, and must be dealt with beforehand. Good modeling practice requires that these issues be attended to!_
+_IMPORTANT: Important preparations for distribution modeling, such as accounting for sampling bias and setting study area extent, are not dealt with in `MIAmaxent`, and must be dealt with beforehand. Good modeling practice requires that these issues be attended to!_
 
 
 ***
@@ -79,7 +79,7 @@ By its simplest definition, a distribution model examines the relationship betwe
 We can use the `plotFOP` function to create a so-called Frequency of Observed Presence (FOP) plot. An FOP plot shows how commonly the target occurs across the range of the explanatory variable, and makes it possible to recognize patterns in frequency of occurrence. Most often, the relationship between an environmental variable and modeled target is linear or unimodal, but the pattern seen in the FOP plot depends on the range of the EV, which in turn depends on the extent of the study area.
 
 Here we examine FOP plots for 2 of the continuous explanatory variables:
-```{r, fig.align='center'}
+```{r, fig.width=5, fig.height=5, fig.align='center'}
 teraspifFOP <- plotFOP(grasslandPO, "teraspif")
 terslpdgFOP <- plotFOP(grasslandPO, "terslpdg")
 ```
@@ -91,7 +91,7 @@ terslpdgFOP$FOPdata
 ```
 
 Now we examine FOP plots for 1 of the categorical explanatory variables:
-```{r, fig.width=7, fig.height=4, fig.align = "center"}
+```{r, fig.width=7, fig.height=5, fig.align = "center"}
 geobergFOP <- plotFOP(grasslandPO, 10)
 ```
 
@@ -141,7 +141,7 @@ length(grasslandDVs$transformations)
 Note that the names of derived variables indicate the type of transformation was used to create them. For example, "terslpdg\_D2" is a deviation-type transformation of terslpdg, where the slope of the deviation is controlled by a parameter value of 2. Meanwhile, "terslpdg\_HR4" is the a reverse hinge transformation, with the knot in the 4th position.
 
 We can check how derived variables relate to the original, untransformed explanatory variable from which they came. Here we look at "terslpdg\_D2" and "terslpdg\_HR4":
-```{r, fig.show='hold'}
+```{r, fig.show='hold', fig.width=4.5, fig.height=5}
 plot(grasslandPO$terslpdg, grasslandDVs$EVDV$terslpdg$terslpdg_D2, pch = 20)
 plot(grasslandPO$terslpdg, grasslandDVs$EVDV$terslpdg$terslpdg_HR4, pch = 20)
 ```
@@ -251,7 +251,7 @@ For example, we may decide that a simple model with only 5 explanatory variables
 ```{r}
 grasslandEVselect[[2]][grasslandEVselect$selection$round == 5, ][1, -13]
 ```
-The variables included in this model are: pr_bygall, terslpps15, pca1, lcucor1, and geoberg.
+The explanatory variables included in this model are: pr_bygall, terslpps15, pca1, lcucor1, and geoberg.
 
 
 ***
@@ -276,7 +276,7 @@ pr_bygallFOP <- plotFOP(grasslandPO, "pr_bygall", intervals=50)
 pr_bygallResp <- plotResp(grasslandPO, grasslandEVselect[[1]], "pr_bygall")
 ```
 
-The values on the y-axes of the plots are not directly comparable, but one can expect that the shape of the response plot curve should mirror, more or less closely, the shape of the FOP plot curve.
+The values on the y-axes of the plots are not directly comparable, but one can expect that the shape of the response plot curve should mirror, to a greater or lesser extent, the shape of the FOP plot curve.
 
 Here is the same comparison for one of the categorical variables included in the model:
 ```{r, fig.show='hold', fig.width=4.5}
@@ -338,9 +338,12 @@ stackpts <- rasterToPoints(stack)
 spatialPrediction <- projectModel(stackpts, 
   transformation = grasslandDVs[[2]], 
   model = system.file("extdata", "1.lambdas", package = "maxentmodelselectr"))
+```{r, fig.show='hold', fig.width=7, fig.height=7, fig.align='center', fig.cap="Model predictions in probability ratio output (PRO) across the study area"}
 Predictionraster <- raster(stack, layer=0)
 Predictionraster <- rasterize(spatialPrediction$output[, c("x", "y")], Predictionraster, field = spatialPrediction$output$PRO)
+par(mar=c(3.1,3.1,2.1,0.1))
 plot(Predictionraster, colNA="black")
+par(mar=c(5.1,4.1,4.1,2.1))
 ```
 
 
@@ -357,19 +360,21 @@ The evaluation metric which is used most commonly for distribution models and is
 The `testAUC` function takes a data frame of presence or absence locations, along with the corresponding values of explanatory variable at those locations, and calculates a testAUC value for the model. The presence-absence occurrence data can be read into R using the `readData` function with `PA = TRUE` if desired.
 
 In our example, 122 test locations in Øsfold County, Norway, were visited to record presence or absence of semi-natural grasslands. Plotted on the raster of model predictions these data look like this:
-```{r, fig.show='hold', fig.width=5, fig.height=5, fig.align='center', fig.cap="Presence (red) and absence (blue) test data plotted over model predictions"}
+```{r}
 grasslandPA <- readData(occurrence = system.file("extdata", "occurrence_PA.csv", package = "maxentmodelselectr"), 
   contEV = system.file("extdata", "EV_continuous", package = "maxentmodelselectr"),
   catEV = system.file("extdata", "EV_categorical", package = "maxentmodelselectr"),
   PA = TRUE, XY = TRUE)
 head(grasslandPA)
 tail(grasslandPA)
-
+```{r, fig.show='hold', fig.width=7, fig.height=7, fig.align='center', fig.cap="Presence (red) and absence (blue) test data plotted over model predictions"}
+par(mar=c(3.1,3.1,2.1,0.1))
 plot(Predictionraster, colNA="black")
 presences <- grasslandPA[grasslandPA$RV==1, ]
 absences <- grasslandPA[grasslandPA$RV==0, ]
 points(presences$x, presences$y, pch = 20, cex = 0.5, col = 'red')
 points(absences$x, absences$y, pch = 20, cex = 0.5, col = 'blue')
+par(mar=c(5.1,4.1,4.1,2.1))
 ```
 
 We can use these data to calculate testAUC for our distribution model:
