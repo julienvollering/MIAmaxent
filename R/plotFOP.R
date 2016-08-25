@@ -85,16 +85,18 @@ plotFOP <- function(data, EV, smoothwindow = 5, EVranging = FALSE,
     FOPdf <- as.data.frame(dplyr::summarise(grouped, n = n(),
       intEV = mean(EV), intRV = mean(RV, na.rm=F)))
 
-    FOPdf$smoothRV <- .ewma(FOPdf$intRV, smoothwindow)
-
     graphics::plot(FOPdf$intRV ~ FOPdf$intEV,
       main = paste0("FOP plot: ", EVname), xlab = EVname,
       ylab = "Frequency of Observed Presence (FOP)", ...)
-    graphics::lines(FOPdf$intEV, FOPdf$smoothRV, col="grey")
+
+    if (length(FOPdf$intRV) > smoothwindow) {
+      FOPdf$smoothRV <- .ewma(FOPdf$intRV, smoothwindow)
+      graphics::lines(FOPdf$intEV, FOPdf$smoothRV, col="grey")
+    } else { FOPdf$smoothRV <- NA }
 
     maxRV <- FOPdf$smoothRV
     maxRV[is.na(maxRV)] <- FOPdf$intRV[is.na(maxRV)]
-    EVoptimum = FOPdf$intEV[which(maxRV == max(maxRV))]
+    EVoptimum <- FOPdf$intEV[which(maxRV == max(maxRV))]
 
     while (length(EVoptimum) > 1) {
       intervals <- intervals - 1
@@ -102,7 +104,9 @@ plotFOP <- function(data, EV, smoothwindow = 5, EVranging = FALSE,
       grouped <- dplyr::group_by(df, int)
       FOPdf <- as.data.frame(dplyr::summarise(grouped, n = n(),
         intEV = mean(EV), intRV = mean(RV, na.rm=F)))
-      FOPdf$smoothRV <- .ewma(FOPdf$intRV, smoothwindow)
+      if (length(FOPdf$intRV) > smoothwindow) {
+        FOPdf$smoothRV <- .ewma(FOPdf$intRV, smoothwindow)
+      } else { FOPdf$smoothRV <- NA }
       maxRV <- FOPdf$smoothRV
       maxRV[is.na(maxRV)] <- FOPdf$intRV[is.na(maxRV)]
       EVoptimum <- FOPdf$intEV[which(maxRV == max(maxRV))]

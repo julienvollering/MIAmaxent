@@ -92,22 +92,27 @@ plotResp <- function(data, dvdata, EV, dir = NULL, logscale = FALSE, ...) {
       ylab = ifelse(logscale == TRUE, "log Probability Ratio Output (logPRO)",
         "Probability Ratio Output (PRO)"))
 
-    intervals <- min(c(ceiling(nrow(respPts) / 50), 100))
-    respPts$int <- .reg.interval(respPts[, 1], intervals)
-    grouped <- dplyr::group_by(respPts, int)
-    respLine <- as.data.frame(dplyr::summarise(grouped, n = n(),
-      intEV = mean(EV, na.rm = TRUE),
-      intPRO = mean(PRO, na.rm = TRUE)))
-    respLine$smoothPRO <- .ewma(respLine$intPRO, 5)
-    graphics::lines(respLine$smoothPRO ~ respLine$intEV, col="red", lwd = 2)
+    if (nrow(respPts) >= 250) {
+      intervals <- min(c(ceiling(nrow(respPts) / 50), 100))
+      respPts$int <- .reg.interval(respPts[, 1], intervals)
+      grouped <- dplyr::group_by(respPts, int)
+      respLine <- as.data.frame(dplyr::summarise(grouped, n = n(),
+        intEV = mean(EV, na.rm = TRUE),
+        intPRO = mean(PRO, na.rm = TRUE)))
+      respLine$smoothPRO <- .ewma(respLine$intPRO, 5)
+      graphics::lines(respLine$smoothPRO ~ respLine$intEV, col="red", lwd = 2)
+      result <- list("respPts" = respPts, "respLine" = respLine)
+    } else {
+      result <- respPts
+      warning("Exponentially weighted moving average line not drawn due to few intervals",
+        call. = FALSE)
+    }
 
     if (logscale == TRUE) {
       graphics::abline(h = 0, lty = 3)
     } else {
       graphics::abline(h = 1, lty = 3)
     }
-
-    result <- list("respPts" = respPts, "respLine" = respLine)
   }
 
   if (class(respPts[, 1]) %in% c("factor", "character")) {

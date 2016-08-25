@@ -143,7 +143,10 @@ if(getRversion() >= "2.15.1") {
   grouped <- dplyr::group_by(df, int)
   FOPdf <- dplyr::summarise(grouped, intEV = mean(EV), intRV = mean(RV, na.rm=F))
 
-  FOPdf$smoothRV <- .ewma(FOPdf$intRV, smoothwindow)
+  if (length(FOPdf$intRV) > smoothwindow) {
+    FOPdf$smoothRV <- .ewma(FOPdf$intRV, smoothwindow)
+  } else { FOPdf$smoothRV <- NA }
+
   maxRV <- FOPdf$smoothRV
   maxRV[is.na(maxRV)] <- FOPdf$intRV[is.na(maxRV)]
   EVoptimum <- FOPdf$intEV[which(maxRV == max(maxRV))]
@@ -152,12 +155,16 @@ if(getRversion() >= "2.15.1") {
     intervals <- intervals - 1
     df$int <- .reg.interval(df[, 2], intervals)
     grouped <- dplyr::group_by(df, int)
-    FOPdf <- dplyr::summarise(grouped, intEV = mean(EV), intRV = mean(RV, na.rm=F))
-    FOPdf$smoothRV <- .ewma(FOPdf$intRV, smoothwindow)
+    FOPdf <- as.data.frame(dplyr::summarise(grouped, n = n(),
+      intEV = mean(EV), intRV = mean(RV, na.rm=F)))
+    if (length(FOPdf$intRV) > smoothwindow) {
+      FOPdf$smoothRV <- .ewma(FOPdf$intRV, smoothwindow)
+    } else { FOPdf$smoothRV <- NA }
     maxRV <- FOPdf$smoothRV
     maxRV[is.na(maxRV)] <- FOPdf$intRV[is.na(maxRV)]
     EVoptimum <- FOPdf$intEV[which(maxRV == max(maxRV))]
   }
+
   return(EVoptimum)
 }
 
@@ -244,7 +251,7 @@ if(getRversion() >= "2.15.1") {
 release_questions <- function() {
   c(
     "Have you reknitted the static vignette and copied the html file into /vignettes?",
-    "Have you removed the vignitte-produced files?"
+    "Have you removed the vignitte-produced directories?"
   )
 }
 
