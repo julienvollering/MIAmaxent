@@ -178,7 +178,7 @@ plotResp2 <- function(data, EV, transformation, model, logscale = FALSE,
     respBar <- as.data.frame(dplyr::summarise(dplyr::group_by(respPts, EV),
       n = n(), levelPRO = mean(PRO, na.rm = TRUE)))
     graphics::barplot(respBar[, 3], names.arg = respBar[, 1], ...,
-      main = paste0("Single-effect response plot: ", evname), xlab = evname,
+      main = paste0("Single-effect response plot: ", EV), xlab = EV,
       ylab = ifelse(logscale == TRUE, "log Probability Ratio Output (logPRO)",
         "Probability Ratio Output (PRO)"))
     if (logscale == TRUE) {
