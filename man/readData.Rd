@@ -75,7 +75,9 @@ presences.
 
 The names of the ASCII raster files are used as the names of the explanatory
 variables, so these files should be uniquely named, and the names must not
-contain spaces or colons.
+contain spaces, underscores, or colons. Underscores and colons are reserved
+to denote derived variables and interaction terms repectively.
+\code{readData} automatically replaces underscores with hyphens.
 }
 \examples{
 \dontrun{

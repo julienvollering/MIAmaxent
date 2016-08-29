@@ -7,19 +7,31 @@
 #' transformation types (HF, HR, T),  a subset of possible DVs is selected by
 #' the criteria described under Details.
 #'
-#' The monotonous transformation "M" performed in this function is a zero-skew
-#' transformation (Oekland et al. 2001).
+#' The linear transformation "L" is a simple rescaling to the range [0, 1].
 #'
-#' For spline transformations, DVs are created around 20 different break points
-#' (knots). Only DVs which satisfy all of the following criteria are retained:
-#' \enumerate{ \item 3 <= knot <= 18 (DVs with knots at the extremes of the EV
-#' are never retained). \item F-test of the single-variable Maxent model from
-#' the given DV gives a p-value < 0.05. \item The single-variable Maxent model
-#' from the given DV shows a local maximum in fraction of variation explained
-#' (FVA) compared to DVs from the neighboring 4 knots.}
+#' The monotonous transformation "M" performed is a zero-skew transformation
+#' (Oekland et al. 2001).
 #'
-#' Variables should be uniquely named, and the names should not contain spaces
-#' or colons.
+#' The deviation transformation "D" is performed around an optimum EV value that
+#' is found by looking at frequency of presence (see \code{\link{plotFOP}}).
+#' Three deviation transformations are created with different steepness and
+#' curvature around the optimum.
+#'
+#' For spline transformations ("HF", "HR", and "T"), DVs are created around 20
+#' different break points (knots) which span the range of the EV. Only DVs which
+#' satisfy all of the following criteria are retained: \enumerate{ \item 3 <=
+#' knot <= 18 (DVs with knots at the extremes of the EV are never retained).
+#' \item F-test of the single-variable Maxent model from the given DV gives a
+#' p-value < 0.05. \item The single-variable Maxent model from the given DV
+#' shows a local maximum in fraction of variation explained (FVA) compared to
+#' DVs from the neighboring 4 knots.}
+#'
+#' For categorical variables, 1 binary derived variable (type "B") is created
+#' for each category.
+#'
+#' Explanatory variables should be uniquely named, and the names must not
+#' contain spaces, underscores, or colons. Underscores and colons are reserved
+#' to denote derived variables and interaction terms repectively.
 #'
 #' @param data Data frame containing the response variable in the first column
 #'   and explanatory variables in subsequent columns. The response variable

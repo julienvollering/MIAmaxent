@@ -36,8 +36,8 @@
 #'   respect to the projection \code{data}? This has implications for the
 #'   interpretation of output values with respect to reference values (e.g. PRO
 #'   = 1). See details.
-#' @param raw Logical. Return raw Maxent output instead of Probability Ratio
-#'   Output (PRO)? Default is FALSE.
+#' @param raw Logical. Return raw Maxent output instead of probability ratio
+#'   output (PRO)? Default is FALSE.
 #'
 #' @return List of 2: \enumerate{ \item A data frame with the model output in
 #'   column 1 and the corresponding explanatory data in subsequent columns.
@@ -96,28 +96,15 @@ projectModel <- function(data, transformation, model, clamping = FALSE,
   dvnamesni <- dvnames[grep(":", dvnames, invert = TRUE)]
   dvnamesi <- dvnames[grep(":", dvnames)]
 
-  check <- lapply(dvnamesni, function(x) { startsWith(x, colnames(data)) })
-  if (any(sapply(check, function(x) { all(x==FALSE) }))) {
-    stop("All EVs in the model must be represented in data",
-      call. = FALSE)
-  }
+  .check.dvs.in.data(dvnamesni, data)
+  evnames <- unique(sub("_.*", "", dvnamesni))
 
   alltransf <- .load.transf(transformation)
-
-  evnames <- unique(unname(sapply(dvnamesni, function(x) {
-    colnames(data)[startsWith(x, colnames(data))]
-  })))
-  evnames <- sapply(evnames, .best.match, b = dvnamesni)
-
-  check2 <- lapply(dvnamesni, function(x) { startsWith(names(alltransf), x) })
-  if (any(sapply(check2, sum) < 1)) {
-    stop("All DVs in the model must be represented in transformation",
-      call. = FALSE)
-  }
+  .check.dvs.in.transf(dvnamesni, alltransf)
 
   Ranges <- lapply(evnames, function(x) {
     evdata <- data[, x]
-    xnull <- environment(alltransf[startsWith(names(alltransf), x)][[1]])$xnull
+    xnull <- environment(alltransf[x == sub("_.*", "", names(alltransf))][[1]])$xnull
     if (class(xnull) %in% c("numeric", "integer")) {
       L <- (evdata - range(xnull)[1]) / diff(range(xnull))
       return(range(L))
@@ -129,10 +116,8 @@ projectModel <- function(data, transformation, model, clamping = FALSE,
   names(Ranges) <- evnames
 
   dvdatani <- lapply(dvnamesni, function(x) {
-    evname <- evnames[startsWith(x, evnames)]
-    evdata <- data[, evname]
-    transffunction <- alltransf[.best.match.ind(names(alltransf), x)][[1]]
-    y <- transffunction(evdata)
+    evdata <- data[, sub("_.*", "", x)]
+    y <- alltransf[[paste0(x, "_transf")]](evdata)
     if (clamping == TRUE) {
       y[y > 1] <- 1
       y[y < 0] <- 0

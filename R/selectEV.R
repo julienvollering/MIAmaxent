@@ -25,8 +25,9 @@
 #' points were randomly selected, and should be used together with the selected
 #' EVs in \code{\link{plotResp}} if plotting single-effect model response.
 #'
-#' Variables should be uniquely named, and the names must not contain spaces or
-#' colons. Colons are reserved as the designator for interaction terms.
+#' Explanatory variables should be uniquely named, and the names must not
+#' contain spaces, underscores, or colons. Underscores and colons are reserved
+#' to denote derived variables and interaction terms repectively.
 #'
 #' @param data Data frame containing the response variable in the first column
 #'   and explanatory variables in subsequent columns. The response variable

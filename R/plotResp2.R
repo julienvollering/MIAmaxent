@@ -74,61 +74,33 @@ plotResp2 <- function(data, EV, transformation, model, logscale = FALSE,
   dvnamesni <- dvnames[grep(":", dvnames, invert = TRUE)]
   dvnamesi <- dvnames[grep(":", dvnames)]
 
-  check <- lapply(dvnamesni, function(x) { startsWith(x, colnames(data)) })
-  if (any(sapply(check, function(x) { all(x==FALSE) }))) {
-    stop("All EVs in the model must be represented in data",
-      call. = FALSE)
-  }
+  .check.dvs.in.data(dvnamesni, data)
+  evnames <- unique(sub("_.*", "", dvnamesni))
 
   alltransf <- .load.transf(transformation)
-
-  evnames <- unique(unname(sapply(dvnamesni, function(x) {
-    colnames(data)[startsWith(x, colnames(data))]
-  })))
-  evnames <- sapply(evnames, .best.match, b = dvnamesni)
-
-  check2 <- lapply(dvnamesni, function(x) { startsWith(names(alltransf), x) })
-  if (any(sapply(check2, sum) < 1)) {
-    stop("All DVs in the model must be represented in transformation",
-      call. = FALSE)
-  }
+  .check.dvs.in.transf(dvnamesni, alltransf)
 
   EV <- colnames(data[, EV, drop = FALSE])
   evdata <- data[, EV]
-  xnull <- environment(alltransf[startsWith(names(alltransf), EV)][[1]])$xnull
-  if (class(xnull) %in% c("numeric", "integer")) {
-    L <- (evdata - range(xnull)[1]) / diff(range(xnull))
-    Range <- (range(L))
-  }
-  if (class(xnull) %in% c("factor", "character")) {
-    if (all(evdata %in% xnull)) {Range <- "inside"} else {Range <- "outside"}
-  }
 
-  reg <- regexpr(EV, dvnamesni)
-  margdvnamesni <- dvnamesni[which(startsWith(dvnamesni, EV) &
-      attr(reg, "match.length") == max(attr(reg, "match.length")))]
-  cnstdvnamesni <-  dvnamesni[!(dvnamesni %in% margdvnamesni)]
+  margdvnamesni <- dvnamesni[sub("_.*", "", dvnamesni) == EV]
+  cnstdvnamesni <- dvnamesni[!(dvnamesni %in% margdvnamesni)]
 
   margdvdatani <- lapply(margdvnamesni, function(x) {
-    evname <- evnames[startsWith(x, evnames)]
-    evdata <- data[, evname]
-    transffunction <- alltransf[.best.match.ind(names(alltransf), x)][[1]]
-    y <- transffunction(evdata)
-    return(y)
+    evdata <- data[, sub("_.*", "", x)]
+    return(alltransf[[paste0(x, "_transf")]](evdata))
   })
   names(margdvdatani) <- margdvnamesni
 
   cnstdvdatani <- lapply(cnstdvnamesni, function(x) {
-    xnull <- environment(alltransf[startsWith(names(alltransf), x)][[1]])$xnull
+    xnull <- environment(alltransf[[paste0(x, "_transf")]])$xnull
     if (class(xnull) %in% c("numeric", "integer")) {
       evdata <- rep(mean(xnull), nrow(data))
     }
     if (class(xnull) %in% c("factor", "character")) {
       evdata <- rep(names(which.max(table(xnull))), nrow(data))
     }
-    transffunction <- alltransf[.best.match.ind(names(alltransf), x)][[1]]
-    y <- transffunction(evdata)
-    return(y)
+    return(alltransf[[paste0(x, "_transf")]](evdata))
   })
   names(cnstdvdatani) <- cnstdvnamesni
 
@@ -141,7 +113,7 @@ plotResp2 <- function(data, EV, transformation, model, logscale = FALSE,
   names(dvdatai) <- dvnamesi
 
   dvdf <- data.frame(c(dvdatani, dvdatai), check.names = FALSE)
-  modelfunction <- modelfromlambdas(model)
+  modelfunction <- modelfromlambdas(model, raw = FALSE)
   respPts <- data.frame(EV = evdata, PRO = modelfunction(dvdf)[, 1])
   if (logscale == TRUE) {respPts$PRO <- log10(respPts$PRO)}
 

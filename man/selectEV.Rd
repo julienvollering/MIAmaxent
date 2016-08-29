@@ -66,8 +66,9 @@ output. This \code{data} object shows which of the uninformed background
 points were randomly selected, and should be used together with the selected
 EVs in \code{\link{plotResp}} if plotting single-effect model response.
 
-Variables should be uniquely named, and the names must not contain spaces or
-colons. Colons are reserved as the designator for interaction terms.
+Explanatory variables should be uniquely named, and the names must not
+contain spaces, underscores, or colons. Underscores and colons are reserved
+to denote derived variables and interaction terms repectively.
 }
 \examples{
 \dontrun{

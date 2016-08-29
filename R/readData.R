@@ -25,7 +25,9 @@
 #'
 #' The names of the ASCII raster files are used as the names of the explanatory
 #' variables, so these files should be uniquely named, and the names must not
-#' contain spaces or colons.
+#' contain spaces, underscores, or colons. Underscores and colons are reserved
+#' to denote derived variables and interaction terms repectively.
+#' \code{readData} automatically replaces underscores with hyphens.
 #'
 #' @param occurrence Full pathway of the '.csv' file of occurrence data. The
 #'   first column of the CSV should code occurrence (see Details), while the
@@ -143,6 +145,7 @@ readData <- function(occurrence, contEV = NULL, catEV = NULL, maxbkg = 10000,
     catindex <- seq(ncol(data) - length(catfiles) + 1, ncol(data))
     data[catindex] <- lapply(data[catindex], function(x) as.factor(x))
   }
+  colnames(data) <- gsub("_", "-", colnames(data))
 
   return(data)
 }

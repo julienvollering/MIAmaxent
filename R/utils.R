@@ -4,48 +4,6 @@ if(getRversion() >= "2.15.1") {
 
 
 
-#' Best prefix match.
-#'
-#' Return only the string in 'a' which best matches any of the strings in 'b'
-#'
-#' @param a Vector of character strings to be matched
-#' @param b vector of character strings to match
-#'
-#' @return single character string
-
-.best.match <- function(a, b) {
-  score <- sapply(a, function(a) {
-    reg <- regexpr(a, b)
-    max(attr(reg, "match.length"))
-  })
-  a[which.max(score)]
-}
-
-
-
-#' Index of best prefix match.
-#'
-#' Return the index of the string in 'a' which best matches any of the strings
-#' in 'b'
-#'
-#' @param a Vector of character strings to be matched
-#' @param b vector of character strings to match
-#'
-#' @return single character string
-
-.best.match.ind <- function(a, b) {
-  score <- sapply(a, function(a) {
-    reg <- regexpr(b, a)
-    max(attr(reg, "match.length"))
-  })
-  maxs <- score[score == max(score)]
-  best <- names(maxs[nchar(names(maxs)) == min(nchar(names(maxs)))])
-  best.ind <- which(a == best)
-  return(best.ind)
-}
-
-
-
 #' checks the validity of RV values
 #'
 #' Presence-only data should be coded as: 1/NA (preferred) or 1/0 (danger of
@@ -68,6 +26,39 @@ if(getRversion() >= "2.15.1") {
   }
 }
 
+
+
+#' checks representation of dvs in data
+#'
+#' @param dvnamesni Names of DVs in model (no interaction terms)
+#' @param data Data frame with EV column names
+
+.check.dvs.in.data <- function(dvnamesni, data) {
+  for (i in dvnamesni) {
+    a <- sub("_.*", "", i)
+    if (sum(colnames(data) == a) != 1) {
+      stop(paste(a, "must be represented in 'data' (exactly once)"),
+        call. = FALSE)
+    }
+  }
+}
+
+
+
+#' checks representation of dvs in tranformations
+#'
+#' @param dvnamesni Names of DVs in model (no interaction terms)
+#' @param alltransf List of transformation functions
+
+.check.dvs.in.transf <- function(dvnamesni, alltransf) {
+  for (i in dvnamesni) {
+    a <- paste0(i, "_transf")
+    if (sum(names(alltransf) == a) != 1) {
+      stop(paste(i, "must be represented in 'transformation' (exactly once)"),
+        call. = FALSE)
+    }
+  }
+}
 
 
 #' Name and create directory

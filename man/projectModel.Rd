@@ -28,8 +28,8 @@ respect to the projection \code{data}? This has implications for the
 interpretation of output values with respect to reference values (e.g. PRO
 = 1). See details.}
 
-\item{raw}{Logical. Return raw Maxent output instead of Probability Ratio
-Output (PRO)? Default is FALSE.}
+\item{raw}{Logical. Return raw Maxent output instead of probability ratio
+output (PRO)? Default is FALSE.}
 }
 \value{
 List of 2: \enumerate{ \item A data frame with the model output in
