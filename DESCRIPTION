@@ -1,7 +1,7 @@
-Package: maxentmodelselectr
+Package: MIAmaxent
 Type: Package
 Title: Maxent Distribution Model Selection
-Version: 0.3.4.9000
+Version: 0.3.5.9000
 Authors@R: as.person(c(
     "Julien Vollering <julien.vollering@hisf.no> [aut, cre]",
     "Sabrina Mazzoni <sabrina.mazzoni@nhm.uio.no> [aut]",
@@ -16,8 +16,8 @@ Description: Tools for training, selecting, and evaluating maximum entropy
 Depends: R (>= 2.10)
 License: MIT + file LICENSE
 LazyData: TRUE
-URL: https://github.com/julienvollering/maxentmodelselectr
-BugReports: https://github.com/julienvollering/maxentmodelselectr/issues
+URL: https://github.com/julienvollering/MIAmaxent
+BugReports: https://github.com/julienvollering/MIAmaxent/issues
 RoxygenNote: 5.0.1
 SystemRequirements: Maxent.jar software, Java Runtime Environment (JRE)
 Imports:

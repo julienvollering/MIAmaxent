@@ -1,6 +1,6 @@
-# maxentmodelselectr 0.3.4.9000
+# MIAmaxent 0.3.5.9000
 
-* Added a `NEWS.md` file to track changes to the package.
+* Changed package name to "MIAmaxent"
 
 
 

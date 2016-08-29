@@ -72,17 +72,17 @@
 #'
 #' # From vignette:
 #' grasslandPO <- readData(
-#'    occurrence = system.file("extdata", "occurrence_PO.csv", package = "maxentmodelselectr"),
-#'    contEV = system.file("extdata", "EV_continuous", package = "maxentmodelselectr"),
-#'    catEV = system.file("extdata", "EV_categorical", package = "maxentmodelselectr"),
+#'    occurrence = system.file("extdata", "occurrence_PO.csv", package = "MIAmaxent"),
+#'    contEV = system.file("extdata", "EV_continuous", package = "MIAmaxent"),
+#'    catEV = system.file("extdata", "EV_categorical", package = "MIAmaxent"),
 #'    maxbkg = 20000)
 #' head(grasslandPO)
 #'
 #' # From vignette:
 #' grasslandPA <- readData(
-#'    occurrence = system.file("extdata", "occurrence_PA.csv", package = "maxentmodelselectr"),
-#'    contEV = system.file("extdata", "EV_continuous", package = "maxentmodelselectr"),
-#'    catEV = system.file("extdata", "EV_categorical", package = "maxentmodelselectr"),
+#'    occurrence = system.file("extdata", "occurrence_PA.csv", package = "MIAmaxent"),
+#'    contEV = system.file("extdata", "EV_continuous", package = "MIAmaxent"),
+#'    catEV = system.file("extdata", "EV_categorical", package = "MIAmaxent"),
 #'    PA = TRUE, XY = TRUE)
 #' head(grasslandPA)
 #' tail(grasslandPA)

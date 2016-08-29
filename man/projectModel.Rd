@@ -69,21 +69,21 @@ modeloutput <- projectModel(newdat,
 # From vignette:
 grasslandPrediction <- projectModel(grasslandPO,
    transformation = grasslandDVs[[2]],
-   model = system.file("extdata", "1.lambdas", package = "maxentmodelselectr"))
+   model = system.file("extdata", "1.lambdas", package = "MIAmaxent"))
 head(grasslandPrediction$output)
 grasslandPrediction$ranges
 
 # From vignette:
 library(raster)
-contfiles <- list.files(system.file("extdata", "EV_continuous", package = "maxentmodelselectr"),
+contfiles <- list.files(system.file("extdata", "EV_continuous", package = "MIAmaxent"),
    full.names = TRUE)
-catfiles <- list.files(system.file("extdata", "EV_categorical", package = "maxentmodelselectr"),
+catfiles <- list.files(system.file("extdata", "EV_categorical", package = "MIAmaxent"),
    full.names = TRUE)
 stack <- raster::stack(c(contfiles, catfiles))
 stackpts <- rasterToPoints(stack)
 spatialPrediction <- projectModel(stackpts,
    transformation = grasslandDVs[[2]],
-   model = system.file("extdata", "1.lambdas", package = "maxentmodelselectr"))
+   model = system.file("extdata", "1.lambdas", package = "MIAmaxent"))
 Predictionraster <- raster(stack, layer=0)
 Predictionraster <- rasterize(spatialPrediction$output[, c("x", "y")], Predictionraster,
    field = spatialPrediction$output$PRO)

@@ -30,7 +30,7 @@
 #'
 #' From vignette:
 #' grasslandAUC <- testAUC(grasslandPA, transformation = grasslandDVs[[2]],
-#'    model = system.file("extdata", "1.lambdas", package = "maxentmodelselectr"))
+#'    model = system.file("extdata", "1.lambdas", package = "MIAmaxent"))
 #' grasslandAUC
 #' }
 #'

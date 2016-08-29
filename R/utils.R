@@ -257,7 +257,7 @@ release_questions <- function() {
 #' @param dir Directory to which Maxent files will be written
 
 .runjar <- function(rv, ev, maxbkg = 10000, dir) {
-  jarpath <- system.file("java/maxent.jar", package = "maxentmodelselectr")
+  jarpath <- system.file("java/maxent.jar", package = "MIAmaxent")
   if (file.exists(jarpath) == FALSE) {
     stop("Missing 'maxent.jar' file. Place this file in the java folder of the
        package (see System Requirements in package description).", call. = FALSE)}

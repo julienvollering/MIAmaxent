@@ -1,4 +1,4 @@
-#' maxentmodelselectr: Maxent Distribution Model Selection.
+#' MIAmaxent: Maxent Distribution Model Selection.
 #'
 #' Training, selecting, and evaluating maximum entropy (Maxent) distribution
 #' models. This package provides tools for user-controlled transformation of
@@ -16,7 +16,7 @@
 #'   \url{https://www.cs.princeton.edu/~schapire/maxent/}, and place the
 #'   'maxent.jar' file in the 'java' folder of this package. This folder can be
 #'   located by the following R command: \code{system.file("java", package =
-#'   "maxentmodelselectr")}.
+#'   "MIAmaxent")}.
 #'
 #'   You must have the Java Runtime Environment (JRE) installed on your computer
 #'   for the MaxEnt program to function. You can check if you have Java
@@ -43,5 +43,5 @@
 #'   190, 231-259.
 #'
 #' @docType package
-#' @name maxentmodelselectr
+#' @name MIAmaxent
 NULL
