@@ -13,7 +13,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 
 This short vignette is meant to introduce users to the `MIAmaxent` package by providing a worked example of a distribution modeling exercise. It shows how to use all of the main functions included in `MIAmaxent` in the order of a typical analysis. This vignette does NOT describe the theoretical underpinnings of the package. To learn more about the theory behind `MIAmaxent`, the user is referred to Halvorsen (2013) and Halvorsen et al. (2015), as well as other references listed in the documentation of the package. 
 
->__Help pages for the package and for individual functions in the package can be accessed in R using the help command: `?'MIAmaxent'`.__ 
+>__Help pages for the package and for individual functions in the package can be accessed in R using the help command: `?'MIAmaxent'` (after attaching the package using `library(MIAmaxent)`.__ 
 
 
 ***
@@ -28,8 +28,10 @@ The data used for demonstration in this vignette are a set of data that have bee
 Before beginning the modeling exercise, it may be useful to see what the data look like in their geographical representation. We can use the `raster` package to plot the 1059 recorded presences on top of one of the environmental variable rasters:
 ```{r}
 library(raster)
-EV1 <- raster(list.files(system.file("extdata", "EV_continuous", package = "maxentmodelselectr"), full.names = TRUE)[1])
-PO <- read.csv(system.file("extdata", "occurrence_PO.csv", package = "maxentmodelselectr"))
+EV1 <- raster(list.files(system.file("extdata", "EV_continuous", package = "MIAmaxent"), full.names = TRUE)[1])
+PO <- read.csv(system.file("extdata", "occurrence_PO.csv", package = "MIAmaxent"))
+```
+
 ```{r, fig.show='hold', fig.width=7, fig.height=7, fig.align='center', fig.cap="Presence-only occurrence across the study area"}
 par(mar=c(3.1,3.1,2.1,0.1))
 plot(EV1, colNA = 'black', legend=FALSE)
@@ -47,10 +49,10 @@ Users of the maxent.jar program are usually accustomed to having their training 
 
 We begin by creating our data object from file. Note that continuous and categorical environmental variables should be placed in separate directories:
 ```{r}
-library(maxentmodelselectr)
-grasslandPO <- readData(occurrence = system.file("extdata", "occurrence_PO.csv", package = "maxentmodelselectr"), 
-                  contEV = system.file("extdata", "EV_continuous", package = "maxentmodelselectr"),
-                  catEV = system.file("extdata", "EV_categorical", package = "maxentmodelselectr"),
+library(MIAmaxent)
+grasslandPO <- readData(occurrence = system.file("extdata", "occurrence_PO.csv", package = "MIAmaxent"), 
+                  contEV = system.file("extdata", "EV_continuous", package = "MIAmaxent"),
+                  catEV = system.file("extdata", "EV_categorical", package = "MIAmaxent"),
                   maxbkg = 20000)
 
 ```
@@ -139,6 +141,8 @@ length(grasslandDVs$transformations)
 ***
 
 Note that the names of derived variables indicate the type of transformation was used to create them. For example, "terslpdg\_D2" is a deviation-type transformation of terslpdg, where the slope of the deviation is controlled by a parameter value of 2. Meanwhile, "terslpdg\_HR4" is the a reverse hinge transformation, with the knot in the 4th position.
+
+>__Underscores (_) are used to denote derived variables, and colons (:) are used to denote interaction terms, so explanatory variable names must not contain these characters. EV names should also be unique.__
 
 We can check how derived variables relate to the original, untransformed explanatory variable from which they came. Here we look at "terslpdg\_D2" and "terslpdg\_HR4":
 ```{r, fig.show='hold', fig.width=4.5, fig.height=5}
@@ -251,7 +255,7 @@ For example, we may decide that a simple model with only 5 explanatory variables
 ```{r}
 grasslandEVselect[[2]][grasslandEVselect$selection$round == 5, ][1, -13]
 ```
-The explanatory variables included in this model are: pr_bygall, terslpps15, pca1, lcucor1, and geoberg.
+The explanatory variables included in this model are: pr-bygall, terslpps15, pca1, lcucor1, and geoberg.
 
 
 ***
@@ -267,13 +271,13 @@ We can use the `plotResp` function to create a so-called response plot. A respon
 
 Here we examine a single-effect response plot for the most important explanatory variable included in the model chosen above:
 ```{r, fig.show='hold', fig.width=5, fig.height=5, fig.align = "center"}
-pr_bygallResp <- plotResp(grasslandPO, grasslandEVselect[[1]], "pr_bygall")
+prbygallResp <- plotResp(grasslandPO, grasslandEVselect[[1]], "pr-bygall")
 ```
 
 To assess how well the relationship between the explanatory variable and the response variable is captured by the model, it can be useful to examine FOP plots and response plots side-by-side:
 ```{r, fig.show='hold', fig.width=4.5}
-pr_bygallFOP <- plotFOP(grasslandPO, "pr_bygall", intervals=50)
-pr_bygallResp <- plotResp(grasslandPO, grasslandEVselect[[1]], "pr_bygall")
+prbygallFOP <- plotFOP(grasslandPO, "pr-bygall", intervals=50)
+prbygallResp <- plotResp(grasslandPO, grasslandEVselect[[1]], "pr-bygall")
 ```
 
 The values on the y-axes of the plots are not directly comparable, but one can expect that the shape of the response plot curve should mirror, to a greater or lesser extent, the shape of the FOP plot curve.
@@ -292,9 +296,9 @@ The two response plot functions also work in distinctly different ways, so the i
 
 Here is the marginal-effect response plot for the same continuous explanatory variable shown above (note that the `transformation`  and `model` arguments will normally be file paths in the user-specified directory; see `?plotResp2` Examples): 
 ```{r, fig.show='hold', fig.width=5, fig.height=5, fig.align = "center"}
-pr_bygallResp2 <- plotResp2(grasslandPO, "pr_bygall", 
+prbygallResp2 <- plotResp2(grasslandPO, "pr-bygall", 
   transformation = grasslandDVs[[2]], 
-  model = system.file("extdata", "1.lambdas", package = "maxentmodelselectr"))
+  model = system.file("extdata", "1.lambdas", package = "MIAmaxent"))
 ```
 
 
@@ -314,7 +318,7 @@ Here, we obtain model output across the extent of the study area as represented 
 ```{r}
 grasslandPrediction <- projectModel(grasslandPO, 
     transformation = grasslandDVs[[2]], 
-    model = system.file("extdata", "1.lambdas", package = "maxentmodelselectr"))
+    model = system.file("extdata", "1.lambdas", package = "MIAmaxent"))
 ```
 
 Model predictions are appended to the `data` in column 1:
@@ -329,16 +333,16 @@ grasslandPrediction$ranges
 Since we projected the model over the training data, it makes sense that all the ranges are reported as [0,1] or "inside".
 
 Note that `MIAmaxent` never uses any location data in the modelling process -- Maxent distribution modelling is not spatially explicit. Therefore, if model predictions are to be used in a spatial context (mapped), it can be helpful to include spatial coordinates in the `data` input to the `projectModel`. Here is some code (using the `raster` package again) that shows an example of how to plot model predictions spatially:
-```{r, fig.width=5, fig.height=5, fig.align='center', fig.cap="Model predictions in probability ratio output (PRO) across the study area"}
+```{r, fig.show='hold', fig.width=7, fig.height=7, fig.align='center', fig.cap="Model predictions in probability ratio output (PRO) across the study area"}
 library(raster)
 contfiles <- list.files(system.file("extdata", "EV_continuous", package = "maxentmodelselectr"), full.names = TRUE)
 catfiles <- list.files(system.file("extdata", "EV_categorical", package = "maxentmodelselectr"), full.names = TRUE)
 stack <- raster::stack(c(contfiles, catfiles))
 stackpts <- rasterToPoints(stack)
+colnames(stackpts) <- gsub("_", "-", colnames(stackpts))
 spatialPrediction <- projectModel(stackpts, 
   transformation = grasslandDVs[[2]], 
-  model = system.file("extdata", "1.lambdas", package = "maxentmodelselectr"))
-```{r, fig.show='hold', fig.width=7, fig.height=7, fig.align='center', fig.cap="Model predictions in probability ratio output (PRO) across the study area"}
+  model = system.file("extdata", "1.lambdas", package = "MIAmaxent"))
 Predictionraster <- raster(stack, layer=0)
 Predictionraster <- rasterize(spatialPrediction$output[, c("x", "y")], Predictionraster, field = spatialPrediction$output$PRO)
 par(mar=c(3.1,3.1,2.1,0.1))
@@ -361,9 +365,9 @@ The `testAUC` function takes a data frame of presence or absence locations, alon
 
 In our example, 122 test locations in Øsfold County, Norway, were visited to record presence or absence of semi-natural grasslands. Plotted on the raster of model predictions these data look like this:
 ```{r}
-grasslandPA <- readData(occurrence = system.file("extdata", "occurrence_PA.csv", package = "maxentmodelselectr"), 
-  contEV = system.file("extdata", "EV_continuous", package = "maxentmodelselectr"),
-  catEV = system.file("extdata", "EV_categorical", package = "maxentmodelselectr"),
+grasslandPA <- readData(occurrence = system.file("extdata", "occurrence_PA.csv", package = "MIAmaxent"), 
+  contEV = system.file("extdata", "EV_continuous", package = "MIAmaxent"),
+  catEV = system.file("extdata", "EV_categorical", package = "MIAmaxent"),
   PA = TRUE, XY = TRUE)
 head(grasslandPA)
 tail(grasslandPA)
@@ -381,11 +385,19 @@ We can use these data to calculate testAUC for our distribution model:
 ```{r, fig.show='hold', fig.width=5, fig.height=5, fig.align = "center"}
 grasslandAUC <- testAUC(grasslandPA, 
   transformation = grasslandDVs[[2]], 
-  model = system.file("extdata", "1.lambdas", package = "maxentmodelselectr"))
+  model = system.file("extdata", "1.lambdas", package = "MIAmaxent"))
 grasslandAUC
 ```
 
 The ROC plot produced by `testAUC` shows how the rate of true positives as well as false positives increases as the binary classification threshold is lowered. The area under this curve corresponds to the value of testAUC.  
+
+
+***
+
+
+## Acknowledgements
+
+Thank you to Sabrina Mazzoni and Rune Halvorsen for providing the data used in this vignette.
 
 
 ***
