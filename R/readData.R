@@ -106,6 +106,7 @@ readData <- function(occurrence, contEV = NULL, catEV = NULL, maxbkg = 10000,
     catfiles <- list.files(catEV, pattern = "\\.asc$", full.names = TRUE)
   }
   stack <- raster::stack(c(contfiles, catfiles))
+  names(stack) <- gsub(".asc", "", basename(c(contfiles, catfiles)))
 
   if (PA == FALSE) {
     if (any(is.na(occ[, 1]))) {
