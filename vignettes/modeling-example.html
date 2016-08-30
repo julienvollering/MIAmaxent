@@ -310,7 +310,7 @@ length(grasslandDVs$transformations)
 <hr />
 <p>Note that the names of derived variables indicate the type of transformation was used to create them. For example, “terslpdg_D2” is a deviation-type transformation of terslpdg, where the slope of the deviation is controlled by a parameter value of 2. Meanwhile, “terslpdg_HR4” is the a reverse hinge transformation, with the knot in the 4th position.</p>
 <blockquote>
-<p>__Underscores (_) are used to denote derived variables, and colons (:) are used to denote interaction terms, so explanatory variable names must not contain these characters. EV names should also be unique.__</p>
+<p><strong>Underscores (_) are used to denote derived variables, and colons (:) are used to denote interaction terms, so explanatory variable names must not contain these characters. EV names should also be unique.</strong></p>
 </blockquote>
 <p>We can check how derived variables relate to the original, untransformed explanatory variable from which they came. Here we look at “terslpdg_D2” and “terslpdg_HR4”:</p>
 <pre class="r"><code>plot(grasslandPO$terslpdg, grasslandDVs$EVDV$terslpdg$terslpdg_D2, pch = 20)
