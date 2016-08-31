@@ -42,22 +42,31 @@ testAUC <- function(data, transformation, model) {
   data <- stats::na.omit(data)
   test <- data[, 1]
   PRO <- projectModel(data, transformation, model)[[1]][, 1]
-  rangedoutput <- (PRO - min(PRO)) / diff(range(PRO))
-  PRO1 <- (1 - min(PRO)) / diff(range(PRO))
-  df <- data.frame(ID = 1:nrow(data), test = test, output = rangedoutput)
 
-  AUC <- PresenceAbsence::auc(df, st.dev = FALSE)
+  cont <- as.matrix(table(PRO, test))
+  cont <- cont[order(as.numeric(rownames(cont)), decreasing = T), ]
+  falspos <- c(0, unname(cumsum(cont[, "0"])))
+  truepos <- c(0, unname(cumsum(cont[, "1"])))
+  fpr <- falspos/sum(cont[, "0"])
+  tpr <- truepos/sum(cont[, "1"])
 
-  orderedpreds <- df$output[order(df$output)]
-  breaks <- orderedpreds[-length(orderedpreds)] + diff(orderedpreds)/2
-  PresenceAbsence::auc.roc.plot(df, threshold = breaks, add.legend = FALSE,
-    line.type = FALSE, color = "red")
+  plot(fpr, tpr, type="l", col="red", cex = 0.5, xlim=c(0,1), ylim=c(0,1),
+    xlab="1 - specificity (false positive rate)",
+    ylab="Sensitivity (true positive rate)")
+  abline(0,1, lty=3)
 
-  PRO1thresh <- PresenceAbsence::roc.plot.calculate(df, PRO1)
-  x <- 1 - PRO1thresh$specificity
-  y <- PRO1thresh$sensitivity
+  PRO1fp <- sum(cont[as.numeric(rownames(cont)) > 1, "0"])
+  PRO1tp <- sum(cont[as.numeric(rownames(cont)) > 1, "1"])
+  x <- PRO1fp/sum(cont[, "0"])
+  y <- PRO1tp/sum(cont[, "1"])
+
   graphics::points(x, y, pch = 19, col = "#999999")
   graphics::text(x, y, "PRO = 1", pos = 3, col = "#999999", cex = 0.9)
+
+  hgtl <- tpr[-length(tpr)]
+  hgtr <- tpr[-1]
+  wdth <- diff(fpr)
+  AUC <- sum(((hgtl + hgtr)/2) * wdth)
 
   return(AUC)
 }

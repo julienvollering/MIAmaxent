@@ -26,7 +26,6 @@ Imports:
     graphics (>= 3.3.0),
     grDevices (>= 3.3.0),
     Hmisc (>= 3.17-2),
-    PresenceAbsence (>= 1.1.9),
     raster (>= 2.5-8),
     stats (>= 3.3.0),
     utils (>= 3.3.0)
