@@ -335,8 +335,8 @@ Since we projected the model over the training data, it makes sense that all the
 Note that `MIAmaxent` never uses any location data in the modelling process -- Maxent distribution modelling is not spatially explicit. Therefore, if model predictions are to be used in a spatial context (mapped), it can be helpful to include spatial coordinates in the `data` input to the `projectModel`. Here is some code (using the `raster` package again) that shows an example of how to plot model predictions spatially:
 ```{r, fig.show='hold', fig.width=7, fig.height=7, fig.align='center', fig.cap="Model predictions in probability ratio output (PRO) across the study area"}
 library(raster)
-contfiles <- list.files(system.file("extdata", "EV_continuous", package = "maxentmodelselectr"), full.names = TRUE)
-catfiles <- list.files(system.file("extdata", "EV_categorical", package = "maxentmodelselectr"), full.names = TRUE)
+contfiles <- list.files(system.file("extdata", "EV_continuous", package = "MIAmaxent"), full.names = TRUE)
+catfiles <- list.files(system.file("extdata", "EV_categorical", package = "MIAmaxent"), full.names = TRUE)
 stack <- raster::stack(c(contfiles, catfiles))
 stackpts <- rasterToPoints(stack)
 colnames(stackpts) <- gsub("_", "-", colnames(stackpts))
