@@ -84,7 +84,6 @@ to denote derived variables and interaction terms repectively.
 dat <- readData(occurrence = "D:/path/to/occurrence/data.csv",
    contEV = "D:/path/to/continuousEV/directory",
    catEV = "D:/path/to/categoricalEV/directory", maxbkg = 100000, XY = TRUE)
-}
 
 # From vignette:
 grasslandPO <- readData(
@@ -102,6 +101,7 @@ grasslandPA <- readData(
    PA = TRUE, XY = TRUE)
 head(grasslandPA)
 tail(grasslandPA)
+}
 
 }
 
