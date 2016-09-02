@@ -50,10 +50,10 @@ testAUC <- function(data, transformation, model) {
   fpr <- falspos/sum(cont[, "0"])
   tpr <- truepos/sum(cont[, "1"])
 
-  plot(fpr, tpr, type="l", col="red", cex = 0.5, xlim=c(0,1), ylim=c(0,1),
+  graphics::plot(fpr, tpr, type="l", col="red", cex = 0.5, xlim=c(0,1), ylim=c(0,1),
     xlab="1 - specificity (false positive rate)",
     ylab="Sensitivity (true positive rate)")
-  abline(0,1, lty=3)
+  graphics::abline(0,1, lty=3)
 
   PRO1fp <- sum(cont[as.numeric(rownames(cont)) > 1, "0"])
   PRO1tp <- sum(cont[as.numeric(rownames(cont)) > 1, "1"])
