@@ -13,7 +13,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 
 This short vignette is meant to introduce users to the `MIAmaxent` package by providing a worked example of a distribution modeling exercise. It shows how to use all of the main functions included in `MIAmaxent` in the order of a typical analysis. This vignette does NOT describe the theoretical underpinnings of the package. To learn more about the theory behind `MIAmaxent`, the user is referred to Halvorsen (2013) and Halvorsen et al. (2015), as well as other references listed in the documentation of the package. 
 
->__Help pages for the package and for individual functions in the package can be accessed in R using the help command: `?'MIAmaxent'` (after attaching the package using `library(MIAmaxent)`.__ 
+>__Help pages for the package and for individual functions in the package can be accessed in R using the help command: `?'MIAmaxent'` (after attaching the package using `library(MIAmaxent)`).__ 
 
 
 ***
