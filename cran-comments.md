@@ -1,3 +1,8 @@
+## Resubmission
+This is a resubmission. In this version I have:
+* Fixed the contents of the file LICENSE following the template at https://www.r-project.org/Licenses/MIT.
+* Changed the DESCRIPTION Authors@R field to call to person().
+
 ## Test environments
 * local Windows install, R 3.3.1
 * ubuntu 12.04 (on travis-ci), R 3.3.1

@@ -2,10 +2,10 @@ Package: MIAmaxent
 Type: Package
 Title: Maxent Distribution Model Selection
 Version: 0.3.6
-Authors@R: as.person(c(
-    "Julien Vollering <julien.vollering@hisf.no> [aut, cre]",
-    "Sabrina Mazzoni <sabrina.mazzoni@nhm.uio.no> [aut]",
-    "Rune Halvorsen <rune.halvorsen@nhm.uio.no> [aut]"))
+Authors@R: c(
+    person("Julien", "Vollering", email = "julien.vollering@hisf.no", role = c("aut", "cre")),
+    person("Sabrina", "Mazzoni", email = "sabrina.mazzoni@nhm.uio.no", role = "aut"),
+    person("Rune", "Halvorsen", email = "rune.halvorsen@nhm.uio.no", role = "aut"))
 Maintainer: Julien Vollering <julien.vollering@hisf.no>
 Description: Tools for training, selecting, and evaluating maximum entropy
     (Maxent) distribution models. This package provides tools for user-
