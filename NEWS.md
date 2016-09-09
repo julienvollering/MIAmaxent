@@ -1,6 +1,6 @@
-# MIAmaxent 0.3.5.9000
+# MIAmaxent 0.3.6
 
-* Changed package name to "MIAmaxent"
+* First public release
 
 
 
