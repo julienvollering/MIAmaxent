@@ -2,15 +2,13 @@
 MIAmaxent
 =========
 
-**MIAmaxent** is an R package under development (pre-release). The contents of this repository are not currently intended for public use.
-
 ### Description
 
 Training, selecting, and evaluating maximum entropy (Maxent) distribution models. This package provides tools for user-controlled transformation of explanatory variables, selection of variables by nested model comparison, and flexible model evaluation and projection. The methods implemented here are based on the strict maximum likelihood interpretation of maximum entropy modelling (Halvorsen, 2013, Halvorsen et al., 2015).
 
 The predecessor to this package is the MIA Toolbox, which is described in detail in Mazzoni et al. (2015).
 
-**MIAmaxent** is built around the highly popular MaxEnt java program (Phillips et al., 2006), but provides an alternative methodology for training, selecting, and using models. The major advantage in this alternative methodology is greater user control -- in variable transformations, in variable selection, and in model output. Comparisons also suggest that this methodology results in simpler models with equally good predictive ability, and reduces the risk of overfitting (Halvorsen et al., 2016).
+**MIAmaxent** is built around the highly popular MaxEnt distribution modeling program (Phillips et al., 2006), but provides an alternative methodology for training, selecting, and using models. The major advantage in this alternative methodology is greater user control -- in variable transformations, in variable selection, and in model output. Comparisons also suggest that this methodology results in simpler models with equally good predictive ability, and reduces the risk of overfitting (Halvorsen et al., 2016).
 
 ### System Requirements
 
