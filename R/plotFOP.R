@@ -53,13 +53,18 @@
 #'   manuscript.
 #'
 #' @examples
+#' FOPev11 <- plotFOP(sp1po, 2, intervals = 5, smoothwindow = 3)
+#' FOPev11 <- plotFOP(sp1po, 2, intervals = 8)
+#' FOPev12 <- plotFOP(sp1po, "EV12", intervals = 8, ylim=c(0,1))
+#' FOPev12$EVoptimum
+#' FOPev12$FOPdata
+#'
 #' \dontrun{
 #' # From vignette:
 #' teraspifFOP <- plotFOP(grasslandPO, "teraspif")
 #' terslpdgFOP <- plotFOP(grasslandPO, "terslpdg", intervals = 25,  pch=20, cex=1.1, col = "red")
 #' terslpdgFOP$EVoptimum
 #' terslpdgFOP$FOPdata
-#' geobergFOP <- plotFOP(grasslandPO, 10)
 #' }
 #'
 #' @export

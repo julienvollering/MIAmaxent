@@ -27,7 +27,16 @@
 #' AUC <- testAUC(testdat,
 #'    transformation = "D:/path/to/modeling/directory/deriveVars/transformations.Rdata",
 #'    model = "D:/path/to/modeling/directory/selectEV/round/model/1.lambdas")
+#' }
 #'
+#' sp1pa <- sp1po
+#' sp1pa$RV[is.na(sp1pa$RV)] <- 0
+#' sp1pa[, 1] <- sample(sp1pa$RV, 40)
+#' auc <- testAUC(sp1pa, DVs$transformations,
+#'    system.file("extdata/sommerfeltia", "1.lambdas", package = "MIAmaxent"))
+#' auc
+#'
+#' \dontrun{
 #' From vignette:
 #' grasslandAUC <- testAUC(grasslandPA, transformation = grasslandDVs[[2]],
 #'    model = system.file("extdata", "1.lambdas", package = "MIAmaxent"))

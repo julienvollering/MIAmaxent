@@ -242,7 +242,8 @@ if(getRversion() >= "2.15.1") {
 release_questions <- function() {
   c(
     "Have you reknitted the static vignette and copied the html file into /vignettes?",
-    "Have you removed the vignitte-produced directories?"
+    "Have you removed the vignitte-produced directories?",
+    "Have you removed 'maxent.jar' from inst/java?"
   )
 }
 

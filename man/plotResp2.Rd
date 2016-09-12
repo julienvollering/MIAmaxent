@@ -71,7 +71,13 @@ The \code{EV} specified in \code{data} must not be an interaction term.
 responseEV1 <- plotResp2(dat, "EV1",
    transformation = "D:/path/to/modeling/directory/deriveVars/transformations.Rdata",
    model = "D:/path/to/modeling/directory/selectEV/round/model/1.lambdas")
+}
 
+names(selevs$selectedEV)
+resp <- plotResp2(sp1po, "EV11", DVs$transformations,
+   system.file("extdata/sommerfeltia", "1.lambdas", package = "MIAmaxent"))
+
+\dontrun{
 # From vignette:
 pr_bygallResp2 <- plotResp2(grasslandPO, "pr_bygall",
 transformation = grasslandDVs[[2]],

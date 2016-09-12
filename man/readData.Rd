@@ -84,7 +84,13 @@ to denote derived variables and interaction terms repectively.
 dat <- readData(occurrence = "D:/path/to/occurrence/data.csv",
    contEV = "D:/path/to/continuousEV/directory",
    catEV = "D:/path/to/categoricalEV/directory", maxbkg = 100000, XY = TRUE)
+}
 
+sp1po <- readData(system.file("extdata/sommerfeltia", "Sp1.csv", package = "MIAmaxent"),
+   contEV = system.file("extdata/sommerfeltia", "EV_continuous", package = "MIAmaxent"))
+sp1po
+
+\dontrun{
 # From vignette:
 grasslandPO <- readData(
    occurrence = system.file("extdata", "occurrence_PO.csv", package = "MIAmaxent"),

@@ -65,7 +65,13 @@ scale which is dependent on the size of either the training data extent
 modeloutput <- projectModel(newdat,
    transformation = "D:/path/to/modeling/directory/deriveVars/transformations.Rdata",
    model = "D:/path/to/modeling/directory/selectEV/round/model/1.lambdas")
+}
 
+proj <- projectModel(sp1po, DVs$transformations,
+   system.file("extdata/sommerfeltia", "1.lambdas", package = "MIAmaxent"))
+proj
+
+\dontrun{
 # From vignette:
 grasslandPrediction <- projectModel(grasslandPO,
    transformation = grasslandDVs[[2]],
