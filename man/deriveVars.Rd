@@ -75,10 +75,9 @@ deriveddat <- deriveVars(dat, transformtype = c("HF", "HR", "T"), allsplines = T
    dir = "D:/path/to/modeling/directory")
 }
 
-DVs <- deriveVars(sp1po)
+DVs <- deriveVars(sp1po, transformtype = c("L", "M", "D", "B"))
 str(DVs$EVDV)
 summary(DVs$transformations)
-plot(sp1po$EV11, DVs$EVDV$EV11$EV11_HF8)
 
 \dontrun{
 # From vignette:
