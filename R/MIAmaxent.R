@@ -27,7 +27,7 @@
 #'
 #'   \if{html}{\figure{workflow-flowchart.png}{options: width="70\%"
 #'   alt="Figure: workflow-flowchart.png"}}
-#'   \if{latex}{\figure{workflow-flowchart.pdf}{options: width=7cm}}
+#'   \if{latex}{\figure{workflow-flowchart.pdf}{options: width=12cm}}
 #'
 #' @references Halvorsen, R. (2013) A strict maximum likelihood explanation of
 #'   MaxEnt, and some implications for distribution modelling. Sommerfeltia, 36,
