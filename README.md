@@ -36,7 +36,7 @@ You must have the Java Runtime Environment (JRE) installed on your computer for 
 
 This diagram outlines a common workflow for users of this package. Functions are shown in red.
 
-![User workflow](/man/figures/workflow-flowchart.png)
+![](https://raw.githubusercontent.com/julienvollering/MIAmaxent/master/man/figures/workflow-flowchart.png)
 
 ### References
 
