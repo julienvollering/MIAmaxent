@@ -1,7 +1,3 @@
-## Resubmission
-This is a resubmission. In this version I have:
-* Added examples that are not wrapped in \dontrun{}, and therefore are executed during checks. 3 functions rely on external java software that the user must install separately, so executed examples are not included for these.
-
 ## Test environments
 * local Windows install, R 3.3.1
 * ubuntu 12.04 (on travis-ci), R 3.3.1
