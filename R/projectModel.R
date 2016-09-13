@@ -62,7 +62,7 @@
 #'    model = "D:/path/to/modeling/directory/selectEV/round/model/1.lambdas")
 #' }
 #'
-#' proj <- projectModel(sp1po, DVs$transformations,
+#' proj <- projectModel(toydata_sp1po, toydata_dvs$transformations,
 #'    system.file("extdata/sommerfeltia", "1.lambdas", package = "MIAmaxent"))
 #' proj
 #'

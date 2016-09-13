@@ -70,9 +70,9 @@
 #'    catEV = "D:/path/to/categoricalEV/directory", maxbkg = 100000, XY = TRUE)
 #' }
 #'
-#' sp1po <- readData(system.file("extdata/sommerfeltia", "Sp1.csv", package = "MIAmaxent"),
+#' toydata_sp1po <- readData(system.file("extdata/sommerfeltia", "Sp1.csv", package = "MIAmaxent"),
 #'    contEV = system.file("extdata/sommerfeltia", "EV_continuous", package = "MIAmaxent"))
-#' sp1po
+#' toydata_sp1po
 #'
 #' \dontrun{
 #' # From vignette:

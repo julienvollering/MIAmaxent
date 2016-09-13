@@ -69,9 +69,9 @@
 #'    dir = "D:/path/to/modeling/directory")
 #' }
 #'
-#' DVs <- deriveVars(sp1po, transformtype = c("L", "M", "D", "B"))
-#' str(DVs$EVDV)
-#' summary(DVs$transformations)
+#' toydata_dvs <- deriveVars(toydata_sp1po, transformtype = c("L", "M", "D", "B"))
+#' str(toydata_dvs$EVDV)
+#' summary(toydata_dvs$transformations)
 #'
 #' \dontrun{
 #' # From vignette:
