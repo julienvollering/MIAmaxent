@@ -9,8 +9,8 @@
   variable. \item A list of forward model selection trails used to select
   derived variables. }}
 \source{
-produced from \code{\link{toydata_dvs}} and
-  \code{\link{toydata_sp1po}} using \code{\link{selectDVforEV}}
+Produced from \code{\link{toydata_dvs}} and
+  \code{\link{toydata_sp1po}} using \code{\link{selectDVforEV}}.
 }
 \usage{
 toydata_seldvs

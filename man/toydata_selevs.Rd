@@ -11,8 +11,8 @@ data.}
   \item A trail of forward model selection used to select explanatory
   variables and interaction terms. }}
 \source{
-produced from \code{\link{toydata_seldvs}} and
-  \code{\link{toydata_sp1po}} using \code{\link{selectEV}}
+Produced from \code{\link{toydata_seldvs}} and
+  \code{\link{toydata_sp1po}} using \code{\link{selectEV}}.
 }
 \usage{
 toydata_selevs

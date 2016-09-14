@@ -26,8 +26,8 @@
 #'   each containing the derived variables produced for a given explanatory
 #'   variable. \item A list of all the transformation functions used to produce
 #'   the derived variables. }
-#' @source produced from \code{\link{toydata_sp1po}} using
-#'   \code{\link{deriveVars}}
+#' @source Produced from \code{\link{toydata_sp1po}} using
+#'   \code{\link{deriveVars}}.
 #' @references Halvorsen, R. (2013) A strict maximum likelihood explanation of
 #'   MaxEnt, and some implications for distribution modelling. Sommerfeltia, 36,
 #'   1-132.
@@ -44,8 +44,8 @@
 #'   each containing the derived variables selected for a given explanatory
 #'   variable. \item A list of forward model selection trails used to select
 #'   derived variables. }
-#' @source produced from \code{\link{toydata_dvs}} and
-#'   \code{\link{toydata_sp1po}} using \code{\link{selectDVforEV}}
+#' @source Produced from \code{\link{toydata_dvs}} and
+#'   \code{\link{toydata_sp1po}} using \code{\link{selectDVforEV}}.
 #' @references Halvorsen, R. (2013) A strict maximum likelihood explanation of
 #'   MaxEnt, and some implications for distribution modelling. Sommerfeltia, 36,
 #'   1-132.
@@ -65,8 +65,8 @@
 #'   represent selected interaction terms between these explanatory variables.
 #'   \item A trail of forward model selection used to select explanatory
 #'   variables and interaction terms. }
-#' @source produced from \code{\link{toydata_seldvs}} and
-#'   \code{\link{toydata_sp1po}} using \code{\link{selectEV}}
+#' @source Produced from \code{\link{toydata_seldvs}} and
+#'   \code{\link{toydata_sp1po}} using \code{\link{selectEV}}.
 #' @references Halvorsen, R. (2013) A strict maximum likelihood explanation of
 #'   MaxEnt, and some implications for distribution modelling. Sommerfeltia, 36,
 #'   1-132.

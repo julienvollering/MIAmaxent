@@ -9,8 +9,8 @@
   variable. \item A list of all the transformation functions used to produce
   the derived variables. }}
 \source{
-produced from \code{\link{toydata_sp1po}} using
-  \code{\link{deriveVars}}
+Produced from \code{\link{toydata_sp1po}} using
+  \code{\link{deriveVars}}.
 }
 \usage{
 toydata_dvs
