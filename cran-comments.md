@@ -1,3 +1,6 @@
+## Patch submission
+I am submitting this patch to correct an error in the CRAN check results for r-oldrel-windows. 
+
 ## Test environments
 * local Windows install, R 3.3.1
 * ubuntu 12.04 (on travis-ci), R 3.3.1
@@ -8,11 +11,10 @@
 
 0 errors | 0 warnings | 1 note
 
-* This is a new release.
 * 1 note under R devel: 
     "checking CRAN incoming feasibility ... NOTE
     Maintainer: 'Julien Vollering <julien.vollering@hisf.no>'
-    New submission
+    Days since last update: 2
     ...
     Possibly mis-spelled words in DESCRIPTION:
     Maxent (3:8, 11:6)"
@@ -20,6 +22,6 @@
 
 ## Reverse dependencies
 
-This is a new release, so there are no reverse dependencies.
+There are currently no reverse dependencies.
 
 ---
