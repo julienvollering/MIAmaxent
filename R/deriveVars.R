@@ -58,10 +58,9 @@
 #' @references Halvorsen, R., Mazzoni, S., Bryn, A., & Bakkestuen, V. (2015).
 #'   Opportunities for improved distribution modelling practice via a strict
 #'   maximum likelihood interpretation of MaxEnt. Ecography, 38(2), 172-183.
-#' @references Oekland, R.H., Oekland, T. & Rydgren, K. (2001)
+#' @references Oekland, R.H., Oekland, T. & Rydgren, K. (2001).
 #'   Vegetation-environment relationships of boreal spruce swamp forests in
-#'   Oestmarka Nature Reserve, SE Norway. Natural History Museums and Botanical
-#'   Garden, University of Oslo, Oslo.
+#'   Oestmarka Nature Reserve, SE Norway. Sommerfeltia, 29, 1-190.
 #'
 #' @examples
 #' \dontrun{
