@@ -57,7 +57,7 @@ grasslandPO <- readData(occurrence = system.file("extdata", "occurrence_PO.csv",
 
 ```
 
->__All functions in `MIAmaxent` produce console output. Therefore it's handy to always assign function output to an object, so that you can manipulate that object further.__  
+>__All functions in `MIAmaxent` return console output. Therefore it's handy to always assign function output to an object, so that you can manipulate that object further.__  
 
 If we look at the resulting data object we see the response variable (with `r sum(grasslandPO$RV == 1, na.rm = TRUE)` presence and `r sum(is.na(grasslandPO$RV))` background points) along with `r sum(sapply(grasslandPO[,-1], class) == "numeric")` continuous and `r sum(sapply(grasslandPO[,-1], class) == "factor")` categorical explanatory variables:
 ```{r}

@@ -23,7 +23,7 @@ Or the development version from github
 ``` r
 # install.packages('devtools')
 # install.packages('R.rsp')
-devtools::install_github("julienvollering/maxentmodelselectr", build_vignettes=TRUE)
+devtools::install_github("julienvollering/MIAmaxent", build_vignettes=TRUE)
 ```
 
 ### System Requirements
