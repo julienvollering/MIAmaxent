@@ -59,7 +59,7 @@
       ctable$Directory[i] <- modeldir
     }
 
-    ctable <- ctable[order(-ctable$Fstatistic), ]
+    ctable ctable[order(ctable$Pvalue, -ctable$Fstatistic), ]
     modeltable <- rbind(modeltable, ctable, make.row.names = FALSE)
 
     if (ctable$Pvalue[1] < alpha) {
@@ -149,7 +149,7 @@
       ctable$Directory[i] <- modeldir
     }
 
-    ctable <- ctable[order(-ctable$Fstatistic), ]
+    ctable <- ctable[order(ctable$Pvalue, -ctable$Fstatistic), ]
     modeltable <- rbind(modeltable, ctable, make.row.names = FALSE)
 
     if (ctable$Pvalue[1] < alpha) {
