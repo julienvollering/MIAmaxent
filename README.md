@@ -1,8 +1,3 @@
-!/bin/bash
-==========
-
-if \[\[ README.Rmd -nt README.md \]\]; then echo "README.md is out of date; please re-knit README.Rmd" exit 1 fi
-
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 MIAmaxent
 =========
@@ -57,4 +52,4 @@ Phillips, S.J., Anderson, R.P. & Schapire, R.E. (2006) Maximum entropy modeling 
 
 ------------------------------------------------------------------------
 
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/MIAmaxent)](https://cran.r-project.org/package=MIAmaxent) [![Travis-CI Build Status](https://travis-ci.org/julienvollering/MIAmaxent.svg?branch=master)](https://travis-ci.org/julienvollering/MIAmaxent)
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/MIAmaxent)](https://cran.r-project.org/package=MIAmaxent) [![Travis-CI Build Status](https://travis-ci.org/julienvollering/MIAmaxent.svg?branch=master)](https://travis-ci.org/julienvollering/MIAmaxent) [![CRAN download rate](http://cranlogs.r-pkg.org/badges/MIAmaxent)](http://cran.rstudio.com/web/packages/MIAmaxent/index.html)
