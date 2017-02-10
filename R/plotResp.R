@@ -94,7 +94,7 @@ plotResp <- function(data, dvdata, EV, dir = NULL, logscale = FALSE, ...) {
 
     if (nrow(respPts) >= 250) {
       intervals <- min(c(ceiling(nrow(respPts) / 50), 100))
-      respPts$int <- .reg.interval(respPts[, 1], intervals)
+      respPts$int <- cut(respPts[, 1], intervals)
       grouped <- dplyr::group_by(respPts, int)
       respLine <- as.data.frame(dplyr::summarise(grouped, n = n(),
         intEV = mean(EV, na.rm = TRUE),

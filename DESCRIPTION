@@ -25,7 +25,6 @@ Imports:
     e1071 (>= 1.6-7),
     graphics,
     grDevices,
-    Hmisc (>= 3.17-2),
     raster (>= 2.5-8),
     stats,
     utils
