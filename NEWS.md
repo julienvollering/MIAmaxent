@@ -1,6 +1,7 @@
 # MIAmaxent 0.3.7.9000
 
 * Unnecessary dependency on Hmisc removed
+* Fixed bug in selectEV that occurred when the last round of model selection before interaction terms did not result in a significant variable.
 
 # MIAmaxent 0.3.7
 
