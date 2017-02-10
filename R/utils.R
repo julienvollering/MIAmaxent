@@ -129,7 +129,7 @@ if(getRversion() >= "2.15.1") {
   }
 
   if (is.null(intervals)) {intervals <- min(c(ceiling(nrow(df) / 50), 100))}
-  df$int <- cut(df[, 2], intervals)
+  df$int <- cut(df[, 2], max(2, intervals))
 
   grouped <- dplyr::group_by(df, int)
   FOPdf <- dplyr::summarise(grouped, intEV = mean(EV), intRV = mean(RV, na.rm=F))
@@ -144,7 +144,7 @@ if(getRversion() >= "2.15.1") {
 
   while (length(EVoptimum) > 1) {
     intervals <- intervals - 1
-    df$int <- cut(df[, 2], intervals)
+    df$int <- cut(df[, 2], max(2, intervals))
     grouped <- dplyr::group_by(df, int)
     FOPdf <- as.data.frame(dplyr::summarise(grouped, n = n(),
       intEV = mean(EV), intRV = mean(RV, na.rm=F)))

@@ -84,7 +84,7 @@ plotFOP <- function(data, EV, smoothwindow = 5, EVranging = FALSE,
       df[, 2] <- (df[, 2] - min(df[, 2])) / diff(range(df[, 2]))
     }
     if (is.null(intervals)) {intervals <- min(c(ceiling(nrow(df) / 50), 100))}
-    df$int <- cut(df[, 2], intervals)
+    df$int <- cut(df[, 2], max(2, intervals))
 
     grouped <- dplyr::group_by(df, int)
     FOPdf <- as.data.frame(dplyr::summarise(grouped, n = n(),
@@ -105,7 +105,7 @@ plotFOP <- function(data, EV, smoothwindow = 5, EVranging = FALSE,
 
     while (length(EVoptimum) > 1) {
       intervals <- intervals - 1
-      df$int <- cut(df[, 2], intervals)
+      df$int <- cut(df[, 2], max(2, intervals))
       grouped <- dplyr::group_by(df, int)
       FOPdf <- as.data.frame(dplyr::summarise(grouped, n = n(),
         intEV = mean(EV), intRV = mean(RV, na.rm=F)))
