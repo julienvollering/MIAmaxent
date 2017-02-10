@@ -97,7 +97,7 @@ deriveVars <- function(data,
 
   fdir <- file.path(dir, "deriveVars")
   if (file.exists(fdir)) {
-    stop("The specified dir already contains a selection of spline DVs.
+    stop("The specified dir already contains a selection of DVs.
 Please specify a different dir. \n ", call. = FALSE)
   } else {
     dir.create(fdir)
