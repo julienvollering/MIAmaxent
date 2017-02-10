@@ -1,6 +1,6 @@
 # MIAmaxent 0.3.7.9000
 
-
+* Unnecessary dependency on Hmisc removed
 
 # MIAmaxent 0.3.7
 
