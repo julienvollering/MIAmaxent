@@ -27,7 +27,7 @@
     ctable <- data.frame(round=integer(nrows), model=integer(nrows),
       EV=character(nrows), m=integer(nrows), trainAUC=numeric(nrows),
       Entropy=numeric(nrows), FVA=numeric(nrows), addedFVA=numeric(nrows),
-      Fstatistic=numeric(nrows), dfe=integer(nrows), dfu=integer(nrows),
+      dfe=integer(nrows), dfu=integer(nrows), Fstatistic=numeric(nrows),
       Pvalue=numeric(nrows), Directory=character(nrows),
       stringsAsFactors = F)
 
@@ -50,13 +50,12 @@
       N <- maxRes$X.Background.points
       ctable$FVA[i] <- (log(N) - ctable$Entropy[i]) / (log(N) - log(n))
       ctable$addedFVA[i] <- ctable$FVA[i] - bestFVA
-      dfe <- ctable$m[i] - mnull
-      dfu <- (N - n) - (ctable$m[i] + 1) - 1
-      ctable$Fstatistic[i] <- (ctable$addedFVA[i] * dfu) /
-        ((1 - ctable$FVA[i]) * dfe)
-      ctable$dfe[i] <- dfe
-      ctable$dfu[i] <- dfu
-      ctable$Pvalue[i] <- 1 - stats::pf(ctable$Fstatistic[i], dfe, dfu)
+      ctable$dfe[i] <- ctable$m[i] - mnull
+      ctable$dfu[i] <- (N - n) - (ctable$m[i] + 1) - 1
+      ctable$Fstatistic[i] <- (ctable$addedFVA[i] * ctable$dfu[i]) /
+        ((1 - ctable$FVA[i]) * ctable$dfe[i])
+      ctable$Pvalue[i] <- 1 - stats::pf(ctable$Fstatistic[i], ctable$dfe[i],
+        ctable$dfu[i])
       ctable$Directory[i] <- modeldir
     }
 
@@ -118,7 +117,7 @@
     ctable <- data.frame(round=integer(nrows), model=integer(nrows),
       EV=character(nrows), m=integer(nrows), trainAUC=numeric(nrows),
       Entropy=numeric(nrows), FVA=numeric(nrows), addedFVA=numeric(nrows),
-      Fstatistic=numeric(nrows), dfe=integer(nrows), dfu=integer(nrows),
+      dfe=integer(nrows), dfu=integer(nrows), Fstatistic=numeric(nrows),
       Pvalue=numeric(nrows), Directory=character(nrows),
       stringsAsFactors = F)
 
@@ -141,13 +140,12 @@
       N <- maxRes$X.Background.points
       ctable$FVA[i] <- (log(N) - ctable$Entropy[i]) / (log(N) - log(n))
       ctable$addedFVA[i] <- ctable$FVA[i] - bestFVA
-      dfe <- ctable$m[i] - mnull
-      dfu <- (N - n) - (ctable$m[i] + 1) - 1
-      ctable$Fstatistic[i] <- (ctable$addedFVA[i] * dfu) /
-        ((1 - ctable$FVA[i]) * dfe)
-      ctable$dfe[i] <- dfe
-      ctable$dfu[i] <- dfu
-      ctable$Pvalue[i] <- 1 - stats::pf(ctable$Fstatistic[i], dfe, dfu)
+      ctable$dfe[i] <- ctable$m[i] - mnull
+      ctable$dfu[i] <- (N - n) - (ctable$m[i] + 1) - 1
+      ctable$Fstatistic[i] <- (ctable$addedFVA[i] * ctable$dfu[i]) /
+        ((1 - ctable$FVA[i]) * ctable$dfe[i])
+      ctable$Pvalue[i] <- 1 - stats::pf(ctable$Fstatistic[i], ctable$dfe[i],
+        ctable$dfu[i])
       ctable$Directory[i] <- modeldir
     }
 
