@@ -63,7 +63,7 @@
       selectedset <- unlist(strsplit(ctable$DV[1], split=" "))
       bestFVA <- ctable$FVA[1]
       addedDV <- sapply(strsplit(ctable$DV[seq(nrow(ctable))[-1]], split=" "),
-        function(x) {x[roundnumber]})
+        function(x) {x[length(selectedset)]})
       remainingset <- addedDV[ctable$Pvalue[seq(nrow(ctable))[-1]] < alpha]
     }
 
