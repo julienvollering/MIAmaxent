@@ -89,11 +89,14 @@ selectEV <- function(data, dvdata, alpha = 0.01, interaction = FALSE, dir = NULL
 
   fdir <- file.path(dir, "selectEV")
   if (file.exists(fdir)) {
-    stop("The specified dir already contains a selection of EVs.
-Please specify a different dir. \n ", call. = FALSE)
-  } else {
-    dir.create(fdir)
+    yn <- readline("The specified dir already contains a selectEV result. Overwrite this result? (y/n) ")
+    if (yn == "y") {
+      unlink(fdir, recursive = TRUE)
+      Sys.sleep(1)
+    }
+    if (yn != "y") { return(message("Overwrite declined")) }
   }
+  dir.create(fdir, recursive = TRUE)
 
   returndata <- FALSE
   if (!is.null(trainmax) && trainmax < sum(is.na(rv))) {

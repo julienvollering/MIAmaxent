@@ -1,7 +1,9 @@
 # MIAmaxent 0.3.7.9000
 
-* Unnecessary dependency on Hmisc removed
+* Unnecessary dependency on Hmisc removed.
 * Fixed bug in selectEV that occurred when the last round of model selection before interaction terms did not result in a significant variable.
+* Directories specified by 'dir' argument are created if they do not already exist.
+* Existing results in directories specified by 'dir' argument are overwritten, if desired.
 
 # MIAmaxent 0.3.7
 

@@ -97,12 +97,14 @@ deriveVars <- function(data,
 
   fdir <- file.path(dir, "deriveVars")
   if (file.exists(fdir)) {
-    stop("The specified dir already contains a selection of DVs.
-Please specify a different dir. \n ", call. = FALSE)
-  } else {
-    dir.create(fdir)
+    yn <- readline("The specified dir already contains a deriveVars result. Overwrite this result? (y/n) ")
+    if (yn == "y") {
+      unlink(fdir, recursive = TRUE)
+      Sys.sleep(1)
+    }
+    if (yn != "y") { return(message("Overwrite declined")) }
   }
-
+  dir.create(fdir, recursive = TRUE)
 
   transformations <- list()
   EVDV <- list()
