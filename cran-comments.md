@@ -8,7 +8,7 @@
 
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
+0 errors | 0 warnings | 2 notes
 
 * 1 note under R devel:
     "checking CRAN incoming feasibility ... NOTE 
@@ -17,11 +17,15 @@
     Maxent (3:8, 11:6)"
 * "Maxent" is not a mis-spelling.
 
+* 1 note under devtools::release() check:
+    "New maintainer:
+    Julien Vollering <julien.vollering@hvl.no>
+    Old maintainer(s):
+    Julien Vollering <julien.vollering@hisf.no>"
+* The email address of the maintainer has changed due institutional reorganization, from <julien.vollering at hisf.no> to <julien.vollering at hvl.no>. This change is reflected in the description, and a email was sent from <julien.vollering at hisf.no> to <CRAN at R-project.org> on 14.02.2017 to confirm the change.
+
 ## Reverse dependencies
 
 There are currently no reverse dependencies.
-
-## Maintainer information
-The email address of the maintainer has changed due institutional reorganization, from <julien.vollering at hisf.no> to <julien.vollering at hvl.no>. This change is reflected in the description, and a email was sent from <julien.vollering at hisf.no> to <CRAN at R-project.org> on 14.02.2017 to confirm the change.
 
 ---
