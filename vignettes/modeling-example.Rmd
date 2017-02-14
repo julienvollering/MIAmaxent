@@ -204,9 +204,9 @@ Here is an example of one of the trails of forward DV selection. Shown is the tr
 ```{r}
 grasslandDVselect$selection$terdem[, -13]
 ```
-The columns in this data frame represent: the round of variable selection (round), the name of the model per round (model), the names of the derived variables included in the model (DV), the number of variables in the model (m), the training AUC (trainAUC), the Entropy or log loss of the model (Entropy), the fraction of variation explained (FVA), the additional variation explained compared to the best model of the previous round (addedFVA), the degrees of freedom of the explained variance (dfe), the degrees of freedom of the unexplained variance (dfu), and the p-value of the F-test comparing the model to the previous round's best model (Pvalue). The model directory, recorded in column 13, is not shown. 
+The columns in this data frame represent: the round of variable selection (round), the name of the model per round (model), the names of the derived variables included in the model (DV), the number of variables in the model (m), the training AUC (trainAUC), the Entropy or log loss of the model (Entropy), the fraction of variation explained (FVA), the additional variation explained compared to the best model of the previous round (addedFVA), the degrees of freedom of the explained variance (dfe), the degrees of freedom of the unexplained variance (dfu), the F-statistic for the nested model comparison, and the probability that the previous round's best model fits the data just as well as the current model (Pvalue). The model directory, recorded in column 13, is not shown. 
 
-This table shows, for example, that in the first round of selection, one model was built for each of the 8 derived variables, and that all of these explained enough variation to be retained for the second round of selection. Of all the derived variables produced from "terdem", "terdem\_HR18" explained the most variation in the response variable. Furthermore, "terdem\_HR4" explained enough of the remaining variation to be selected as well (Pvalue < alpha). 
+This table shows, for example, that in the first round of selection, one model was built for each of the 8 derived variables, and that all of these explained enough variation to be retained for the second round of selection. Of all the derived variables produced from "terdem", "terdem\_HR18" explained the most variation in the response variable. Furthermore, "terdem\_HR4" explained enough of the remaining variation to be selected as well (Pvalue < alpha, in round 2). 
 
 ### selectEV(...)
 
@@ -231,7 +231,7 @@ length(grasslandDVselect[[1]])
 summary(grasslandEVselect[[1]])
 length(grasslandEVselect[[1]])
 ```
-We can see that `selectEV` has reduced the number of explanatory variables to 9, but it has also added new interaction terms between explanatory variables selected for the model.
+We can see that `selectEV` has reduced the number of explanatory variables to 8, but it has also added 3 new interaction terms between explanatory variables selected for the model.
 
 Here we show the best model of each round in the trail of forward selection of EVs and interaction terms, hiding a few columns for readability:
 ```{r, echo=FALSE}
@@ -244,18 +244,18 @@ roundbests[, -c(3, 6, 10, 11, 13)]
 ```
 The full selection trail is automatically saved as a CSV-format file in the directory specified by the `dir` argument in `selectEV`. It is recommended to open this file (named: "evselection.csv") using spreadsheet software to inspect the trail of forward selection more closely. This allows the user to make an informed decision about what is the best model. 
 
->__The trail of forward variable selection is automatically written to file (in the specified `dir`), and should be examined using spreadsheet software.__
+>__The trail of forward variable selection is automatically written to file (in the specified `dir`), and can be examined more closely using spreadsheet software.__
 
 We can also look at the selection trail in graphical form. For example, we may plot additional variation explained across round number, to see how much better the model fit is for each round of adding a variable:
 ```{r, fig.show='hold', fig.width=5, fig.height=5, fig.align = "center"}
 plot(grasslandEVselect$selection$round, grasslandEVselect$selection$addedFVA)
 ```
 
-For example, we may decide that a simple model with only 5 explanatory variables is best, since rounds 6-13 explain only small amounts of additional variation. Thus, we choose the best model in round 5:
+For example, we may decide that a simple model with only 4 explanatory variables is best, since rounds 5-11 explain only small amounts of additional variation. Thus, we choose the best model in round 4:
 ```{r}
-grasslandEVselect[[2]][grasslandEVselect$selection$round == 5, ][1, -13]
+grasslandEVselect[[2]][grasslandEVselect$selection$round == 4, ][1, -13]
 ```
-The explanatory variables included in this model are: pr-bygall, terslpps15, pca1, lcucor1, and geoberg.
+The explanatory variables included in this model are: pr-bygall, terslpps15, lcucor1, and geoberg.
 
 
 ***
@@ -334,16 +334,15 @@ Since we projected the model over the training data, it makes sense that all the
 
 Note that `MIAmaxent` never uses any location data in the modelling process -- Maxent distribution modelling is not spatially explicit. Therefore, if model predictions are to be used in a spatial context (mapped), it can be helpful to include spatial coordinates in the `data` input to the `projectModel`. Here is some code (using the `raster` package again) that shows an example of how to plot model predictions spatially:
 ```{r, fig.show='hold', fig.width=7, fig.height=7, fig.align='center', fig.cap="Model predictions in probability ratio output (PRO) across the study area"}
+grasslandPOXY <- readData(occurrence = system.file("extdata", "occurrence_PO.csv", package = "MIAmaxent"), 
+    contEV = system.file("extdata", "EV_continuous", package = "MIAmaxent"),
+    catEV = system.file("extdata", "EV_categorical", package = "MIAmaxent"),
+    maxbkg = 20000, XY = TRUE)
+spatialPrediction <- projectModel(grasslandPOXY, transformation = grasslandDVs[[2]], 
+    model = system.file("extdata", "1.lambdas", package = "MIAmaxent"))
+
 library(raster)
-contfiles <- list.files(system.file("extdata", "EV_continuous", package = "MIAmaxent"), full.names = TRUE)
-catfiles <- list.files(system.file("extdata", "EV_categorical", package = "MIAmaxent"), full.names = TRUE)
-stack <- raster::stack(c(contfiles, catfiles))
-stackpts <- rasterToPoints(stack)
-colnames(stackpts) <- gsub("_", "-", colnames(stackpts))
-spatialPrediction <- projectModel(stackpts, 
-  transformation = grasslandDVs[[2]], 
-  model = system.file("extdata", "1.lambdas", package = "MIAmaxent"))
-Predictionraster <- raster(stack, layer=0)
+Predictionraster <- raster(list.files(system.file("extdata", "EV_continuous", package = "MIAmaxent"), full.names = TRUE)[1])
 Predictionraster <- rasterize(spatialPrediction$output[, c("x", "y")], Predictionraster, field = spatialPrediction$output$PRO)
 par(mar=c(3.1,3.1,2.1,0.1))
 plot(Predictionraster, colNA="black")
