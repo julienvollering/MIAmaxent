@@ -1,3 +1,7 @@
+# MIAmaxent 0.4.0.9000
+
+
+
 # MIAmaxent 0.4.0
 
 * Model ranking within selection rounds based on p-value and then F-statistic (tiebreaker), rather than simply F-statistic
