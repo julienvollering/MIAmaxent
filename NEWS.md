@@ -1,5 +1,5 @@
 # MIAmaxent 0.4.0.9000
-
+* readData now automatically removes duplicates when two or more presences (or absences) fall in the same cell
 
 
 # MIAmaxent 0.4.0

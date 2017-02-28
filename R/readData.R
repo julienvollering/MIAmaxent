@@ -117,9 +117,12 @@ readData <- function(occurrence, contEV = NULL, catEV = NULL, maxbkg = 10000,
   if (PA == FALSE) {
     if (any(is.na(occ[, 1]))) {
       pres <- raster::extract(stack, occ[!is.na(occ[, 1]), 2:3], cellnumbers = TRUE)
+      pres <- pres[!duplicated(pres[, 1]), ]
       bkg <- raster::extract(stack, occ[is.na(occ[, 1]), 2:3], cellnumbers =TRUE)
+      bkg <- bkg[!duplicated(bkg[, 1]), ]
     } else {
       pres <- raster::extract(stack, occ[, 2:3], cellnumbers = TRUE)
+      pres <- pres[!duplicated(pres[, 1]), ]
       bkg <- raster::extract(stack, raster::extent(stack), cellnumbers = TRUE)
       bkg <- bkg[!apply(bkg, 1, function(x) any(is.na(x))), ]
       bkg <- bkg[!(bkg[, 1] %in% pres[, 1]), ]
@@ -137,7 +140,9 @@ readData <- function(occurrence, contEV = NULL, catEV = NULL, maxbkg = 10000,
     presabs <- occ[!is.na(occ[, 1]), ]
     absindex <- presabs[, 1] == 0
     pres <- raster::extract(stack, presabs[!absindex, 2:3], cellnumbers = TRUE)
+    pres <- pres[!duplicated(pres[, 1]), ]
     abs <- raster::extract(stack, presabs[absindex, 2:3], cellnumbers = TRUE)
+    abs <- abs[!duplicated(abs[, 1]), ]
     presXY <- raster::xyFromCell(stack, pres[, 1])
     presdf <- data.frame(RV = 1, presXY, pres[, -1])
     absXY <- raster::xyFromCell(stack, abs[, 1])
