@@ -16,7 +16,7 @@
 #' desired. Otherwise background points are randomly selected from the full
 #' extent of the raster cells which are not already included as presence
 #' locations. Only cells which contain data for all environmental variables are
-#' selected as background locations.
+#' selected as background locations, or retained as presence locations.
 #'
 #' When \code{occurrence} represents presence/absence data (\code{PA = TRUE}),
 #' rows with value '0' in column 1 of the CSV are treated as absence locations,
@@ -158,6 +158,9 @@ readData <- function(occurrence, contEV = NULL, catEV = NULL, maxbkg = 10000,
     data[catindex] <- lapply(data[catindex], function(x) as.factor(x))
   }
   colnames(data) <- gsub("_", "-", colnames(data))
+
+  data <- data[apply(data[,2:ncol(data)], 1, function(x) !any(is.na(x))), ]
+  rownames(data) <- seq(length=nrow(data))
 
   return(data)
 }
