@@ -10,4 +10,3 @@ release_questions()
 Reminders when using devtools::release
 }
 \keyword{internal}
-

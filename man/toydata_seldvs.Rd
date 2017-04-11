@@ -26,4 +26,3 @@ Halvorsen, R. (2013) A strict maximum likelihood explanation of
   1-132.
 }
 \keyword{datasets}
-

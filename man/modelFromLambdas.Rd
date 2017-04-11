@@ -32,4 +32,3 @@ explanatory variables in the model. The format of this input must be an array
 names in the .lambdas file used to reproduce the model.
 }
 \keyword{internal}
-

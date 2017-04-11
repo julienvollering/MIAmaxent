@@ -25,4 +25,3 @@ consists of 40 grid cells, with 8 row and 5 columns, in which 10 presences
 occur.
 }
 \keyword{datasets}
-

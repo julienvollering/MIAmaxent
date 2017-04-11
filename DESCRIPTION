@@ -18,7 +18,7 @@ License: MIT + file LICENSE
 LazyData: TRUE
 URL: https://github.com/julienvollering/MIAmaxent
 BugReports: https://github.com/julienvollering/MIAmaxent/issues
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
 SystemRequirements: Maxent.jar software, Java Runtime Environment (JRE)
 Imports:
     dplyr (>= 0.4.3),

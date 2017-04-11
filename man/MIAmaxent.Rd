@@ -38,6 +38,7 @@ package is the MIA Toolbox, which is described in detail in Mazzoni et al.
   alt="Figure: workflow-flowchart.png"}}
   \if{latex}{\figure{workflow-flowchart.pdf}{options: width=12cm}}
 }
+
 \references{
 Halvorsen, R. (2013) A strict maximum likelihood explanation of
   MaxEnt, and some implications for distribution modelling. Sommerfeltia, 36,
@@ -55,4 +56,3 @@ Phillips, S.J., Anderson, R.P. & Schapire, R.E. (2006) Maximum
   entropy modeling of species geographic distributions. Ecological Modelling,
   190, 231-259.
 }
-

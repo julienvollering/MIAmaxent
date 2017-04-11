@@ -85,4 +85,3 @@ model = system.file("extdata", "1.lambdas", package = "MIAmaxent"))
 }
 
 }
-

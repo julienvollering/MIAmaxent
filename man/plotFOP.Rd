@@ -85,4 +85,3 @@ Stoea, B., Halvorsen, R., Mazzoni, S. & Gusarov, V. (2016)
   modelling: assessment and effects on models. Sommerfeltia, submitted
   manuscript.
 }
-

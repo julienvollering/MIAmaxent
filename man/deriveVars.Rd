@@ -99,4 +99,3 @@ Oekland, R.H., Oekland, T. & Rydgren, K. (2001).
   Vegetation-environment relationships of boreal spruce swamp forests in
   Oestmarka Nature Reserve, SE Norway. Sommerfeltia, 29, 1-190.
 }
-

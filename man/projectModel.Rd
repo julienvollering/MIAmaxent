@@ -110,4 +110,3 @@ Phillips, S.J., Anderson, R.P. & Schapire, R.E. (2006) Maximum
   entropy modeling of species geographic distributions. Ecological Modelling,
   190, 231-259.
 }
-

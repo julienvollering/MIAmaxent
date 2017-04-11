@@ -87,4 +87,3 @@ Halvorsen, R., Mazzoni, S., Bryn, A., & Bakkestuen, V. (2015).
   Opportunities for improved distribution modelling practice via a strict
   maximum likelihood interpretation of MaxEnt. Ecography, 38(2), 172-183.
 }
-
