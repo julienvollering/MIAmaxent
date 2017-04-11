@@ -5,16 +5,60 @@
 #' @param alpha Alpha level for F-test.
 #' @param interaction Logical. Allows interaction terms.
 #' @param dir Directory to which MaxEnt runs are written.
+#' @param formula Model formula specifying a starting point for model selection.
 #'
 
-.parsevs <- function(rv, ev, alpha, interaction, dir) {
+.parsevs <- function(rv, ev, alpha, interaction, dir, formula) {
 
-  selectedset <- character(length=0)
-  remainingset <- names(ev)
-  modeltable <- data.frame()
-  roundnumber <- 0
-  mnull <- 0
-  bestFVA <- 0
+  if (!is.null(formula) && length(labels(terms(formula))) != 0) {
+    roundnumber <- 0
+    mnull <- 0
+    bestFVA <- 0
+    rounddir <- .dirpath.create(dir, "round0")
+    roundmodel <- labels(terms(formula))
+    ctable <- data.frame(round=integer(1), model=integer(1), EV=character(1),
+      m=integer(1), trainAUC=numeric(1), Entropy=numeric(1), FVA=numeric(1),
+      addedFVA=numeric(1), dfe=integer(1), dfu=integer(1),
+      Fstatistic=numeric(1), Pvalue=numeric(1), Directory=character(1),
+      stringsAsFactors = F)
+    evnames <- roundmodel
+    dvnames <- unlist(lapply(ev[evnames], names), use.names = FALSE)
+    modeldir <- .dirpath.create(rounddir, "model1")
+    df <- data.frame(ev[evnames])
+    colnames(df) <- dvnames
+    .runjar(rv, df, maxbkg = length(rv) + 1, modeldir)
+    maxRes <- utils::read.csv(file.path(modeldir, "maxentResults.csv"))
+    ctable$round[1] <- 0
+    ctable$model[1] <- 1
+    ctable$EV[1] <- paste(evnames, collapse = " ")
+    ctable$m[1] <- length(dvnames)
+    ctable$trainAUC[1] <- maxRes$Training.AUC
+    ctable$Entropy[1] <- maxRes$Entropy
+    n <- maxRes$X.Training.samples
+    N <- maxRes$X.Background.points
+    ctable$FVA[1] <- (log(N) - ctable$Entropy[1]) / (log(N) - log(n))
+    ctable$addedFVA[1] <- ctable$FVA[1] - bestFVA
+    ctable$dfe[1] <- ctable$m[1] - mnull
+    ctable$dfu[1] <- (N - n) - (ctable$m[1] + 1) - 1
+    ctable$Fstatistic[1] <- (ctable$addedFVA[1] * ctable$dfu[1]) /
+      ((1 - ctable$FVA[1]) * ctable$dfe[1])
+    ctable$Pvalue[1] <- 1 - stats::pf(ctable$Fstatistic[1], ctable$dfe[1],
+      ctable$dfu[1])
+    ctable$Directory[1] <- modeldir
+    modeltable <- ctable
+    selectedset <- roundmodel
+    mnull <- ctable$m[1]
+    bestFVA <- ctable$FVA[1]
+    remainingset <- names(ev)[!(names(ev) %in% roundmodel)]
+    message("Round 0 complete.")
+  } else {
+    selectedset <- character(length=0)
+    remainingset <- names(ev)
+    modeltable <- data.frame()
+    roundnumber <- 0
+    mnull <- 0
+    bestFVA <- 0
+  }
 
   iterationexit <- FALSE
   while (iterationexit == FALSE) {

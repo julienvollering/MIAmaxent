@@ -1,6 +1,6 @@
 # MIAmaxent 0.4.0.9000
 * readData now automatically removes duplicates when two or more presences (or absences) fall in the same cell
-
+* Added 'formula' argument to 'selectEV' function, which allows specifiying a starting point for forward model selection
 
 # MIAmaxent 0.4.0
 

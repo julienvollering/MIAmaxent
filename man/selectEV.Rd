@@ -5,7 +5,7 @@
 \title{Select parsimonious set of explanatory variables.}
 \usage{
 selectEV(data, dvdata, alpha = 0.01, interaction = FALSE, dir = NULL,
-  trainmax = NULL)
+  trainmax = NULL, formula = NULL)
 }
 \arguments{
 \item{data}{Data frame containing the response variable in the first column
@@ -30,6 +30,15 @@ of explanatory variables. Defaults to the working directory.}
 used to train the models. May be used to reduce computation time for data
 sets with very large numbers of points. Default is no maximum. See Details
 for more information.}
+
+\item{formula}{A model formula (in the form y ~ x + ...) specifying a
+starting point for forward model selection. The independent terms in the
+formula will be included in the model regardless of explanatory power, and
+must be represented in \code{dvdata}, while the remaining explanatory
+variables in \code{dvdata} are candidates for selection. The first column
+in \code{data} is still taken as the response variable, regardless of
+\code{formula}. Default is \code{NULL}, meaning that forward selection
+starts with zero selected variables.}
 }
 \value{
 List of 2 (3): \enumerate{ \item A list of data frames, with one data
@@ -95,4 +104,3 @@ Halvorsen, R., Mazzoni, S., Bryn, A., & Bakkestuen, V. (2015).
   Opportunities for improved distribution modelling practice via a strict
   maximum likelihood interpretation of MaxEnt. Ecography, 38(2), 172-183.
 }
-

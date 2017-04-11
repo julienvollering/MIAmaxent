@@ -14,15 +14,15 @@ if(getRversion() >= "2.15.1") {
 .binaryrvcheck <- function(rv) {
   if (length(levels(as.factor(rv))) > 2) {
     stop("The response variable must contain 2 levels only: presence (1)
-      and background (NA/0)", call. = FALSE)
+       and background (NA/0)", call. = FALSE)
   }
   if (anyNA(rv) && length(levels(as.factor(rv))) > 1) {
     stop("The response variable must contain 2 levels only: presence (1)
-      and background (NA/0)", call. = FALSE)
+       and background (NA/0)", call. = FALSE)
   }
   if (class(rv) != "numeric" && class(rv) != "integer") {
     stop("The response variable must be numeric or integer class: presence (1)
-      and background (NA/0)", call. = FALSE)
+       and background (NA/0)", call. = FALSE)
   }
 }
 
@@ -159,6 +159,24 @@ if(getRversion() >= "2.15.1") {
   return(EVoptimum)
 }
 
+#' checks the validity of formulas
+#'
+#' @param formula Formula entered as selection start point
+#' @param dvdata List of data frames containing EVs
+
+.formulacheck <- function(formula, dvdata) {
+  if (any(attr(terms(formula), "order") != 1)) {
+    stop("The provided formula may contain first-order explanatory variables
+      only (no interactions)", call. = FALSE)
+  }
+  terms <- labels(terms(formula))
+  for (i in terms) {
+    if (sum(names(dvdata) == i) != 1) {
+      stop(paste(i, "must be represented in 'dvdata' (exactly once)"),
+        call. = FALSE)
+    }
+  }
+}
 
 
 #' Loads a transformation object

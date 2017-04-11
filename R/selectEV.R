@@ -46,6 +46,14 @@
 #'   used to train the models. May be used to reduce computation time for data
 #'   sets with very large numbers of points. Default is no maximum. See Details
 #'   for more information.
+#' @param formula A model formula (in the form y ~ x + ...) specifying a
+#'   starting point for forward model selection. The independent terms in the
+#'   formula will be included in the model regardless of explanatory power, and
+#'   must be represented in \code{dvdata}, while the remaining explanatory
+#'   variables in \code{dvdata} are candidates for selection. The first column
+#'   in \code{data} is still taken as the response variable, regardless of
+#'   \code{formula}. Default is \code{NULL}, meaning that forward selection
+#'   starts with zero selected variables.
 #'
 #' @return List of 2 (3): \enumerate{ \item A list of data frames, with one data
 #'   frame for each \emph{selected} EV. This item is recommended as input for
@@ -80,7 +88,7 @@
 
 
 selectEV <- function(data, dvdata, alpha = 0.01, interaction = FALSE, dir = NULL,
-                     trainmax = NULL) {
+                     trainmax = NULL, formula = NULL) {
 
   rv <- data[, 1]
   .binaryrvcheck(rv)
@@ -108,9 +116,18 @@ selectEV <- function(data, dvdata, alpha = 0.01, interaction = FALSE, dir = NULL
     returndata <- TRUE
   }
 
-  message(paste0("Forward selection of ", length(dvdata), " EVs"))
+  if (!is.null(formula)) {
+    .formulacheck(formula, dvdata)
+  }
 
-  result <- .parsevs(rv, dvdata, alpha, interaction, fdir)
+  if (!is.null(formula) && length(labels(terms(formula))) != 0) {
+    nterms <- length(labels(terms(formula)))
+    message(paste0("Forward selection of ", length(dvdata) - nterms, " EVs"))
+  } else {
+    message(paste0("Forward selection of ", length(dvdata), " EVs"))
+  }
+
+  result <- .parsevs(rv, dvdata, alpha, interaction, fdir, formula)
   utils::write.csv(result[[2]], file = file.path(fdir, "evselection.csv"),
     row.names = FALSE)
 
