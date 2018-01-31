@@ -120,8 +120,8 @@ selectEV <- function(data, dvdata, alpha = 0.01, interaction = FALSE, dir = NULL
     .formulacheck(formula, dvdata)
   }
 
-  if (!is.null(formula) && length(labels(terms(formula))) != 0) {
-    nterms <- length(labels(terms(formula)))
+  if (!is.null(formula) && length(labels(stats::terms(formula))) != 0) {
+    nterms <- length(labels(stats::terms(formula)))
     message(paste0("Forward selection of ", length(dvdata) - nterms, " EVs"))
   } else {
     message(paste0("Forward selection of ", length(dvdata), " EVs"))

@@ -10,12 +10,12 @@
 
 .parsevs <- function(rv, ev, alpha, interaction, dir, formula) {
 
-  if (!is.null(formula) && length(labels(terms(formula))) != 0) {
+  if (!is.null(formula) && length(labels(stats::terms(formula))) != 0) {
     roundnumber <- 0
     mnull <- 0
     bestFVA <- 0
     rounddir <- .dirpath.create(dir, "round0")
-    roundmodel <- labels(terms(formula))
+    roundmodel <- labels(stats::terms(formula))
     ctable <- data.frame(round=integer(1), model=integer(1), EV=character(1),
       m=integer(1), trainAUC=numeric(1), Entropy=numeric(1), FVA=numeric(1),
       addedFVA=numeric(1), dfe=integer(1), dfu=integer(1),
