@@ -1,8 +1,8 @@
 library(MIAmaxent)
 
 ?readData
-toydata_sp1po <- readData("D:\\Rpackage\\testdata\\sommerfeltia\\Sp1.csv",
-  contEV="D:\\Rpackage\\testdata\\sommerfeltia\\EV_continuous\\")
+toydata_sp1po <- readData("Z:\\Rpackage\\MIAmaxent\\inst\\extdata\\sommerfeltia\\Sp1.csv",
+  contEV="Z:\\Rpackage\\MIAmaxent\\inst\\extdata\\sommerfeltia\\EV_continuous\\")
 
 ?deriveVars
 toydata_dvs <- deriveVars(toydata_sp1po)
