@@ -295,35 +295,6 @@ release_questions <- function() {
 
 
 
-#' Creates infinitely weighted logistic regression model (equivalent to maxent) without regularization
-#'
-#' @param formula Object of class "formula": a symbolic description of the model to be fitted
-#' @param data Data frame or list containing the variables in the model. Response variable as (1/NA).
-
-.runIWLR <- function(formula, data) {
-  RV <- all.vars(formula)[1]
-  data[,RV][is.na(RV)] <- 0
-  padd <- data[data[, RV]==1, ]
-  padd[, RV] <- 0
-  padddata <- rbind(data, padd)
-  # Code below this line was modified from the MIT-licensed 'maxnet' library
-  wgts <- padddata[,1]+(1-padddata[,1])*100
-  glmdata <- cbind(padddata, wgts)
-  model <- stats::glm(formula=formula, family=binomial, data=glmdata, weights=wgts)
-  model$betas <- model$coefficients[-1]
-  model$alpha <- 0
-  bkg <- model.matrix(stats::update(formula, ~. -1), padddata[padddata[, RV]==0, ])
-  link <- (bkg %*% model$betas) + model$alpha
-  rr <- exp(link)
-  raw <- rr / sum(rr)
-  model$entropy <- -sum(raw * log(raw))
-  model$alpha <- -log(sum(rr))
-  return(model)
-  # Code above this line was modified from the MIT-licensed 'maxnet' library
-}
-
-
-
 #' skewness transformation using constant c
 #'
 #' @param x Vector of data.
