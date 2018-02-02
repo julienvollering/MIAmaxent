@@ -295,41 +295,31 @@ release_questions <- function() {
 
 
 
-#' Creates maxnet model without regularization
+#' Creates infinitely weighted logistic regression model (equivalent to maxent) without regularization
 #'
-#' @param rv Vector of response variable values (1/NA)
-#' @param ev Data frame of continuous (or dummy) explanatory variables
+#' @param formula Object of class "formula": a symbolic description of the model to be fitted
+#' @param data Data frame or list containing the variables in the model. Response variable as (1/NA).
 
-.runmaxnet <- function(rv, ev) {
-rv[is.na(rv)] <- 0
-dat <- cbind(rv, ev)
-presadd <- dat[dat$rv==1, ]
-presadd$rv <- 0
-presadddat <- rbind(dat, presadd)
-# Code below this line was modified from the MIT-licensed 'maxnet' library.
-p <- presadddat[,1]
-mm <- as.matrix(presadddat[,-1])
-weights <- p+(1-p)*100
-glmnet::glmnet.control(pmin=1.0e-8, fdev=0)
-model <- glmnet::glmnet(x=mm, y=as.factor(p), family="binomial", standardize=F,
-                        lambda=0, weights=weights)
-class(model) <- c("maxnet", class(model))
-bb <- model$beta[,1]
-model$betas <- bb[bb!=0]
-model$alpha <- 0
-rr <- maxnet:::predict.maxnet(model, mm[p==0, , drop = FALSE], type="exponent", clamp=F)
-raw <- rr / sum(rr)
-model$entropy <- -sum(raw * log(raw))
-model$alpha <- -log(sum(rr))
-model$penalty.factor <- NULL
-model$featuremins <- apply(mm, 2, min)
-model$featuremaxs <- apply(mm, 2, max)
-model$varmin <- NULL
-model$varmax <- NULL
-model$samplemeans <- apply(mm[p==1, , drop = FALSE], 2, mean)
-model$levels <- NULL
-return(model)
-# Code above this line was modified from the MIT-licensed 'maxnet' library.
+.runIWLR <- function(formula, data) {
+  RV <- all.vars(formula)[1]
+  data[,RV][is.na(RV)] <- 0
+  padd <- data[data[, RV]==1, ]
+  padd[, RV] <- 0
+  padddata <- rbind(data, padd)
+  # Code below this line was modified from the MIT-licensed 'maxnet' library
+  wgts <- padddata[,1]+(1-padddata[,1])*100
+  glmdata <- cbind(padddata, wgts)
+  model <- stats::glm(formula=formula, family=binomial, data=glmdata, weights=wgts)
+  model$betas <- model$coefficients[-1]
+  model$alpha <- 0
+  bkg <- model.matrix(stats::update(formula, ~. -1), padddata[padddata[, RV]==0, ])
+  link <- (bkg %*% model$betas) + model$alpha
+  rr <- exp(link)
+  raw <- rr / sum(rr)
+  model$entropy <- -sum(raw * log(raw))
+  model$alpha <- -log(sum(rr))
+  return(model)
+  # Code above this line was modified from the MIT-licensed 'maxnet' library
 }
 
 
