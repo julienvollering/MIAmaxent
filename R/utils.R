@@ -302,8 +302,8 @@ release_questions <- function() {
 
 .runIWLR <- function(formula, data) {
   RV <- all.vars(formula)[1]
-  data[,RV][is.na(RV)] <- 0
-  padd <- data[data[, RV]==1, ]
+  data[,RV][is.na(data[,RV])] <- 0
+  padd <- data[data[,RV]==1, ]
   padd[, RV] <- 0
   padddata <- rbind(data, padd)
   # Code below this line was modified from the MIT-licensed 'maxnet' library

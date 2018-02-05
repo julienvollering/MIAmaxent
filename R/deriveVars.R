@@ -110,7 +110,7 @@ deriveVars <- function(data,
   EVDV <- list()
   for (i in 2:ncol(data)) {
     df <- data[, c(1,i)]
-    result <- .dvsfromev(df, transformtype, allsplines, fdir)
+    result <- .dvsfromev(df, transformtype, allsplines)
     transformations <- c(transformations, result$storage)
     EVDV[[colnames(df)[2]]] <- result$evdv
   }

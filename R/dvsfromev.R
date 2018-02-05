@@ -10,13 +10,11 @@
 #'   explanatory variable may be continuous or categorical.
 #' @param transformtype Set of transformation types to be used.
 #' @param allsplines Logical. Keep all spline transformations.
-#' @param dir Directory to which Maxent runs of spline transformations are
-#'   written
 #'
 #' @return Dataframe with one column for each DV.
 
 
-.dvsfromev <- function(df, transformtype, allsplines, dir) {
+.dvsfromev <- function(df, transformtype, allsplines) {
 
   rv <- df[, 1]
   ev <- df[, 2]
@@ -24,10 +22,6 @@
   storage <- list()
 
   if (class(ev) %in% c("numeric", "integer")) {
-
-    if (any(c("HF", "HR", "T") %in% transformtype) && allsplines == F) {
-      evdir <- .dirpath.create(dir, evname)
-    }
 
     if ("L" %in% transformtype) {
       tfunction <- .transfL(ev)
@@ -57,11 +51,10 @@
       if (allsplines == T) {
         storage <- c(storage, splall)
       } else {
-        hfdir <- .dirpath.create(evdir, "HF")
         message(paste0("Pre-selecting forward hinge transformations of ", evname))
         dvs <- lapply(splall, function(x) {x(ev)})
         names(dvs) <- gsub("_transf", "", names(splall))
-        selected <- .splselect(rv, dvs, hfdir)
+        selected <- .splselect(rv, dvs)
         if (length(selected) > 0) {
           storage <- c(storage, splall[paste0(selected, "_transf")])
         }
