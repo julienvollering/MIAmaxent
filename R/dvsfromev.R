@@ -72,11 +72,10 @@
       if (allsplines == T) {
         storage <- c(storage, splall)
       } else {
-        hrdir <- .dirpath.create(evdir, "HR")
         message(paste0("Pre-selecting reverse hinge transformations of ", evname))
         dvs <- lapply(splall, function(x) {x(ev)})
         names(dvs) <- gsub("_transf", "", names(splall))
-        selected <- .splselect(rv, dvs, hrdir)
+        selected <- .splselect(rv, dvs)
         if (length(selected) > 0) {
           storage <- c(storage, splall[paste0(selected, "_transf")])
         }
@@ -94,11 +93,10 @@
       if (allsplines == T) {
         storage <- c(storage, splall)
       } else {
-        tdir <- .dirpath.create(evdir, "T")
         message(paste0("Pre-selecting threshold transformations of ", evname))
         dvs <- lapply(splall, function(x) {x(ev)})
         names(dvs) <- gsub("_transf", "", names(splall))
-        selected <- .splselect(rv, dvs, tdir)
+        selected <- .splselect(rv, dvs)
         if (length(selected) > 0) {
           storage <- c(storage, splall[paste0(selected, "_transf")])
         }

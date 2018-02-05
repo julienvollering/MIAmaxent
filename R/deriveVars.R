@@ -115,7 +115,6 @@ deriveVars <- function(data,
     EVDV[[colnames(df)[2]]] <- result$evdv
   }
 
-  save(EVDV, file = file.path(fdir, "EVDV.Rdata"))
   save(transformations, file = file.path(fdir, "transformations.Rdata"))
   return(list("EVDV" = EVDV, "transformations" = transformations))
 }

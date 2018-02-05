@@ -12,8 +12,6 @@
                        dfu=integer(n), Fstatistic=numeric(n), Pvalue=numeric(n),
                        stringsAsFactors = F)
 
-  pb <- utils::txtProgressBar(min = 0, max = n, style = 3)
-
   for (i in 1:n) {
     dvname <- names(dvs)[[i]]
     df <- data.frame(rv, dvs[[i]])
@@ -31,10 +29,7 @@
     ctable$Fstatistic[i] <- (ctable$FVA[i] * ctable$dfu[i]) /
                                 ((1-ctable$FVA[i]) * 1)
     ctable$Pvalue[i] <- 1 - stats::pf(ctable$Fstatistic[i], 1, ctable$dfu[i])
-
-    utils::setTxtProgressBar(pb, i)
   }
-
 
   selected <- character()
   for (i in 3:(nrow(ctable)-2)) {
