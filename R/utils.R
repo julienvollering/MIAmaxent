@@ -295,10 +295,13 @@ release_questions <- function() {
 
 
 
-#' Creates infinitely weighted logistic regression model (equivalent to maxent) without regularization
+#' Creates infinitely weighted logistic regression model (equivalent to maxent)
+#' without regularization
 #'
-#' @param formula Object of class "formula": a symbolic description of the model to be fitted
-#' @param data Data frame or list containing the variables in the model. Response variable as (1/NA).
+#' @param formula Object of class "formula": a symbolic description of the model
+#'   to be fitted. Do not use '.' term, as weights are added to the data object.
+#' @param data Data frame or list containing the variables in the model.
+#'   Response variable as (1/NA).
 
 .runIWLR <- function(formula, data) {
   RV <- all.vars(formula)[1]
@@ -316,7 +319,7 @@ release_questions <- function() {
   link <- (bkg %*% model$betas) + model$alpha
   rr <- exp(link)
   raw <- rr / sum(rr)
-  model$entropy <- -sum(raw * log(raw))
+  model$entropy <- -sum(raw * log(raw), na.rm = TRUE)
   model$alpha <- -log(sum(rr))
   return(model)
   # Code above this line was modified from the MIT-licensed 'maxnet' library
