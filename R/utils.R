@@ -312,10 +312,18 @@ release_questions <- function() {
   # Code below this line was modified from the MIT-licensed 'maxnet' library
   wgts <- padddata[,1]+(1-padddata[,1])*100
   glmdata <- cbind(padddata, wgts)
-  model <- stats::glm(formula=formula, family=binomial, data=glmdata, weights=wgts)
-  model$betas <- model$coefficients[-1]
+  model <- stats::glm(formula=formula, family=binomial, data=glmdata,
+                      weights=wgts)
+  if (any(is.na(model$coefficients))) {
+    nacoef <- names(model$coefficients)[is.na(model$coefficients)]
+    model$betas <- model$coefficients[-1][!is.na(model$coefficients[-1])]
+    formula <- stats::update(formula, paste("~ . -", nacoef))
+  } else {
+    model$betas <- model$coefficients[-1]
+    }
+  bkg <- model.matrix(stats::update(formula, ~. -1),
+                      padddata[padddata[, RV]==0, ])
   model$alpha <- 0
-  bkg <- model.matrix(stats::update(formula, ~. -1), padddata[padddata[, RV]==0, ])
   link <- (bkg %*% model$betas) + model$alpha
   rr <- exp(link)
   raw <- rr / sum(rr)
