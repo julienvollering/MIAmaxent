@@ -19,11 +19,11 @@ performed. Default is the full set of the following transfomation types: L
 hinge), T (threshold), and B (binary).}
 
 \item{allsplines}{Logical. Keep all spline transformations created, rather
-than selecting particular splines based on fraction of total variation
+than pre-selecting particular splines based on fraction of total variation
 explained.}
 
-\item{dir}{Directory to which files will be written during selection of
-spline-type derived variables. Defaults to the working directory.}
+\item{dir}{Directory to which transformation functions will be written, for
+future access. Defaults to the working directory.}
 }
 \value{
 List of 2: \enumerate{ \item A list of data frames, with each
