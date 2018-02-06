@@ -16,7 +16,8 @@
     dvname <- names(dvs)[[i]]
     df <- data.frame(rv, dvs[[i]])
     colnames(df) <- c("RV", dvname)
-    formula <- stats::formula(paste("RV ~", dvname))
+    browser()
+    formula <- stats::formula(paste("RV ~", paste0("`", dvname, "`")))
     iwlr <- .runIWLR(formula, df)
     ctable$DV[i] <- dvname
     ctable$KnotPosition[i] <- (2 * i - 1) / (2 * n)

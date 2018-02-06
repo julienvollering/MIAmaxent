@@ -29,8 +29,10 @@
 
     for (i in 1:length(roundmodels)) {
       dvnames <- roundmodels[[i]]
+      browser()
       formula <- stats::formula(paste(paste(colnames(df)[1], "~"),
-                                      paste(dvnames, collapse = " + ")))
+                                      paste0("`", dvnames, "`",
+                                             collapse = " + ")))
       iwlr <- .runIWLR(formula, df)
       ctable$round[i] <- roundnumber
       ctable$DV[i] <- paste(dvnames, collapse = " ")
