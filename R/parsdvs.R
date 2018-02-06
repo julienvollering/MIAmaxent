@@ -29,7 +29,6 @@
 
     for (i in 1:length(roundmodels)) {
       dvnames <- roundmodels[[i]]
-      browser()
       formula <- stats::formula(paste(paste(colnames(df)[1], "~"),
                                       paste0("`", dvnames, "`",
                                              collapse = " + ")))
