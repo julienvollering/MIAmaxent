@@ -21,7 +21,7 @@
     ctable$DV[i] <- dvname
     ctable$KnotPosition[i] <- (2 * i - 1) / (2 * n)
     ctable$n[i] <- sum(df[,"RV"]==1, na.rm=TRUE)
-    ctable$N[i] <- nrow(df) + ctable$n[i]
+    ctable$N[i] <- nrow(df)
     ctable$Entropy[i] <- iwlr$entropy
     ctable$FVA[i] <- (log(ctable$N[i]) - ctable$Entropy[i]) /
                          (log(ctable$N[i]) - log(ctable$n[i]))

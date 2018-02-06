@@ -38,7 +38,7 @@
       ctable$m[i] <- length(dvnames)
       ctable$Entropy[i] <- iwlr$entropy
       n <- sum(df[, 1]==1, na.rm=TRUE)
-      N <- nrow(df) + n
+      N <- nrow(df)
       ctable$FVA[i] <- (log(N) - ctable$Entropy[i]) / (log(N) - log(n))
       ctable$addedFVA[i] <- ctable$FVA[i] - bestFVA
       ctable$dfe[i] <- 1
