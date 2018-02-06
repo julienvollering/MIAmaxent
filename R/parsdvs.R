@@ -1,15 +1,14 @@
 #' Forward selection of DVs
 #'
-#' @param rv Vector of response variable values.
-#' @param dv Dataframe of DVs to be selected from.
+#' @param df Data frame with response variable in first column and DVs to be
+#'   selected from in subsequent columns.
 #' @param alpha Alpha level for F-test.
-#' @param dir Directory to which Maxent runs are written
 #'
 
-.parsdvs <- function(rv, dv, alpha, dir) {
+.parsdvs <- function(df, alpha) {
 
   selectedset <- character(length=0)
-  remainingset <- colnames(dv)
+  remainingset <- colnames(df[, -1])
   evtable <- data.frame()
   roundnumber <- 0
   bestFVA <- 0
@@ -18,33 +17,27 @@
   while (iterationexit == FALSE) {
 
     roundnumber <- roundnumber + 1
-    rounddir <- .dirpath.create(dir, paste0("round", roundnumber))
     roundmodels <- lapply(remainingset, function(x) c(selectedset, x))
 
     nrows <- length(roundmodels)
-    ctable <- data.frame(round=integer(nrows), model=integer(nrows),
-      DV=character(nrows), m=integer(nrows), trainAUC=numeric(nrows),
-      Entropy=numeric(nrows), FVA=numeric(nrows), addedFVA=numeric(nrows),
-      dfe=integer(nrows), dfu=integer(nrows), Fstatistic=numeric(nrows),
-      Pvalue=numeric(nrows), Directory=character(nrows),
-      stringsAsFactors = F)
+    ctable <- data.frame(round=integer(nrows), DV=character(nrows),
+                         m=integer(nrows), Entropy=numeric(nrows),
+                         FVA=numeric(nrows), addedFVA=numeric(nrows),
+                         dfe=integer(nrows), dfu=integer(nrows),
+                         Fstatistic=numeric(nrows), Pvalue=numeric(nrows),
+                         stringsAsFactors = F)
 
     for (i in 1:length(roundmodels)) {
       dvnames <- roundmodels[[i]]
-      modeldir <- .dirpath.create(rounddir, paste0("model", i))
-      df <- data.frame(dv[, dvnames])
-      colnames(df) <- dvnames
-      .runjar(rv, df, maxbkg = length(rv) + 1, modeldir)
-
-      maxRes <- utils::read.csv(file.path(modeldir, "maxentResults.csv"))
+      formula <- stats::formula(paste(paste(colnames(df)[1], "~"),
+                                      paste(dvnames, collapse = " + ")))
+      iwlr <- .runIWLR(formula, df)
       ctable$round[i] <- roundnumber
-      ctable$model[i] <- i
       ctable$DV[i] <- paste(dvnames, collapse = " ")
       ctable$m[i] <- length(dvnames)
-      ctable$trainAUC[i] <- maxRes$Training.AUC
-      ctable$Entropy[i] <- maxRes$Entropy
-      n <- maxRes$X.Training.samples
-      N <- maxRes$X.Background.points
+      ctable$Entropy[i] <- iwlr$entropy
+      n <- sum(df[, 1]==1, na.rm=TRUE)
+      N <- nrow(df) + n
       ctable$FVA[i] <- (log(N) - ctable$Entropy[i]) / (log(N) - log(n))
       ctable$addedFVA[i] <- ctable$FVA[i] - bestFVA
       ctable$dfe[i] <- 1
@@ -53,7 +46,6 @@
         ((1 - ctable$FVA[i]) * ctable$dfe[i])
       ctable$Pvalue[i] <- 1 - stats::pf(ctable$Fstatistic[i], ctable$dfe[i],
         ctable$dfu[i])
-      ctable$Directory[i] <- modeldir
     }
 
     ctable <- ctable[order(ctable$Pvalue, -ctable$Fstatistic), ]
@@ -74,5 +66,5 @@
     }
   }
 
-  return(list(dv[,selectedset, drop = FALSE], evtable))
+  return(list(df[,selectedset, drop = FALSE], evtable))
 }

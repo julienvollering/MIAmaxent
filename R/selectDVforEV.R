@@ -110,15 +110,17 @@ selectDVforEV <- function(data, dvdata, alpha = 0.01, dir = NULL,
 
   for (i in 1:length(dvdata)) {
     evname <- names(dvdata)[i]
-    evdir <- .dirpath.create(fdir, evname)
-    df <- dvdata[[i]]
-    result <- .parsdvs(rv, df, alpha, evdir)
-    utils::write.csv(result[[2]], file = file.path(evdir, "dvselection.csv"),
-      row.names = FALSE)
+    df <- data.frame("RV"=rv, dvdata[[i]])
+    result <- .parsdvs(df, alpha)
+    utils::write.csv(result[[2]],
+                     file=file.path(fdir, paste0(evname, "_dvselection.csv")),
+                     row.names = FALSE)
     EVDV[[i]] <- result[[1]]
     trail[[i]] <- result[[2]]
     utils::setTxtProgressBar(pb, i)
   }
+  close(pb)
+
   names(EVDV) <- names(dvdata)
   names(trail) <- names(dvdata)
   EVDV <- EVDV[sapply(EVDV, function(x) {dim(x)[2] != 0})]
