@@ -25,6 +25,7 @@
                          FVA=numeric(nrows), addedFVA=numeric(nrows),
                          dfe=integer(nrows), dfu=integer(nrows),
                          Fstatistic=numeric(nrows), Pvalue=numeric(nrows),
+                         devianceF=numeric(nrows), devianceP=numeric(nrows),
                          stringsAsFactors = F)
 
     for (i in 1:length(roundmodels)) {
@@ -47,10 +48,13 @@
         ((1 - ctable$FVA[i]) * ctable$dfe[i])
       ctable$Pvalue[i] <- 1 - stats::pf(ctable$Fstatistic[i], ctable$dfe[i],
         ctable$dfu[i])
+      ctable$devianceF[i] <- anova(iwlr, test="F")$F[2]
+      ctable$devianceP[i] <- anova(iwlr, test="F")$Pr[2]
     }
 
     ctable <- ctable[order(ctable$Pvalue, -ctable$Fstatistic), ]
     evtable <- rbind(evtable, ctable, make.row.names = FALSE)
+    browser()
 
     if (ctable$Pvalue[1] < alpha) {
       selectedset <- unlist(strsplit(ctable$DV[1], split=" "))
