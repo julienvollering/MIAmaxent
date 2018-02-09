@@ -39,8 +39,8 @@ List of 2: \enumerate{ \item A list of data frames, with each
 transformation, and returns a list of dataframes. The available
 transformation types are as follows, described in Halvorsen et al. (2015): L,
 M, D, HF, HR, T (for continuous EVs), and B (for categorical EVs). For spline
-transformation types (HF, HR, T),  a subset of possible DVs is selected by
-the criteria described under Details.
+transformation types (HF, HR, T),  a subset of possible DVs is pre-selected
+by the criteria described under Details.
 }
 \details{
 The linear transformation "L" is a simple rescaling to the range [0, 1].
@@ -57,10 +57,11 @@ For spline transformations ("HF", "HR", and "T"), DVs are created around 20
 different break points (knots) which span the range of the EV. Only DVs which
 satisfy all of the following criteria are retained: \enumerate{ \item 3 <=
 knot <= 18 (DVs with knots at the extremes of the EV are never retained).
-\item F-test of the single-variable Maxent model from the given DV gives a
-p-value < 0.05. \item The single-variable Maxent model from the given DV
-shows a local maximum in fraction of variation explained (FVA) compared to
-DVs from the neighboring 4 knots.}
+\item Chi-square test of the single-variable Maxent model from the given DV
+compared to the null model gives a p-value < 0.05. \item The single-variable
+Maxent model from the given DV shows a local maximum in fraction of variation
+explained (D^2, sensu Guisan & Zimmerman, 2000) compared to DVs from the
+neighboring 4 knots.}
 
 For categorical variables, 1 binary derived variable (type "B") is created
 for each category.
@@ -91,6 +92,9 @@ plot(grasslandPO$terslpdg, grasslandDVs$EVDV$terslpdg$terslpdg_HR4, pch = 20)
 
 }
 \references{
+Guisan, A., & Zimmermann, N. E. (2000). Predictive habitat
+  distribution models in ecology. Ecological modelling, 135(2-3), 147-186.
+
 Halvorsen, R., Mazzoni, S., Bryn, A., & Bakkestuen, V. (2015).
   Opportunities for improved distribution modelling practice via a strict
   maximum likelihood interpretation of MaxEnt. Ecography, 38(2), 172-183.
