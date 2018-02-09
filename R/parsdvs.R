@@ -8,7 +8,7 @@
 .parsdvs <- function(df, alpha) {
 
   selectedset <- character(length=0)
-  remainingset <- colnames(df[, -1])
+  remainingset <- names(df)[-1]
   evtable <- data.frame()
   roundnumber <- 0
   bestFVA <- 0
@@ -54,7 +54,6 @@
 
     ctable <- ctable[order(ctable$Pvalue, -ctable$Fstatistic), ]
     evtable <- rbind(evtable, ctable, make.row.names = FALSE)
-    browser()
 
     if (ctable$Pvalue[1] < alpha) {
       selectedset <- unlist(strsplit(ctable$DV[1], split=" "))

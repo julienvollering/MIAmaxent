@@ -6,39 +6,20 @@
 
 .splselect <- function(rv, dvs) {
 
-  n <- length(dvs)
-  ctable <- data.frame(DV=character(n), KnotPosition=numeric(n), n=integer(n),
-                       N=integer(n), Entropy=numeric(n), FVA=numeric(n),
-                       dfu=integer(n), Fstatistic=numeric(n), Pvalue=numeric(n),
-                       stringsAsFactors = F)
-
-  for (i in 1:n) {
-    dvname <- names(dvs)[[i]]
-    df <- data.frame(rv, dvs[[i]])
-    colnames(df) <- c("RV", dvname)
-    formula <- stats::formula(paste("RV ~", paste0("`", dvname, "`")))
-    iwlr <- .runIWLR(formula, df)
-    ctable$DV[i] <- dvname
-    ctable$KnotPosition[i] <- (2 * i - 1) / (2 * n)
-    ctable$n[i] <- sum(df[,"RV"]==1, na.rm=TRUE)
-    ctable$N[i] <- nrow(df)
-    ctable$Entropy[i] <- iwlr$entropy
-    ctable$FVA[i] <- (log(ctable$N[i]) - ctable$Entropy[i]) /
-                         (log(ctable$N[i]) - log(ctable$n[i]))
-    ctable$dfu[i] <- (ctable$N[i] - ctable$n[i]) - 2 - 1
-    ctable$Fstatistic[i] <- (ctable$FVA[i] * ctable$dfu[i]) /
-                                ((1-ctable$FVA[i]) * 1)
-    ctable$Pvalue[i] <- 1 - stats::pf(ctable$Fstatistic[i], 1, ctable$dfu[i])
-  }
+  data <- data.frame(RV=rv, do.call(cbind, dvs))
+  names(data)[-1] <- names(dvs)
+  formulas <- lapply(names(dvs), function(x) {
+    stats::formula(paste("RV ~", paste0("`", x, "`")))})
+  ctable <- .compare(formulas, stats::formula("RV ~ 1"), data, "Chisq")
 
   selected <- character()
   for (i in 3:(nrow(ctable)-2)) {
-    if (ctable$FVA[i] >= ctable$FVA[i-2] &&
-        ctable$FVA[i] >= ctable$FVA[i-1] &&
-        ctable$FVA[i] >= ctable$FVA[i+1] &&
-        ctable$FVA[i] >= ctable$FVA[i+2] &&
-        ctable$Pvalue[i] < 0.05) {
-      selected <- append(selected, ctable$DV[i])
+    if (ctable$DSquared[i] >= ctable$DSquared[i-2] &&
+        ctable$DSquared[i] >= ctable$DSquared[i-1] &&
+        ctable$DSquared[i] >= ctable$DSquared[i+1] &&
+        ctable$DSquared[i] >= ctable$DSquared[i+2] &&
+        ctable$P[i] < 0.05) {
+      selected <- append(selected, ctable$variables[i])
     }
   }
 
