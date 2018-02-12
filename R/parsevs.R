@@ -3,8 +3,8 @@
 #' @param rv Vector of response variable values.
 #' @param ev List of EVs to be selected from.
 #' @param alpha Alpha level for F-test.
+#' @param test Character string matching either "Chisq" or "F".
 #' @param interaction Logical. Allows interaction terms.
-#' @param dir Directory to which MaxEnt runs are written.
 #' @param formula Model formula specifying a starting point for model selection.
 #'
 

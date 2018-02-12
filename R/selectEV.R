@@ -38,14 +38,12 @@
 #'   the first item in the list returned by \code{\link{selectDVforEV}}).
 #' @param alpha Alpha-level used in F-test comparison of models. Default is
 #'   0.01.
+#' @param test Character string matching either "Chisq" or "F" to determine
+#'   which inference test is used in nested model comparison. The Chi-squared
+#'   test is implemented as in stats::anova, while the F-test is implemented as
+#'   described in Halvorsen (2013, 2015). Default is "Chisq".
 #' @param interaction Logical. Allows interaction terms between pairs of EVs.
 #'   Default is \code{FALSE}.
-#' @param dir Directory to which files will be written during subset selection
-#'   of explanatory variables. Defaults to the working directory.
-#' @param trainmax Integer. Maximum number of uninformed background points to be
-#'   used to train the models. May be used to reduce computation time for data
-#'   sets with very large numbers of points. Default is no maximum. See Details
-#'   for more information.
 #' @param formula A model formula (in the form y ~ x + ...) specifying a
 #'   starting point for forward model selection. The independent terms in the
 #'   formula will be included in the model regardless of explanatory power, and
@@ -54,13 +52,14 @@
 #'   in \code{data} is still taken as the response variable, regardless of
 #'   \code{formula}. Default is \code{NULL}, meaning that forward selection
 #'   starts with zero selected variables.
+#' @param dir Directory to which files will be written during subset selection
+#'   of explanatory variables. Defaults to the working directory.
 #'
-#' @return List of 2 (3): \enumerate{ \item A list of data frames, with one data
+#' @return List of 2: \enumerate{ \item A list of data frames, with one data
 #'   frame for each \emph{selected} EV. This item is recommended as input for
 #'   \code{dvdata} in \code{\link{plotResp}}. \item A data frame showing the
 #'   trail of forward selection of individual EVs (and interaction terms if
-#'   necessary). \item (If \code{trainmax} reduces the number of uninformed
-#'   background points) a new \code{data} object. See details.}
+#'   necessary).}
 #'
 #' @references Halvorsen, R. (2013). A strict maximum likelihood explanation of
 #'   MaxEnt, and some implications for distribution modelling. Sommerfeltia, 36,
@@ -87,8 +86,8 @@
 #' @export
 
 
-selectEV <- function(data, dvdata, alpha = 0.01, interaction = FALSE, dir = NULL,
-                     trainmax = NULL, formula = NULL) {
+selectEV <- function(data, dvdata, alpha = 0.01, test="Chisq",
+                     interaction = FALSE, formula = NULL, dir = NULL) {
 
   rv <- data[, 1]
   .binaryrvcheck(rv)
@@ -106,16 +105,6 @@ selectEV <- function(data, dvdata, alpha = 0.01, interaction = FALSE, dir = NULL
   }
   dir.create(fdir, recursive = TRUE)
 
-  returndata <- FALSE
-  if (!is.null(trainmax) && trainmax < sum(is.na(rv))) {
-    nub <- min(sum(is.na(rv)), trainmax)
-    trainindex <- c(which(!is.na(rv)), sample(which(is.na(rv)), nub))
-    data <- data[trainindex, ]
-    dvdata <- lapply(dvdata, function(x) {x[trainindex, , drop = FALSE]})
-    rv <- rv[trainindex]
-    returndata <- TRUE
-  }
-
   if (!is.null(formula)) {
     .formulacheck(formula, dvdata)
   }
@@ -127,15 +116,11 @@ selectEV <- function(data, dvdata, alpha = 0.01, interaction = FALSE, dir = NULL
     message(paste0("Forward selection of ", length(dvdata), " EVs"))
   }
 
-  result <- .parsevs(rv, dvdata, alpha, interaction, fdir, formula)
+  result <- .parsevs(rv, dvdata, alpha, test, interaction, formula)
   utils::write.csv(result[[2]], file = file.path(fdir, "evselection.csv"),
     row.names = FALSE)
 
-  if (returndata == TRUE) {
-    Result <- list(selectedEV = result[[1]], selection = result[[2]], data = data)
-  } else {
-    Result <- list(selectedEV = result[[1]], selection = result[[2]])
-  }
+  Result <- list(selectedEV = result[[1]], selection = result[[2]])
   selectedEV <- result[[1]]
   save(selectedEV, file = file.path(fdir, "selectedEV.Rdata"))
 

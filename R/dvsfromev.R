@@ -36,7 +36,7 @@
     if ("D" %in% transformtype) {
       for (i in c(0.5, 1, 2)) {
         tfunction <- .transfD(ev, rv, i)
-        storage[[paste0(evname, "_D", i, "_transf")]] <- tfunction
+        storage[[paste0(evname, "_D", sub("[.]", "", i), "_transf")]] <- tfunction
       }
     }
 
@@ -110,7 +110,8 @@
     if ("B" %in% transformtype) {
       for (i in levels(ev)) {
         tfunction <- .transfB(ev, i)
-        storage[[paste0(evname, "_B", i, "_transf")]] <- tfunction
+        levelname <- gsub("[-,+,*,:,.]", "", i)
+        storage[[paste0(evname, "_B", levelname, "_transf")]] <- tfunction
       }
     }
   }
