@@ -56,15 +56,15 @@
     remainingset <- names(ev)
     modeltable <- data.frame()
     roundnumber <- 0
-    mnull <- 0
-    bestFVA <- 0
+    refformula <- stats::formula(paste(names(df)[1], "~ 1"))
   }
 
   iterationexit <- FALSE
   while (iterationexit == FALSE) {
 
     roundnumber <- roundnumber + 1
-    rounddir <- .dirpath.create(dir, paste0("round", roundnumber))
+
+
     roundmodels <- lapply(remainingset, function(x) c(selectedset, x))
 
     nrows <- length(roundmodels)

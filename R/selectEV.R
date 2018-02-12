@@ -116,6 +116,7 @@ selectEV <- function(data, dvdata, alpha = 0.01, test="Chisq",
     message(paste0("Forward selection of ", length(dvdata), " EVs"))
   }
 
+  list <-
   result <- .parsevs(rv, dvdata, alpha, test, interaction, formula)
   utils::write.csv(result[[2]], file = file.path(fdir, "evselection.csv"),
     row.names = FALSE)
