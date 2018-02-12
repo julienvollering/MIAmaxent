@@ -6,7 +6,7 @@
 
 .splselect <- function(rv, dvs) {
 
-  data <- data.frame(RV=rv, do.call(cbind, dvs))
+  data <- data.frame("RV"=rv, do.call(cbind, dvs))
   names(data)[-1] <- names(dvs)
   formulas <- lapply(names(dvs), function(x) {
     stats::formula(paste("RV ~", paste0("`", x, "`")))})
@@ -14,10 +14,10 @@
 
   selected <- character()
   for (i in 3:(nrow(ctable)-2)) {
-    if (ctable$DSquared[i] >= ctable$DSquared[i-2] &&
-        ctable$DSquared[i] >= ctable$DSquared[i-1] &&
-        ctable$DSquared[i] >= ctable$DSquared[i+1] &&
-        ctable$DSquared[i] >= ctable$DSquared[i+2] &&
+    if (ctable$Dsq[i] >= ctable$Dsq[i-2] &&
+        ctable$Dsq[i] >= ctable$Dsq[i-1] &&
+        ctable$Dsq[i] >= ctable$Dsq[i+1] &&
+        ctable$Dsq[i] >= ctable$Dsq[i+2] &&
         ctable$P[i] < 0.05) {
       selected <- append(selected, ctable$variables[i])
     }

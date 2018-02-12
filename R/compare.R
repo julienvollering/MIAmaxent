@@ -7,13 +7,14 @@
 #'   Halvorsen (2013, 2015).
 
 .compare <- function(formulas, refformula, data, test="Chisq") {
+
   test <- match.arg(test, choices = c("Chisq", "F"))
   n <- length(formulas)
 
   if (test == "Chisq") {
     ctable <- data.frame(variables=character(n), m=integer(n),
-                         DSquared=numeric(n), ChiSquared=numeric(n),
-                         df=integer(n), P=numeric(n), stringsAsFactors = F)
+                         Dsq=numeric(n), Chisq=numeric(n), df=integer(n),
+                         P=numeric(n), stringsAsFactors = F)
 
     refiwlr <- .runIWLR(refformula, data)
 
@@ -23,10 +24,10 @@
                                    collapse = " + ")
       ctable$m[i] <- length(iwlr$coefficients)-1
       a1 <- stats::anova(iwlr, test="Chisq")
-      ctable$DSquared[i] <- round(sum(a1$Deviance, na.rm = TRUE) /
+      ctable$Dsq[i] <- round(sum(a1$Deviance, na.rm = TRUE) /
                                     a1$`Resid. Dev`[1], digits = 3)
       a2 <- stats::anova(refiwlr, iwlr, test="Chisq")
-      ctable$ChiSquared[i] <- round(a2$Deviance[2], digits = 3)
+      ctable$Chisq[i] <- round(a2$Deviance[2], digits = 3)
       ctable$df[i] <- a2$Df[2]
       ctable$P[i] <- signif(a2$`Pr(>Chi)`[2], digits = 3)
     }
@@ -34,7 +35,7 @@
 
   if (test == "F") {
     ctable <- data.frame(variables=character(n), m=integer(n),
-                         DSquared=numeric(n), F=numeric(n), dfe=integer(n),
+                         Dsq=numeric(n), F=numeric(n), dfe=integer(n),
                          dfu=integer(n), P=numeric(n), stringsAsFactors = F)
 
     refiwlr <- .runIWLR(refformula, data)
@@ -45,16 +46,16 @@
                                    collapse = " + ")
       ctable$m[i] <- length(iwlr$coefficients)-1
       a1 <- stats::anova(iwlr)
-      DSquared <- sum(a1$Deviance, na.rm = TRUE) / a1$`Resid. Dev`[1]
-      ctable$DSquared[i] <- round(DSquared, digits = 3)
+      Dsq <- sum(a1$Deviance, na.rm = TRUE) / a1$`Resid. Dev`[1]
+      ctable$Dsq[i] <- round(Dsq, digits = 3)
       N <- nrow(data)
       n <- sum(data[,1]==1, na.rm = TRUE)
       a2 <- stats::anova(refiwlr, iwlr)
-      addedDSquared <- a2$Deviance[2] / a2$`Resid. Dev`[1]
+      addedDsq <- a2$Deviance[2] / a2$`Resid. Dev`[1]
       ctable$dfe[i] <- a2$Df[2]
       ctable$dfu[i] <- (N - n) - (ctable$m[i] + 1) - 1
-      ctable$F[i] <- (addedDSquared * ctable$dfu[i]) /
-        ((1 - DSquared) * ctable$dfe[i])
+      ctable$F[i] <- (addedDsq * ctable$dfu[i]) /
+        ((1 - Dsq) * ctable$dfe[i])
       ctable$P[i] <- 1 - stats::pf(ctable$F[i], ctable$dfe[i], ctable$dfu[i])
     }
   }

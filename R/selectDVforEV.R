@@ -3,24 +3,24 @@
 #' For each explanatory variable (EV), \code{selectDVforEV} selects the
 #' parsimonious set of derived variables (DV) which best explains variation in a
 #' given response variable. The function uses a process of forward selection
-#' based on comparison of nested models by the F-test. A DV is selected for
-#' inclusion when, during nested model comparison, it accounts for a significant
-#' amount of remaining variation, under the alpha value specified by the user.
+#' based on comparison of nested models using inference tests. A DV is selected
+#' for inclusion when, during nested model comparison, it accounts for a
+#' significant amount of remaining variation, under the alpha value specified by
+#' the user.
 #'
 #' The F-statistic that \code{selectDVforEV} uses for nested model comparison is
 #' calculated using equation 59 in Halvorsen (2013). See Halvorsen et al. (2015)
 #' for a more detailed explanation of the forward selection procedure.
 #'
 #' If the derived variables were created using \code{\link{deriveVars}}, the
-#' same response variable should be used in \code{selectDVforEV}, as the
+#' same response variable should be used in \code{selectDVforEV}, because the
 #' deviation and spline transformations produced by \code{deriveVars} are
 #' RV-specific.
 #'
-#' If \code{trainmax} reduces the number of uninformed background points in the
-#' training data, a new \code{data} object is returned as part of the function
-#' output. This \code{data} object shows which of the uninformed background
-#' points were randomly selected, and should be used together with the selected
-#' DVs in \code{\link{selectEV}} during continued model selection.
+#' If using binary-type derived variables from \code{\link{deriveVars}}, be
+#' aware that a model including all of these DVs will be considered equal to the
+#' the closest nested model, due to perfect multicollinearity (i.e. the dummy
+#' variable trap).
 #'
 #' Explanatory variables should be uniquely named, and the names must not
 #' contain spaces, underscores, or colons. Underscores and colons are reserved
@@ -33,22 +33,20 @@
 #' @param dvdata List of data frames, with each data frame containing derived
 #'   variables for a given explanatory variable (e.g. the first item in the list
 #'   returned by \code{\link{deriveVars}}).
-#' @param alpha Alpha-level used in F-test comparison of models. Default is
-#'   0.01.
+#' @param alpha Alpha-level used for inference testing in nested model
+#'   comparison. Default is 0.01.
+#' @param test Character string matching either "Chisq" or "F" to determine
+#'   which inference test is used in nested model comparison. The Chi-squared
+#'   test is implemented as in stats::anova, while the F-test is implemented as
+#'   described in Halvorsen (2013, 2015). Default is "Chisq".
 #' @param dir Directory to which files will be written during subset selection
 #'   of derived variables. Defaults to the working directory.
-#' @param trainmax Integer. Maximum number of uninformed background points to be
-#'   used to train the models. May be used to reduce computation time for data
-#'   sets with very large numbers of points. Default is no maximum. See Details
-#'   for more information.
 #'
-#' @return List of 2 (3): \enumerate{ \item A list of data frames, with each
-#'   data frame containing \emph{selected} DVs for a given EV. This item is
+#' @return List of 2: \enumerate{ \item A list of data frames, with each data
+#'   frame containing \emph{selected} DVs for a given EV. This item is
 #'   recommended as input for \code{dvdata} in \code{\link{selectEV}}. \item A
 #'   list of data frames, where each data frame shows the trail of forward
-#'   selection of DVs for a given EV. \item (If \code{trainmax} reduces the
-#'   number of uninformed background points) a new \code{data} object. See
-#'   details. }
+#'   selection of DVs for a given EV. }
 #'
 #' @references Halvorsen, R. (2013). A strict maximum likelihood explanation of
 #'   MaxEnt, and some implications for distribution modelling. Sommerfeltia, 36,
@@ -73,8 +71,8 @@
 #' @export
 
 
-selectDVforEV <- function(data, dvdata, alpha = 0.01, dir = NULL,
-                          trainmax = NULL) {
+selectDVforEV <- function(data, dvdata, alpha = 0.01, test="Chisq",
+                          dir = NULL) {
 
   rv <- data[, 1]
   .binaryrvcheck(rv)
@@ -92,16 +90,6 @@ selectDVforEV <- function(data, dvdata, alpha = 0.01, dir = NULL,
   }
   dir.create(fdir, recursive = TRUE)
 
-  returndata <- FALSE
-  if (!is.null(trainmax) && trainmax < sum(is.na(rv))) {
-    nub <- min(sum(is.na(rv)), trainmax)
-    trainindex <- c(which(!is.na(rv)), sample(which(is.na(rv)), nub))
-    data <- data[trainindex, ]
-    dvdata <- lapply(dvdata, function(x) {x[trainindex, , drop = FALSE]})
-    rv <- rv[trainindex]
-    returndata <- TRUE
-  }
-
   EVDV <- list()
   trail <- list()
 
@@ -111,7 +99,7 @@ selectDVforEV <- function(data, dvdata, alpha = 0.01, dir = NULL,
   for (i in 1:length(dvdata)) {
     evname <- names(dvdata)[i]
     df <- data.frame("RV"=rv, dvdata[[i]])
-    result <- .parsdvs(df, alpha)
+    result <- .parsdvs(df, alpha, test=test)
     utils::write.csv(result[[2]],
                      file=file.path(fdir, paste0(evname, "_dvselection.csv")),
                      row.names = FALSE)
@@ -125,11 +113,7 @@ selectDVforEV <- function(data, dvdata, alpha = 0.01, dir = NULL,
   names(trail) <- names(dvdata)
   EVDV <- EVDV[sapply(EVDV, function(x) {dim(x)[2] != 0})]
 
-  if (returndata == TRUE) {
-    Result <- list(selectedDV = EVDV, selection = trail, data = data)
-  } else {
-    Result <- list(selectedDV = EVDV, selection = trail)
-  }
+  Result <- list(selectedDV = EVDV, selection = trail)
   selectedDV <- Result[[1]]
   save(selectedDV, file = file.path(fdir, "selectedDV.Rdata"))
 
