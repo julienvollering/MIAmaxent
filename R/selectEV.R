@@ -89,7 +89,7 @@
 selectEV <- function(data, dvdata, alpha = 0.01, test="Chisq",
                      interaction = FALSE, formula = NULL, dir = NULL) {
 
-  rv <- data[, 1]
+  rv <- data[, 1, drop=F]
   .binaryrvcheck(rv)
 
   if (is.null(dir)) { dir <- getwd()}
@@ -116,8 +116,8 @@ selectEV <- function(data, dvdata, alpha = 0.01, test="Chisq",
     message(paste0("Forward selection of ", length(dvdata), " EVs"))
   }
 
-  list <-
-  result <- .parsevs(rv, dvdata, alpha, test, interaction, formula)
+  list <- c(list("RV"=rv), dvdata)
+  result <- .parsevs(list, alpha, test, interaction, formula)
   utils::write.csv(result[[2]], file = file.path(fdir, "evselection.csv"),
     row.names = FALSE)
 

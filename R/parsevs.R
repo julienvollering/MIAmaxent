@@ -1,14 +1,18 @@
 #' Forward selection of EVs
 #'
-#' @param rv Vector of response variable values.
-#' @param ev List of EVs to be selected from.
+#' @param list List of data frames with response variable (element 1) and EVs to
+#'   be selected from.
 #' @param alpha Alpha level for F-test.
 #' @param test Character string matching either "Chisq" or "F".
 #' @param interaction Logical. Allows interaction terms.
 #' @param formula Model formula specifying a starting point for model selection.
 #'
 
-.parsevs <- function(rv, ev, alpha, interaction, dir, formula) {
+.parsevs <- function(list, alpha, interaction, dir, formula) {
+
+  dfnames <-  unlist(lapply(list, names))
+  df <- data.frame(do.call(cbind, list))
+  names(df) <- dfnames
 
   if (!is.null(formula) && length(labels(stats::terms(formula))) != 0) {
     roundnumber <- 0
@@ -53,7 +57,7 @@
     message("Round 0 complete.")
   } else {
     selectedset <- character(length=0)
-    remainingset <- names(ev)
+    remainingset <- names(list)[-1]
     modeltable <- data.frame()
     roundnumber <- 0
     refformula <- stats::formula(paste(names(df)[1], "~ 1"))
@@ -63,6 +67,7 @@
   while (iterationexit == FALSE) {
 
     roundnumber <- roundnumber + 1
+    remainingsetdvs <- lapply(list[remainingset], names)
 
 
     roundmodels <- lapply(remainingset, function(x) c(selectedset, x))
