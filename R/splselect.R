@@ -14,10 +14,10 @@
 
   selected <- character()
   for (i in 3:(nrow(ctable)-2)) {
-    if (ctable$Dsq[i] >= ctable$Dsq[i-2] &&
-        ctable$Dsq[i] >= ctable$Dsq[i-1] &&
-        ctable$Dsq[i] >= ctable$Dsq[i+1] &&
-        ctable$Dsq[i] >= ctable$Dsq[i+2] &&
+    if (ctable$Chisq[i] >= ctable$Chisq[i-2] &&
+        ctable$Chisq[i] >= ctable$Chisq[i-1] &&
+        ctable$Chisq[i] >= ctable$Chisq[i+1] &&
+        ctable$Chisq[i] >= ctable$Chisq[i+2] &&
         ctable$P[i] < 0.05) {
       selected <- append(selected, ctable$variables[i])
     }

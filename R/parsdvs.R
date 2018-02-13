@@ -39,8 +39,7 @@
 
     if (nrow(ctable) == 1 ||
         ctable$P[1] > alpha ||
-        (ctable$P[1] < alpha &&
-         all(ctable$P[seq(nrow(ctable))[-1]] >= alpha |
+        (all(ctable$P[seq(nrow(ctable))[-1]] >= alpha |
              is.na(ctable$P[seq(nrow(ctable))[-1]])))) {
       iterationexit <- TRUE
     }
