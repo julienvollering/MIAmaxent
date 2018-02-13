@@ -105,6 +105,7 @@ selectEV <- function(data, dvdata, alpha = 0.01, test="Chisq",
   dir.create(fdir, recursive = TRUE)
 
   if (!is.null(formula)) {
+    formula <- stats::as.formula(formula)
     .formulacheck(formula, dvdata)
   }
 

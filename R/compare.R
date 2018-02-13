@@ -54,9 +54,10 @@
       addedDsq <- a2$Deviance[2] / a2$`Resid. Dev`[1]
       ctable$dfe[i] <- a2$Df[2]
       ctable$dfu[i] <- (N - n) - (ctable$m[i] + 1) - 1
-      ctable$F[i] <- (addedDsq * ctable$dfu[i]) /
-        ((1 - Dsq) * ctable$dfe[i])
-      ctable$P[i] <- 1 - stats::pf(ctable$F[i], ctable$dfe[i], ctable$dfu[i])
+      ctable$F[i] <- round((addedDsq * ctable$dfu[i]) /
+        ((1 - Dsq) * ctable$dfe[i]), digits = 3)
+      ctable$P[i] <- signif(1 - stats::pf(ctable$F[i], ctable$dfe[i], ctable$dfu[i]),
+                            digits = 3)
     }
   }
 
