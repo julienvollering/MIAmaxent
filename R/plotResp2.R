@@ -119,7 +119,7 @@ plotResp2 <- function(data, EV, transformation, model, logscale = FALSE,
   names(dvdatai) <- dvnamesi
 
   dvdf <- data.frame(c(dvdatani, dvdatai), check.names = FALSE)
-  modelfunction <- modelfromlambdas(model, raw = FALSE)
+  modelfunction <- modelFromLambdas(model, raw = FALSE)
   respPts <- data.frame(EV = evdata, PRO = modelfunction(dvdf)[, 1])
   if (logscale == TRUE) {respPts$PRO <- log10(respPts$PRO)}
 

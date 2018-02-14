@@ -139,7 +139,7 @@ projectModel <- function(data, transformation, model, clamping = FALSE,
   names(dvdatai) <- dvnamesi
 
   dvdf <- data.frame(c(dvdatani, dvdatai), check.names = FALSE)
-  modelfunction <- modelfromlambdas(model, raw)
+  modelfunction <- modelFromLambdas(model, raw)
   modeloutput <- modelfunction(dvdf)[, 1]
   if (rescale == TRUE) {
     if (raw == TRUE) {
