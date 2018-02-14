@@ -22,7 +22,7 @@ comparison. Default is 0.01.}
 \item{test}{Character string matching either "Chisq" or "F" to determine
 which inference test is used in nested model comparison. The Chi-squared
 test is implemented as in stats::anova, while the F-test is implemented as
-described in Halvorsen (2013, 2015).}
+described in Halvorsen (2013, 2015). Default is "Chisq".}
 
 \item{dir}{Directory to which files will be written during subset selection
 of derived variables. Defaults to the working directory.}
