@@ -114,8 +114,6 @@ selectDVforEV <- function(data, dvdata, alpha = 0.01, test="Chisq",
   EVDV <- EVDV[sapply(EVDV, function(x) {dim(x)[2] != 0})]
 
   Result <- list(selectedDV = EVDV, selection = trail)
-  selectedDV <- Result[[1]]
-  save(selectedDV, file = file.path(fdir, "selectedDV.Rdata"))
 
   return(Result)
 }

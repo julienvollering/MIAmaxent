@@ -12,18 +12,17 @@
 #' calculated using equation 59 in Halvorsen (2013). See Halvorsen et al. (2015)
 #' for a more detailed explanation of the forward selection procedure.
 #'
+#' If the derived variables were created using \code{\link{deriveVars}}, the
+#' same response variable should be used in \code{selectDVforEV}, because the
+#' deviation and spline transformations produced by \code{deriveVars} are
+#' RV-specific.
+#'
 #' When \code{interaction = TRUE}, the forward selection procedure selects a
 #' parsimonious group of individual EVs first, and then tests interactions
 #' between EVs included in the model afterwards. Therefore, interactions are
 #' only explored between terms which are individually explain a significant
 #' amount of variation. When \code{interaction = FALSE}, interactions are not
 #' considered.
-#'
-#' If \code{trainmax} reduces the number of uninformed background points in the
-#' training data, a new \code{data} object is returned as part of the function
-#' output. This \code{data} object shows which of the uninformed background
-#' points were randomly selected, and should be used together with the selected
-#' EVs in \code{\link{plotResp}} if plotting single-effect model response.
 #'
 #' Explanatory variables should be uniquely named, and the names must not
 #' contain spaces, underscores, or colons. Underscores and colons are reserved
@@ -55,11 +54,11 @@
 #' @param dir Directory to which files will be written during subset selection
 #'   of explanatory variables. Defaults to the working directory.
 #'
-#' @return List of 2: \enumerate{ \item A list of data frames, with one data
+#' @return List of 3: \enumerate{ \item selectedEV: A list of data frames, with one data
 #'   frame for each \emph{selected} EV. This item is recommended as input for
-#'   \code{dvdata} in \code{\link{plotResp}}. \item A data frame showing the
+#'   \code{dvdata} in \code{\link{plotResp}}. \item selection: A data frame showing the
 #'   trail of forward selection of individual EVs (and interaction terms if
-#'   necessary).}
+#'   necessary). \item selectedmodel: the selected model under the given alpha value.}
 #'
 #' @references Halvorsen, R. (2013). A strict maximum likelihood explanation of
 #'   MaxEnt, and some implications for distribution modelling. Sommerfeltia, 36,
@@ -122,10 +121,7 @@ selectEV <- function(data, dvdata, alpha = 0.01, test="Chisq",
   utils::write.csv(result[[2]], file = file.path(fdir, "evselection.csv"),
     row.names = FALSE)
 
-  Result <- list(selectedEV = result[[1]], selection = result[[2]])
-  selectedEV <- result[[1]]
-  save(selectedEV, file = file.path(fdir, "selectedEV.Rdata"))
-
-
+  Result <- list("selectedEV"=result[[1]], "selection"=result[[2]],
+                 "selectedmodel"=result[[3]])
   return(Result)
 }
