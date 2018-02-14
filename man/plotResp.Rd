@@ -4,7 +4,7 @@
 \alias{plotResp}
 \title{Plot single-effect model response.}
 \usage{
-plotResp(data, dvdata, EV, dir = NULL, logscale = FALSE, ...)
+plotResp(data, dvdata, EV, logscale = FALSE, ...)
 }
 \arguments{
 \item{data}{Data frame containing the response variable in the first column
@@ -17,11 +17,9 @@ each list item is a data frame containing \emph{selected} DVs for a
 \emph{selected} EV (e.g. the first item in the list returned by
 \code{\link{selectEV}}).}
 
-\item{EV}{Name or list index of the explanatory variable in \code{dvdata} for
-which the response curve is to be generated. Interaction terms not allowed.}
-
-\item{dir}{Directory to which files will be written. Defaults to the working
-directory.}
+\item{EV}{Name of the explanatory variable or its list index in \code{dvdata}
+for which the response curve is to be generated. Interaction terms not
+allowed.}
 
 \item{logscale}{Logical. Plot the common logarithm of PRO rather than PRO
 itself.}
@@ -32,20 +30,12 @@ the plot. For example: \itemize{ \item \code{cex} for size of points \item
 }
 \value{
 In addition to the graphical output, the plotted data is returned. In
-  the case of a continuous EV, the plotted data is a list of 2: \enumerate{
-  \item \code{respPts}. Model response across individual data points. Columns
-  in this data frame represent the following: EV value ("EV"), Probability
-  Ratio Output of the model ("PRO"), and corresponding EV interval ("int").
-  \item \code{respLine}. Model response across intervals of the EV. Columns
-  in this data frame represent the following: EV interval ("int"), number of
-  points in the interval ("n"), mean EV value of the points in the interval
-  ("intEV"), mean Probability Ratio Output of the points in the interval
-  ("intPRO"), and exponentially weighted moving average of intPRO
-  ("smoothPRO").}
+  the case of a continuous EV, the plotted data consists of: EV values ("EV")
+  and Probability Ratio Output of the model ("PRO").
 
   In the case of a categorical EV, the plotted data is a data frame
   containing the number of points in the level ("n"), the level name
-  ("level"), and the mean Probability Ratio Output of the level ("levelRV").
+  ("level"), and the mean Probability Ratio Output of the level ("levelPRO").
 }
 \description{
 \code{plotResp} plots the single-effect response of a given Maxent model over
@@ -61,18 +51,12 @@ The plot contains points, representing the model response across individual
 data points, as well as a line, representing an exponentially weighted moving
 average of the model response over intervals of the EV.
 
-The \code{EV} specified in \code{dvdata} must not be an interaction term.
+Note that the rows in \code{data} and \code{dvdata} must correspond to the
+same observations, so that the transformed data relate correctly to their
+untransformed values. This will automatically be the case if
+\code{\link{deriveVars}} and \code{\link{selectDVforEV}} are used to create
+\code{dvdata} from \code{data}.
 }
 \examples{
-\dontrun{
-responseEV1 <- plotResp(dat, deriveddat, "EV1", dir = "D:/path/to/modeling/directory")
-
-# From vignette
-pr_bygallResp <- plotResp(grasslandPO, grasslandEVselect[[1]], "pr_bygall")
-par(mfrow = c(1,2))
-pr_bygallFOP <- plotFOP(grasslandPO, "pr_bygall", intervals=50)
-pr_bygallResp <- plotResp(grasslandPO, grasslandEVselect[[1]], "pr_bygall")
-par(mfrow = c(1,1))
-}
 
 }
