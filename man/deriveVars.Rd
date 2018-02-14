@@ -22,8 +22,8 @@ hinge), T (threshold), and B (binary).}
 than pre-selecting particular splines based on fraction of total variation
 explained.}
 
-\item{dir}{Directory to which transformation functions will be written, for
-future access. Defaults to the working directory.}
+\item{dir}{Directory to which transformation functions will be written as
+.Rdata file, for future access. Defaults to the working directory.}
 }
 \value{
 List of 2: \enumerate{ \item A list of data frames, with each

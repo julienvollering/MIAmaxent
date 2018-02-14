@@ -299,7 +299,8 @@ release_questions <- function() {
 #' without regularization
 #'
 #' @param formula Object of class "formula": a symbolic description of the model
-#'   to be fitted. Do not use '.' term, as weights are added to the data object.
+#'   to be fitted. Do not use '.' term, as weights are concatenated to the data
+#'   object.
 #' @param data Data frame or list containing the variables in the model.
 #'   Response variable as (1/NA).
 

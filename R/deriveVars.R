@@ -45,8 +45,8 @@
 #' @param allsplines Logical. Keep all spline transformations created, rather
 #'   than pre-selecting particular splines based on fraction of total variation
 #'   explained.
-#' @param dir Directory to which transformation functions will be written, for
-#'   future access. Defaults to the working directory.
+#' @param dir Directory to which transformation functions will be written as
+#'   .Rdata file, for future access. Defaults to the working directory.
 #'
 #' @return List of 2: \enumerate{ \item A list of data frames, with each
 #'   containing the derived variables produced for a given explanatory variable.
