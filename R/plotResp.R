@@ -66,7 +66,7 @@ plotResp <- function(data, transformations, model, EV, logscale = FALSE, ...) {
     seq <- seq(min(data[,evname]), max(data[,evname]), length.out = 100)
   }
   if (class(data[, evname]) %in% c("factor", "character")) {
-    seq <- unique(data[, evname])
+    seq <- levels(as.factor(data[, evname]))
   }
   newdata <- do.call(cbind, lapply(evtransfs, function(f, x) { f(x) }, x=seq))
   colnames(newdata) <- names(betas)
