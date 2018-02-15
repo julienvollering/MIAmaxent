@@ -4,58 +4,44 @@
 \alias{plotResp}
 \title{Plot single-effect model response.}
 \usage{
-plotResp(data, dvdata, EV, logscale = FALSE, ...)
+plotResp(data, transformations, model, EV, logscale = FALSE, ...)
 }
 \arguments{
-\item{data}{Data frame containing the response variable in the first column
-and explanatory variables in subsequent columns. The response variable
-should represent presence/background data, coded as: 1/NA. See
+\item{data}{Data frame containing the observations used to train the
+\code{model}, with the response variable in the first column and
+explanatory variables in subsequent columns. The response variable should
+represent presence/background data, coded as: 1/NA. See
 \code{\link{readData}}.}
 
-\item{dvdata}{List of explanatory variables used to train the model, where
-each list item is a data frame containing \emph{selected} DVs for a
-\emph{selected} EV (e.g. the first item in the list returned by
-\code{\link{selectEV}}).}
+\item{transformations}{Transformation functions used to create the derived
+variables in the model. I.e. the 'transformations' returned by
+\code{\link{deriveVars}}. Equivalently, the full file pathway of the
+'transformations.Rdata' file saved as a result of \code{\link{deriveVars}}.}
 
-\item{EV}{Name of the explanatory variable or its list index in \code{dvdata}
-for which the response curve is to be generated. Interaction terms not
+\item{model}{The model for which the response is to be plotted, represented
+by an object of class 'glm'. This may be the object returned by
+\code{\link{chooseModel}}, or the 'selectedmodel' returned by
+\code{\link{selectEV}}.}
+
+\item{EV}{Name of the explanatory variable or its column index in \code{data}
+for which the response curve is to be plotted. Interaction terms not
 allowed.}
 
 \item{logscale}{Logical. Plot the common logarithm of PRO rather than PRO
 itself.}
 
-\item{...}{Arguments to be passed to \code{plot} to control the appearance of
-the plot. For example: \itemize{ \item \code{cex} for size of points \item
-\code{col} for color \item \code{pch} for type }}
-}
-\value{
-In addition to the graphical output, the plotted data is returned. In
-  the case of a continuous EV, the plotted data consists of: EV values ("EV")
-  and Probability Ratio Output of the model ("PRO").
-
-  In the case of a categorical EV, the plotted data is a data frame
-  containing the number of points in the level ("n"), the level name
-  ("level"), and the mean Probability Ratio Output of the level ("levelPRO").
+\item{...}{Arguments to be passed to \code{plot} or \code{barplot} to control
+the appearance of the plot. For example: \itemize{ \item \code{lwd} for
+line width \item \code{cex.main} for size of plot title \item \code{space}
+for space between bars }}
 }
 \description{
-\code{plotResp} plots the single-effect response of a given Maxent model over
-any of the included explanatory variables (EVs) in that model. For
-categorical variables, a bar plot is returned rather than a scatter plot.
-\code{plotResp} also returns a data frame containing the plotted data (for
-customizable graphics). Single-effect response curves present the response of
-a model containing the explanatory variable of interest only (cf.
-marginal-effect response curves; \code{\link{plotResp2}}).
-}
-\details{
-The plot contains points, representing the model response across individual
-data points, as well as a line, representing an exponentially weighted moving
-average of the model response over intervals of the EV.
-
-Note that the rows in \code{data} and \code{dvdata} must correspond to the
-same observations, so that the transformed data relate correctly to their
-untransformed values. This will automatically be the case if
-\code{\link{deriveVars}} and \code{\link{selectDVforEV}} are used to create
-\code{dvdata} from \code{data}.
+\code{plotResp} plots the single-effect response of a given model over any of
+the explanatory variables (EVs) included in that model. For categorical
+variables, a bar plot is returned rather than a scatter plot. Single-effect
+response curves present the response of a model containing the explanatory
+variable of interest only (cf. marginal-effect response curves;
+\code{\link{plotResp2}}).
 }
 \examples{
 
