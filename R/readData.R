@@ -157,7 +157,7 @@ readData <- function(occurrence, contEV = NULL, catEV = NULL, maxbkg = 10000,
     catindex <- seq(ncol(data) - length(catfiles) + 1, ncol(data))
     data[catindex] <- lapply(data[catindex], function(x) as.factor(x))
   }
-  colnames(data) <- gsub("_", "-", colnames(data))
+  colnames(data) <- make.names(colnames(data), allow_ = FALSE)
 
   data <- data[apply(data[,2:ncol(data)], 1, function(x) !any(is.na(x))), ]
   rownames(data) <- seq(length=nrow(data))

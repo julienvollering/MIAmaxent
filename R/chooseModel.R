@@ -43,7 +43,7 @@ chooseModel <- function(data, dvdata, formula) {
            call. = FALSE) }
   }
 
-  names(data)[1] <- gsub("[-,+,*,:,.]", "", names(data)[1])
+  names(data)[1] <- make.names(names(data)[1], allow_ = FALSE)
   datalist <- c(list("RV"=data[, 1, drop=FALSE]),
                 dvdata[names(dvdata) %in% firstorderterms])
   dfnames <-  unlist(lapply(datalist, names))

@@ -110,7 +110,7 @@
     if ("B" %in% transformtype) {
       for (i in levels(ev)) {
         tfunction <- .transfB(ev, i)
-        levelname <- gsub("[-,+,*,:,.]", "", i)
+        levelname <- make.names(i, allow_ = FALSE)
         storage[[paste0(evname, "_B", levelname, "_transf")]] <- tfunction
       }
     }
