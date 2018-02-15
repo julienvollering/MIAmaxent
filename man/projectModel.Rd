@@ -4,18 +4,19 @@
 \alias{projectModel}
 \title{Project model to data.}
 \usage{
-projectModel(data, transformation, model, clamping = FALSE, rescale = FALSE,
-  raw = FALSE)
+projectModel(data, transformations, model, clamping = FALSE,
+  rescale = FALSE, raw = FALSE)
 }
 \arguments{
 \item{data}{Data frame of all the explanatory variables (EVs) included in the
-model, with column names matching EV names. See \code{\link{readData}}.}
+model (see \code{\link{readData}}). Alternatively, an object of class
+'RasterStack' containing rasters for all EVs included in the model. Column
+or raster names matching EV names.}
 
-\item{transformation}{Full pathway of the 'transformations.Rdata' file
-containing the transformations used to build the model. This file is saved
-as a result of the \code{\link{deriveVars}} function. Equivalently, the
-second item in the list returned by \code{\link{deriveVars}} can be used
-directly.}
+\item{transformations}{Transformation functions used to create the derived
+variables in the model. I.e. the 'transformations' returned by
+\code{\link{deriveVars}}. Equivalently, the full file pathway of the
+'transformations.Rdata' file saved as a result of \code{\link{deriveVars}}.}
 
 \item{model}{Full pathway of the '.lambdas' file of the model in question.
 This file is saved as a result of \code{\link{selectEV}}.}
@@ -34,14 +35,15 @@ output (PRO)? Default is FALSE.}
 \value{
 List of 2: \enumerate{ \item A data frame with the model output in
   column 1 and the corresponding explanatory data in subsequent columns.
-  \item A data frame showing the range of \code{data} compared to the
-  training data, on a 0-1 scale.}
+  \item A list showing the range of \code{data} compared to the training
+  data, on a 0-1 scale.} If \code{data} is a RasterStack, the model output is
+  plotted as a raster, and only the list of ranges is returned.
 }
 \description{
-\code{projectModel} Calculates the probability ratio output (PRO) of a given
-model for any points where values of the explanatory variables in the model
-are known.The transformations performed on the explanatory variables to build
-the model must be specified.
+\code{projectModel} Calculates model predictions for any points where values
+of the explanatory variables in the model are known. \code{projectModel} can
+be used to get model predictions for the training data, or to project the
+model to a new space or time.
 }
 \details{
 Missing data (NA) for a continuous variable will result in NA output for that
@@ -59,43 +61,6 @@ can be interpreted as having a probability of presence twice as high as an
 average site in the \emph{projection} data. Similarly, raw values are on a
 scale which is dependent on the size of either the training data extent
 (\code{rescale = FALSE}) or projection data extent (\code{rescale = TRUE}).
-}
-\examples{
-\dontrun{
-modeloutput <- projectModel(newdat,
-   transformation = "D:/path/to/modeling/directory/deriveVars/transformations.Rdata",
-   model = "D:/path/to/modeling/directory/selectEV/round/model/1.lambdas")
-}
-
-proj <- projectModel(toydata_sp1po, toydata_dvs$transformations,
-   system.file("extdata/sommerfeltia", "1.lambdas", package = "MIAmaxent"))
-proj
-
-\dontrun{
-# From vignette:
-grasslandPrediction <- projectModel(grasslandPO,
-   transformation = grasslandDVs[[2]],
-   model = system.file("extdata", "1.lambdas", package = "MIAmaxent"))
-head(grasslandPrediction$output)
-grasslandPrediction$ranges
-
-# From vignette:
-library(raster)
-contfiles <- list.files(system.file("extdata", "EV_continuous", package = "MIAmaxent"),
-   full.names = TRUE)
-catfiles <- list.files(system.file("extdata", "EV_categorical", package = "MIAmaxent"),
-   full.names = TRUE)
-stack <- raster::stack(c(contfiles, catfiles))
-stackpts <- rasterToPoints(stack)
-spatialPrediction <- projectModel(stackpts,
-   transformation = grasslandDVs[[2]],
-   model = system.file("extdata", "1.lambdas", package = "MIAmaxent"))
-Predictionraster <- raster(stack, layer=0)
-Predictionraster <- rasterize(spatialPrediction$output[, c("x", "y")], Predictionraster,
-   field = spatialPrediction$output$PRO)
-plot(Predictionraster, colNA="black")
-}
-
 }
 \references{
 Halvorsen, R. (2013) A strict maximum likelihood explanation of

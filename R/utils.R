@@ -28,23 +28,6 @@ if(getRversion() >= "2.15.1") {
 
 
 
-#' checks representation of dvs in data
-#'
-#' @param dvnamesni Names of DVs in model (no interaction terms)
-#' @param data Data frame with EV column names
-
-.check.dvs.in.data <- function(dvnamesni, data) {
-  for (i in dvnamesni) {
-    a <- sub("_.*", "", i)
-    if (sum(colnames(data) == a) != 1) {
-      stop(paste(a, "must be represented in 'data' (exactly once)"),
-        call. = FALSE)
-    }
-  }
-}
-
-
-
 #' checks representation of dvs in tranformations
 #'
 #' @param dvnamesni Names of DVs in model (no interaction terms)
@@ -54,11 +37,12 @@ if(getRversion() >= "2.15.1") {
   for (i in dvnamesni) {
     a <- paste0(i, "_transf")
     if (sum(names(alltransf) == a) != 1) {
-      stop(paste(i, "must be represented in 'transformation' (exactly once)"),
+      stop(paste(i, "must be represented in 'transformations' (exactly once)"),
         call. = FALSE)
     }
   }
 }
+
 
 
 #' Name and create directory
