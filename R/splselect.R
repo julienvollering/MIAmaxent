@@ -9,7 +9,7 @@
   data <- data.frame("RV"=rv, do.call(cbind, dvs))
   names(data)[-1] <- names(dvs)
   formulas <- lapply(names(dvs), function(x) {
-    stats::formula(paste("RV ~", paste0("`", x, "`")))})
+    stats::formula(paste("RV ~", x))})
   ctable <- .compare(formulas, stats::formula("RV ~ 1"), data, "Chisq")
 
   selected <- character()

@@ -297,8 +297,18 @@ release_questions <- function() {
   # Code below this line was modified from the MIT-licensed 'maxnet' library
   wgts <- padddata[,1]+(1-padddata[,1])*100
   glmdata <- cbind(padddata, wgts)
-  model <- stats::glm(formula=formula, family=binomial, data=glmdata,
-                      weights=wgts)
+
+  withCallingHandlers({
+    model <- stats::glm(formula=formula, family=binomial, data=glmdata,
+                        weights=wgts)
+  }, warning = function(w) {
+    if(grepl("fitted probabilities numerically 0 or 1", conditionMessage(w))){
+      invokeRestart("muffleWarning")
+    } else {
+      conditionMessage(w)
+    }
+  })
+
   if (any(is.na(model$coefficients))) {
     nacoef <- names(model$coefficients)[is.na(model$coefficients)]
     model$betas <- model$coefficients[-1][!is.na(model$coefficients[-1])]
@@ -306,8 +316,7 @@ release_questions <- function() {
   } else {
     model$betas <- model$coefficients[-1]
     }
-  bkg <- model.matrix(stats::update(formula, ~. -1),
-                      padddata[padddata[, RV]==0, ])
+  bkg <- model.matrix(formula, padddata[padddata[, RV]==0, ])[,-1, drop=FALSE]
   model$alpha <- 0
   link <- (bkg %*% model$betas) + model$alpha
   rr <- exp(link)
