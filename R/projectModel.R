@@ -67,6 +67,7 @@ projectModel <- function(data, transformations, model, clamping = FALSE,
   dvnamesi <- names(model$betas)[grep(":", names(model$betas))]
   evnames <- unique(sub("_.*", "", dvnamesni))
 
+  map <- FALSE
   if (class(data) == "RasterStack") {
     map <- TRUE
     evstack <- data[[evnames]]
