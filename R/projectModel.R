@@ -71,7 +71,7 @@ projectModel <- function(data, transformations, model, clamping = FALSE,
   if (class(data) == "RasterStack") {
     map <- TRUE
     evstack <- data[[evnames]]
-    data <- stats::na.omit(raster::as.data.frame(evstack))
+    data <- raster::as.data.frame(evstack, na.rm = TRUE)
     cells <- as.numeric(row.names(data))
   }
 

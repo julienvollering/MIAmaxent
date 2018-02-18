@@ -24,16 +24,16 @@
 #' presences.
 #'
 #' The names of the ASCII raster files are used as the names of the explanatory
-#' variables, so these files should be uniquely named, and the names must not
-#' contain spaces, underscores, or colons. Underscores and colons are reserved
-#' to denote derived variables and interaction terms repectively.
-#' \code{readData} automatically replaces underscores with hyphens.
+#' variables, so these files should be uniquely named. \code{readData} replaces
+#' underscores '_', spaces ' ' and other special characters not allowed in R
+#' with periods '.' in. In MIAmaxent, underscores and colons are reserved to
+#' denote derived variables and interaction terms, repectively.
 #'
 #' @param occurrence Full pathway of the '.csv' file of occurrence data. The
 #'   first column of the CSV should code occurrence (see Details), while the
 #'   second and third columns should contain X and Y coordinates corresponding
-#'   to the ASCII raster coordinate system. The first row is read as a header
-#'   row.
+#'   to the ASCII raster coordinate system. The first row of the csv is read as
+#'   a header row.
 #' @param contEV Pathway to a directory containing continuous environmental
 #'   variables in '.asc' file format.
 #' @param catEV Pathway to a directory containing categorical environmental
@@ -42,10 +42,10 @@
 #'   unknown background points for the response variable. Default is 10,000.
 #'   Irrelevant for presence/absence data (\code{PA = TRUE}) and ignored for
 #'   presence-only data (\code{PA = FALSE}) if \code{occurrence} contains 'NA'
-#'   values.
+#'   values. See Details.
 #' @param PA Logical. Does \code{occurrence} represent presence/absence data?
 #'   This argument affects how the values in \code{occurrence} are interpreted,
-#'   and controls what type of data object is produced. See details.
+#'   and controls what type of data object is produced. See Details.
 #' @param XY Logical. Include XY coordinates in the output. May be useful for
 #'   spatial plotting. Note that coordinates included in the training data used
 #'   to build the model will be treated as explanatory variables.
@@ -53,15 +53,6 @@
 #' @return Data frame with the Response Variable (RV) in the first column, and
 #'   Explanatory Variables (EVs) in subsequent columns. When \code{PA = FALSE},
 #'   RV values are 1/NA, and when \code{PA = TRUE}, RV values are 1/0.
-#'
-#'   With presence-only occurrence data, the returned output can be used as the
-#'   \code{data} argument for \code{\link{plotFOP}}, \code{\link{deriveVars}},
-#'   \code{\link{selectDVforEV}}, \code{\link{selectEV}}, and
-#'   \code{\link{plotResp}}. With presence/absence occurrence data, the returned
-#'   output can be used as the \code{data} argument for \code{\link{testAUC}}.
-#'   Output from \code{readData} can also be used as the \code{data} argument
-#'   for \code{\link{plotResp2}}, and \code{\link{projectModel}}, but for these
-#'   functions the values of RV are irrelevant.
 #'
 #' @examples
 #' \dontrun{
@@ -94,6 +85,7 @@
 #' }
 #'
 #' @export
+#'
 
 
 readData <- function(occurrence, contEV = NULL, catEV = NULL, maxbkg = 10000,
@@ -120,20 +112,20 @@ readData <- function(occurrence, contEV = NULL, catEV = NULL, maxbkg = 10000,
       pres <- pres[!duplicated(pres[, 1]), ]
       bkg <- raster::extract(stack, occ[is.na(occ[, 1]), 2:3], cellnumbers =TRUE)
       bkg <- bkg[!duplicated(bkg[, 1]), ]
+      cells <- c(pres[, 1], bkg[, 1])
+      presbkg <- rbind(pres[, -1], bkg[, -1])
     } else {
       pres <- raster::extract(stack, occ[, 2:3], cellnumbers = TRUE)
       pres <- pres[!duplicated(pres[, 1]), ]
-      bkg <- raster::extract(stack, raster::extent(stack), cellnumbers = TRUE)
-      bkg <- bkg[!apply(bkg, 1, function(x) any(is.na(x))), ]
-      bkg <- bkg[!(bkg[, 1] %in% pres[, 1]), ]
+      bkg <- raster::as.data.frame(stack, na.rm = TRUE)
+      bkg <- bkg[!(rownames(bkg) %in% pres[,1]),]
       if (nrow(bkg) > maxbkg) {bkg <- bkg[sample(nrow(bkg), maxbkg), ]}
+      cells <- c(pres[,1], as.numeric(rownames(bkg)))
+      presbkg <- rbind(pres[, -1], bkg)
     }
-    presXY <- raster::xyFromCell(stack, pres[, 1])
-    presdf <- data.frame(RV = 1, presXY, pres[, -1])
-    bkgXY <- raster::xyFromCell(stack, bkg[, 1])
-    bkgdf <- data.frame(RV = NA, bkgXY, bkg[, -1])
-
-    data <- rbind(presdf, bkgdf)
+    xy <- raster::xyFromCell(stack, cells)
+    data <- data.frame("RV"=c(rep(1, nrow(pres)), rep(NA, nrow(bkg))), xy,
+                       presbkg)
   }
 
   if (PA == TRUE) {
@@ -143,11 +135,10 @@ readData <- function(occurrence, contEV = NULL, catEV = NULL, maxbkg = 10000,
     pres <- pres[!duplicated(pres[, 1]), ]
     abs <- raster::extract(stack, presabs[absindex, 2:3], cellnumbers = TRUE)
     abs <- abs[!duplicated(abs[, 1]), ]
-    presXY <- raster::xyFromCell(stack, pres[, 1])
-    presdf <- data.frame(RV = 1, presXY, pres[, -1])
-    absXY <- raster::xyFromCell(stack, abs[, 1])
-    absdf <- data.frame(RV = 0, absXY, abs[, -1])
-    data <- rbind(presdf, absdf)
+    xy <- raster::xyFromCell(stack, c(pres[, 1], abs[, 1]))
+    presabs <- rbind(pres[, -1], abs[, -1])
+    data <- data.frame("RV"=c(rep(1, nrow(pres)), rep(0, nrow(abs))), xy,
+                       presabs)
   }
 
   if (XY == FALSE) {
