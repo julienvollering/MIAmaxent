@@ -64,7 +64,6 @@ projectModel <- function(data, transformations, model, clamping = FALSE,
                          rescale = FALSE, raw = FALSE) {
 
   dvnamesni <- names(model$betas)[grep(":", names(model$betas), invert = TRUE)]
-  dvnamesi <- names(model$betas)[grep(":", names(model$betas))]
   evnames <- unique(sub("_.*", "", dvnamesni))
 
   map <- FALSE
@@ -90,7 +89,7 @@ projectModel <- function(data, transformations, model, clamping = FALSE,
     xnull <- environment(anevtransf)$xnull
     if (class(xnull) %in% c("numeric", "integer")) {
       L <- (evdata - range(xnull)[1]) / diff(range(xnull))
-      return(range(L))
+      return(range(L, na.rm = TRUE))
     }
     if (class(xnull) %in% c("factor", "character")) {
       if (all(evdata %in% xnull)) {return("inside")} else {return("outside")}
@@ -107,10 +106,13 @@ projectModel <- function(data, transformations, model, clamping = FALSE,
     }
     return(y)
   })
+  dvdatani <- as.data.frame(do.call(cbind, dvdatani))
   names(dvdatani) <- dvnamesni
 
   mmformula <- stats::update.formula(model$formula, NULL ~ . - 1)
   newdata <- model.matrix(mmformula, dvdatani)
+  newdata <- newdata[match(rownames(dvdatani),rownames(newdata)), ]
+  rownames(newdata) <- rownames(dvdatani)
   if (raw == TRUE) {
     modeloutput <- exp((newdata %*% model$betas) + model$alpha)
   } else {
@@ -120,16 +122,17 @@ projectModel <- function(data, transformations, model, clamping = FALSE,
 
   if (rescale == TRUE) {
     if (raw == TRUE) {
-      modeloutput <- modeloutput/sum(modeloutput)
+      modeloutput <- modeloutput/sum(modeloutput, na.rm = TRUE)
     } else {
-      modeloutput <- (modeloutput/sum(modeloutput))*length(modeloutput)
+      modeloutput <- (modeloutput/sum(modeloutput, na.rm = TRUE)) *
+        sum(!is.na(modeloutput))
     }
   }
 
   if (raw == TRUE) {
-    Output <- as.data.frame(cbind("raw" = modeloutput, data))
+    Output <- data.frame("raw" = modeloutput, data)
   } else {
-    Output <- as.data.frame(cbind("PRO" = modeloutput, data))
+    Output <- data.frame("PRO" = modeloutput, data)
   }
 
   if (map == TRUE) {
