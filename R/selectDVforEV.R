@@ -41,6 +41,8 @@
 #'   described in Halvorsen (2013, 2015). Default is "Chisq".
 #' @param dir Directory to which files will be written during subset selection
 #'   of derived variables. Defaults to the working directory.
+#' @param write Logical. Write important function output to file in the
+#'   \code{dir}?
 #'
 #' @return List of 2: \enumerate{ \item A list of data frames, with each data
 #'   frame containing \emph{selected} DVs for a given EV. This item is
@@ -72,23 +74,24 @@
 
 
 selectDVforEV <- function(data, dvdata, alpha = 0.01, test="Chisq",
-                          dir = NULL) {
+                          dir = NULL, write = TRUE) {
 
   rv <- data[, 1]
   .binaryrvcheck(rv)
 
-  if (is.null(dir)) { dir <- getwd()}
-
-  fdir <- file.path(dir, "selectDVforEV")
-  if (file.exists(fdir)) {
-    yn <- readline("The specified dir already contains a selectDVforEV result. Overwrite this result? (y/n) ")
-    if (yn == "y") {
-      unlink(fdir, recursive = TRUE)
-      Sys.sleep(1)
+  if (write == TRUE) {
+    if (is.null(dir)) { dir <- getwd() }
+    fdir <- file.path(dir, "selectDVforEV")
+    if (file.exists(fdir)) {
+      yn <- readline("The specified dir already contains a selectDVforEV result. Overwrite this result? (y/n) ")
+      if (yn == "y") {
+        unlink(fdir, recursive = TRUE)
+        Sys.sleep(1)
+      }
+      if (yn != "y") { return(message("Overwrite declined")) }
     }
-    if (yn != "y") { return(message("Overwrite declined")) }
+    dir.create(fdir, recursive = TRUE)
   }
-  dir.create(fdir, recursive = TRUE)
 
   EVDV <- list()
   trail <- list()
@@ -100,9 +103,11 @@ selectDVforEV <- function(data, dvdata, alpha = 0.01, test="Chisq",
     evname <- names(dvdata)[i]
     df <- data.frame("RV"=rv, dvdata[[i]])
     result <- .parsdvs(df, alpha, test=test)
-    utils::write.csv(result[[2]],
-                     file=file.path(fdir, paste0(evname, "_dvselection.csv")),
-                     row.names = FALSE)
+    if (write == TRUE) {
+      utils::write.csv(result[[2]],
+                       file=file.path(fdir, paste0(evname, "_dvselection.csv")),
+                       row.names = FALSE)
+    }
     EVDV[[i]] <- result[[1]]
     trail[[i]] <- result[[2]]
     utils::setTxtProgressBar(pb, i)

@@ -33,11 +33,15 @@
 #' Explanatory variables should be uniquely named, and the names must not
 #' contain spaces, underscores, or colons. Underscores and colons are reserved
 #' to denote derived variables and interaction terms repectively.
+#' \code{deriveVars} replaces underscores '_', colons ':' and other special
+#' characters not allowed in names with periods '.'. In MIAmaxent, underscores
+#' and colons are reserved to denote derived variables and interaction terms,
+#' repectively.
 #'
 #' @param data Data frame containing the response variable in the first column
 #'   and explanatory variables in subsequent columns. The response variable
-#'   should represent presence/background data, coded as: 1/NA. See
-#'   \code{\link{readData}}.
+#'   should represent presence/background data, coded as: 1/NA. The explanatory
+#'   variable data should be complete (no NAs). See \code{\link{readData}}.
 #' @param transformtype Specifies the types of transformations types to be
 #'   performed. Default is the full set of the following transfomation types: L
 #'   (linear), M (monotonous), D (deviation), HF (forward hinge), HR (reverse
@@ -45,8 +49,10 @@
 #' @param allsplines Logical. Keep all spline transformations created, rather
 #'   than pre-selecting particular splines based on fraction of total variation
 #'   explained.
-#' @param dir Directory to which transformation functions will be written as
+#' @param dir Directory to which transformation functions will be written as an
 #'   .Rdata file, for future access. Defaults to the working directory.
+#' @param write Logical. Write important function output to file in the
+#'   \code{dir}?
 #'
 #' @return List of 2: \enumerate{ \item A list of data frames, with each
 #'   containing the derived variables produced for a given explanatory variable.
@@ -90,24 +96,33 @@
 
 deriveVars <- function(data,
                        transformtype = c("L", "M", "D", "HF", "HR", "T", "B"),
-                       allsplines = FALSE, dir = NULL) {
+                       allsplines = FALSE, dir = NULL, write = TRUE) {
 
   if (any(c("HF", "HR", "T") %in% transformtype) && allsplines == F) {
     .binaryrvcheck(data[, 1])
   }
 
-  if (is.null(dir)) { dir <- getwd()}
+  colnames(data) <- make.names(colnames(data), allow_ = FALSE)
 
-  fdir <- file.path(dir, "deriveVars")
-  if (file.exists(fdir)) {
-    yn <- readline("The specified dir already contains a deriveVars result. Overwrite this result? (y/n) ")
-    if (yn == "y") {
-      unlink(fdir, recursive = TRUE)
-      Sys.sleep(1)
-    }
-    if (yn != "y") { return(message("Overwrite declined")) }
+  if (any(!complete.cases(data[,-1]))) {
+    warning(paste(sum(!complete.cases(data[,-1])),
+                  "rows in 'data' were dropped due to missing EV values."), call. = FALSE)
+    data <- data[complete.cases(data[,-1]), ]
   }
-  dir.create(fdir, recursive = TRUE)
+
+  if (write == TRUE) {
+    if (is.null(dir)) { dir <- getwd() }
+    fdir <- file.path(dir, "deriveVars")
+    if (file.exists(fdir)) {
+      yn <- readline("The specified dir already contains a deriveVars result. Overwrite this result? (y/n) ")
+      if (yn == "y") {
+        unlink(fdir, recursive = TRUE)
+        Sys.sleep(1)
+      }
+      if (yn != "y") { return(message("Overwrite declined")) }
+    }
+    dir.create(fdir, recursive = TRUE)
+  }
 
   transformations <- list()
   EVDV <- list()
@@ -117,7 +132,10 @@ deriveVars <- function(data,
     transformations <- c(transformations, result$storage)
     EVDV[[colnames(df)[2]]] <- result$evdv
   }
+  EVDV <- EVDV[sapply(EVDV, function(x) {dim(x)[2] != 0})]
 
-  save(transformations, file = file.path(fdir, "transformations.Rdata"))
+  if (write == TRUE) {
+    save(transformations, file = file.path(fdir, "transformations.Rdata"))
+  }
   return(list("EVDV" = EVDV, "transformations" = transformations))
 }

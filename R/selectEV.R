@@ -53,6 +53,8 @@
 #'   starts with zero selected variables.
 #' @param dir Directory to which files will be written during subset selection
 #'   of explanatory variables. Defaults to the working directory.
+#' @param write Logical. Write important function output to file in the
+#'   \code{dir}?
 #'
 #' @return List of 3: \enumerate{ \item selectedEV: A list of data frames, with one data
 #'   frame for each \emph{selected} EV. This item is recommended as input for
@@ -86,22 +88,24 @@
 
 
 selectEV <- function(data, dvdata, alpha = 0.01, test="Chisq",
-                     interaction = FALSE, formula = NULL, dir = NULL) {
+                     interaction = FALSE, formula = NULL, dir = NULL,
+                     write = TRUE) {
 
   .binaryrvcheck(data[, 1])
 
-  if (is.null(dir)) { dir <- getwd()}
-
-  fdir <- file.path(dir, "selectEV")
-  if (file.exists(fdir)) {
-    yn <- readline("The specified dir already contains a selectEV result. Overwrite this result? (y/n) ")
-    if (yn == "y") {
-      unlink(fdir, recursive = TRUE)
-      Sys.sleep(1)
+  if (write == TRUE) {
+    if (is.null(dir)) { dir <- getwd() }
+    fdir <- file.path(dir, "selectEV")
+    if (file.exists(fdir)) {
+      yn <- readline("The specified dir already contains a selectEV result. Overwrite this result? (y/n) ")
+      if (yn == "y") {
+        unlink(fdir, recursive = TRUE)
+        Sys.sleep(1)
+      }
+      if (yn != "y") { return(message("Overwrite declined")) }
     }
-    if (yn != "y") { return(message("Overwrite declined")) }
+    dir.create(fdir, recursive = TRUE)
   }
-  dir.create(fdir, recursive = TRUE)
 
   if (!is.null(formula)) {
     formula <- stats::as.formula(formula)
@@ -118,8 +122,10 @@ selectEV <- function(data, dvdata, alpha = 0.01, test="Chisq",
   names(data)[1] <- make.names(names(data)[1], allow_ = FALSE)
   list <- c(list("RV"=data[, 1, drop=FALSE]), dvdata)
   result <- .parsevs(list, alpha, test, interaction, formula)
-  utils::write.csv(result[[2]], file = file.path(fdir, "evselection.csv"),
-    row.names = FALSE)
+  if (write == TRUE) {
+    utils::write.csv(result[[2]], file = file.path(fdir, "evselection.csv"),
+                     row.names = FALSE)
+  }
 
   Result <- list("selectedEV"=result[[1]], "selection"=result[[2]],
                  "selectedmodel"=result[[3]])

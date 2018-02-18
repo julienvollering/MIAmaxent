@@ -4,7 +4,8 @@
 \alias{selectDVforEV}
 \title{Select parsimonious sets of derived variables.}
 \usage{
-selectDVforEV(data, dvdata, alpha = 0.01, test = "Chisq", dir = NULL)
+selectDVforEV(data, dvdata, alpha = 0.01, test = "Chisq", dir = NULL,
+  write = TRUE)
 }
 \arguments{
 \item{data}{Data frame containing the response variable in the first column
@@ -26,6 +27,9 @@ described in Halvorsen (2013, 2015). Default is "Chisq".}
 
 \item{dir}{Directory to which files will be written during subset selection
 of derived variables. Defaults to the working directory.}
+
+\item{write}{Logical. Write important function output to file in the
+\code{dir}?}
 }
 \value{
 List of 2: \enumerate{ \item A list of data frames, with each data

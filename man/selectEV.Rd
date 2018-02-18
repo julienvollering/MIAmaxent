@@ -5,7 +5,7 @@
 \title{Select parsimonious set of explanatory variables.}
 \usage{
 selectEV(data, dvdata, alpha = 0.01, test = "Chisq", interaction = FALSE,
-  formula = NULL, dir = NULL)
+  formula = NULL, dir = NULL, write = TRUE)
 }
 \arguments{
 \item{data}{Data frame containing the response variable in the first column
@@ -39,6 +39,9 @@ starts with zero selected variables.}
 
 \item{dir}{Directory to which files will be written during subset selection
 of explanatory variables. Defaults to the working directory.}
+
+\item{write}{Logical. Write important function output to file in the
+\code{dir}?}
 }
 \value{
 List of 3: \enumerate{ \item selectedEV: A list of data frames, with one data

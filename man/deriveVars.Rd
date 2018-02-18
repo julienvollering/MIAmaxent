@@ -5,13 +5,13 @@
 \title{Derive variables by transformation.}
 \usage{
 deriveVars(data, transformtype = c("L", "M", "D", "HF", "HR", "T", "B"),
-  allsplines = FALSE, dir = NULL)
+  allsplines = FALSE, dir = NULL, write = TRUE)
 }
 \arguments{
 \item{data}{Data frame containing the response variable in the first column
 and explanatory variables in subsequent columns. The response variable
-should represent presence/background data, coded as: 1/NA. See
-\code{\link{readData}}.}
+should represent presence/background data, coded as: 1/NA. The explanatory
+variable data should be complete (no NAs). See \code{\link{readData}}.}
 
 \item{transformtype}{Specifies the types of transformations types to be
 performed. Default is the full set of the following transfomation types: L
@@ -22,8 +22,11 @@ hinge), T (threshold), and B (binary).}
 than pre-selecting particular splines based on fraction of total variation
 explained.}
 
-\item{dir}{Directory to which transformation functions will be written as
+\item{dir}{Directory to which transformation functions will be written as an
 .Rdata file, for future access. Defaults to the working directory.}
+
+\item{write}{Logical. Write important function output to file in the
+\code{dir}?}
 }
 \value{
 List of 2: \enumerate{ \item A list of data frames, with each
@@ -69,6 +72,10 @@ for each category.
 Explanatory variables should be uniquely named, and the names must not
 contain spaces, underscores, or colons. Underscores and colons are reserved
 to denote derived variables and interaction terms repectively.
+\code{deriveVars} replaces underscores '_', colons ':' and other special
+characters not allowed in names with periods '.'. In MIAmaxent, underscores
+and colons are reserved to denote derived variables and interaction terms,
+repectively.
 }
 \examples{
 \dontrun{
