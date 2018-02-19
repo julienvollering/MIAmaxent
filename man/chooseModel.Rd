@@ -4,22 +4,17 @@
 \alias{chooseModel}
 \title{Trains a model containing the explanatory variables specified.}
 \usage{
-chooseModel(data, dvdata, formula)
+chooseModel(dvdata, formula)
 }
 \arguments{
-\item{data}{Data frame containing the response variable in the first column
-and explanatory variables in subsequent columns. The response variable
-should represent presence/background data, coded as: 1/NA. See
-\code{\link{readData}}.}
-
-\item{dvdata}{List of data frames, with each data frame containing selected
-derived variables for a given explanatory variable (e.g. the first item in
-the list returned by \code{\link{selectDVforEV}}).}
+\item{dvdata}{A list containing first the response variable, followed by data
+frames of \emph{selected} derived variables for a given explanatory
+variable (e.g. the first item in the list returned by
+\code{\link{selectDVforEV}}).}
 
 \item{formula}{A model formula (in the form y ~ x + ...) specifying the
-independent terms to be included in the model. The first column in
-\code{data} is still taken as the response variable, regardless of
-\code{formula}.}
+independent terms to be included in the model. The item in \code{dvdata} is
+still taken as the response variable, regardless of \code{formula}.}
 }
 \description{
 \code{chooseModel} trains a model based on the formula provided. The formula
@@ -31,9 +26,10 @@ The function may be employed to choose a model from the selection pathway of
 value.
 }
 \details{
-Explanatory variables should be uniquely named, and the names must not
-contain spaces, underscores, or colons. Underscores and colons are reserved
-to denote derived variables and interaction terms repectively.
+Explanatory variables should be uniquely named. Underscores ('_') and colons
+(':') are reserved to denote derived variables and interaction terms
+repectively, and \code{chooseModel} will replace these -- along with other
+special characters -- with periods ('.').
 }
 \examples{
 

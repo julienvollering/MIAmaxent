@@ -4,18 +4,13 @@
 \alias{selectDVforEV}
 \title{Select parsimonious sets of derived variables.}
 \usage{
-selectDVforEV(data, dvdata, alpha = 0.01, test = "Chisq", dir = NULL,
+selectDVforEV(dvdata, alpha = 0.01, test = "Chisq", dir = NULL,
   write = TRUE)
 }
 \arguments{
-\item{data}{Data frame containing the response variable in the first column
-and explanatory variables in subsequent columns. The response variable
-should represent presence/background data, coded as: 1/NA. See
-\code{\link{readData}}.}
-
-\item{dvdata}{List of data frames, with each data frame containing derived
-variables for a given explanatory variable (e.g. the first item in the list
-returned by \code{\link{deriveVars}}).}
+\item{dvdata}{A list containing first the response variable, followed by data
+frames of derived variables produced for each explanatory variable (e.g.
+the first item in the list returned by \code{\link{deriveVars}}).}
 
 \item{alpha}{Alpha-level used for inference testing in nested model
 comparison. Default is 0.01.}
@@ -32,11 +27,12 @@ of derived variables. Defaults to the working directory.}
 \code{dir}?}
 }
 \value{
-List of 2: \enumerate{ \item A list of data frames, with each data
-  frame containing \emph{selected} DVs for a given EV. This item is
-  recommended as input for \code{dvdata} in \code{\link{selectEV}}. \item A
-  list of data frames, where each data frame shows the trail of forward
-  selection of DVs for a given EV. }
+List of 2: \enumerate{ \item dvdata: A list containing first the
+  response variable, followed by data frames of \emph{selected} DVs for each
+  EV. EVs with zero selected DVs are dropped. This item is recommended as
+  input for \code{dvdata} in \code{\link{selectEV}}. \item selection: A list
+  of data frames, where each data frame shows the trail of forward selection
+  of DVs for a given EV. }
 }
 \description{
 For each explanatory variable (EV), \code{selectDVforEV} selects the
@@ -45,39 +41,24 @@ given response variable. The function uses a process of forward selection
 based on comparison of nested models using inference tests. A DV is selected
 for inclusion when, during nested model comparison, it accounts for a
 significant amount of remaining variation, under the alpha value specified by
-the user.
+the user. See Halvorsen et al. (2015) for a more detailed explanation of the
+forward selection procedure.
 }
 \details{
-The F-statistic that \code{selectDVforEV} uses for nested model comparison is
-calculated using equation 59 in Halvorsen (2013). See Halvorsen et al. (2015)
-for a more detailed explanation of the forward selection procedure.
-
-If the derived variables were created using \code{\link{deriveVars}}, the
-same response variable should be used in \code{selectDVforEV}, because the
-deviation and spline transformations produced by \code{deriveVars} are
-RV-specific.
+The F-test available in \code{selectDVforEV} is calculated using equation 59
+in Halvorsen (2013).
 
 If using binary-type derived variables from \code{\link{deriveVars}}, be
 aware that a model including all of these DVs will be considered equal to the
 the closest nested model, due to perfect multicollinearity (i.e. the dummy
 variable trap).
 
-Explanatory variables should be uniquely named, and the names must not
-contain spaces, underscores, or colons. Underscores and colons are reserved
-to denote derived variables and interaction terms repectively.
+Explanatory variables should be uniquely named. Underscores ('_') and colons
+(':') are reserved to denote derived variables and interaction terms
+repectively, and \code{selectDVforEV} will replace these -- along with other
+special characters -- with periods ('.').
 }
 \examples{
-\dontrun{
-selecteddvs <- selectDVforEV(dat, deriveddat, alpha = 0.0001,
-   dir = "D:/path/to/modeling/directory")
-
-# From vignette:
-grasslandDVselect <- selectDVforEV(grasslandPO, grasslandDVs[[1]], alpha = 0.001)
-summary(grasslandDVs$EVDV)
-sum(sapply(grasslandDVs$EVDV, length))
-summary(grasslandDVselect$selectedDV)
-sum(sapply(grasslandDVselect$selectedDV, length))
-}
 
 }
 \references{

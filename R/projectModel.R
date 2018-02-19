@@ -29,8 +29,9 @@
 #'   variables in the model. I.e. the 'transformations' returned by
 #'   \code{\link{deriveVars}}. Equivalently, the full file pathway of the
 #'   'transformations.Rdata' file saved as a result of \code{\link{deriveVars}}.
-#' @param model Full pathway of the '.lambdas' file of the model in question.
-#'   This file is saved as a result of \code{\link{selectEV}}.
+#' @param model The model to be projected, represented by an object of class
+#'   'glm'. This may be the object returned by \code{\link{chooseModel}}, or the
+#'   'selectedmodel' returned by \code{\link{selectEV}}.
 #' @param clamping Logical. Do clamping \emph{sensu} Phillips et al. (2006).
 #'   Default is \code{FALSE}.
 #' @param rescale Logical. Linearly rescale model output (PRO or raw) with
@@ -109,14 +110,14 @@ projectModel <- function(data, transformations, model, clamping = FALSE,
   dvdatani <- as.data.frame(do.call(cbind, dvdatani))
   names(dvdatani) <- dvnamesni
 
-  mmformula <- stats::update.formula(model$formula, NULL ~ . - 1)
+  mmformula <- stats::update.formula(model$formula.narm, NULL ~ . - 1)
   newdata <- model.matrix(mmformula, dvdatani)
-  newdata <- newdata[match(rownames(dvdatani),rownames(newdata)), ]
+  newdata <- newdata[match(rownames(dvdatani), rownames(newdata)), ]
   rownames(newdata) <- rownames(dvdatani)
   if (raw == TRUE) {
     modeloutput <- exp((newdata %*% model$betas) + model$alpha)
   } else {
-    Ntrain <- length(environment(alltransf[[1]])$xnull)
+    Ntrain <- length(alltransf[[1]])
     modeloutput <- exp((newdata %*% model$betas) + model$alpha) * Ntrain
   }
 

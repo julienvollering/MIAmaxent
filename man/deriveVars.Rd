@@ -29,13 +29,12 @@ explained.}
 \code{dir}?}
 }
 \value{
-List of 2: \enumerate{ \item A list of data frames, with each
-  containing the derived variables produced for a given explanatory variable.
-  This item is recommended as input for \code{dvdata} in
-  \code{\link{selectDVforEV}}. \item A list of all the transformation
-  functions used to produce the derived variables. This item is recommended
-  as input for \code{transformation} in \code{\link{plotResp2}},
-  \code{\link{testAUC}}, and \code{\link{projectModel}}. }
+List of 2: \enumerate{ \item dvdata: A list containing first the
+  response variable, followed data frames of derived variables produced for
+  each explanatory variable. This item is recommended as input for
+  \code{dvdata} in \code{\link{selectDVforEV}}. \item transformations: A list
+  containing first the response variable, followed by all the transformation
+  functions used to produce the derived variables. }
 }
 \description{
 \code{deriveVars} produces derived variables from explanatory variables by
@@ -69,33 +68,12 @@ neighboring 4 knots.}
 For categorical variables, 1 binary derived variable (type "B") is created
 for each category.
 
-Explanatory variables should be uniquely named, and the names must not
-contain spaces, underscores, or colons. Underscores and colons are reserved
-to denote derived variables and interaction terms repectively.
-\code{deriveVars} replaces underscores '_', colons ':' and other special
-characters not allowed in names with periods '.'. In MIAmaxent, underscores
-and colons are reserved to denote derived variables and interaction terms,
-repectively.
+Explanatory variables should be uniquely named. Underscores ('_') and colons
+(':') are reserved to denote derived variables and interaction terms
+repectively, and \code{deriveVars} will replace these -- along with other
+special characters -- with periods ('.').
 }
 \examples{
-\dontrun{
-deriveddat <- deriveVars(dat, transformtype = c("HF", "HR", "T"), allsplines = TRUE,
-   dir = "D:/path/to/modeling/directory")
-}
-
-toydata_dvs <- deriveVars(toydata_sp1po, transformtype = c("L", "M", "D", "B"))
-str(toydata_dvs$EVDV)
-summary(toydata_dvs$transformations)
-
-\dontrun{
-# From vignette:
-grasslandDVs <- deriveVars(grasslandPO, transformtype = c("L", "M", "D", "HF", "HR", "T", "B"))
-summary(grasslandDVs$EVDV) # alternatively: summary(grasslandDVs[[1]])
-head(summary(grasslandDVs$transformations)) # alternatively: head(summary(grasslandDVs[[2]]))
-length(grasslandDVs$transformations)
-plot(grasslandPO$terslpdg, grasslandDVs$EVDV$terslpdg$terslpdg_D2, pch = 20)
-plot(grasslandPO$terslpdg, grasslandDVs$EVDV$terslpdg$terslpdg_HR4, pch = 20)
-}
 
 }
 \references{

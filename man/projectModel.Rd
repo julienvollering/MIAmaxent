@@ -18,8 +18,9 @@ variables in the model. I.e. the 'transformations' returned by
 \code{\link{deriveVars}}. Equivalently, the full file pathway of the
 'transformations.Rdata' file saved as a result of \code{\link{deriveVars}}.}
 
-\item{model}{Full pathway of the '.lambdas' file of the model in question.
-This file is saved as a result of \code{\link{selectEV}}.}
+\item{model}{The model to be projected, represented by an object of class
+'glm'. This may be the object returned by \code{\link{chooseModel}}, or the
+'selectedmodel' returned by \code{\link{selectEV}}.}
 
 \item{clamping}{Logical. Do clamping \emph{sensu} Phillips et al. (2006).
 Default is \code{FALSE}.}

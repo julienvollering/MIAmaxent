@@ -30,13 +30,10 @@
 #' For categorical variables, 1 binary derived variable (type "B") is created
 #' for each category.
 #'
-#' Explanatory variables should be uniquely named, and the names must not
-#' contain spaces, underscores, or colons. Underscores and colons are reserved
-#' to denote derived variables and interaction terms repectively.
-#' \code{deriveVars} replaces underscores '_', colons ':' and other special
-#' characters not allowed in names with periods '.'. In MIAmaxent, underscores
-#' and colons are reserved to denote derived variables and interaction terms,
-#' repectively.
+#' Explanatory variables should be uniquely named. Underscores ('_') and colons
+#' (':') are reserved to denote derived variables and interaction terms
+#' repectively, and \code{deriveVars} will replace these -- along with other
+#' special characters -- with periods ('.').
 #'
 #' @param data Data frame containing the response variable in the first column
 #'   and explanatory variables in subsequent columns. The response variable
@@ -54,13 +51,12 @@
 #' @param write Logical. Write important function output to file in the
 #'   \code{dir}?
 #'
-#' @return List of 2: \enumerate{ \item A list of data frames, with each
-#'   containing the derived variables produced for a given explanatory variable.
-#'   This item is recommended as input for \code{dvdata} in
-#'   \code{\link{selectDVforEV}}. \item A list of all the transformation
-#'   functions used to produce the derived variables. This item is recommended
-#'   as input for \code{transformation} in \code{\link{plotResp2}},
-#'   \code{\link{testAUC}}, and \code{\link{projectModel}}. }
+#' @return List of 2: \enumerate{ \item dvdata: A list containing first the
+#'   response variable, followed data frames of derived variables produced for
+#'   each explanatory variable. This item is recommended as input for
+#'   \code{dvdata} in \code{\link{selectDVforEV}}. \item transformations: A list
+#'   containing first the response variable, followed by all the transformation
+#'   functions used to produce the derived variables. }
 #'
 #' @references Guisan, A., & Zimmermann, N. E. (2000). Predictive habitat
 #'   distribution models in ecology. Ecological modelling, 135(2-3), 147-186.
@@ -72,24 +68,6 @@
 #'   Oestmarka Nature Reserve, SE Norway. Sommerfeltia, 29, 1-190.
 #'
 #' @examples
-#' \dontrun{
-#' deriveddat <- deriveVars(dat, transformtype = c("HF", "HR", "T"), allsplines = TRUE,
-#'    dir = "D:/path/to/modeling/directory")
-#' }
-#'
-#' toydata_dvs <- deriveVars(toydata_sp1po, transformtype = c("L", "M", "D", "B"))
-#' str(toydata_dvs$EVDV)
-#' summary(toydata_dvs$transformations)
-#'
-#' \dontrun{
-#' # From vignette:
-#' grasslandDVs <- deriveVars(grasslandPO, transformtype = c("L", "M", "D", "HF", "HR", "T", "B"))
-#' summary(grasslandDVs$EVDV) # alternatively: summary(grasslandDVs[[1]])
-#' head(summary(grasslandDVs$transformations)) # alternatively: head(summary(grasslandDVs[[2]]))
-#' length(grasslandDVs$transformations)
-#' plot(grasslandPO$terslpdg, grasslandDVs$EVDV$terslpdg$terslpdg_D2, pch = 20)
-#' plot(grasslandPO$terslpdg, grasslandDVs$EVDV$terslpdg$terslpdg_HR4, pch = 20)
-#' }
 #'
 #' @export
 
@@ -98,11 +76,11 @@ deriveVars <- function(data,
                        transformtype = c("L", "M", "D", "HF", "HR", "T", "B"),
                        allsplines = FALSE, dir = NULL, write = TRUE) {
 
-  if (any(c("HF", "HR", "T") %in% transformtype) && allsplines == F) {
+  colnames(data) <- make.names(colnames(data), allow_ = FALSE)
+
+    if (any(c("HF", "HR", "T") %in% transformtype) && allsplines == F) {
     .binaryrvcheck(data[, 1])
   }
-
-  colnames(data) <- make.names(colnames(data), allow_ = FALSE)
 
   if (any(!complete.cases(data[,-1]))) {
     warning(paste(sum(!complete.cases(data[,-1])),
@@ -124,18 +102,19 @@ deriveVars <- function(data,
     dir.create(fdir, recursive = TRUE)
   }
 
-  transformations <- list()
-  EVDV <- list()
+  transformations <- list("RV"=data[, 1])
+  dvdata <- list("RV"=data[, 1])
+
   for (i in 2:ncol(data)) {
     df <- data[, c(1,i)]
     result <- .dvsfromev(df, transformtype, allsplines)
     transformations <- c(transformations, result$storage)
-    EVDV[[colnames(df)[2]]] <- result$evdv
+    dvdata[[names(data)[i]]] <- result$evdv
   }
-  EVDV <- EVDV[sapply(EVDV, function(x) {dim(x)[2] != 0})]
+  dvdata[-1] <- dvdata[-1][sapply(dvdata[-1], function(x) {dim(x)[2] != 0})]
 
   if (write == TRUE) {
     save(transformations, file = file.path(fdir, "transformations.Rdata"))
   }
-  return(list("EVDV" = EVDV, "transformations" = transformations))
+  return(list("dvdata" = dvdata, "transformations" = transformations))
 }

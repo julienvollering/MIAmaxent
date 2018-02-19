@@ -8,30 +8,28 @@
 #' \code{\link{selectEV}} other than the model selected under the provided alpha
 #' value.
 #'
-#' Explanatory variables should be uniquely named, and the names must not
-#' contain spaces, underscores, or colons. Underscores and colons are reserved
-#' to denote derived variables and interaction terms repectively.
+#' Explanatory variables should be uniquely named. Underscores ('_') and colons
+#' (':') are reserved to denote derived variables and interaction terms
+#' repectively, and \code{chooseModel} will replace these -- along with other
+#' special characters -- with periods ('.').
 #'
-#' @param data Data frame containing the response variable in the first column
-#'   and explanatory variables in subsequent columns. The response variable
-#'   should represent presence/background data, coded as: 1/NA. See
-#'   \code{\link{readData}}.
-#' @param dvdata List of data frames, with each data frame containing selected
-#'   derived variables for a given explanatory variable (e.g. the first item in
-#'   the list returned by \code{\link{selectDVforEV}}).
+#' @param dvdata A list containing first the response variable, followed by data
+#'   frames of \emph{selected} derived variables for a given explanatory
+#'   variable (e.g. the first item in the list returned by
+#'   \code{\link{selectDVforEV}}).
 #' @param formula A model formula (in the form y ~ x + ...) specifying the
-#'   independent terms to be included in the model. The first column in
-#'   \code{data} is still taken as the response variable, regardless of
-#'   \code{formula}.
+#'   independent terms to be included in the model. The item in \code{dvdata} is
+#'   still taken as the response variable, regardless of \code{formula}.
 #'
 #' @examples
 #'
 #' @export
 
 
-chooseModel <- function(data, dvdata, formula) {
+chooseModel <- function(dvdata, formula) {
 
-  .binaryrvcheck(data[, 1])
+  names(dvdata) <- make.names(names(dvdata), allow_ = FALSE)
+  .binaryrvcheck(dvdata[[1]])
 
   formula <- stats::as.formula(formula)
   terms <- labels(stats::terms(formula))
@@ -43,21 +41,20 @@ chooseModel <- function(data, dvdata, formula) {
            call. = FALSE) }
   }
 
-  names(data)[1] <- make.names(names(data)[1], allow_ = FALSE)
-  datalist <- c(list("RV"=data[, 1, drop=FALSE]),
-                dvdata[names(dvdata) %in% firstorderterms])
-  dfnames <-  unlist(lapply(datalist, names))
-  df <- data.frame(do.call(cbind, datalist))
+  dvdata[[1]] <- data.frame("RV"=dvdata[[1]])
+  dvdata[-1] <- dvdata[-1][names(dvdata[-1]) %in% firstorderterms]
+  dfnames <-  unlist(lapply(dvdata, names))
+  df <- data.frame(do.call(cbind, dvdata))
   names(df) <- dfnames
 
-  maineffectdvs <- lapply(datalist, names)
+  maineffectdvs <- lapply(dvdata[-1], names)
   interactiondvs <- lapply(strsplit(secondorderterms, ":", fixed=TRUE),
                            function(x, data) {
                              dvs1 <- names(data[[x[1]]])
                              dvs2 <- names(data[[x[2]]])
                              apply(expand.grid(dvs1, dvs2), 1, function(y) {
                                paste(y, collapse=":")})
-                           }, data=datalist)
+                           }, data=dvdata)
   names(interactiondvs) <- secondorderterms
   dvs <- c(maineffectdvs, interactiondvs)
 

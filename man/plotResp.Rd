@@ -4,28 +4,21 @@
 \alias{plotResp}
 \title{Plot single-effect model response.}
 \usage{
-plotResp(data, transformations, model, EV, logscale = FALSE, ...)
+plotResp(model, transformations, EV, logscale = FALSE, ...)
 }
 \arguments{
-\item{data}{Data frame containing the observations used to train the
-\code{model}, with the response variable in the first column and
-explanatory variables in subsequent columns. The response variable should
-represent presence/background data, coded as: 1/NA. See
-\code{\link{readData}}.}
+\item{model}{The model for which the response is to be plotted, represented
+by an object of class 'glm'. This may be the object returned by
+\code{\link{chooseModel}}, or the 'selectedmodel' returned by
+\code{\link{selectEV}}.}
 
 \item{transformations}{Transformation functions used to create the derived
 variables in the model. I.e. the 'transformations' returned by
 \code{\link{deriveVars}}. Equivalently, the full file pathway of the
 'transformations.Rdata' file saved as a result of \code{\link{deriveVars}}.}
 
-\item{model}{The model for which the response is to be plotted, represented
-by an object of class 'glm'. This may be the object returned by
-\code{\link{chooseModel}}, or the 'selectedmodel' returned by
-\code{\link{selectEV}}.}
-
-\item{EV}{Name of the explanatory variable or its column index in \code{data}
-for which the response curve is to be plotted. Interaction terms not
-allowed.}
+\item{EV}{Name of the explanatory variable for which the response curve is to
+be plotted. Interaction terms not allowed.}
 
 \item{logscale}{Logical. Plot the common logarithm of PRO rather than PRO
 itself.}

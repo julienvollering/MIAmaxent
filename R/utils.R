@@ -163,20 +163,21 @@ if(getRversion() >= "2.15.1") {
 }
 
 
-#' Loads a transformation object
+#' Loads a transformations object
 #'
 #' From .Rdata file or from existing object
 #'
-#' @param transformation Vector of data. Must have scale [0,1]!
+#' @param transformations transformations object produced by deriveVars
 
-.load.transf <- function(transformation) {
-  if (class(transformation) == "character") {
-    alltransf <- get(load(transformation))
+.load.transf <- function(transformations) {
+  if (class(transformations) == "character") {
+    alltransf <- get(load(transformations))
   } else {
-    alltransf <- transformation
+    alltransf <- transformations
   }
-  if (!all(sapply(alltransf, class) == "function")) {
-    stop("transformation argument should contain functions only", call. = FALSE)
+  if (!all(sapply(alltransf[-1], class) == "function")) {
+    stop("'transformations' should be a transformations object returned by 'deriveVars'",
+         call. = FALSE)
   }
   return(alltransf)
 }
