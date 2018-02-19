@@ -17,7 +17,7 @@ variables in the model. I.e. the 'transformations' returned by
 \code{\link{deriveVars}}. Equivalently, the full file pathway of the
 'transformations.Rdata' file saved as a result of \code{\link{deriveVars}}.}
 
-\item{EV}{Name of the explanatory variable for which the response curve is to
+\item{EV}{Character. Name of the explanatory variable for which the response curve is to
 be plotted. Interaction terms not allowed.}
 
 \item{logscale}{Logical. Plot the common logarithm of PRO rather than PRO

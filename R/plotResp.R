@@ -15,7 +15,7 @@
 #'   variables in the model. I.e. the 'transformations' returned by
 #'   \code{\link{deriveVars}}. Equivalently, the full file pathway of the
 #'   'transformations.Rdata' file saved as a result of \code{\link{deriveVars}}.
-#' @param EV Name of the explanatory variable for which the response curve is to
+#' @param EV Character. Name of the explanatory variable for which the response curve is to
 #'   be plotted. Interaction terms not allowed.
 #' @param logscale Logical. Plot the common logarithm of PRO rather than PRO
 #'   itself.
@@ -68,7 +68,7 @@ plotResp <- function(model, transformations, EV, logscale = FALSE, ...) {
 
   raw <- exp((newdata %*% smodel$betas) + smodel$alpha)
 
-  resp <- data.frame(EV = seq, PRO = raw*nrow(data))
+  resp <- data.frame(EV = seq, PRO = raw*length(transformations[[1]]))
   if (logscale == TRUE) {resp$PRO <- log10(resp$PRO)}
 
   if (class(resp[, 1]) %in% c("numeric", "integer")) {

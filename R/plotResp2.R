@@ -7,22 +7,16 @@
 #' variables are held constant at their mean values (cf. single-effect response
 #' curves; \code{\link{plotResp}}).
 #'
-#' @param data Data frame containing the observations used to train the
-#'   \code{model}, with the response variable in the first column and
-#'   explanatory variables in subsequent columns. The response variable should
-#'   represent presence/background data, coded as: 1/NA. See
-#'   \code{\link{readData}}.
-#' @param transformations Transformation functions used to create the derived
-#'   variables in the model. I.e. the 'transformations' returned by
-#'   \code{\link{deriveVars}}. Equivalently, the full file pathway of the
-#'   'transformations.Rdata' file saved as a result of \code{\link{deriveVars}}.
 #' @param model The model for which the response is to be plotted, represented
 #'   by an object of class 'glm'. This may be the object returned by
 #'   \code{\link{chooseModel}}, or the 'selectedmodel' returned by
 #'   \code{\link{selectEV}}.
-#' @param EV Name of the explanatory variable or its column index in \code{data}
-#'   for which the response curve is to be plotted. Interaction terms not
-#'   allowed.
+#' @param transformations Transformation functions used to create the derived
+#'   variables in the model. I.e. the 'transformations' returned by
+#'   \code{\link{deriveVars}}. Equivalently, the full file pathway of the
+#'   'transformations.Rdata' file saved as a result of \code{\link{deriveVars}}.
+#' @param EV Character. Name of the explanatory variable for which the response curve is to
+#'   be plotted. Interaction terms not allowed.
 #' @param logscale Logical. Plot the common logarithm of PRO rather than PRO
 #'   itself.
 #' @param ... Arguments to be passed to \code{plot} or \code{barplot} to control
@@ -35,41 +29,38 @@
 #' @export
 
 
-plotResp2 <- function(data, transformations, model, EV, logscale = FALSE, ...) {
+plotResp2 <- function(model, transformations, EV, logscale = FALSE, ...) {
 
-  .binaryrvcheck(data[, 1])
-
-  if (EV==1) {
-    stop("'EV' cannot be the first column of 'data', which must be the response variable")
+  evbetas <- model$betas[grep(paste0(EV, "_"), names(model$betas))]
+  evbetasni <- evbetas[!grepl(":", names(evbetas), fixed=TRUE)]
+  if (length(evbetasni)==0) {
+    stop("The 'EV' specified cannot be found in the model")
   }
 
-  evname <- names(data[EV])
-  if (length(grep(paste0(evname, "_"), names(model$betas)))==0) {
-    stop("The 'EV' specified is not in the model")
-  }
-
+  betasni <- model$betas[!grepl(":", names(model$betas), fixed=TRUE)]
   alltransf <- .load.transf(transformations)
-  modtransfs <- alltransf[match(paste0(names(model$betas), "_transf"),
+  modtransfs <- alltransf[match(paste0(names(betasni), "_transf"),
                                names(alltransf), nomatch = 0)]
-  # if (!(length(modtransfs)==length(model$betas))) {
-  #   stop("The transformation function for at least one DV in the model is missing")
-  # }
-
-  if (class(data[, evname]) %in% c("numeric", "integer")) {
-    seq <- seq(min(data[, evname]), max(data[, evname]), length.out = 100)
-  }
-  if (class(data[, evname]) %in% c("factor", "character")) {
-    seq <- levels(as.factor(data[, evname]))
+  if (!(length(modtransfs)==length(betasni))) {
+    stop("The transformation function for at least one DV in the model is missing")
   }
 
-  marginal <- grepl(paste0(evname, "_"), names(model$betas))
-  betasEV <- gsub("_.*", "", names(model$betas))
+  anevtransf <- modtransfs[[paste0(names(evbetasni)[1], "_transf")]]
+  evnull <- environment(anevtransf)$xnull
+  if (class(evnull) %in% c("numeric", "integer")) {
+    seq <- seq(min(evnull), max(evnull), length.out = 100)
+  }
+  if (class(evnull) %in% c("factor", "character")) {
+    seq <- levels(as.factor(evnull))
+  }
 
-  newdata <- mapply(function(f, marginal, seq, data, betasEV) {
+  marginal <- grepl(paste0(EV, "_"), names(betasni))
+
+  newdata <- mapply(function(f, marginal, seq) {
     if (marginal) {
       dv <- f(seq)
     } else {
-      x <- data[, betasEV]
+      x <- environment(f)$xnull
       if (class(x) %in% c("numeric", "integer")) {
         dvmean <- f(mean(x, na.rm = TRUE))
         dv <- rep(dvmean, length(seq))
@@ -82,22 +73,26 @@ plotResp2 <- function(data, transformations, model, EV, logscale = FALSE, ...) {
       }
     }
    return(dv)
-  }, modtransfs, marginal, betasEV, MoreArgs = list("seq"=seq, "data"=data))
+  }, modtransfs, marginal, MoreArgs = list("seq"=seq))
+  colnames(newdata) <- names(betasni)
+  newdata <- as.data.frame(newdata)
+  mmformula <- stats::update.formula(model$formula.narm, NULL ~ . - 1)
+  newdata <- model.matrix(mmformula, newdata)
 
   raw <- exp((newdata %*% model$betas) + model$alpha)
-  resp <- data.frame(EV = seq, PRO = raw*nrow(data))
+  resp <- data.frame(EV = seq, PRO = raw*length(transformations[[1]]))
   if (logscale == TRUE) {resp$PRO <- log10(resp$PRO)}
 
   if (class(resp[, 1]) %in% c("numeric", "integer")) {
     graphics::plot(resp[, 2] ~ resp[, 1], type="l", col="red", ...,
-      main = paste0("Marginal-effect response plot: ", evname), xlab = evname,
+      main = paste0("Marginal-effect response plot: ", EV), xlab = EV,
       ylab = ifelse(logscale == TRUE, "log Probability Ratio Output (logPRO)",
         "Probability Ratio Output (PRO)"))
   }
 
   if (class(resp[, 1]) %in% c("factor", "character")) {
     graphics::barplot(resp[, 2], names.arg = resp[, 1], col="red", ...,
-      main = paste0("Marginal-effect response plot: ", evname), xlab = evname,
+      main = paste0("Marginal-effect response plot: ", EV), xlab = EV,
       ylab = ifelse(logscale == TRUE, "log Probability Ratio Output (logPRO)",
         "Probability Ratio Output (PRO)"))
   }
