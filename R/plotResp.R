@@ -52,9 +52,9 @@ plotResp <- function(data, transformations, model, EV, logscale = FALSE, ...) {
   alltransf <- .load.transf(transformations)
   evtransfs <- alltransf[match(paste0(names(betas), "_transf"),
                                names(alltransf), nomatch = 0)]
-  if (!(length(evtransfs)==length(betas))) {
-    stop("The transformation function for at least one DV in the model is missing")
-  }
+  # if (!(length(evtransfs)==length(betas))) {
+  #   stop("The transformation function for at least one DV in the model is missing")
+  # }
 
   dvdata <- lapply(evtransfs, function(f, x) { f(x) }, x=data[,evname])
   names(dvdata) <- names(betas)

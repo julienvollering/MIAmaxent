@@ -51,9 +51,9 @@ plotResp2 <- function(data, transformations, model, EV, logscale = FALSE, ...) {
   alltransf <- .load.transf(transformations)
   modtransfs <- alltransf[match(paste0(names(model$betas), "_transf"),
                                names(alltransf), nomatch = 0)]
-  if (!(length(modtransfs)==length(model$betas))) {
-    stop("The transformation function for at least one DV in the model is missing")
-  }
+  # if (!(length(modtransfs)==length(model$betas))) {
+  #   stop("The transformation function for at least one DV in the model is missing")
+  # }
 
   if (class(data[, evname]) %in% c("numeric", "integer")) {
     seq <- seq(min(data[, evname]), max(data[, evname]), length.out = 100)

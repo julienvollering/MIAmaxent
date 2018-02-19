@@ -10,11 +10,10 @@
 #'   and corresponding explanatory variables in subsequent columns. The test
 #'   data should be coded as: 1/0/NA, representing presence, absence, and
 #'   unknown. See \code{\link{readData}}.
-#' @param transformation Full pathway of the 'transformation.Rdata' file
-#'   containing the transformations used to build the model. This file is saved
-#'   as a result of the \code{\link{deriveVars}} function. Equivalently, the
-#'   second item in the list returned by \code{\link{deriveVars}} can be used
-#'   directly.
+#' @param transformations Transformation functions used to create the derived
+#'   variables in the model. I.e. the 'transformations' returned by
+#'   \code{\link{deriveVars}}. Equivalently, the full file pathway of the
+#'   'transformations.Rdata' file saved as a result of \code{\link{deriveVars}}.
 #' @param model Full pathway of the '.lambdas' file of the model in question.
 #'   This file is saved as a result of \code{\link{selectEV}}.
 #'
@@ -46,11 +45,11 @@
 #' @export
 
 
-testAUC <- function(data, transformation, model) {
+testAUC <- function(data, transformations, model) {
 
   data <- stats::na.omit(data)
   test <- data[, 1]
-  PRO <- projectModel(data, transformation, model)[[1]][, 1]
+  PRO <- projectModel(data, transformations, model)[[1]][, 1]
 
   cont <- as.matrix(table(PRO, test))
   cont <- cont[order(as.numeric(rownames(cont)), decreasing = T), ]
