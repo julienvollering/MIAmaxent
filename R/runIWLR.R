@@ -28,12 +28,14 @@
 
   if (any(is.na(model$coefficients))) {
     nacoef <- names(model$coefficients)[is.na(model$coefficients)]
+    model$formula.narm <- stats::update(model$formula,
+                             paste("~ . -", paste(nacoef, collapse = " - ")))
     model$betas <- model$coefficients[-1][!is.na(model$coefficients[-1])]
-    formula <- stats::update(formula, paste("~ . -", nacoef))
   } else {
+    model$formula.narm <- model$formula
     model$betas <- model$coefficients[-1]
   }
-  bkg <- model.matrix(formula, padddata[padddata[, RV]==0, ])[,-1, drop=FALSE]
+  bkg <- model.matrix(model$formula.narm, padddata[padddata[, RV]==0, ])[, -1, drop=FALSE]
   model$alpha <- 0
   link <- (bkg %*% model$betas) + model$alpha
   rr <- exp(link)
