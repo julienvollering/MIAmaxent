@@ -53,7 +53,7 @@ Be aware of implications for the interpretation of the AUC value.", call. = FALS
 
   data <- stats::na.omit(data)
   test <- data[, 1]
-  PRO <- projectModel(data, transformations, model)[[1]][, 1]
+  PRO <- projectModel(model, transformations, data)[[1]][, 1]
 
   cont <- as.matrix(table(PRO, test))
   cont <- cont[order(as.numeric(rownames(cont)), decreasing = T), ]

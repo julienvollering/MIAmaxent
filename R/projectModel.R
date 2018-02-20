@@ -68,8 +68,9 @@ projectModel <- function(model, transformations, data, clamping = FALSE,
   evnames <- unique(sub("_.*", "", dvnamesni))
 
   map <- FALSE
-  if (class(data) == "RasterStack") {
+  if (class(data)[1] == "RasterStack") {
     map <- TRUE
+    names(data) <- make.names(names(data), allow_ = FALSE)
     evstack <- data[[evnames]]
     data <- raster::as.data.frame(evstack, na.rm = TRUE)
     cells <- as.numeric(row.names(data))
