@@ -59,33 +59,6 @@ if(getRversion() >= "2.15.1") {
 
 
 
-#' calculates exponentially weighted moving average
-#'
-#' @param x numeric. Vector across which the moving average is to be applied.
-#' @param n integer. Width of the moving average window. Should be odd,
-#'   otherwise the window will be uncentered.
-#'
-#' @return vector of moving average values
-
-.ewma <- function(x, n) {
-  if (missing(n)) {
-    stop("Specify the width of the moving average window (n)", call. = FALSE)
-  }
-  if (n < 3) {
-    stop("Width of window should be at least 3", call. = FALSE)
-  }
-
-  if (n %% 2 != 0) {
-    expwindow <- stats::dexp(c(((n-1)/2):0,1:((n-1)/2)))
-  } else {
-    expwindow <- stats::dexp(c((n/2):0,1:((n-2)/2)))
-  }
-  weights <- expwindow/sum(expwindow)
-  as.numeric(stats::filter(x, weights, sides=2))
-}
-
-
-
 #' calculates optimum EV value based on FOP
 #'
 #' The optimum that is returned is based on the smoothed data, unless a maximum
