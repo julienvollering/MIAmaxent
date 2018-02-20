@@ -4,13 +4,13 @@
 \alias{testAUC}
 \title{Calculate model AUC with test data.}
 \usage{
-testAUC(data, transformations, model)
+testAUC(data, transformations, model, ...)
 }
 \arguments{
 \item{data}{Data frame containing test occurrence data in the first column
-and corresponding explanatory variables in subsequent columns. The test
-data should be coded as: 1/0/NA, representing presence, absence, and
-unknown. See \code{\link{readData}}.}
+and corresponding explanatory variables in the model in subsequent columns.
+The test data should be coded as: 1/0/NA, representing presence, absence,
+and unknown. See \code{\link{readData}}.}
 
 \item{transformations}{Transformation functions used to create the derived
 variables in the model. I.e. the 'transformations' returned by
@@ -19,6 +19,12 @@ variables in the model. I.e. the 'transformations' returned by
 
 \item{model}{Full pathway of the '.lambdas' file of the model in question.
 This file is saved as a result of \code{\link{selectEV}}.}
+
+\item{...}{Arguments to be passed to \code{plot} to control the appearance of
+the ROC plot. For example: \itemize{ \item \code{lwd} for line width \item
+\code{main} for plot title \item \code{cex} for plot text and symbol size }
+Note that some graphical parameters may return errors or warnings if they
+cannot be changed or correspond to multiple elements in the plot.}
 }
 \value{
 In addition to returning the testAUC value, graphical output showing
@@ -33,24 +39,5 @@ used with occurence data that is independent from the data used to train the
 model, to obtain an unbiased measure of model performance.
 }
 \examples{
-\dontrun{
-AUC <- testAUC(testdat,
-   transformation = "D:/path/to/modeling/directory/deriveVars/transformations.Rdata",
-   model = "D:/path/to/modeling/directory/selectEV/round/model/1.lambdas")
-}
-
-sp1pa <- toydata_sp1po
-sp1pa$RV[is.na(sp1pa$RV)] <- 0
-sp1pa[, 1] <- sample(sp1pa$RV, 40)
-auc <- testAUC(sp1pa, toydata_dvs$transformations,
-   system.file("extdata/sommerfeltia", "1.lambdas", package = "MIAmaxent"))
-auc
-
-\dontrun{
-From vignette:
-grasslandAUC <- testAUC(grasslandPA, transformation = grasslandDVs[[2]],
-   model = system.file("extdata", "1.lambdas", package = "MIAmaxent"))
-grasslandAUC
-}
 
 }

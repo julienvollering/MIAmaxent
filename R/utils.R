@@ -223,6 +223,36 @@ if(getRversion() >= "2.15.1") {
 
 
 
+#' Plotting helper function for testAUC
+#'
+#' @param fpr false positive rate vector
+#' @param tpr true positive rate vector
+#' @param AUC AUC value
+#' @param x PRO = 1 x-coordinate
+#' @param y PRO = 1 y-coordinate
+
+.plotROC <- function(fpr, tpr, AUC, x, y, ...) {
+  args1 <- list(xlab="1 - specificity (false positive rate)",
+                ylab="Sensitivity (true positive rate)", col="red",
+                main=paste("AUC = ", signif(AUC, 3)))
+  inargs <- list(...)
+  args1[names(inargs)] <- inargs
+  do.call(graphics::plot, c(list(x=fpr, y=tpr, xlim=c(0,1), ylim=c(0,1),
+                                 type="l"), args1))
+
+  graphics::abline(0, 1, lty=3)
+
+  args2 <- list(cex=0.8, col="#999999", pch=19)
+  inargs <- list(...)
+  args2[names(inargs)] <- inargs
+  do.call(graphics::points, c(list(x=x, y=y), args2))
+
+  args3 <- list(cex=0.8, col="#999999")
+  inargs <- list(...)
+  args3[names(inargs)] <- inargs
+  do.call(graphics::text, c(list(x=x, y=y, labels="PRO = 1", pos=4), args3))
+}
+
 #' Reminders when using devtools::release
 #'
 #' @keywords internal
