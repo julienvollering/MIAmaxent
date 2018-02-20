@@ -6,6 +6,9 @@
 #' used with occurence data that is independent from the data used to train the
 #' model, to obtain an unbiased measure of model performance.
 #'
+#' If plotted, the point along the ROC curve where the discrimination threshold
+#' is PRO = 1, is shown for reference.
+#'
 #' @param data Data frame containing test occurrence data in the first column
 #'   and corresponding explanatory variables in the model in subsequent columns.
 #'   The test data should be coded as: 1/0/NA, representing presence, absence,
@@ -16,22 +19,19 @@
 #'   'transformations.Rdata' file saved as a result of \code{\link{deriveVars}}.
 #' @param model Full pathway of the '.lambdas' file of the model in question.
 #'   This file is saved as a result of \code{\link{selectEV}}.
+#' @param plot Logical. Plot the ROC curve?
 #' @param ... Arguments to be passed to \code{plot} to control the appearance of
 #'   the ROC plot. For example: \itemize{ \item \code{lwd} for line width \item
 #'   \code{main} for plot title \item \code{cex} for plot text and symbol size }
 #'   Note that some graphical parameters may return errors or warnings if they
 #'   cannot be changed or correspond to multiple elements in the plot.
 #'
-#' @return In addition to returning the testAUC value, graphical output showing
-#'   the corresponding ROC plot is produced. The point along the ROC curve where
-#'   the discrimination threshold is PRO = 1 is shown for reference.
-#'
 #' @examples
 #'
 #' @export
 
 
-testAUC <- function(data, transformations, model, ...) {
+testAUC <- function(data, transformations, model, plot = TRUE, ...) {
 
   dvnamesni <- names(model$betas)[grep(":", names(model$betas), invert = TRUE)]
   evnames <- unique(sub("_.*", "", dvnamesni))
@@ -71,7 +71,9 @@ Be aware of implications for the interpretation of the AUC value.", call. = FALS
   x <- PRO1fp/sum(cont[, "0"])
   y <- PRO1tp/sum(cont[, "1"])
 
-  .plotROC(fpr, tpr, AUC, x, y, ...)
+  if (plot == TRUE) {
+    .plotROC(fpr, tpr, AUC, x, y, ...)
+  }
 
   return(AUC)
 }

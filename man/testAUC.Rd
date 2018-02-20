@@ -4,7 +4,7 @@
 \alias{testAUC}
 \title{Calculate model AUC with test data.}
 \usage{
-testAUC(data, transformations, model, ...)
+testAUC(data, transformations, model, plot = TRUE, ...)
 }
 \arguments{
 \item{data}{Data frame containing test occurrence data in the first column
@@ -20,16 +20,13 @@ variables in the model. I.e. the 'transformations' returned by
 \item{model}{Full pathway of the '.lambdas' file of the model in question.
 This file is saved as a result of \code{\link{selectEV}}.}
 
+\item{plot}{Logical. Plot the ROC curve?}
+
 \item{...}{Arguments to be passed to \code{plot} to control the appearance of
 the ROC plot. For example: \itemize{ \item \code{lwd} for line width \item
 \code{main} for plot title \item \code{cex} for plot text and symbol size }
 Note that some graphical parameters may return errors or warnings if they
 cannot be changed or correspond to multiple elements in the plot.}
-}
-\value{
-In addition to returning the testAUC value, graphical output showing
-  the corresponding ROC plot is produced. The point along the ROC curve where
-  the discrimination threshold is PRO = 1 is shown for reference.
 }
 \description{
 For a given model, \code{testAUC} calculates the Area Under the Curve (AUC)
@@ -37,6 +34,10 @@ of the Receiver Operating Characteristic (ROC) as a threshold-independent
 measure of binary classification performance. This function is intended to be
 used with occurence data that is independent from the data used to train the
 model, to obtain an unbiased measure of model performance.
+}
+\details{
+If plotted, the point along the ROC curve where the discrimination threshold
+is PRO = 1, is shown for reference.
 }
 \examples{
 

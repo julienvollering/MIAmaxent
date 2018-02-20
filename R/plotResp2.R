@@ -83,18 +83,19 @@ plotResp2 <- function(model, transformations, EV, logscale = FALSE, ...) {
   resp <- data.frame(EV = seq, PRO = raw*length(transformations[[1]]))
   if (logscale == TRUE) {resp$PRO <- log10(resp$PRO)}
 
+  args1 <- list(main = paste0("Single-effect response plot: ", EV), xlab = EV,
+                ylab = ifelse(logscale == TRUE,
+                              "log Probability Ratio Output (logPRO)",
+                              "Probability Ratio Output (PRO)"), col="red")
+  inargs <- list(...)
+  args1[names(inargs)] <- inargs
+
   if (class(resp[, 1]) %in% c("numeric", "integer")) {
-    graphics::plot(resp[, 2] ~ resp[, 1], type="l", col="red", ...,
-      main = paste0("Marginal-effect response plot: ", EV), xlab = EV,
-      ylab = ifelse(logscale == TRUE, "log Probability Ratio Output (logPRO)",
-        "Probability Ratio Output (PRO)"))
+    do.call(graphics::plot, c(list(x=resp[, 1], y=resp[, 2], type="l"), args1))
   }
 
   if (class(resp[, 1]) %in% c("factor", "character")) {
-    graphics::barplot(resp[, 2], names.arg = resp[, 1], col="red", ...,
-      main = paste0("Marginal-effect response plot: ", EV), xlab = EV,
-      ylab = ifelse(logscale == TRUE, "log Probability Ratio Output (logPRO)",
-        "Probability Ratio Output (PRO)"))
+    do.call(graphics::barplot, c(list(height=resp[, 2], names.arg=resp[, 1]), args1))
   }
 
   if (logscale == TRUE) { graphics::abline(h = 0, lty = 3)
