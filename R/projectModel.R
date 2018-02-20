@@ -21,17 +21,17 @@
 #' scale which is dependent on the size of either the training data extent
 #' (\code{rescale = FALSE}) or projection data extent (\code{rescale = TRUE}).
 #'
-#' @param data Data frame of all the explanatory variables (EVs) included in the
-#'   model (see \code{\link{readData}}). Alternatively, an object of class
-#'   'RasterStack' containing rasters for all EVs included in the model. Column
-#'   or raster names matching EV names.
+#' @param model The model to be projected, represented by an object of class
+#'   'glm'. This may be the object returned by \code{\link{chooseModel}}, or the
+#'   'selectedmodel' returned by \code{\link{selectEV}}.
 #' @param transformations Transformation functions used to create the derived
 #'   variables in the model. I.e. the 'transformations' returned by
 #'   \code{\link{deriveVars}}. Equivalently, the full file pathway of the
 #'   'transformations.Rdata' file saved as a result of \code{\link{deriveVars}}.
-#' @param model The model to be projected, represented by an object of class
-#'   'glm'. This may be the object returned by \code{\link{chooseModel}}, or the
-#'   'selectedmodel' returned by \code{\link{selectEV}}.
+#' @param data Data frame of all the explanatory variables (EVs) included in the
+#'   model (see \code{\link{readData}}). Alternatively, an object of class
+#'   'RasterStack' containing rasters for all EVs included in the model. Column
+#'   or raster names must match EV names.
 #' @param clamping Logical. Do clamping \emph{sensu} Phillips et al. (2006).
 #'   Default is \code{FALSE}.
 #' @param rescale Logical. Linearly rescale model output (PRO or raw) with
@@ -61,7 +61,7 @@
 #' @export
 
 
-projectModel <- function(data, transformations, model, clamping = FALSE,
+projectModel <- function(model, transformations, data, clamping = FALSE,
                          rescale = FALSE, raw = FALSE) {
 
   dvnamesni <- names(model$betas)[grep(":", names(model$betas), invert = TRUE)]

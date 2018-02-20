@@ -55,34 +55,6 @@
 #'   RV values are 1/NA, and when \code{PA = TRUE}, RV values are 1/0.
 #'
 #' @examples
-#' \dontrun{
-#' dat <- readData(occurrence = "D:/path/to/occurrence/data.csv",
-#'    contEV = "D:/path/to/continuousEV/directory",
-#'    catEV = "D:/path/to/categoricalEV/directory", maxbkg = 100000, XY = TRUE)
-#' }
-#'
-#' toydata_sp1po <- readData(system.file("extdata/sommerfeltia", "Sp1.csv", package = "MIAmaxent"),
-#'    contEV = system.file("extdata/sommerfeltia", "EV_continuous", package = "MIAmaxent"))
-#' toydata_sp1po
-#'
-#' \dontrun{
-#' # From vignette:
-#' grasslandPO <- readData(
-#'    occurrence = system.file("extdata", "occurrence_PO.csv", package = "MIAmaxent"),
-#'    contEV = system.file("extdata", "EV_continuous", package = "MIAmaxent"),
-#'    catEV = system.file("extdata", "EV_categorical", package = "MIAmaxent"),
-#'    maxbkg = 20000)
-#' head(grasslandPO)
-#'
-#' # From vignette:
-#' grasslandPA <- readData(
-#'    occurrence = system.file("extdata", "occurrence_PA.csv", package = "MIAmaxent"),
-#'    contEV = system.file("extdata", "EV_continuous", package = "MIAmaxent"),
-#'    catEV = system.file("extdata", "EV_categorical", package = "MIAmaxent"),
-#'    PA = TRUE, XY = TRUE)
-#' head(grasslandPA)
-#' tail(grasslandPA)
-#' }
 #'
 #' @export
 #'

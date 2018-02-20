@@ -9,16 +9,17 @@
 #' If plotted, the point along the ROC curve where the discrimination threshold
 #' is PRO = 1, is shown for reference.
 #'
-#' @param data Data frame containing test occurrence data in the first column
-#'   and corresponding explanatory variables in the model in subsequent columns.
-#'   The test data should be coded as: 1/0/NA, representing presence, absence,
-#'   and unknown. See \code{\link{readData}}.
+#' @param model The model to be projected, represented by an object of class
+#'   'glm'. This may be the object returned by \code{\link{chooseModel}}, or the
+#'   'selectedmodel' returned by \code{\link{selectEV}}.
 #' @param transformations Transformation functions used to create the derived
 #'   variables in the model. I.e. the 'transformations' returned by
 #'   \code{\link{deriveVars}}. Equivalently, the full file pathway of the
 #'   'transformations.Rdata' file saved as a result of \code{\link{deriveVars}}.
-#' @param model Full pathway of the '.lambdas' file of the model in question.
-#'   This file is saved as a result of \code{\link{selectEV}}.
+#' @param data Data frame containing test occurrence data in the first column
+#'   and corresponding explanatory variables in the model in subsequent columns.
+#'   The test data should be coded as: 1/0/NA, representing presence, absence,
+#'   and unknown. See \code{\link{readData}}.
 #' @param plot Logical. Plot the ROC curve?
 #' @param ... Arguments to be passed to \code{plot} to control the appearance of
 #'   the ROC plot. For example: \itemize{ \item \code{lwd} for line width \item
@@ -31,7 +32,7 @@
 #' @export
 
 
-testAUC <- function(data, transformations, model, plot = TRUE, ...) {
+testAUC <- function(model, transformations, data, plot = TRUE, ...) {
 
   dvnamesni <- names(model$betas)[grep(":", names(model$betas), invert = TRUE)]
   evnames <- unique(sub("_.*", "", dvnamesni))

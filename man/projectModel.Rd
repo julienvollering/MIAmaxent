@@ -4,23 +4,23 @@
 \alias{projectModel}
 \title{Project model to data.}
 \usage{
-projectModel(data, transformations, model, clamping = FALSE,
+projectModel(model, transformations, data, clamping = FALSE,
   rescale = FALSE, raw = FALSE)
 }
 \arguments{
-\item{data}{Data frame of all the explanatory variables (EVs) included in the
-model (see \code{\link{readData}}). Alternatively, an object of class
-'RasterStack' containing rasters for all EVs included in the model. Column
-or raster names matching EV names.}
+\item{model}{The model to be projected, represented by an object of class
+'glm'. This may be the object returned by \code{\link{chooseModel}}, or the
+'selectedmodel' returned by \code{\link{selectEV}}.}
 
 \item{transformations}{Transformation functions used to create the derived
 variables in the model. I.e. the 'transformations' returned by
 \code{\link{deriveVars}}. Equivalently, the full file pathway of the
 'transformations.Rdata' file saved as a result of \code{\link{deriveVars}}.}
 
-\item{model}{The model to be projected, represented by an object of class
-'glm'. This may be the object returned by \code{\link{chooseModel}}, or the
-'selectedmodel' returned by \code{\link{selectEV}}.}
+\item{data}{Data frame of all the explanatory variables (EVs) included in the
+model (see \code{\link{readData}}). Alternatively, an object of class
+'RasterStack' containing rasters for all EVs included in the model. Column
+or raster names must match EV names.}
 
 \item{clamping}{Logical. Do clamping \emph{sensu} Phillips et al. (2006).
 Default is \code{FALSE}.}

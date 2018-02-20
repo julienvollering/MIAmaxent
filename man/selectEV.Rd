@@ -4,8 +4,8 @@
 \alias{selectEV}
 \title{Select parsimonious set of explanatory variables.}
 \usage{
-selectEV(dvdata, alpha = 0.01, test = "Chisq", interaction = FALSE,
-  formula = NULL, dir = NULL, write = TRUE)
+selectEV(dvdata, alpha = 0.01, interaction = FALSE, formula = NULL,
+  test = "Chisq", dir = NULL, write = TRUE)
 }
 \arguments{
 \item{dvdata}{A list containing first the response variable, followed by data
@@ -15,11 +15,6 @@ variable (e.g. the first item in the list returned by
 
 \item{alpha}{Alpha-level used in F-test comparison of models. Default is
 0.01.}
-
-\item{test}{Character string matching either "Chisq" or "F" to determine
-which inference test is used in nested model comparison. The Chi-squared
-test is implemented as in stats::anova, while the F-test is implemented as
-described in Halvorsen (2013, 2015). Default is "Chisq".}
 
 \item{interaction}{Logical. Allows interaction terms between pairs of EVs.
 Default is \code{FALSE}.}
@@ -32,6 +27,11 @@ variables in \code{dvdata} are candidates for selection. The first list
 item in \code{dvdata} is still taken as the response variable, regardless
 of \code{formula}. Default is \code{NULL}, meaning that forward selection
 starts with zero selected variables.}
+
+\item{test}{Character string matching either "Chisq" or "F" to determine
+which inference test is used in nested model comparison. The Chi-squared
+test is implemented as in stats::anova, while the F-test is implemented as
+described in Halvorsen (2013, 2015). Default is "Chisq".}
 
 \item{dir}{Directory to which files will be written during subset selection
 of explanatory variables. Defaults to the working directory.}

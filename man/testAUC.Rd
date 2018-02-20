@@ -4,21 +4,22 @@
 \alias{testAUC}
 \title{Calculate model AUC with test data.}
 \usage{
-testAUC(data, transformations, model, plot = TRUE, ...)
+testAUC(model, transformations, data, plot = TRUE, ...)
 }
 \arguments{
-\item{data}{Data frame containing test occurrence data in the first column
-and corresponding explanatory variables in the model in subsequent columns.
-The test data should be coded as: 1/0/NA, representing presence, absence,
-and unknown. See \code{\link{readData}}.}
+\item{model}{The model to be projected, represented by an object of class
+'glm'. This may be the object returned by \code{\link{chooseModel}}, or the
+'selectedmodel' returned by \code{\link{selectEV}}.}
 
 \item{transformations}{Transformation functions used to create the derived
 variables in the model. I.e. the 'transformations' returned by
 \code{\link{deriveVars}}. Equivalently, the full file pathway of the
 'transformations.Rdata' file saved as a result of \code{\link{deriveVars}}.}
 
-\item{model}{Full pathway of the '.lambdas' file of the model in question.
-This file is saved as a result of \code{\link{selectEV}}.}
+\item{data}{Data frame containing test occurrence data in the first column
+and corresponding explanatory variables in the model in subsequent columns.
+The test data should be coded as: 1/0/NA, representing presence, absence,
+and unknown. See \code{\link{readData}}.}
 
 \item{plot}{Logical. Plot the ROC curve?}
 
