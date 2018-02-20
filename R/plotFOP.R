@@ -59,6 +59,9 @@
 
 plotFOP <- function(data, EV, span = 0.5, intervals = NULL, ranging = FALSE) {
 
+  if (EV==1) {
+    stop("'EV' cannot be the first column of 'data', which must be the response variable")
+  }
   df <- data.frame(RV = data[, 1], EV = data[, EV])
   evname <- names(data[, EV, drop = FALSE])
 
@@ -85,7 +88,8 @@ plotFOP <- function(data, EV, span = 0.5, intervals = NULL, ranging = FALSE) {
     on.exit(par(op))
     dens <- density(df[, 2])
     graphics::plot(range(dens$x), range(dens$y), type="n", axes=FALSE, ann=FALSE)
-    graphics::polygon(dens, border=NA, col="grey90")
+    graphics::polygon(x=c(min(dens$x), dens$x, max(dens$x)), y=c(0, dens$y, 0),
+                      border=NA, col="grey90")
     axis(side=4, col="grey60", col.axis="grey60")
     mtext("Kernel estimated data density", side=4, line=3, col="grey60")
     par(new=TRUE)

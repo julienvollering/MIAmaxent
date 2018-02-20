@@ -42,7 +42,7 @@ chooseModel <- function(dvdata, formula) {
   }
 
   dvdata[[1]] <- data.frame("RV"=dvdata[[1]])
-  dvdata[-1] <- dvdata[-1][names(dvdata[-1]) %in% firstorderterms]
+  dvdata <- c(dvdata[1], dvdata[-1][names(dvdata[-1]) %in% firstorderterms])
   dfnames <-  unlist(lapply(dvdata, names))
   df <- data.frame(do.call(cbind, dvdata))
   names(df) <- dfnames

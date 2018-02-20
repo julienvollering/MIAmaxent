@@ -106,7 +106,7 @@ selectEV <- function(dvdata, alpha = 0.01, interaction = FALSE, formula = NULL,
                      row.names = FALSE)
   }
 
-  Result <- list("selectedEV"=result[[1]], "selection"=result[[2]],
+  Result <- list("dvdata"=c(dvdata[1], result[[1]]), "selection"=result[[2]],
                  "selectedmodel"=result[[3]])
   return(Result)
 }
