@@ -17,7 +17,7 @@ information regarding presence/absence data. See also
 which to calculate FOP.}
 
 \item{span}{The proportion of FOP points included in the local regression
-neighborhood. Should be between 0 and 1.}
+neighborhood. Should be between 0 and 1. Irrelevant for categorical EVs.}
 
 \item{intervals}{Number of intervals into which the continuous EV is divided.
 Defaults to the minimum of N/10 and 100. Irrelevant for categorical EVs.}
@@ -48,20 +48,20 @@ optimum EV value, and a data frame containing the plotted data (for
 customizable plotting).
 }
 \details{
+In the local regression ("loess"), the plotted FOP values are regressed
+against the the EV values. The points are weighted by the number of
+observations they represent, such that an FOP value in an interval with many
+observations is given more weight.
+
+For continuous variables, the returned value of 'EVoptimum' is based on the
+loess-smoothed FOP values, such that a point maximum in FOP may not always be
+considered the optimal value of EV.
+
 If the response variable in \code{data} represents presence/absence data, the
 result is an empirical frequency of presence curve, rather than a observed
 frequency of presence curve (see Stoea et al. [in press], Sommerfeltia).
-
-For continuous variables, the returned value of 'EVoptimum' is based on the
-smoothed FOP values, such that a point maximum in FOP may not always be
-considered the optimal value of EV.
 }
 \examples{
-FOPev11 <- plotFOP(toydata_sp1po, 2, intervals = 5, smoothwindow = 3)
-FOPev11 <- plotFOP(toydata_sp1po, 2, intervals = 8)
-FOPev12 <- plotFOP(toydata_sp1po, "EV12", intervals = 8, ylim=c(0,1))
-FOPev12$EVoptimum
-FOPev12$FOPdata
 
 }
 \references{

@@ -8,13 +8,18 @@
 #' optimum EV value, and a data frame containing the plotted data (for
 #' customizable plotting).
 #'
+#' In the local regression ("loess"), the plotted FOP values are regressed
+#' against the the EV values. The points are weighted by the number of
+#' observations they represent, such that an FOP value in an interval with many
+#' observations is given more weight.
+#'
+#' For continuous variables, the returned value of 'EVoptimum' is based on the
+#' loess-smoothed FOP values, such that a point maximum in FOP may not always be
+#' considered the optimal value of EV.
+#'
 #' If the response variable in \code{data} represents presence/absence data, the
 #' result is an empirical frequency of presence curve, rather than a observed
 #' frequency of presence curve (see Stoea et al. [in press], Sommerfeltia).
-#'
-#' For continuous variables, the returned value of 'EVoptimum' is based on the
-#' smoothed FOP values, such that a point maximum in FOP may not always be
-#' considered the optimal value of EV.
 #'
 #' @param data Data frame containing the response variable in the first column
 #'   and explanatory variables in subsequent columns. The response variable
@@ -24,7 +29,7 @@
 #' @param EV Name or column index of the explanatory variable in \code{data} for
 #'   which to calculate FOP.
 #' @param span The proportion of FOP points included in the local regression
-#'   neighborhood. Should be between 0 and 1.
+#'   neighborhood. Should be between 0 and 1. Irrelevant for categorical EVs.
 #' @param intervals Number of intervals into which the continuous EV is divided.
 #'   Defaults to the minimum of N/10 and 100. Irrelevant for categorical EVs.
 #' @param ranging Logical. If \code{TRUE}, will range the EV scale to [0,1].
@@ -48,11 +53,6 @@
 #'   manuscript.
 #'
 #' @examples
-#' FOPev11 <- plotFOP(toydata_sp1po, 2, intervals = 5, smoothwindow = 3)
-#' FOPev11 <- plotFOP(toydata_sp1po, 2, intervals = 8)
-#' FOPev12 <- plotFOP(toydata_sp1po, "EV12", intervals = 8, ylim=c(0,1))
-#' FOPev12$EVoptimum
-#' FOPev12$FOPdata
 #'
 #' @export
 
@@ -94,7 +94,7 @@ plotFOP <- function(data, EV, span = 0.5, intervals = NULL, ranging = FALSE) {
                    ylab = "Frequency of Observed Presence (FOP)", pch=20)
     graphics::points(FOPdf$loess ~ FOPdf$intEV, type="l", lwd=2, col="red")
     legend("topleft",legend=paste0("Loess (span = ", span, ")"), col="red",
-           lwd=2, bty="n", inset=0.05)
+           lwd=2, bty="n", inset=0.05, seg.len = 1)
 
   }
 

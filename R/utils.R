@@ -61,60 +61,47 @@ if(getRversion() >= "2.15.1") {
 
 #' calculates optimum EV value based on FOP
 #'
-#' The optimum that is returned is based on the smoothed data, unless a maximum
-#' exists at the extremes of the EV (outside the 5-interval smoothing window).
+#' The optimum that is returned is based on the loess-smoothed data (for
+#' continuous variables).
 #'
-#' @param data Dataframe containing the response variable in the first column and
-#'   explanatory variables in the second column. The response variable should
-#'   represent presence or background, coded as: 1/NA.
-#' @param smoothwindow Width of the smoothing window (in an exponentially
-#'   weighted moving average). Irrelevant for categorical EVs.
+#' @param data Dataframe containing the response variable in the first column
+#'   and explanatory variables in the second column. The response variable
+#'   should represent presence or background, coded as: 1/NA.
+#' @param span The proportion of FOP points included in the local regression
+#'   neighborhood. Should be between 0 and 1. Irrelevant for categorical EVs.
 #' @param intervals Number of intervals into which the continuous EV is divided.
-#'   Defaults to the minimum of N/50 and 100. Irrelevant for categorical EVs.
+#'   Defaults to the minimum of N/10 and 100. Irrelevant for categorical EVs.
 #'
 #' @return the EV value at which FOP is highest (\code{EVoptimum})
 
-.fopoptimum <- function(data, smoothwindow = 5, intervals = NULL) {
+.fopoptimum <- function(df, span = 0.5, intervals = NULL) {
 
-  df <- data.frame(RV = data[, 1], EV = data[, 2])
+  df <- data.frame(RV = df[, 1], EV = df[, 2])
   .binaryrvcheck(df[, 1])
   df[, 1][is.na(df[, 1])] <- 0
 
-  if (!class(df[, 2]) %in% c("numeric", "integer")) {
-    stop("EVoptimum is calculated for numeric or integer class EVs only",
-      call. = F)
+  if (class(df[, 2]) %in% c("numeric", "integer")) {
+    if (is.null(intervals)) {intervals <- min(c(ceiling(nrow(df)/10), 100))}
+    df$int <- cut(df[, 2], breaks=max(2, intervals))
+    grouped <- dplyr::group_by(df, int)
+    FOPdf <- as.data.frame(dplyr::summarise(grouped, n = n(), intEV = mean(EV),
+                                            intRV = mean(RV, na.rm=FALSE)))
+    FOPdf$loess <- stats::predict(stats::loess(intRV~intEV, FOPdf,
+                                               weights=FOPdf$n, span=span))
+    EVoptimum <- FOPdf$intEV[which.max(FOPdf$loess)]
   }
 
-  if (is.null(intervals)) {intervals <- min(c(ceiling(nrow(df) / 50), 100))}
-  df$int <- cut(df[, 2], max(2, intervals))
-
-  grouped <- dplyr::group_by(df, int)
-  FOPdf <- dplyr::summarise(grouped, intEV = mean(EV), intRV = mean(RV, na.rm=F))
-
-  if (length(FOPdf$intRV) > smoothwindow) {
-    FOPdf$smoothRV <- .ewma(FOPdf$intRV, smoothwindow)
-  } else { FOPdf$smoothRV <- NA }
-
-  maxRV <- FOPdf$smoothRV
-  maxRV[is.na(maxRV)] <- FOPdf$intRV[is.na(maxRV)]
-  EVoptimum <- FOPdf$intEV[which(maxRV == max(maxRV))]
-
-  while (length(EVoptimum) > 1) {
-    intervals <- intervals - 1
-    df$int <- cut(df[, 2], max(2, intervals))
-    grouped <- dplyr::group_by(df, int)
+  if (class(df[, 2]) %in% c("factor", "character")) {
+    grouped <- dplyr::group_by(df, EV)
     FOPdf <- as.data.frame(dplyr::summarise(grouped, n = n(),
-      intEV = mean(EV), intRV = mean(RV, na.rm=F)))
-    if (length(FOPdf$intRV) > smoothwindow) {
-      FOPdf$smoothRV <- .ewma(FOPdf$intRV, smoothwindow)
-    } else { FOPdf$smoothRV <- NA }
-    maxRV <- FOPdf$smoothRV
-    maxRV[is.na(maxRV)] <- FOPdf$intRV[is.na(maxRV)]
-    EVoptimum <- FOPdf$intEV[which(maxRV == max(maxRV))]
+                                            lvlRV = mean(RV, na.rm=FALSE)))
+    EVoptimum <- FOPdf$EV[which.max(FOPdf$lvlRV)]
   }
 
   return(EVoptimum)
 }
+
+
 
 #' checks the validity of formulas
 #'
