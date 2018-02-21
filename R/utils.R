@@ -45,20 +45,6 @@ if(getRversion() >= "2.15.1") {
 
 
 
-#' Name and create directory
-#'
-#' Simultaneuosly pastes arguments into pathway and creates the directory
-#'
-#' @param ... Arguments to be pasted together into directory pathway
-
-.dirpath.create <- function(...) {
-  path <- file.path(...)
-  dir.create(path)
-  return(path)
-}
-
-
-
 #' calculates optimum EV value based on FOP
 #'
 #' The optimum that is returned is based on the loess-smoothed data (for
@@ -212,6 +198,8 @@ if(getRversion() >= "2.15.1") {
   args3[names(inargs)] <- inargs
   do.call(graphics::text, c(list(x=x, y=y, labels="PRO = 1", pos=4), args3))
 }
+
+
 
 #' Reminders when using devtools::release
 #'
