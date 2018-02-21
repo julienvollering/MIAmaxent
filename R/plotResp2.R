@@ -31,6 +31,9 @@
 
 plotResp2 <- function(model, transformations, EV, logscale = FALSE, ...) {
 
+  if (!(class(model)[1] %in% c("iwlr", "lr"))) {
+    stop("'model' should be of the class produced by 'selectEV' or 'chooseModel'", call. = FALSE)
+  }
   evbetas <- model$betas[grep(paste0(EV, "_"), names(model$betas))]
   evbetasni <- evbetas[!grepl(":", names(evbetas), fixed=TRUE)]
   if (length(evbetasni)==0) {
@@ -76,17 +79,15 @@ plotResp2 <- function(model, transformations, EV, logscale = FALSE, ...) {
   }, modtransfs, marginal, MoreArgs = list("seq"=seq))
   colnames(newdata) <- names(betasni)
   newdata <- as.data.frame(newdata)
-  mmformula <- stats::update.formula(model$formula.narm, NULL ~ . - 1)
-  newdata <- model.matrix(mmformula, newdata)
+  type <- ifelse(class(model)[1] == "iwlr", "PRO", "response")
+  preds <- stats::predict(model, newdata, type)
+  resp <- data.frame(EV = seq, preds = preds)
 
-  raw <- exp((newdata %*% model$betas) + model$alpha)
-  resp <- data.frame(EV = seq, PRO = raw*length(transformations[[1]]))
-  if (logscale == TRUE) {resp$PRO <- log10(resp$PRO)}
-
-  args1 <- list(main = paste0("Single-effect response plot: ", EV), xlab = EV,
-                ylab = ifelse(logscale == TRUE,
-                              "log Probability Ratio Output (logPRO)",
-                              "Probability Ratio Output (PRO)"), col="red")
+  if (logscale == TRUE) {resp$preds <- log10(resp$preds)}
+  ylab <- ifelse(type == "PRO", "Probability Ratio Output (PRO)", "Predicted probability")
+  if (logscale == TRUE) {ylab <- paste("log", ylab)}
+  args1 <- list(main = paste0("Marginal-effect response plot: ", EV), xlab = EV,
+                ylab = ylab, col="red")
   inargs <- list(...)
   args1[names(inargs)] <- inargs
 
@@ -100,5 +101,10 @@ plotResp2 <- function(model, transformations, EV, logscale = FALSE, ...) {
 
   if (logscale == TRUE) { graphics::abline(h = 0, lty = 3)
   } else { graphics::abline(h = 1, lty = 3) }
+
+  if (type == "PRO") {
+    if (logscale == TRUE) { graphics::abline(h = 0, lty = 3)
+    } else { graphics::abline(h = 1, lty = 3) }
+  }
 
 }
