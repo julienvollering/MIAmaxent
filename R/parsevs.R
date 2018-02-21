@@ -4,14 +4,16 @@
 #'   frame) followed by EVs to be selected from (data frames).
 #' @param alpha Alpha level for F-test.
 #' @param test Character string matching either "Chisq" or "F".
+#' @param algorithm Character string matching either "maxent" or "LR".
 #' @param interaction Logical. Allows interaction terms.
 #' @param formula Model formula specifying a starting point for model selection.
 #'
 
-.parsevs <- function(dvdata, alpha, test, interaction, formula) {
+.parsevs <- function(dvdata, alpha, interaction, formula, test, algorithm) {
 
   dvdata[[1]] <- data.frame("RV"=dvdata[[1]])
   test <- match.arg(test, choices = c("Chisq", "F"))
+  algorithm <- match.arg(algorithm, choices = c("maxent", "LR"))
   dfnames <-  unlist(lapply(dvdata, names))
   df <- data.frame(do.call(cbind, dvdata))
   names(df) <- dfnames
@@ -24,14 +26,18 @@
     selectedsetdvs <- unlist(lapply(dvdata[selectedset], names))
     formula <- stats::formula(paste(names(df)[1], "~",
                                     paste(selectedsetdvs, collapse=" + ")))
-    ctable <- .compare(list(formula), refformula, df, test=test)
+    ctable <- .compare(list(formula), refformula, df, test, algorithm)
     ctable$variables <- paste(selectedset, collapse=" + ")
     modeltable <- data.frame("round"=roundnumber, ctable)
     refformula <- formula
     message("Round 0 complete.")
 
     if (length(remainingset) < 1) {
-      selectedmodel <- .runIWLR(formula, df)
+      if (algorithm == "maxent") {
+        selectedmodel <- .runIWLR(formula, df)
+      } else {
+        selectedmodel <- .runLR(formula, df)
+      }
       return(list(dvdata[selectedset], modeltable, selectedmodel))
     }
 
@@ -49,7 +55,7 @@
     formulas <- lapply(remainingsetdvs, function(x) {
       stats::update.formula(refformula,
                             paste("~ . +", paste(x, collapse = " + ")))})
-    ctable <- .compare(formulas, refformula, df, test=test)
+    ctable <- .compare(formulas, refformula, df, test, algorithm)
     if (length(selectedset)==0) {
       variables <- remainingset
     } else { variables <- paste(paste(selectedset, collapse=" + "),
@@ -84,7 +90,11 @@
   }
 
   if (interaction == FALSE || length(selectedset) < 2) {
-    selectedmodel <- .runIWLR(refformula, df)
+    if (algorithm == "maxent") {
+      selectedmodel <- .runIWLR(refformula, df)
+    } else {
+      selectedmodel <- .runLR(refformula, df)
+    }
     return(list(dvdata[selectedset], modeltable, selectedmodel))
   }
 
@@ -112,7 +122,7 @@
     formulas <- lapply(remainingsetdvs, function(x) {
       stats::update.formula(refformula,
                             paste("~ . +", paste(x, collapse = " + ")))})
-    ctable <- .compare(formulas, refformula, df, test=test)
+    ctable <- .compare(formulas, refformula, df, test, algorithm)
     variables <- paste(paste(selectedset, collapse=" + "),
                                 remainingset, sep=" + ")
     ctable$variables <- variables
@@ -144,7 +154,11 @@
     }
   }
 
-  selectedmodel <- .runIWLR(refformula, df)
+  if (algorithm == "maxent") {
+    selectedmodel <- .runIWLR(refformula, df)
+  } else {
+    selectedmodel <- .runLR(refformula, df)
+  }
   selectedsetni <- selectedset[selectedset %in% names(dvdata)]
   return(list(dvdata[selectedsetni], modeltable, selectedmodel))
 

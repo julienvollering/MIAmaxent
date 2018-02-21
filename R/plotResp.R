@@ -31,6 +31,9 @@
 
 plotResp <- function(model, transformations, EV, logscale = FALSE, ...) {
 
+  if (!(class(model)[1] %in% c("iwlr", "lr"))) {
+    stop("'model' should be of the class produced by 'selectEV' or 'chooseModel'", call. = FALSE)
+  }
   evbetas <- model$betas[grep(paste0(EV, "_"), names(model$betas))]
   evbetasni <- evbetas[!grepl(":", names(evbetas), fixed=TRUE)]
   if (length(evbetasni)==0) {
@@ -50,7 +53,12 @@ plotResp <- function(model, transformations, EV, logscale = FALSE, ...) {
   names(dvdata) <- names(evbetasni)
   traindata <- data.frame("RV"=alltransf[[1]], dvdata)
   formula <- stats::formula(paste("RV ~", paste(names(evbetasni), collapse = " + ")))
-  smodel <- .runIWLR(formula, traindata)
+
+  if (class(model)[1] == "iwlr") {
+    smodel <- .runIWLR(formula, traindata)
+  } else if (class(model)[1] == "lr") {
+    smodel <- .runLR(formula, traindata)
+  }
 
   evnull <- environment(evtransfs[[1]])$xnull
   if (class(evnull) %in% c("numeric", "integer")) {
@@ -63,18 +71,16 @@ plotResp <- function(model, transformations, EV, logscale = FALSE, ...) {
                                    lapply(evtransfs, function(f, x) {
                                      f(x) }, x=seq)))
   names(newdata) <- names(evbetasni)
-  mmformula <- stats::update.formula(smodel$formula.narm, NULL ~ . - 1)
-  newdata <- model.matrix(mmformula, newdata)
+  type <- ifelse(class(model)[1] == "iwlr", "PRO", "response")
+  preds <- stats::predict(smodel, newdata, type)
 
-  raw <- exp((newdata %*% smodel$betas) + smodel$alpha)
-
-  resp <- data.frame(EV = seq, PRO = raw*length(transformations[[1]]))
-  if (logscale == TRUE) {resp$PRO <- log10(resp$PRO)}
+  resp <- data.frame(EV = seq, preds = preds)
+  if (logscale == TRUE) {resp$preds <- log10(resp$preds)}
+  ylab <- ifelse(type == "PRO", "Probability Ratio Output (PRO)", "Predicted probability")
+  if (logscale == TRUE) {ylab <- paste("log", ylab)}
 
   args1 <- list(main = paste0("Single-effect response plot: ", EV), xlab = EV,
-                ylab = ifelse(logscale == TRUE,
-                              "log Probability Ratio Output (logPRO)",
-                              "Probability Ratio Output (PRO)"), col="red")
+                ylab = ylab, col="red")
   inargs <- list(...)
   args1[names(inargs)] <- inargs
 
@@ -86,7 +92,9 @@ plotResp <- function(model, transformations, EV, logscale = FALSE, ...) {
     do.call(graphics::barplot, c(list(height=resp[, 2], names.arg=resp[, 1]), args1))
   }
 
-  if (logscale == TRUE) { graphics::abline(h = 0, lty = 3)
-  } else { graphics::abline(h = 1, lty = 3) }
+  if (type == "PRO") {
+    if (logscale == TRUE) { graphics::abline(h = 0, lty = 3)
+    } else { graphics::abline(h = 1, lty = 3) }
+  }
 
 }

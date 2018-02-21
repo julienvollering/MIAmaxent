@@ -9,12 +9,12 @@
 
 .runIWLR <- function(formula, data) {
   RV <- all.vars(formula)[1]
-  data[,RV][is.na(data[,RV])] <- 0
-  padd <- data[data[,RV]==1, ]
+  data[, RV][is.na(data[, RV])] <- 0
+  padd <- data[data[, RV]==1, ]
   padd[, RV] <- 0
   padddata <- rbind(data, padd)
   # Code below this line was modified from the MIT-licensed 'maxnet' library
-  wgts <- padddata[,1]+(1-padddata[,1])*100
+  wgts <- padddata[, RV] + (1 - padddata[, RV])*100
   glmdata <- cbind(padddata, wgts)
 
   withCallingHandlers({
@@ -42,6 +42,24 @@
   raw <- rr / sum(rr)
   model$entropy <- -sum(raw * log(raw), na.rm = TRUE)
   model$alpha <- -log(sum(rr))
+  class(model) <- c("iwlr", class(model))
   return(model)
   # Code above this line was modified from the MIT-licensed 'maxnet' library
+}
+
+
+
+#' S3 method for class "iwlr": returns model predictions for new data in "PRO"
+#' or "raw" format.
+#'
+#' @param model Model of class "iwlr"
+#' @param newdata Data frame containing variables to predict across
+#' @param type Type of model output: "PRO" or "raw"
+
+predict.iwlr <- function(model, newdata, type="PRO") {
+  mmformula <- stats::update.formula(model$formula.narm, NULL ~ . - 1)
+  newdata <- model.matrix(mmformula, newdata)
+  raw <- exp((newdata %*% model$betas) + model$alpha)
+  PRO <- raw * nrow(model$data)
+  if (type == "PRO") {return(PRO)} else {return(raw)}
 }

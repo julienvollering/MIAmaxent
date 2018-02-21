@@ -10,11 +10,12 @@
 #'   explanatory variable may be continuous or categorical.
 #' @param transformtype Set of transformation types to be used.
 #' @param allsplines Logical. Keep all spline transformations.
+#' @param algorithm Character string matching either "maxent" or "LR".
 #'
 #' @return Dataframe with one column for each DV.
 
 
-.dvsfromev <- function(df, transformtype, allsplines) {
+.dvsfromev <- function(df, transformtype, allsplines, algorithm) {
 
   rv <- df[, 1]
   ev <- df[, 2]
@@ -54,7 +55,7 @@
         message(paste0("Pre-selecting forward hinge transformations of ", evname))
         dvs <- lapply(splall, function(x) {x(ev)})
         names(dvs) <- gsub("_transf", "", names(splall))
-        selected <- .splselect(rv, dvs)
+        selected <- .splselect(rv, dvs, algorithm)
         if (length(selected) > 0) {
           storage <- c(storage, splall[paste0(selected, "_transf")])
         }
@@ -75,7 +76,7 @@
         message(paste0("Pre-selecting reverse hinge transformations of ", evname))
         dvs <- lapply(splall, function(x) {x(ev)})
         names(dvs) <- gsub("_transf", "", names(splall))
-        selected <- .splselect(rv, dvs)
+        selected <- .splselect(rv, dvs, algorithm)
         if (length(selected) > 0) {
           storage <- c(storage, splall[paste0(selected, "_transf")])
         }
@@ -96,7 +97,7 @@
         message(paste0("Pre-selecting threshold transformations of ", evname))
         dvs <- lapply(splall, function(x) {x(ev)})
         names(dvs) <- gsub("_transf", "", names(splall))
-        selected <- .splselect(rv, dvs)
+        selected <- .splselect(rv, dvs, algorithm)
         if (length(selected) > 0) {
           storage <- c(storage, splall[paste0(selected, "_transf")])
         }

@@ -18,18 +18,22 @@
 #'   variable (e.g. the first item in the list returned by
 #'   \code{\link{selectDVforEV}}).
 #' @param formula A model formula (in the form y ~ x + ...) specifying the
-#'   independent terms to be included in the model. The item in \code{dvdata} is
-#'   still taken as the response variable, regardless of \code{formula}.
+#'   independent terms (EVs) to be included in the model. The item in
+#'   \code{dvdata} is still taken as the response variable, regardless of
+#'   \code{formula}.
+#' @param algorithm Character string matching either "maxent" or "LR", which
+#'   determines the type of model built. Default is "maxent".
 #'
 #' @examples
 #'
 #' @export
 
 
-chooseModel <- function(dvdata, formula) {
+chooseModel <- function(dvdata, formula, algorithm = "maxent") {
 
   names(dvdata) <- make.names(names(dvdata), allow_ = FALSE)
   .binaryrvcheck(dvdata[[1]])
+  algorithm <- match.arg(algorithm, choices = c("maxent", "LR"))
 
   formula <- stats::as.formula(formula)
   terms <- labels(stats::terms(formula))
@@ -61,6 +65,10 @@ chooseModel <- function(dvdata, formula) {
   selectedsetdvs <- unlist(dvs[terms])
   formula <- stats::formula(paste(names(df)[1], "~",
                                   paste(selectedsetdvs, collapse=" + ")))
-  model <- .runIWLR(formula, df)
+  if (algorithm == "maxent") {
+    model <- .runIWLR(formula, df)
+  } else {
+    model <- .runLR(formula, df)
+  }
   return(model)
 }

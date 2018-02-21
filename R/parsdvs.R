@@ -4,8 +4,9 @@
 #'   selected from in subsequent columns.
 #' @param alpha Alpha level for inference test.
 #' @param test Character string matching either "Chisq" or "F".
+#' @param algorithm Character string matching either "maxent" or "LR".
 
-.parsdvs <- function(df, alpha = 0.01, test="Chisq") {
+.parsdvs <- function(df, alpha, test, algorithm) {
 
   selectedset <- character(length=0)
   remainingset <- names(df)[-1]
@@ -19,7 +20,7 @@
     roundnumber <- roundnumber + 1
     formulas <- lapply(remainingset, function(x) {
       stats::update.formula(refformula,  paste("~ . +", x))})
-    ctable <- .compare(formulas, refformula, df, test=test)
+    ctable <- .compare(formulas, refformula, df, test, algorithm)
     ctable <- ctable[order(ctable$P,
                            -ctable[, match(test, names(ctable))]), ]
     evtable <- rbind(evtable, data.frame("round"=roundnumber, ctable),

@@ -45,6 +45,9 @@
 #'   which inference test is used in nested model comparison. The Chi-squared
 #'   test is implemented as in stats::anova, while the F-test is implemented as
 #'   described in Halvorsen (2013, 2015). Default is "Chisq".
+#' @param algorithm Character string matching either "maxent" or "LR", which
+#'   determines the type of model used during forward selection. Default is
+#'   "maxent".
 #' @param dir Directory to which files will be written during subset selection
 #'   of explanatory variables. Defaults to the working directory.
 #' @param write Logical. Write important function output to file in the
@@ -69,7 +72,7 @@
 
 
 selectEV <- function(dvdata, alpha = 0.01, interaction = FALSE, formula = NULL,
-                     test="Chisq", dir = NULL, write = TRUE) {
+                     test="Chisq", algorithm, dir = NULL, write = TRUE) {
 
   names(dvdata) <- make.names(names(dvdata), allow_ = FALSE)
   .binaryrvcheck(dvdata[[1]])
@@ -100,7 +103,7 @@ selectEV <- function(dvdata, alpha = 0.01, interaction = FALSE, formula = NULL,
     message(paste0("Forward selection of ", length(dvdata[-1]), " EVs"))
   }
 
-  result <- .parsevs(dvdata, alpha, test, interaction, formula)
+  result <- .parsevs(dvdata, alpha, interaction, formula, test, algorithm)
   if (write == TRUE) {
     utils::write.csv(result[[2]], file = file.path(fdir, "evselection.csv"),
                      row.names = FALSE)
