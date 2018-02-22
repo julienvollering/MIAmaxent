@@ -60,6 +60,8 @@ predict.iwlr <- function(model, newdata, type="PRO") {
   mmformula <- stats::update.formula(model$formula.narm, NULL ~ . - 1)
   newdata <- model.matrix(mmformula, newdata)
   raw <- exp((newdata %*% model$betas) + model$alpha)
-  PRO <- raw * nrow(model$data)
+  RV <- all.vars(model$formula)[1]
+  N <- sum(model$data[,RV] == 0)
+  PRO <- raw * N
   if (type == "PRO") {return(PRO)} else {return(raw)}
 }

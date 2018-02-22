@@ -1,4 +1,4 @@
-#' Project model to data.
+#' Project model across explanatory data.
 #'
 #' \code{projectModel} Calculates model predictions for any points where values
 #' of the explanatory variables in the model are known. \code{projectModel} can
@@ -9,7 +9,7 @@
 #' point. Missing data for a categorical variable is treated as belonging to
 #' none of the categories.
 #'
-#' When \code{rescale = FALSE} the scale of the model output (PRO or raw)
+#' When \code{rescale = FALSE} the scale of the maxent model output (PRO or raw)
 #' returned by this function is dependent on the data used to train the model.
 #' For example, a location with PRO = 2 can be interpreted as having a
 #' probability of presence twice as high as an average site in the
@@ -34,12 +34,13 @@
 #'   or raster names must match EV names.
 #' @param clamping Logical. Do clamping \emph{sensu} Phillips et al. (2006).
 #'   Default is \code{FALSE}.
+#' @param raw Logical. Return raw maxent output instead of probability ratio
+#'   output (PRO)? Default is FALSE. Irrelevant for 'lr' class models.
 #' @param rescale Logical. Linearly rescale model output (PRO or raw) with
 #'   respect to the projection \code{data}? This has implications for the
 #'   interpretation of output values with respect to reference values (e.g. PRO
-#'   = 1). See details.
-#' @param raw Logical. Return raw Maxent output instead of probability ratio
-#'   output (PRO)? Default is FALSE.
+#'   = 1). See details. Irrelevant for 'lr' class models.
+
 #'
 #' @return List of 2: \enumerate{ \item A data frame with the model output in
 #'   column 1 and the corresponding explanatory data in subsequent columns.
@@ -62,7 +63,7 @@
 
 
 projectModel <- function(model, transformations, data, clamping = FALSE,
-                         rescale = FALSE, raw = FALSE) {
+                         raw = FALSE, rescale = FALSE) {
 
   dvnamesni <- names(model$betas)[grep(":", names(model$betas), invert = TRUE)]
   evnames <- unique(sub("_.*", "", dvnamesni))
@@ -108,34 +109,21 @@ projectModel <- function(model, transformations, data, clamping = FALSE,
     }
     return(y)
   })
-  dvdatani <- as.data.frame(do.call(cbind, dvdatani))
-  names(dvdatani) <- dvnamesni
+  newdata <- as.data.frame(do.call(cbind, dvdatani))
+  names(newdata) <- dvnamesni
 
-  mmformula <- stats::update.formula(model$formula.narm, NULL ~ . - 1)
-  newdata <- model.matrix(mmformula, dvdatani)
-  newdata <- newdata[match(rownames(dvdatani), rownames(newdata)), ]
-  rownames(newdata) <- rownames(dvdatani)
-  if (raw == TRUE) {
-    modeloutput <- exp((newdata %*% model$betas) + model$alpha)
-  } else {
-    Ntrain <- length(alltransf[[1]])
-    modeloutput <- exp((newdata %*% model$betas) + model$alpha) * Ntrain
+  type <- if (class(model)[1] == "iwlr") {
+    ifelse(raw == TRUE, "raw", "PRO")
+  } else { "response" }
+  preds <- stats::predict(model, newdata, type)
+
+  if (class(model)[1] == "iwlr" && rescale == TRUE) {
+    if (raw == TRUE) { preds <- preds/sum(preds, na.rm = TRUE)
+    } else { preds <- (preds/sum(preds, na.rm = TRUE)) * sum(!is.na(preds)) }
   }
 
-  if (rescale == TRUE) {
-    if (raw == TRUE) {
-      modeloutput <- modeloutput/sum(modeloutput, na.rm = TRUE)
-    } else {
-      modeloutput <- (modeloutput/sum(modeloutput, na.rm = TRUE)) *
-        sum(!is.na(modeloutput))
-    }
-  }
-
-  if (raw == TRUE) {
-    Output <- data.frame("raw" = modeloutput, data)
-  } else {
-    Output <- data.frame("PRO" = modeloutput, data)
-  }
+  Output <- data.frame(preds, data)
+  colnames(Output)[1] <- type
 
   if (map == TRUE) {
     values <- rep(NA, raster::ncell(evstack))

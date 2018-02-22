@@ -177,7 +177,7 @@ if(getRversion() >= "2.15.1") {
 #' @param x PRO = 1 x-coordinate
 #' @param y PRO = 1 y-coordinate
 
-.plotROC <- function(fpr, tpr, AUC, x, y, ...) {
+.plotROC <- function(fpr, tpr, AUC, PROpt, x, y, ...) {
   args1 <- list(xlab="1 - specificity (false positive rate)",
                 ylab="Sensitivity (true positive rate)", col="red",
                 main=paste("AUC = ", signif(AUC, 3)))
@@ -188,15 +188,17 @@ if(getRversion() >= "2.15.1") {
 
   graphics::abline(0, 1, lty=3)
 
-  args2 <- list(cex=0.8, col="#999999", pch=19)
-  inargs <- list(...)
-  args2[names(inargs)] <- inargs
-  do.call(graphics::points, c(list(x=x, y=y), args2))
+  if (PROpt == TRUE) {
+    args2 <- list(cex=0.8, col="#999999", pch=19)
+    inargs <- list(...)
+    args2[names(inargs)] <- inargs
+    do.call(graphics::points, c(list(x=x, y=y), args2))
 
-  args3 <- list(cex=0.8, col="#999999")
-  inargs <- list(...)
-  args3[names(inargs)] <- inargs
-  do.call(graphics::text, c(list(x=x, y=y, labels="PRO = 1", pos=4), args3))
+    args3 <- list(cex=0.8, col="#999999")
+    inargs <- list(...)
+    args3[names(inargs)] <- inargs
+    do.call(graphics::text, c(list(x=x, y=y, labels="PRO = 1", pos=4), args3))
+  }
 }
 
 

@@ -67,13 +67,20 @@ Be aware of implications for the interpretation of the AUC value.", call. = FALS
   wdth <- diff(fpr)
   AUC <- sum(((hgtl + hgtr)/2) * wdth)
 
-  PRO1fp <- sum(cont[as.numeric(rownames(cont)) > 1, "0"])
-  PRO1tp <- sum(cont[as.numeric(rownames(cont)) > 1, "1"])
-  x <- PRO1fp/sum(cont[, "0"])
-  y <- PRO1tp/sum(cont[, "1"])
+  if (class(model)[1] == "iwlr") {
+    PROpt <- TRUE
+    PRO1fp <- sum(cont[as.numeric(rownames(cont)) > 1, "0"])
+    PRO1tp <- sum(cont[as.numeric(rownames(cont)) > 1, "1"])
+    x <- PRO1fp/sum(cont[, "0"])
+    y <- PRO1tp/sum(cont[, "1"])
+  } else {
+    PROpt <- FALSE
+    x <- NULL
+    y <- NULL
+  }
 
   if (plot == TRUE) {
-    .plotROC(fpr, tpr, AUC, x, y, ...)
+    .plotROC(fpr, tpr, AUC, PROpt, x, y, ...)
   }
 
   return(AUC)
