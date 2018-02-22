@@ -1,3 +1,8 @@
+# MIAmaxent 0.5.0.9000
+* Implements maximum entropy models as infinitely-weighted logitic regressions, so that all computation can be done natively in R (maxent.jar no longer required).
+* Implements choice of algorithm: "maxent" for maximum entropy or "LR" for standard logistic regression (binomial GLM).
+* Complete revisions of all high-level functions
+
 # MIAmaxent 0.4.0.9000
 * readData now automatically removes duplicates when two or more presences (or absences) fall in the same cell
 * readData now discards presence locations with missing EV data
