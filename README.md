@@ -2,6 +2,9 @@
 MIAmaxent
 =========
 
+v.0.5.0.9000
+------------
+
 ### Description
 
 Training, selecting, and evaluating maximum entropy (Maxent) distribution models. This package provides tools for user-controlled transformation of explanatory variables, selection of variables by nested model comparison, and flexible model evaluation and projection. The methods implemented here are based on the strict maximum likelihood interpretation of maximum entropy modelling (Halvorsen, 2013, Halvorsen et al., 2015).
