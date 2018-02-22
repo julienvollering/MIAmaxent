@@ -4,84 +4,38 @@
 \alias{plotResp2}
 \title{Plot marginal-effect model response.}
 \usage{
-plotResp2(data, EV, transformation, model, logscale = FALSE, ...)
+plotResp2(model, transformations, EV, logscale = FALSE, ...)
 }
 \arguments{
-\item{data}{Data frame of explanatory variables (EVs) included in the model,
-with column names matching EV names. See \code{\link{readData}}.}
+\item{model}{The model for which the response is to be plotted, represented
+by an object of class 'glm'. This may be the object returned by
+\code{\link{chooseModel}}, or the 'selectedmodel' returned by
+\code{\link{selectEV}}.}
 
-\item{EV}{Name or column index of the explanatory variable in \code{data} for
-which the response curve is to be generated.}
+\item{transformations}{Transformation functions used to create the derived
+variables in the model. I.e. the 'transformations' returned by
+\code{\link{deriveVars}}. Equivalently, the full file pathway of the
+'transformations.Rdata' file saved as a result of \code{\link{deriveVars}}.}
 
-\item{transformation}{Full pathway of the 'transformations.Rdata' file
-containing the transformations used to build the model. This file is saved
-as a result of the \code{\link{deriveVars}} function. Equivalently, the
-second item in the list returned by \code{\link{deriveVars}} can be used
-directly.}
-
-\item{model}{Full pathway of the '.lambdas' file of the model in question.
-This file is saved as a result of \code{\link{selectEV}}.}
+\item{EV}{Character. Name of the explanatory variable for which the response curve is to
+be plotted. Interaction terms not allowed.}
 
 \item{logscale}{Logical. Plot the common logarithm of PRO rather than PRO
 itself.}
 
-\item{...}{Arguments to be passed to \code{plot} to control the appearance of
-the plot. For example: \itemize{ \item \code{cex} for size of points \item
-\code{col} for color \item \code{pch} for type }}
-}
-\value{
-In addition to the graphical output, the plotted data is returned. In
-  the case of a continuous EV, the plotted data is a list of 2: \enumerate{
-  \item \code{respPts}. Model response across individual data points. Columns
-  in this data frame represent the following: EV value ("EV"), Probability
-  Ratio Output of the model ("PRO"), and corresponding EV interval ("int").
-  \item \code{respLine}. Model response across intervals of the EV. Columns
-  in this data frame represent the following: EV interval ("int"), number of
-  points in the interval ("n"), mean EV value of the points in the interval
-  ("intEV"), mean Probability Ratio Output of the points in the interval
-  ("intPRO"), and exponentially weighted moving average of intPRO
-  ("smoothPRO").}
-
-  In the case of a categorical EV, the plotted data is a data frame
-  containing the number of points in the level ("n"), the level name
-  ("level"), and the mean Probability Ratio Output of the level ("levelRV").
+\item{...}{Arguments to be passed to \code{plot} or \code{barplot} to control
+the appearance of the plot. For example: \itemize{ \item \code{lwd} for
+line width \item \code{cex.main} for size of plot title \item \code{space}
+for space between bars }}
 }
 \description{
-\code{plotResp2} plots the marginal-effect response of a given Maxent model
-over any of the included explanatory variables (EVs) in that model. For
-categorical variables, a bar plot is returned rather than a scatter plot.
-\code{plotResp2} also returns a data frame containing the plotted data (for
-customizable graphics). Marginal-effect response curves present the response
-of the model when all other explanatory variables are held constant at their
-mean values (cf. single-effect response curves; \code{\link{plotResp}}).
-}
-\details{
-The plot contains points, representing the model response across individual
-data points, as well as a line, representing an exponentially weighted moving
-average of the model response over intervals of the EV.
-
-Model response is commonly plotted across EV values of the training data, but
-it is possible to plot the model response over any EV values supplied in
-\code{data}.
-
-The \code{EV} specified in \code{data} must not be an interaction term.
+\code{plotResp2} plots the marginal-effect response of a given model over any
+of the explanatory variables (EVs) included in that model. For categorical
+variables, a bar plot is returned rather than a scatter plot. Marginal-effect
+response curves present the response of the model when all other explanatory
+variables are held constant at their mean values (cf. single-effect response
+curves; \code{\link{plotResp}}).
 }
 \examples{
-\dontrun{
-responseEV1 <- plotResp2(dat, "EV1",
-   transformation = "D:/path/to/modeling/directory/deriveVars/transformations.Rdata",
-   model = "D:/path/to/modeling/directory/selectEV/round/model/1.lambdas")
-}
-
-names(toydata_selevs$selectedEV)
-resp <- plotResp2(toydata_sp1po, "EV11", toydata_dvs$transformations,
-   system.file("extdata/sommerfeltia", "1.lambdas", package = "MIAmaxent"))
-
-\dontrun{
-# From vignette:
-pr_bygallResp2 <- plotResp2(grasslandPO, "pr_bygall",
-transformation = grasslandDVs[[2]],
-model = system.file("extdata", "1.lambdas", package = "MIAmaxent"))
-}
 
 }

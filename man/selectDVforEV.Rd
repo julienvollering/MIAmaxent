@@ -4,78 +4,61 @@
 \alias{selectDVforEV}
 \title{Select parsimonious sets of derived variables.}
 \usage{
-selectDVforEV(data, dvdata, alpha = 0.01, dir = NULL, trainmax = NULL)
+selectDVforEV(dvdata, alpha = 0.01, test = "Chisq", dir = NULL,
+  write = TRUE)
 }
 \arguments{
-\item{data}{Data frame containing the response variable in the first column
-and explanatory variables in subsequent columns. The response variable
-should represent presence/background data, coded as: 1/NA. See
-\code{\link{readData}}.}
+\item{dvdata}{A list containing first the response variable, followed by data
+frames of derived variables produced for each explanatory variable (e.g.
+the first item in the list returned by \code{\link{deriveVars}}).}
 
-\item{dvdata}{List of data frames, with each data frame containing derived
-variables for a given explanatory variable (e.g. the first item in the list
-returned by \code{\link{deriveVars}}).}
+\item{alpha}{Alpha-level used for inference testing in nested model
+comparison. Default is 0.01.}
 
-\item{alpha}{Alpha-level used in F-test comparison of models. Default is
-0.01.}
+\item{test}{Character string matching either "Chisq" or "F" to determine
+which inference test is used in nested model comparison. The Chi-squared
+test is implemented as in stats::anova, while the F-test is implemented as
+described in Halvorsen (2013, 2015). Default is "Chisq".}
 
 \item{dir}{Directory to which files will be written during subset selection
 of derived variables. Defaults to the working directory.}
 
-\item{trainmax}{Integer. Maximum number of uninformed background points to be
-used to train the models. May be used to reduce computation time for data
-sets with very large numbers of points. Default is no maximum. See Details
-for more information.}
+\item{write}{Logical. Write important function output to file in the
+\code{dir}?}
 }
 \value{
-List of 2 (3): \enumerate{ \item A list of data frames, with each
-  data frame containing \emph{selected} DVs for a given EV. This item is
-  recommended as input for \code{dvdata} in \code{\link{selectEV}}. \item A
-  list of data frames, where each data frame shows the trail of forward
-  selection of DVs for a given EV. \item (If \code{trainmax} reduces the
-  number of uninformed background points) a new \code{data} object. See
-  details. }
+List of 2: \enumerate{ \item dvdata: A list containing first the
+  response variable, followed by data frames of \emph{selected} DVs for each
+  EV. EVs with zero selected DVs are dropped. This item is recommended as
+  input for \code{dvdata} in \code{\link{selectEV}}. \item selection: A list
+  of data frames, where each data frame shows the trail of forward selection
+  of DVs for a given EV. }
 }
 \description{
 For each explanatory variable (EV), \code{selectDVforEV} selects the
 parsimonious set of derived variables (DV) which best explains variation in a
 given response variable. The function uses a process of forward selection
-based on comparison of nested models by the F-test. A DV is selected for
-inclusion when, during nested model comparison, it accounts for a significant
-amount of remaining variation, under the alpha value specified by the user.
+based on comparison of nested models using inference tests. A DV is selected
+for inclusion when, during nested model comparison, it accounts for a
+significant amount of remaining variation, under the alpha value specified by
+the user. See Halvorsen et al. (2015) for a more detailed explanation of the
+forward selection procedure.
 }
 \details{
-The F-statistic that \code{selectDVforEV} uses for nested model comparison is
-calculated using equation 59 in Halvorsen (2013). See Halvorsen et al. (2015)
-for a more detailed explanation of the forward selection procedure.
+The F-test available in \code{selectDVforEV} is calculated using equation 59
+in Halvorsen (2013).
 
-If the derived variables were created using \code{\link{deriveVars}}, the
-same response variable should be used in \code{selectDVforEV}, as the
-deviation and spline transformations produced by \code{deriveVars} are
-RV-specific.
+If using binary-type derived variables from \code{\link{deriveVars}}, be
+aware that a model including all of these DVs will be considered equal to the
+the closest nested model, due to perfect multicollinearity (i.e. the dummy
+variable trap).
 
-If \code{trainmax} reduces the number of uninformed background points in the
-training data, a new \code{data} object is returned as part of the function
-output. This \code{data} object shows which of the uninformed background
-points were randomly selected, and should be used together with the selected
-DVs in \code{\link{selectEV}} during continued model selection.
-
-Explanatory variables should be uniquely named, and the names must not
-contain spaces, underscores, or colons. Underscores and colons are reserved
-to denote derived variables and interaction terms repectively.
+Explanatory variables should be uniquely named. Underscores ('_') and colons
+(':') are reserved to denote derived variables and interaction terms
+repectively, and \code{selectDVforEV} will replace these -- along with other
+special characters -- with periods ('.').
 }
 \examples{
-\dontrun{
-selecteddvs <- selectDVforEV(dat, deriveddat, alpha = 0.0001,
-   dir = "D:/path/to/modeling/directory")
-
-# From vignette:
-grasslandDVselect <- selectDVforEV(grasslandPO, grasslandDVs[[1]], alpha = 0.001)
-summary(grasslandDVs$EVDV)
-sum(sapply(grasslandDVs$EVDV, length))
-summary(grasslandDVselect$selectedDV)
-sum(sapply(grasslandDVselect$selectedDV, length))
-}
 
 }
 \references{

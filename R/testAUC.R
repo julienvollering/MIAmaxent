@@ -6,51 +6,54 @@
 #' used with occurence data that is independent from the data used to train the
 #' model, to obtain an unbiased measure of model performance.
 #'
-#' @param data Data frame containing test occurrence data in the first column
-#'   and corresponding explanatory variables in subsequent columns. The test
-#'   data should be coded as: 1/0/NA, representing presence, absence, and
-#'   unknown. See \code{\link{readData}}.
-#' @param transformation Full pathway of the 'transformation.Rdata' file
-#'   containing the transformations used to build the model. This file is saved
-#'   as a result of the \code{\link{deriveVars}} function. Equivalently, the
-#'   second item in the list returned by \code{\link{deriveVars}} can be used
-#'   directly.
-#' @param model Full pathway of the '.lambdas' file of the model in question.
-#'   This file is saved as a result of \code{\link{selectEV}}.
+#' If plotted, the point along the ROC curve where the discrimination threshold
+#' is PRO = 1, is shown for reference.
 #'
-#' @return In addition to returning the testAUC value, graphical output showing
-#'   the corresponding ROC plot is produced. The point along the ROC curve where
-#'   the discrimination threshold is PRO = 1 is shown for reference.
+#' @param model The model to be projected, represented by an object of class
+#'   'glm'. This may be the object returned by \code{\link{chooseModel}}, or the
+#'   'selectedmodel' returned by \code{\link{selectEV}}.
+#' @param transformations Transformation functions used to create the derived
+#'   variables in the model. I.e. the 'transformations' returned by
+#'   \code{\link{deriveVars}}. Equivalently, the full file pathway of the
+#'   'transformations.Rdata' file saved as a result of \code{\link{deriveVars}}.
+#' @param data Data frame containing test occurrence data in the first column
+#'   and corresponding explanatory variables in the model in subsequent columns.
+#'   The test data should be coded as: 1/0/NA, representing presence, absence,
+#'   and unknown. See \code{\link{readData}}.
+#' @param plot Logical. Plot the ROC curve?
+#' @param ... Arguments to be passed to \code{plot} to control the appearance of
+#'   the ROC plot. For example: \itemize{ \item \code{lwd} for line width \item
+#'   \code{main} for plot title \item \code{cex} for plot text and symbol size }
+#'   Note that some graphical parameters may return errors or warnings if they
+#'   cannot be changed or correspond to multiple elements in the plot.
 #'
 #' @examples
-#' \dontrun{
-#' AUC <- testAUC(testdat,
-#'    transformation = "D:/path/to/modeling/directory/deriveVars/transformations.Rdata",
-#'    model = "D:/path/to/modeling/directory/selectEV/round/model/1.lambdas")
-#' }
-#'
-#' sp1pa <- toydata_sp1po
-#' sp1pa$RV[is.na(sp1pa$RV)] <- 0
-#' sp1pa[, 1] <- sample(sp1pa$RV, 40)
-#' auc <- testAUC(sp1pa, toydata_dvs$transformations,
-#'    system.file("extdata/sommerfeltia", "1.lambdas", package = "MIAmaxent"))
-#' auc
-#'
-#' \dontrun{
-#' From vignette:
-#' grasslandAUC <- testAUC(grasslandPA, transformation = grasslandDVs[[2]],
-#'    model = system.file("extdata", "1.lambdas", package = "MIAmaxent"))
-#' grasslandAUC
-#' }
 #'
 #' @export
 
 
-testAUC <- function(data, transformation, model) {
+testAUC <- function(model, transformations, data, plot = TRUE, ...) {
+
+  dvnamesni <- names(model$betas)[grep(":", names(model$betas), invert = TRUE)]
+  evnames <- unique(sub("_.*", "", dvnamesni))
+  for (i in evnames) {
+    if (sum(colnames(data) == i) != 1) {
+      stop(paste(a, "must be represented in 'data' (exactly once)"),
+           call. = FALSE) }
+  }
+
+  if (!all(levels(as.factor(data[, 1])) %in% c("1", "0"))) {
+    stop("The test data is not coded as (1/0/NA)", call. = FALSE)
+  }
+  if (all(levels(as.factor(data[, 1])) == "1") && anyNA(data[, 1])) {
+    warning("The test data consist of 1/NA only, so NA is treated as absence.
+Be aware of implications for the interpretation of the AUC value.", call. = FALSE)
+    data[is.na(data[, 1]), 1] <- 0
+  }
 
   data <- stats::na.omit(data)
   test <- data[, 1]
-  PRO <- projectModel(data, transformation, model)[[1]][, 1]
+  PRO <- projectModel(model, transformations, data)[[1]][, 1]
 
   cont <- as.matrix(table(PRO, test))
   cont <- cont[order(as.numeric(rownames(cont)), decreasing = T), ]
@@ -59,23 +62,26 @@ testAUC <- function(data, transformation, model) {
   fpr <- falspos/sum(cont[, "0"])
   tpr <- truepos/sum(cont[, "1"])
 
-  graphics::plot(fpr, tpr, type="l", col="red", cex = 0.5, xlim=c(0,1), ylim=c(0,1),
-    xlab="1 - specificity (false positive rate)",
-    ylab="Sensitivity (true positive rate)")
-  graphics::abline(0,1, lty=3)
-
-  PRO1fp <- sum(cont[as.numeric(rownames(cont)) > 1, "0"])
-  PRO1tp <- sum(cont[as.numeric(rownames(cont)) > 1, "1"])
-  x <- PRO1fp/sum(cont[, "0"])
-  y <- PRO1tp/sum(cont[, "1"])
-
-  graphics::points(x, y, pch = 19, col = "#999999")
-  graphics::text(x, y, "PRO = 1", pos = 3, col = "#999999", cex = 0.9)
-
   hgtl <- tpr[-length(tpr)]
   hgtr <- tpr[-1]
   wdth <- diff(fpr)
   AUC <- sum(((hgtl + hgtr)/2) * wdth)
+
+  if (class(model)[1] == "iwlr") {
+    PROpt <- TRUE
+    PRO1fp <- sum(cont[as.numeric(rownames(cont)) > 1, "0"])
+    PRO1tp <- sum(cont[as.numeric(rownames(cont)) > 1, "1"])
+    x <- PRO1fp/sum(cont[, "0"])
+    y <- PRO1tp/sum(cont[, "1"])
+  } else {
+    PROpt <- FALSE
+    x <- NULL
+    y <- NULL
+  }
+
+  if (plot == TRUE) {
+    .plotROC(fpr, tpr, AUC, PROpt, x, y, ...)
+  }
 
   return(AUC)
 }

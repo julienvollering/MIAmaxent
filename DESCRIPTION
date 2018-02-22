@@ -1,25 +1,26 @@
 Package: MIAmaxent
 Type: Package
-Title: Maxent Distribution Model Selection
-Version: 0.4.0.9000
+Title: A modular, integrated approach to maximum entropy distribution modeling
+Version: 0.5.0.9000
 Authors@R: c(
     person("Julien", "Vollering", email = "julien.vollering@hvl.no", role = c("aut", "cre")),
-    person("Sabrina", "Mazzoni", email = "sabgis@uevora.pt", role = "aut"),
-    person("Rune", "Halvorsen", email = "rune.halvorsen@nhm.uio.no", role = "aut"))
+    person("Rune", "Halvorsen", email = "rune.halvorsen@nhm.uio.no", role = "aut"),
+    person("Sabrina", "Mazzoni", email = "sabgis@uevora.pt", role = c("ctb", "cph")),
+    person("Steven", "Phillips", role = "cph"))
 Maintainer: Julien Vollering <julien.vollering@hvl.no>
 Description: Tools for training, selecting, and evaluating maximum entropy
-    (Maxent) distribution models. This package provides tools for user-
-    controlled transformation of explanatory variables, selection of variables
-    by nested model comparison,  and flexible model evaluation and projection.
-    It is based on the strict maximum likelihood interpretation of maximum
-    entropy modelling.
+    (and standard logistic regression) distribution models. This package 
+    provides tools for user-controlled transformation of explanatory variables, 
+    selection of variables by nested model comparison, and flexible model 
+    evaluation and projection. It follows principles based on the maximum-
+    likelihood interpretation of maximum entropy modelling, and implements 
+    maximum entropy models as infinitely-weighted logistic regressions.
 Depends: R (>= 2.10)
 License: MIT + file LICENSE
 LazyData: TRUE
 URL: https://github.com/julienvollering/MIAmaxent
 BugReports: https://github.com/julienvollering/MIAmaxent/issues
 RoxygenNote: 6.0.1
-SystemRequirements: Maxent.jar software, Java Runtime Environment (JRE)
 Imports:
     dplyr (>= 0.4.3),
     e1071 (>= 1.6-7),

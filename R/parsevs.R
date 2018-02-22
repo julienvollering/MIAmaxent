@@ -1,219 +1,165 @@
 #' Forward selection of EVs
 #'
-#' @param rv Vector of response variable values.
-#' @param ev List of EVs to be selected from.
+#' @param dvdata List with response variable (vector or single-column data
+#'   frame) followed by EVs to be selected from (data frames).
 #' @param alpha Alpha level for F-test.
+#' @param test Character string matching either "Chisq" or "F".
+#' @param algorithm Character string matching either "maxent" or "LR".
 #' @param interaction Logical. Allows interaction terms.
-#' @param dir Directory to which MaxEnt runs are written.
 #' @param formula Model formula specifying a starting point for model selection.
 #'
 
-.parsevs <- function(rv, ev, alpha, interaction, dir, formula) {
+.parsevs <- function(dvdata, alpha, interaction, formula, test, algorithm) {
+
+  dvdata[[1]] <- data.frame("RV"=dvdata[[1]])
+  test <- match.arg(test, choices = c("Chisq", "F"))
+  algorithm <- match.arg(algorithm, choices = c("maxent", "LR"))
+  dfnames <-  unlist(lapply(dvdata, names))
+  df <- data.frame(do.call(cbind, dvdata))
+  names(df) <- dfnames
+  roundnumber <- 0
+  refformula <- stats::formula(paste(names(df)[1], "~ 1"))
 
   if (!is.null(formula) && length(labels(stats::terms(formula))) != 0) {
-    roundnumber <- 0
-    mnull <- 0
-    bestFVA <- 0
-    rounddir <- .dirpath.create(dir, "round0")
-    roundmodel <- labels(stats::terms(formula))
-    ctable <- data.frame(round=integer(1), model=integer(1), EV=character(1),
-      m=integer(1), trainAUC=numeric(1), Entropy=numeric(1), FVA=numeric(1),
-      addedFVA=numeric(1), dfe=integer(1), dfu=integer(1),
-      Fstatistic=numeric(1), Pvalue=numeric(1), Directory=character(1),
-      stringsAsFactors = F)
-    evnames <- roundmodel
-    dvnames <- unlist(lapply(ev[evnames], names), use.names = FALSE)
-    modeldir <- .dirpath.create(rounddir, "model1")
-    df <- data.frame(ev[evnames])
-    colnames(df) <- dvnames
-    .runjar(rv, df, maxbkg = length(rv) + 1, modeldir)
-    maxRes <- utils::read.csv(file.path(modeldir, "maxentResults.csv"))
-    ctable$round[1] <- 0
-    ctable$model[1] <- 1
-    ctable$EV[1] <- paste(evnames, collapse = " ")
-    ctable$m[1] <- length(dvnames)
-    ctable$trainAUC[1] <- maxRes$Training.AUC
-    ctable$Entropy[1] <- maxRes$Entropy
-    n <- maxRes$X.Training.samples
-    N <- maxRes$X.Background.points
-    ctable$FVA[1] <- (log(N) - ctable$Entropy[1]) / (log(N) - log(n))
-    ctable$addedFVA[1] <- ctable$FVA[1] - bestFVA
-    ctable$dfe[1] <- ctable$m[1] - mnull
-    ctable$dfu[1] <- (N - n) - (ctable$m[1] + 1) - 1
-    ctable$Fstatistic[1] <- (ctable$addedFVA[1] * ctable$dfu[1]) /
-      ((1 - ctable$FVA[1]) * ctable$dfe[1])
-    ctable$Pvalue[1] <- 1 - stats::pf(ctable$Fstatistic[1], ctable$dfe[1],
-      ctable$dfu[1])
-    ctable$Directory[1] <- modeldir
-    modeltable <- ctable
-    selectedset <- roundmodel
-    mnull <- ctable$m[1]
-    bestFVA <- ctable$FVA[1]
-    remainingset <- names(ev)[!(names(ev) %in% roundmodel)]
+    selectedset <- labels(stats::terms(formula))
+    remainingset <- names(dvdata)[-1][!(names(dvdata)[-1] %in% selectedset)]
+    selectedsetdvs <- unlist(lapply(dvdata[selectedset], names))
+    formula <- stats::formula(paste(names(df)[1], "~",
+                                    paste(selectedsetdvs, collapse=" + ")))
+    ctable <- .compare(list(formula), refformula, df, test, algorithm)
+    ctable$variables <- paste(selectedset, collapse=" + ")
+    modeltable <- data.frame("round"=roundnumber, ctable)
+    refformula <- formula
     message("Round 0 complete.")
+
+    if (length(remainingset) < 1) {
+      if (algorithm == "maxent") {
+        selectedmodel <- .runIWLR(formula, df)
+      } else {
+        selectedmodel <- .runLR(formula, df)
+      }
+      return(list(dvdata[selectedset], modeltable, selectedmodel))
+    }
+
   } else {
     selectedset <- character(length=0)
-    remainingset <- names(ev)
+    remainingset <- names(dvdata)[-1]
     modeltable <- data.frame()
-    roundnumber <- 0
-    mnull <- 0
-    bestFVA <- 0
   }
 
   iterationexit <- FALSE
   while (iterationexit == FALSE) {
 
     roundnumber <- roundnumber + 1
-    rounddir <- .dirpath.create(dir, paste0("round", roundnumber))
-    roundmodels <- lapply(remainingset, function(x) c(selectedset, x))
+    remainingsetdvs <- lapply(dvdata[remainingset], names)
+    formulas <- lapply(remainingsetdvs, function(x) {
+      stats::update.formula(refformula,
+                            paste("~ . +", paste(x, collapse = " + ")))})
+    ctable <- .compare(formulas, refformula, df, test, algorithm)
+    if (length(selectedset)==0) {
+      variables <- remainingset
+    } else { variables <- paste(paste(selectedset, collapse=" + "),
+                                remainingset, sep=" + ")}
+    ctable$variables <- variables
+    ctable <- ctable[order(ctable$P,
+                           -ctable[, match(test, names(ctable))]), ]
+    modeltable <- rbind(modeltable, data.frame("round"=roundnumber, ctable),
+                     make.row.names = FALSE)
 
-    nrows <- length(roundmodels)
-    ctable <- data.frame(round=integer(nrows), model=integer(nrows),
-      EV=character(nrows), m=integer(nrows), trainAUC=numeric(nrows),
-      Entropy=numeric(nrows), FVA=numeric(nrows), addedFVA=numeric(nrows),
-      dfe=integer(nrows), dfu=integer(nrows), Fstatistic=numeric(nrows),
-      Pvalue=numeric(nrows), Directory=character(nrows),
-      stringsAsFactors = F)
-
-    for (i in 1:length(roundmodels)) {
-      evnames <- roundmodels[[i]]
-      dvnames <- unlist(lapply(ev[evnames], names), use.names = FALSE)
-      modeldir <- .dirpath.create(rounddir, paste0("model", i))
-      df <- data.frame(ev[evnames])
-      colnames(df) <- dvnames
-      .runjar(rv, df, maxbkg = length(rv) + 1, modeldir)
-
-      maxRes <- utils::read.csv(file.path(modeldir, "maxentResults.csv"))
-      ctable$round[i] <- roundnumber
-      ctable$model[i] <- i
-      ctable$EV[i] <- paste(evnames, collapse = " ")
-      ctable$m[i] <- length(dvnames)
-      ctable$trainAUC[i] <- maxRes$Training.AUC
-      ctable$Entropy[i] <- maxRes$Entropy
-      n <- maxRes$X.Training.samples
-      N <- maxRes$X.Background.points
-      ctable$FVA[i] <- (log(N) - ctable$Entropy[i]) / (log(N) - log(n))
-      ctable$addedFVA[i] <- ctable$FVA[i] - bestFVA
-      ctable$dfe[i] <- ctable$m[i] - mnull
-      ctable$dfu[i] <- (N - n) - (ctable$m[i] + 1) - 1
-      ctable$Fstatistic[i] <- (ctable$addedFVA[i] * ctable$dfu[i]) /
-        ((1 - ctable$FVA[i]) * ctable$dfe[i])
-      ctable$Pvalue[i] <- 1 - stats::pf(ctable$Fstatistic[i], ctable$dfe[i],
-        ctable$dfu[i])
-      ctable$Directory[i] <- modeldir
+    if (!is.na(ctable$P[1]) && ctable$P[1] < alpha) {
+      selectedset <- unlist(strsplit(ctable$variables[1], split=" + ",
+                                     fixed=TRUE))
+      selectedsetdvs <- unlist(lapply(dvdata[selectedset], names))
+      refformula <- stats::formula(paste(names(df)[1], "~",
+                                         paste(selectedsetdvs, collapse=" + ")))
+      testedEVs <- sapply(strsplit(ctable$variables[seq(nrow(ctable))[-1]],
+                                   split=" + ", fixed=TRUE),
+                          function(x) {x[length(selectedset)]})
+      remainingset <- testedEVs[ctable$P[seq(nrow(ctable))[-1]] < alpha]
+      remainingset <- remainingset[!is.na(remainingset)]
     }
 
-    ctable <- ctable[order(ctable$Pvalue, -ctable$Fstatistic), ]
-    modeltable <- rbind(modeltable, ctable, make.row.names = FALSE)
+    message(paste("Round", roundnumber, "complete."))
 
-    if (ctable$Pvalue[1] < alpha) {
-      selectedset <- unlist(strsplit(ctable$EV[1], split=" "))
-      mnull <- ctable$m[1]
-      bestFVA <- ctable$FVA[1]
-      addedEV <- sapply(strsplit(ctable$EV[seq(nrow(ctable))[-1]], split=" "),
-        function(x) {x[length(selectedset)]})
-      remainingset <- addedEV[ctable$Pvalue[seq(nrow(ctable))[-1]] < alpha]
-    }
-
-    message(paste0("Round ", roundnumber, " complete."))
-
-    if (nrow(ctable) == 1 || ctable$Pvalue[1] > alpha ||
-        (ctable$Pvalue[1] < alpha &&
-            all(ctable$Pvalue[seq(nrow(ctable))[-1]] >= alpha))) {
+    if (nrow(ctable) == 1 ||
+        ctable$P[1] > alpha ||
+        (all(ctable$P[seq(nrow(ctable))[-1]] >= alpha |
+             is.na(ctable$P[seq(nrow(ctable))[-1]])))) {
       iterationexit <- TRUE
     }
   }
 
   if (interaction == FALSE || length(selectedset) < 2) {
-    return(list(ev[selectedset], modeltable))
-  }
-
-  message(paste0("Forward selection of interaction terms between ",
-    length(selectedset), " EVs"))
-
-  combos <- t(utils::combn(selectedset, 2))
-  products <- vector("list", nrow(combos))
-  names(products) <- apply(combos, 1, function(x) {paste(x, collapse=":")})
-  for (i in 1:nrow(combos)) {
-    ev1 <- ev[[combos[i,1]]]
-    ev2 <- ev[[combos[i,2]]]
-    dvcombos <- expand.grid(names(ev1), names(ev2))
-    productdvs <- matrix(nrow = nrow(ev[[1]]), ncol = nrow(dvcombos))
-    for (j in 1:nrow(dvcombos)) {
-      productdvs[, j] <- ev1[[dvcombos[j,1]]] * ev2[[dvcombos[j,2]]]
+    if (algorithm == "maxent") {
+      selectedmodel <- .runIWLR(refformula, df)
+    } else {
+      selectedmodel <- .runLR(refformula, df)
     }
-    colnames(productdvs) <- apply(dvcombos, 1, function(x) {
-      paste(x, collapse=":")})
-    products[[i]] <- as.data.frame(productdvs)
+    return(list(dvdata[selectedset], modeltable, selectedmodel))
   }
 
-  ev <- append(ev, products)
-  remainingset <- names(products)
+  message(paste("Forward selection of interaction terms between",
+    length(selectedset), "EVs"))
+
+  remainingset <- apply(utils::combn(selectedset, 2), 2,
+                        function(x) {paste(x, collapse=":")})
+  maineffectdvs <- lapply(dvdata[-1], names)
+  interactiondvs <- lapply(strsplit(remainingset, ":", fixed=TRUE),
+                            function(x, dvdata) {
+                              dvs1 <- names(dvdata[[x[1]]])
+                              dvs2 <- names(dvdata[[x[2]]])
+                              apply(expand.grid(dvs1, dvs2), 1, function(y) {
+                                paste(y, collapse=":")})
+                            }, dvdata=dvdata)
+  names(interactiondvs) <- remainingset
+  dvs <- c(maineffectdvs, interactiondvs)
 
   iterationexit <- FALSE
   while (iterationexit == FALSE) {
 
     roundnumber <- roundnumber + 1
-    rounddir <- .dirpath.create(dir, paste0("round", roundnumber))
-    roundmodels <- lapply(remainingset, function(x) c(selectedset, x))
+    remainingsetdvs <- dvs[remainingset]
+    formulas <- lapply(remainingsetdvs, function(x) {
+      stats::update.formula(refformula,
+                            paste("~ . +", paste(x, collapse = " + ")))})
+    ctable <- .compare(formulas, refformula, df, test, algorithm)
+    variables <- paste(paste(selectedset, collapse=" + "),
+                                remainingset, sep=" + ")
+    ctable$variables <- variables
+    ctable <- ctable[order(ctable$P,
+                           -ctable[, match(test, names(ctable))]), ]
+    modeltable <- rbind(modeltable, data.frame("round"=roundnumber, ctable),
+                        make.row.names = FALSE)
 
-    nrows <- length(roundmodels)
-    ctable <- data.frame(round=integer(nrows), model=integer(nrows),
-      EV=character(nrows), m=integer(nrows), trainAUC=numeric(nrows),
-      Entropy=numeric(nrows), FVA=numeric(nrows), addedFVA=numeric(nrows),
-      dfe=integer(nrows), dfu=integer(nrows), Fstatistic=numeric(nrows),
-      Pvalue=numeric(nrows), Directory=character(nrows),
-      stringsAsFactors = F)
-
-    for (i in 1:length(roundmodels)) {
-      evnames <- roundmodels[[i]]
-      dvnames <- unlist(lapply(ev[evnames], names), use.names = FALSE)
-      modeldir <- .dirpath.create(rounddir, paste0("model", i))
-      df <- data.frame(ev[evnames])
-      colnames(df) <- dvnames
-      .runjar(rv, df, maxbkg = length(rv) + 1, modeldir)
-
-      maxRes <- utils::read.csv(file.path(modeldir, "maxentResults.csv"))
-      ctable$round[i] <- roundnumber
-      ctable$model[i] <- i
-      ctable$EV[i] <- paste(evnames, collapse = " ")
-      ctable$m[i] <- length(dvnames)
-      ctable$trainAUC[i] <- maxRes$Training.AUC
-      ctable$Entropy[i] <- maxRes$Entropy
-      n <- maxRes$X.Training.samples
-      N <- maxRes$X.Background.points
-      ctable$FVA[i] <- (log(N) - ctable$Entropy[i]) / (log(N) - log(n))
-      ctable$addedFVA[i] <- ctable$FVA[i] - bestFVA
-      ctable$dfe[i] <- ctable$m[i] - mnull
-      ctable$dfu[i] <- (N - n) - (ctable$m[i] + 1) - 1
-      ctable$Fstatistic[i] <- (ctable$addedFVA[i] * ctable$dfu[i]) /
-        ((1 - ctable$FVA[i]) * ctable$dfe[i])
-      ctable$Pvalue[i] <- 1 - stats::pf(ctable$Fstatistic[i], ctable$dfe[i],
-        ctable$dfu[i])
-      ctable$Directory[i] <- modeldir
+    if (!is.na(ctable$P[1]) && ctable$P[1] < alpha) {
+      selectedset <- unlist(strsplit(ctable$variables[1], split=" + ",
+                                     fixed=TRUE))
+      selectedsetdvs <- unlist(dvs[selectedset])
+      refformula <- stats::formula(paste(names(df)[1], "~",
+                                         paste(selectedsetdvs, collapse=" + ")))
+      testedEVs <- sapply(strsplit(ctable$variables[seq(nrow(ctable))[-1]],
+                                   split=" + ", fixed=TRUE),
+                          function(x) {x[length(selectedset)]})
+      remainingset <- testedEVs[ctable$P[seq(nrow(ctable))[-1]] < alpha]
+      remainingset <- remainingset[!is.na(remainingset)]
     }
 
-    ctable <- ctable[order(ctable$Pvalue, -ctable$Fstatistic), ]
-    modeltable <- rbind(modeltable, ctable, make.row.names = FALSE)
+    message(paste("Round", roundnumber, "complete."))
 
-    if (ctable$Pvalue[1] < alpha) {
-      selectedset <- unlist(strsplit(ctable$EV[1], split=" "))
-      mnull <- ctable$m[1]
-      bestFVA <- ctable$FVA[1]
-      addedEV <- sapply(strsplit(ctable$EV[seq(nrow(ctable))[-1]], split=" "),
-        function(x) {x[length(selectedset)]})
-      remainingset <- addedEV[ctable$Pvalue[seq(nrow(ctable))[-1]] < alpha]
-    }
-
-    message(paste0("Round ", roundnumber, " complete."))
-
-    if (nrow(ctable) == 1 || ctable$Pvalue[1] > alpha ||
-        (ctable$Pvalue[1] < alpha &&
-            all(ctable$Pvalue[seq(nrow(ctable))[-1]] >= alpha))) {
+    if (nrow(ctable) == 1 ||
+        ctable$P[1] > alpha ||
+        (all(ctable$P[seq(nrow(ctable))[-1]] >= alpha |
+             is.na(ctable$P[seq(nrow(ctable))[-1]])))) {
       iterationexit <- TRUE
     }
   }
 
-  return(list(ev[selectedset], modeltable))
+  if (algorithm == "maxent") {
+    selectedmodel <- .runIWLR(refformula, df)
+  } else {
+    selectedmodel <- .runLR(refformula, df)
+  }
+  selectedsetni <- selectedset[selectedset %in% names(dvdata)]
+  return(list(dvdata[selectedsetni], modeltable, selectedmodel))
 
 }

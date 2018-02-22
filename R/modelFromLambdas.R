@@ -25,7 +25,7 @@
 #' @export
 
 
-modelfromlambdas <- function(file, raw = FALSE) {
+modelFromLambdas <- function(file, raw = FALSE) {
 
   lambdas <- utils::read.csv(file, header = FALSE)
   dvrows <- lambdas[1:(nrow(lambdas)-4), ]
