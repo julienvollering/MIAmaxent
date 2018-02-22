@@ -1,15 +1,15 @@
-#' Project model to data.
+#' Project model across explanatory data.
 #'
-#' \code{projectModel} Calculates the probability ratio output (PRO) of a given
-#' model for any points where values of the explanatory variables in the model
-#' are known.The transformations performed on the explanatory variables to build
-#' the model must be specified.
+#' \code{projectModel} Calculates model predictions for any points where values
+#' of the explanatory variables in the model are known. \code{projectModel} can
+#' be used to get model predictions for the training data, or to project the
+#' model to a new space or time.
 #'
 #' Missing data (NA) for a continuous variable will result in NA output for that
 #' point. Missing data for a categorical variable is treated as belonging to
 #' none of the categories.
 #'
-#' When \code{rescale = FALSE} the scale of the model output (PRO or raw)
+#' When \code{rescale = FALSE} the scale of the maxent model output (PRO or raw)
 #' returned by this function is dependent on the data used to train the model.
 #' For example, a location with PRO = 2 can be interpreted as having a
 #' probability of presence twice as high as an average site in the
@@ -21,28 +21,32 @@
 #' scale which is dependent on the size of either the training data extent
 #' (\code{rescale = FALSE}) or projection data extent (\code{rescale = TRUE}).
 #'
+#' @param model The model to be projected, represented by an object of class
+#'   'glm'. This may be the object returned by \code{\link{chooseModel}}, or the
+#'   'selectedmodel' returned by \code{\link{selectEV}}.
+#' @param transformations Transformation functions used to create the derived
+#'   variables in the model. I.e. the 'transformations' returned by
+#'   \code{\link{deriveVars}}. Equivalently, the full file pathway of the
+#'   'transformations.Rdata' file saved as a result of \code{\link{deriveVars}}.
 #' @param data Data frame of all the explanatory variables (EVs) included in the
-#'   model, with column names matching EV names. See \code{\link{readData}}.
-#' @param transformation Full pathway of the 'transformations.Rdata' file
-#'   containing the transformations used to build the model. This file is saved
-#'   as a result of the \code{\link{deriveVars}} function. Equivalently, the
-#'   second item in the list returned by \code{\link{deriveVars}} can be used
-#'   directly.
-#' @param model Full pathway of the '.lambdas' file of the model in question.
-#'   This file is saved as a result of \code{\link{selectEV}}.
+#'   model (see \code{\link{readData}}). Alternatively, an object of class
+#'   'RasterStack' containing rasters for all EVs included in the model. Column
+#'   or raster names must match EV names.
 #' @param clamping Logical. Do clamping \emph{sensu} Phillips et al. (2006).
 #'   Default is \code{FALSE}.
+#' @param raw Logical. Return raw maxent output instead of probability ratio
+#'   output (PRO)? Default is FALSE. Irrelevant for 'lr' class models.
 #' @param rescale Logical. Linearly rescale model output (PRO or raw) with
 #'   respect to the projection \code{data}? This has implications for the
 #'   interpretation of output values with respect to reference values (e.g. PRO
-#'   = 1). See details.
-#' @param raw Logical. Return raw Maxent output instead of probability ratio
-#'   output (PRO)? Default is FALSE.
+#'   = 1). See details. Irrelevant for 'lr' class models.
+
 #'
 #' @return List of 2: \enumerate{ \item A data frame with the model output in
 #'   column 1 and the corresponding explanatory data in subsequent columns.
-#'   \item A data frame showing the range of \code{data} compared to the
-#'   training data, on a 0-1 scale.}
+#'   \item A list showing the range of \code{data} compared to the training
+#'   data, on a 0-1 scale.} If \code{data} is a RasterStack, the model output is
+#'   plotted as a raster, and only the list of ranges is returned.
 #'
 #'
 #' @references Halvorsen, R. (2013) A strict maximum likelihood explanation of
@@ -55,65 +59,40 @@
 #'   entropy modeling of species geographic distributions. Ecological Modelling,
 #'   190, 231-259.
 #'
-#' @examples
-#' \dontrun{
-#' modeloutput <- projectModel(newdat,
-#'    transformation = "D:/path/to/modeling/directory/deriveVars/transformations.Rdata",
-#'    model = "D:/path/to/modeling/directory/selectEV/round/model/1.lambdas")
-#' }
-#'
-#' proj <- projectModel(toydata_sp1po, toydata_dvs$transformations,
-#'    system.file("extdata/sommerfeltia", "1.lambdas", package = "MIAmaxent"))
-#' proj
-#'
-#' \dontrun{
-#' # From vignette:
-#' grasslandPrediction <- projectModel(grasslandPO,
-#'    transformation = grasslandDVs[[2]],
-#'    model = system.file("extdata", "1.lambdas", package = "MIAmaxent"))
-#' head(grasslandPrediction$output)
-#' grasslandPrediction$ranges
-#'
-#' # From vignette:
-#' library(raster)
-#' contfiles <- list.files(system.file("extdata", "EV_continuous", package = "MIAmaxent"),
-#'    full.names = TRUE)
-#' catfiles <- list.files(system.file("extdata", "EV_categorical", package = "MIAmaxent"),
-#'    full.names = TRUE)
-#' stack <- raster::stack(c(contfiles, catfiles))
-#' stackpts <- rasterToPoints(stack)
-#' spatialPrediction <- projectModel(stackpts,
-#'    transformation = grasslandDVs[[2]],
-#'    model = system.file("extdata", "1.lambdas", package = "MIAmaxent"))
-#' Predictionraster <- raster(stack, layer=0)
-#' Predictionraster <- rasterize(spatialPrediction$output[, c("x", "y")], Predictionraster,
-#'    field = spatialPrediction$output$PRO)
-#' plot(Predictionraster, colNA="black")
-#' }
-#'
 #' @export
 
 
-projectModel <- function(data, transformation, model, clamping = FALSE,
-                         rescale = FALSE, raw = FALSE) {
+projectModel <- function(model, transformations, data, clamping = FALSE,
+                         raw = FALSE, rescale = FALSE) {
 
-  lambdas <- utils::read.csv(model, header = FALSE)
-  dvnames <- as.character(lambdas[1:(nrow(lambdas)-4), 1])
-  dvnamesni <- dvnames[grep(":", dvnames, invert = TRUE)]
-  dvnamesi <- dvnames[grep(":", dvnames)]
-
-  .check.dvs.in.data(dvnamesni, data)
+  dvnamesni <- names(model$betas)[grep(":", names(model$betas), invert = TRUE)]
   evnames <- unique(sub("_.*", "", dvnamesni))
 
-  alltransf <- .load.transf(transformation)
+  map <- FALSE
+  if (class(data)[1] == "RasterStack") {
+    map <- TRUE
+    names(data) <- make.names(names(data), allow_ = FALSE)
+    evstack <- data[[evnames]]
+    data <- raster::as.data.frame(evstack, na.rm = TRUE)
+    cells <- as.numeric(row.names(data))
+  }
+
+  for (i in evnames) {
+    if (sum(colnames(data) == i) != 1) {
+      stop(paste(a, "must be represented in 'data' (exactly once)"),
+           call. = FALSE) }
+  }
+
+  alltransf <- .load.transf(transformations)
   .check.dvs.in.transf(dvnamesni, alltransf)
 
   Ranges <- lapply(evnames, function(x) {
     evdata <- data[, x]
-    xnull <- environment(alltransf[x == sub("_.*", "", names(alltransf))][[1]])$xnull
+    anevtransf <- alltransf[grepl(paste0(x, "_"), names(alltransf))][[1]]
+    xnull <- environment(anevtransf)$xnull
     if (class(xnull) %in% c("numeric", "integer")) {
       L <- (evdata - range(xnull)[1]) / diff(range(xnull))
-      return(range(L))
+      return(range(L, na.rm = TRUE))
     }
     if (class(xnull) %in% c("factor", "character")) {
       if (all(evdata %in% xnull)) {return("inside")} else {return("outside")}
@@ -130,30 +109,31 @@ projectModel <- function(data, transformation, model, clamping = FALSE,
     }
     return(y)
   })
-  names(dvdatani) <- dvnamesni
+  newdata <- as.data.frame(do.call(cbind, dvdatani))
+  names(newdata) <- dvnamesni
 
-  prodlist <- strsplit(dvnamesi, ":")
-  dvdatai <- lapply(prodlist, function(x) {
-    dvdatani[[x[1]]] * dvdatani[[x[2]]]
-  })
-  names(dvdatai) <- dvnamesi
+  type <- if (class(model)[1] == "iwlr") {
+    ifelse(raw == TRUE, "raw", "PRO")
+  } else { "response" }
+  preds <- stats::predict(model, newdata, type)
 
-  dvdf <- data.frame(c(dvdatani, dvdatai), check.names = FALSE)
-  modelfunction <- modelfromlambdas(model, raw)
-  modeloutput <- modelfunction(dvdf)[, 1]
-  if (rescale == TRUE) {
-    if (raw == TRUE) {
-      modeloutput <- modeloutput/sum(modeloutput)
-    } else {
-      modeloutput <- (modeloutput/sum(modeloutput))*length(modeloutput)
-    }
+  if (class(model)[1] == "iwlr" && rescale == TRUE) {
+    if (raw == TRUE) { preds <- preds/sum(preds, na.rm = TRUE)
+    } else { preds <- (preds/sum(preds, na.rm = TRUE)) * sum(!is.na(preds)) }
   }
 
-  if (raw == TRUE) {
-    Output <- as.data.frame(cbind(raw = modeloutput, data))
+  Output <- data.frame(preds, data)
+  colnames(Output)[1] <- type
+
+  if (map == TRUE) {
+    values <- rep(NA, raster::ncell(evstack))
+    values[cells] <- Output[,1]
+    outraster <- evstack[[1]]
+    outraster <- raster::setValues(outraster, values)
+    raster::plot(outraster)
+    return(Ranges)
   } else {
-    Output <- as.data.frame(cbind(PRO = modeloutput, data))
+    return(list(output = Output, ranges = Ranges))
   }
 
-  return(list(output = Output, ranges = Ranges))
 }

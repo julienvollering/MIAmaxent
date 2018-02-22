@@ -11,8 +11,8 @@ readData(occurrence, contEV = NULL, catEV = NULL, maxbkg = 10000,
 \item{occurrence}{Full pathway of the '.csv' file of occurrence data. The
 first column of the CSV should code occurrence (see Details), while the
 second and third columns should contain X and Y coordinates corresponding
-to the ASCII raster coordinate system. The first row is read as a header
-row.}
+to the ASCII raster coordinate system. The first row of the csv is read as
+a header row.}
 
 \item{contEV}{Pathway to a directory containing continuous environmental
 variables in '.asc' file format.}
@@ -24,11 +24,11 @@ variables in '.asc' file format.}
 unknown background points for the response variable. Default is 10,000.
 Irrelevant for presence/absence data (\code{PA = TRUE}) and ignored for
 presence-only data (\code{PA = FALSE}) if \code{occurrence} contains 'NA'
-values.}
+values. See Details.}
 
 \item{PA}{Logical. Does \code{occurrence} represent presence/absence data?
 This argument affects how the values in \code{occurrence} are interpreted,
-and controls what type of data object is produced. See details.}
+and controls what type of data object is produced. See Details.}
 
 \item{XY}{Logical. Include XY coordinates in the output. May be useful for
 spatial plotting. Note that coordinates included in the training data used
@@ -38,15 +38,6 @@ to build the model will be treated as explanatory variables.}
 Data frame with the Response Variable (RV) in the first column, and
   Explanatory Variables (EVs) in subsequent columns. When \code{PA = FALSE},
   RV values are 1/NA, and when \code{PA = TRUE}, RV values are 1/0.
-
-  With presence-only occurrence data, the returned output can be used as the
-  \code{data} argument for \code{\link{plotFOP}}, \code{\link{deriveVars}},
-  \code{\link{selectDVforEV}}, \code{\link{selectEV}}, and
-  \code{\link{plotResp}}. With presence/absence occurrence data, the returned
-  output can be used as the \code{data} argument for \code{\link{testAUC}}.
-  Output from \code{readData} can also be used as the \code{data} argument
-  for \code{\link{plotResp2}}, and \code{\link{projectModel}}, but for these
-  functions the values of RV are irrelevant.
 }
 \description{
 \code{readData} reads in occurrence data in CSV file format and environmental
@@ -74,39 +65,11 @@ rows with value 'NA' are excluded, and all other rows are treated as
 presences.
 
 The names of the ASCII raster files are used as the names of the explanatory
-variables, so these files should be uniquely named, and the names must not
-contain spaces, underscores, or colons. Underscores and colons are reserved
-to denote derived variables and interaction terms repectively.
-\code{readData} automatically replaces underscores with hyphens.
+variables, so these files should be uniquely named. \code{readData} replaces
+underscores '_', spaces ' ' and other special characters not allowed in names
+with periods '.'. In MIAmaxent, underscores and colons are reserved to
+denote derived variables and interaction terms, repectively.
 }
 \examples{
-\dontrun{
-dat <- readData(occurrence = "D:/path/to/occurrence/data.csv",
-   contEV = "D:/path/to/continuousEV/directory",
-   catEV = "D:/path/to/categoricalEV/directory", maxbkg = 100000, XY = TRUE)
-}
-
-toydata_sp1po <- readData(system.file("extdata/sommerfeltia", "Sp1.csv", package = "MIAmaxent"),
-   contEV = system.file("extdata/sommerfeltia", "EV_continuous", package = "MIAmaxent"))
-toydata_sp1po
-
-\dontrun{
-# From vignette:
-grasslandPO <- readData(
-   occurrence = system.file("extdata", "occurrence_PO.csv", package = "MIAmaxent"),
-   contEV = system.file("extdata", "EV_continuous", package = "MIAmaxent"),
-   catEV = system.file("extdata", "EV_categorical", package = "MIAmaxent"),
-   maxbkg = 20000)
-head(grasslandPO)
-
-# From vignette:
-grasslandPA <- readData(
-   occurrence = system.file("extdata", "occurrence_PA.csv", package = "MIAmaxent"),
-   contEV = system.file("extdata", "EV_continuous", package = "MIAmaxent"),
-   catEV = system.file("extdata", "EV_categorical", package = "MIAmaxent"),
-   PA = TRUE, XY = TRUE)
-head(grasslandPA)
-tail(grasslandPA)
-}
 
 }
