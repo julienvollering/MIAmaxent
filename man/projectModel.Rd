@@ -2,10 +2,10 @@
 % Please edit documentation in R/projectModel.R
 \name{projectModel}
 \alias{projectModel}
-\title{Project model to data.}
+\title{Project model across explanatory data.}
 \usage{
-projectModel(model, transformations, data, clamping = FALSE,
-  rescale = FALSE, raw = FALSE)
+projectModel(model, transformations, data, clamping = FALSE, raw = FALSE,
+  rescale = FALSE)
 }
 \arguments{
 \item{model}{The model to be projected, represented by an object of class
@@ -25,13 +25,13 @@ or raster names must match EV names.}
 \item{clamping}{Logical. Do clamping \emph{sensu} Phillips et al. (2006).
 Default is \code{FALSE}.}
 
+\item{raw}{Logical. Return raw maxent output instead of probability ratio
+output (PRO)? Default is FALSE. Irrelevant for 'lr' class models.}
+
 \item{rescale}{Logical. Linearly rescale model output (PRO or raw) with
 respect to the projection \code{data}? This has implications for the
 interpretation of output values with respect to reference values (e.g. PRO
-= 1). See details.}
-
-\item{raw}{Logical. Return raw Maxent output instead of probability ratio
-output (PRO)? Default is FALSE.}
+= 1). See details. Irrelevant for 'lr' class models.}
 }
 \value{
 List of 2: \enumerate{ \item A data frame with the model output in
@@ -51,7 +51,7 @@ Missing data (NA) for a continuous variable will result in NA output for that
 point. Missing data for a categorical variable is treated as belonging to
 none of the categories.
 
-When \code{rescale = FALSE} the scale of the model output (PRO or raw)
+When \code{rescale = FALSE} the scale of the maxent model output (PRO or raw)
 returned by this function is dependent on the data used to train the model.
 For example, a location with PRO = 2 can be interpreted as having a
 probability of presence twice as high as an average site in the

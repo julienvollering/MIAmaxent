@@ -4,8 +4,8 @@
 \alias{selectDVforEV}
 \title{Select parsimonious sets of derived variables.}
 \usage{
-selectDVforEV(dvdata, alpha = 0.01, test = "Chisq", dir = NULL,
-  write = TRUE)
+selectDVforEV(dvdata, alpha = 0.01, test = "Chisq", algorithm = "maxent",
+  dir = NULL, write = TRUE)
 }
 \arguments{
 \item{dvdata}{A list containing first the response variable, followed by data
@@ -19,6 +19,10 @@ comparison. Default is 0.01.}
 which inference test is used in nested model comparison. The Chi-squared
 test is implemented as in stats::anova, while the F-test is implemented as
 described in Halvorsen (2013, 2015). Default is "Chisq".}
+
+\item{algorithm}{Character string matching either "maxent" or "LR", which
+determines the type of model used during forward selection. Default is
+"maxent".}
 
 \item{dir}{Directory to which files will be written during subset selection
 of derived variables. Defaults to the working directory.}

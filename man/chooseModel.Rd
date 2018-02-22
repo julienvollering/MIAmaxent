@@ -4,7 +4,7 @@
 \alias{chooseModel}
 \title{Trains a model containing the explanatory variables specified.}
 \usage{
-chooseModel(dvdata, formula)
+chooseModel(dvdata, formula, algorithm = "maxent")
 }
 \arguments{
 \item{dvdata}{A list containing first the response variable, followed by data
@@ -13,8 +13,12 @@ variable (e.g. the first item in the list returned by
 \code{\link{selectDVforEV}}).}
 
 \item{formula}{A model formula (in the form y ~ x + ...) specifying the
-independent terms to be included in the model. The item in \code{dvdata} is
-still taken as the response variable, regardless of \code{formula}.}
+independent terms (EVs) to be included in the model. The item in
+\code{dvdata} is still taken as the response variable, regardless of
+\code{formula}.}
+
+\item{algorithm}{Character string matching either "maxent" or "LR", which
+determines the type of model built. Default is "maxent".}
 }
 \description{
 \code{chooseModel} trains a model based on the formula provided. The formula

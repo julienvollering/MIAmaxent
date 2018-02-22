@@ -5,7 +5,7 @@
 \title{Select parsimonious set of explanatory variables.}
 \usage{
 selectEV(dvdata, alpha = 0.01, interaction = FALSE, formula = NULL,
-  test = "Chisq", dir = NULL, write = TRUE)
+  test = "Chisq", algorithm, dir = NULL, write = TRUE)
 }
 \arguments{
 \item{dvdata}{A list containing first the response variable, followed by data
@@ -32,6 +32,10 @@ starts with zero selected variables.}
 which inference test is used in nested model comparison. The Chi-squared
 test is implemented as in stats::anova, while the F-test is implemented as
 described in Halvorsen (2013, 2015). Default is "Chisq".}
+
+\item{algorithm}{Character string matching either "maxent" or "LR", which
+determines the type of model used during forward selection. Default is
+"maxent".}
 
 \item{dir}{Directory to which files will be written during subset selection
 of explanatory variables. Defaults to the working directory.}

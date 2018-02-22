@@ -5,7 +5,7 @@
 \title{Derive variables by transformation.}
 \usage{
 deriveVars(data, transformtype = c("L", "M", "D", "HF", "HR", "T", "B"),
-  allsplines = FALSE, dir = NULL, write = TRUE)
+  allsplines = FALSE, algorithm = "maxent", dir = NULL, write = TRUE)
 }
 \arguments{
 \item{data}{Data frame containing the response variable in the first column
@@ -21,6 +21,9 @@ hinge), T (threshold), and B (binary).}
 \item{allsplines}{Logical. Keep all spline transformations created, rather
 than pre-selecting particular splines based on fraction of total variation
 explained.}
+
+\item{algorithm}{Character string matching either "maxent" or "LR", which
+determines the type of model used for spline pre-selection. See details.}
 
 \item{dir}{Directory to which transformation functions will be written as an
 .Rdata file, for future access. Defaults to the working directory.}
@@ -59,11 +62,13 @@ For spline transformations ("HF", "HR", and "T"), DVs are created around 20
 different break points (knots) which span the range of the EV. Only DVs which
 satisfy all of the following criteria are retained: \enumerate{ \item 3 <=
 knot <= 18 (DVs with knots at the extremes of the EV are never retained).
-\item Chi-square test of the single-variable Maxent model from the given DV
-compared to the null model gives a p-value < 0.05. \item The single-variable
-Maxent model from the given DV shows a local maximum in fraction of variation
-explained (D^2, sensu Guisan & Zimmerman, 2000) compared to DVs from the
-neighboring 4 knots.}
+\item Chi-square test of the single-variable model from the given DV compared
+to the null model gives a p-value < 0.05. \item The single-variable model
+from the given DV shows a local maximum in fraction of variation explained
+(D^2, sensu Guisan & Zimmerman, 2000) compared to DVs from the neighboring 4
+knots.} The models used in this pre-selection procedure may be maxent models
+(algorithm="maxent") or standard logistic regression models
+(algorithm="LR").
 
 For categorical variables, 1 binary derived variable (type "B") is created
 for each category.
