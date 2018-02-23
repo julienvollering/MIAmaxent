@@ -115,7 +115,7 @@ projectModel <- function(model, transformations, data, clamping = FALSE,
   type <- if (class(model)[1] == "iwlr") {
     ifelse(raw == TRUE, "raw", "PRO")
   } else { "response" }
-  preds <- stats::predict(model, newdata, type)
+  preds <- predict(model, newdata, type)
 
   if (class(model)[1] == "iwlr" && rescale == TRUE) {
     if (raw == TRUE) { preds <- preds/sum(preds, na.rm = TRUE)

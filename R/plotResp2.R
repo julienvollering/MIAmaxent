@@ -80,7 +80,7 @@ plotResp2 <- function(model, transformations, EV, logscale = FALSE, ...) {
   colnames(newdata) <- names(betasni)
   newdata <- as.data.frame(newdata)
   type <- ifelse(class(model)[1] == "iwlr", "PRO", "response")
-  preds <- stats::predict(model, newdata, type)
+  preds <- predict(model, newdata, type)
   resp <- data.frame(EV = seq, preds = preds)
 
   if (logscale == TRUE) {resp$preds <- log10(resp$preds)}
@@ -98,9 +98,6 @@ plotResp2 <- function(model, transformations, EV, logscale = FALSE, ...) {
   if (class(resp[, 1]) %in% c("factor", "character")) {
     do.call(graphics::barplot, c(list(height=resp[, 2], names.arg=resp[, 1]), args1))
   }
-
-  if (logscale == TRUE) { graphics::abline(h = 0, lty = 3)
-  } else { graphics::abline(h = 1, lty = 3) }
 
   if (type == "PRO") {
     if (logscale == TRUE) { graphics::abline(h = 0, lty = 3)

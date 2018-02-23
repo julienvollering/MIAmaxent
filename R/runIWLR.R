@@ -55,6 +55,10 @@
 #' @param model Model of class "iwlr"
 #' @param newdata Data frame containing variables to predict across
 #' @param type Type of model output: "PRO" or "raw"
+#'
+#' @keywords internal
+#'
+#' @export
 
 predict.iwlr <- function(model, newdata, type="PRO") {
   mmformula <- stats::update.formula(model$formula.narm, NULL ~ . - 1)
