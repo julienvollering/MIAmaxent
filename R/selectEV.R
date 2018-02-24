@@ -72,7 +72,8 @@
 
 
 selectEV <- function(dvdata, alpha = 0.01, interaction = FALSE, formula = NULL,
-                     test="Chisq", algorithm, dir = NULL, write = TRUE) {
+                     test = "Chisq", algorithm = "maxent", dir = NULL,
+                     write = TRUE) {
 
   names(dvdata) <- make.names(names(dvdata), allow_ = FALSE)
   .binaryrvcheck(dvdata[[1]])

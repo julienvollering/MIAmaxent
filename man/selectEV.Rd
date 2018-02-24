@@ -5,7 +5,7 @@
 \title{Select parsimonious set of explanatory variables.}
 \usage{
 selectEV(dvdata, alpha = 0.01, interaction = FALSE, formula = NULL,
-  test = "Chisq", algorithm, dir = NULL, write = TRUE)
+  test = "Chisq", algorithm = "maxent", dir = NULL, write = TRUE)
 }
 \arguments{
 \item{dvdata}{A list containing first the response variable, followed by data

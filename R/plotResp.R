@@ -75,9 +75,9 @@ plotResp <- function(model, transformations, EV, logscale = FALSE, ...) {
   preds <- predict(smodel, newdata, type)
   resp <- data.frame(EV = seq, preds = preds)
 
-  if (logscale == TRUE) {resp$preds <- log10(resp$preds)}
+  if (logscale == TRUE) { resp$preds <- log10(resp$preds) }
   ylab <- ifelse(type == "PRO", "Probability Ratio Output (PRO)", "Predicted probability")
-  if (logscale == TRUE) {ylab <- paste("log", ylab)}
+  if (logscale == TRUE) { ylab <- paste("log", ylab) }
   args1 <- list(main = paste0("Single-effect response plot: ", EV), xlab = EV,
                 ylab = ylab, col="red")
   inargs <- list(...)

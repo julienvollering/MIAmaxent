@@ -18,3 +18,4 @@ or "raw" format.}
 S3 method for class "iwlr": returns model predictions for new data in "PRO"
 or "raw" format.
 }
+\keyword{internal}
