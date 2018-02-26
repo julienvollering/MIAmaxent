@@ -63,6 +63,9 @@ average site in the \emph{projection} data. Similarly, raw values are on a
 scale which is dependent on the size of either the training data extent
 (\code{rescale = FALSE}) or projection data extent (\code{rescale = TRUE}).
 }
+\examples{
+
+}
 \references{
 Halvorsen, R. (2013) A strict maximum likelihood explanation of
   MaxEnt, and some implications for distribution modelling. Sommerfeltia, 36,

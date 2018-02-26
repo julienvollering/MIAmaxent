@@ -59,6 +59,8 @@
 #'   entropy modeling of species geographic distributions. Ecological Modelling,
 #'   190, 231-259.
 #'
+#' @examples
+#'
 #' @export
 
 
