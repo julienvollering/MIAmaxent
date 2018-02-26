@@ -9,9 +9,9 @@
 #' customizable plotting).
 #'
 #' In the local regression ("loess"), the plotted FOP values are regressed
-#' against the the EV values. The points are weighted by the number of
-#' observations they represent, such that an FOP value in an interval with many
-#' observations is given more weight.
+#' against their EV values. The points are weighted by the number of
+#' observations they represent, such that an FOP value from an interval with
+#' many observations is given more weight.
 #'
 #' For continuous variables, the returned value of 'EVoptimum' is based on the
 #' loess-smoothed FOP values, such that a point maximum in FOP may not always be
@@ -40,12 +40,12 @@
 #'   \code{EVoptimum}. The EV value (or level, for categorical EVs) at which FOP
 #'   is highest \item  \code{FOPdata}. A data frame containing the plotted data.
 #'   Columns in this data frame represent the following: EV interval ("int"),
-#'   number of points in the interval ("n"), mean EV value of the points in the
-#'   interval ("intEV"), mean RV value of the points in the interval ("intRV"),
-#'   and exponentially weighted moving average of intRV ("smoothRV"). For
-#'   categorical variables, only the number of points in the level ("n"), the
-#'   level name ("level"), and the mean RV value of the level ("levelRV") are
-#'   used.}
+#'   number of observations in the interval ("n"), mean EV value of the
+#'   observations in the interval ("intEV"), mean RV value of the observations
+#'   in the interval ("intRV"), and local regression predicted intRV ("loess").
+#'   For categorical variables, only the level name ("level"), the number of
+#'   observations in the level ("n"), and the mean RV value of the level
+#'   ("levelRV") are used.}
 #'
 #' @references Stoea, B., Halvorsen, R., Mazzoni, S. & Gusarov, V. (2016)
 #'   Sampling bias in presence-only data used for species distribution
@@ -97,9 +97,6 @@ plotFOP <- function(data, EV, span = 0.5, intervals = NULL, ranging = FALSE) {
                    main = paste0("FOP plot: ", evname), xlab = evname,
                    ylab = "Frequency of Observed Presence (FOP)", pch=20)
     graphics::points(FOPdf$loess ~ FOPdf$intEV, type="l", lwd=2, col="red")
-    legend("topleft",legend=paste0("Loess (span = ", span, ")"), col="red",
-           lwd=2, bty="n", inset=0.05, seg.len = 1)
-
   }
 
   if (class(df[, 2]) %in% c("factor", "character")) {
@@ -120,7 +117,6 @@ plotFOP <- function(data, EV, span = 0.5, intervals = NULL, ranging = FALSE) {
     graphics::barplot(FOPdf$lvlRV, names.arg = FOPdf$EV,
       main = paste0("FOP plot: ", evname), xlab = evname,
       ylab = "Frequency of Observed Presence (FOP)", density=rep(20, nrow(FOPdf)), col="black")
-
   }
 
   return(FOP)

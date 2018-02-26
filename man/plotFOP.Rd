@@ -31,12 +31,12 @@ In addition to the graphical output, a list of 2: \enumerate{ \item
   \code{EVoptimum}. The EV value (or level, for categorical EVs) at which FOP
   is highest \item  \code{FOPdata}. A data frame containing the plotted data.
   Columns in this data frame represent the following: EV interval ("int"),
-  number of points in the interval ("n"), mean EV value of the points in the
-  interval ("intEV"), mean RV value of the points in the interval ("intRV"),
-  and exponentially weighted moving average of intRV ("smoothRV"). For
-  categorical variables, only the number of points in the level ("n"), the
-  level name ("level"), and the mean RV value of the level ("levelRV") are
-  used.}
+  number of observations in the interval ("n"), mean EV value of the
+  observations in the interval ("intEV"), mean RV value of the observations
+  in the interval ("intRV"), and local regression predicted intRV ("loess").
+  For categorical variables, only the level name ("level"), the number of
+  observations in the level ("n"), and the mean RV value of the level
+  ("levelRV") are used.}
 }
 \description{
 \code{plotFOP} produces a Frequency of Observed Presence (FOP) plot for a
@@ -49,9 +49,9 @@ customizable plotting).
 }
 \details{
 In the local regression ("loess"), the plotted FOP values are regressed
-against the the EV values. The points are weighted by the number of
-observations they represent, such that an FOP value in an interval with many
-observations is given more weight.
+against their EV values. The points are weighted by the number of
+observations they represent, such that an FOP value from an interval with
+many observations is given more weight.
 
 For continuous variables, the returned value of 'EVoptimum' is based on the
 loess-smoothed FOP values, such that a point maximum in FOP may not always be
