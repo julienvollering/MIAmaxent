@@ -23,9 +23,9 @@
 #'
 #' @param data Data frame containing the response variable in the first column
 #'   and explanatory variables in subsequent columns. The response variable
-#'   should represent presence or background, coded as: 1/NA. See Details for
-#'   information regarding presence/absence data. See also
-#'   \code{\link{readData}}.
+#'   should represent either presence and background (coded as 1/NA) or presence
+#'   and absence (coded as 1/0). See Details for information regarding
+#'   implications of occurrence data type. See also \code{\link{readData}}.
 #' @param EV Name or column index of the explanatory variable in \code{data} for
 #'   which to calculate FOP.
 #' @param span The proportion of FOP points included in the local regression

@@ -17,19 +17,25 @@
 #' the closest nested model, due to perfect multicollinearity (i.e. the dummy
 #' variable trap).
 #'
+#' The maximum entropy algorithm ("maxent") -- which is implemented in MIAmaxent
+#' as an infinitly-weighted logisitic regression -- is conventionally used with
+#' presence-only occurrence data. In contrast, standard logisitic regression
+#' (algorithm = "LR"), is conventionally used with presence-absence occurrence
+#' data.
+#'
 #' Explanatory variables should be uniquely named. Underscores ('_') and colons
 #' (':') are reserved to denote derived variables and interaction terms
 #' repectively, and \code{selectDVforEV} will replace these -- along with other
 #' special characters -- with periods ('.').
 #'
-#' @param dvdata A list containing first the response variable, followed by data
+#' @param dvdata List containing first the response variable, followed by data
 #'   frames of derived variables produced for each explanatory variable (e.g.
 #'   the first item in the list returned by \code{\link{deriveVars}}).
 #' @param alpha Alpha-level used for inference testing in nested model
 #'   comparison. Default is 0.01.
 #' @param test Character string matching either "Chisq" or "F" to determine
 #'   which inference test is used in nested model comparison. The Chi-squared
-#'   test is implemented as in stats::anova, while the F-test is implemented as
+#'   test is implemented by stats::anova, while the F-test is implemented as
 #'   described in Halvorsen (2013, 2015). Default is "Chisq".
 #' @param algorithm Character string matching either "maxent" or "LR", which
 #'   determines the type of model used during forward selection. Default is

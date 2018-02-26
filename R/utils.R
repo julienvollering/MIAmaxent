@@ -12,17 +12,17 @@ if(getRversion() >= "2.15.1") {
 #' @param rv Vector of response variable values
 
 .binaryrvcheck <- function(rv) {
-  if (length(levels(as.factor(rv))) > 2) {
-    stop("The response variable must contain 2 levels only: presence (1)
-       and background (NA/0)", call. = FALSE)
-  }
-  if (anyNA(rv) && length(levels(as.factor(rv))) > 1) {
-    stop("The response variable must contain 2 levels only: presence (1)
-       and background (NA/0)", call. = FALSE)
-  }
   if (class(rv) != "numeric" && class(rv) != "integer") {
     stop("The response variable must be numeric or integer class: presence (1)
-       and background (NA/0)", call. = FALSE)
+         and either background or absence (NA/0)", call. = FALSE)
+  }
+  if (anyNA(rv) && !all(levels(as.factor(rv)) %in% "1")) {
+    stop("The response variable must contain exactly 2 levels: presence (1)
+       and either background or absence (NA/0)", call. = FALSE)
+  }
+  if (!anyNA(rv) && !all(levels(as.factor(rv)) %in% c("1", "0"))) {
+    stop("The response variable must contain exactly 2 levels: presence (1)
+       and either background or absence (NA/0)", call. = FALSE)
   }
 }
 

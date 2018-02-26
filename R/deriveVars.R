@@ -26,11 +26,16 @@
 #' from the given DV shows a local maximum in fraction of variation explained
 #' (D^2, sensu Guisan & Zimmerman, 2000) compared to DVs from the neighboring 4
 #' knots.} The models used in this pre-selection procedure may be maxent models
-#' (algorithm="maxent") or standard logistic regression models
-#' (algorithm="LR").
+#' (algorithm="maxent") or standard logistic regression models (algorithm="LR").
 #'
 #' For categorical variables, 1 binary derived variable (type "B") is created
 #' for each category.
+#'
+#' The maximum entropy algorithm ("maxent") -- which is implemented in MIAmaxent
+#' as an infinitly-weighted logisitic regression -- is conventionally used with
+#' presence-only occurrence data. In contrast, standard logisitic regression
+#' (algorithm = "LR"), is conventionally used with presence-absence occurrence
+#' data.
 #'
 #' Explanatory variables should be uniquely named. Underscores ('_') and colons
 #' (':') are reserved to denote derived variables and interaction terms
@@ -39,8 +44,9 @@
 #'
 #' @param data Data frame containing the response variable in the first column
 #'   and explanatory variables in subsequent columns. The response variable
-#'   should represent presence/background data, coded as: 1/NA. The explanatory
-#'   variable data should be complete (no NAs). See \code{\link{readData}}.
+#'   should represent either presence and background (coded as 1/NA) or presence
+#'   and absence (coded as 1/0). The explanatory variable data should be
+#'   complete (no NAs). See \code{\link{readData}}.
 #' @param transformtype Specifies the types of transformations types to be
 #'   performed. Default is the full set of the following transfomation types: L
 #'   (linear), M (monotonous), D (deviation), HF (forward hinge), HR (reverse
@@ -49,16 +55,16 @@
 #'   than pre-selecting particular splines based on fraction of total variation
 #'   explained.
 #' @param algorithm Character string matching either "maxent" or "LR", which
-#'   determines the type of model used for spline pre-selection. See details.
+#'   determines the type of model used for spline pre-selection. See Details.
 #' @param dir Directory to which transformation functions will be written as an
 #'   .Rdata file, for future access. Defaults to the working directory.
 #' @param write Logical. Write important function output to file in the
 #'   \code{dir}?
 #'
-#' @return List of 2: \enumerate{ \item dvdata: A list containing first the
+#' @return List of 2: \enumerate{ \item dvdata: List containing first the
 #'   response variable, followed data frames of derived variables produced for
 #'   each explanatory variable. This item is recommended as input for
-#'   \code{dvdata} in \code{\link{selectDVforEV}}. \item transformations: A list
+#'   \code{dvdata} in \code{\link{selectDVforEV}}. \item transformations: List
 #'   containing first the response variable, followed by all the transformation
 #'   functions used to produce the derived variables. }
 #'

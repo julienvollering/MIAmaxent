@@ -13,7 +13,7 @@ Description: Tools for training, selecting, and evaluating maximum entropy
     provides tools for user-controlled transformation of explanatory variables, 
     selection of variables by nested model comparison, and flexible model 
     evaluation and projection. It follows principles based on the maximum-
-    likelihood interpretation of maximum entropy modelling, and implements 
+    likelihood interpretation of maximum entropy modeling, and implements 
     maximum entropy models as infinitely-weighted logistic regressions.
 Depends: R (>= 2.10)
 License: MIT + file LICENSE

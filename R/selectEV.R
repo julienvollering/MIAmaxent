@@ -20,18 +20,24 @@
 #' amount of variation. When \code{interaction = FALSE}, interactions are not
 #' considered.
 #'
+#' The maximum entropy algorithm ("maxent") -- which is implemented in MIAmaxent
+#' as an infinitly-weighted logisitic regression -- is conventionally used with
+#' presence-only occurrence data. In contrast, standard logisitic regression
+#' (algorithm = "LR"), is conventionally used with presence-absence occurrence
+#' data.
+#'
 #' Explanatory variables should be uniquely named. Underscores ('_') and colons
 #' (':') are reserved to denote derived variables and interaction terms
 #' repectively, and \code{selectEV} will replace these -- along with other
 #' special characters -- with periods ('.').
 #'
-#' @param dvdata A list containing first the response variable, followed by data
+#' @param dvdata List containing first the response variable, followed by data
 #'   frames of \emph{selected} derived variables for a given explanatory
 #'   variable (e.g. the first item in the list returned by
 #'   \code{\link{selectDVforEV}}).
 #' @param alpha Alpha-level used in F-test comparison of models. Default is
 #'   0.01.
-#' @param interaction Logical. Allows interaction terms between pairs of EVs.
+#' @param interaction Logical. Allow interaction terms between pairs of EVs?
 #'   Default is \code{FALSE}.
 #' @param formula A model formula (in the form y ~ x + ...) specifying a
 #'   starting point for forward model selection. The independent terms in the
@@ -43,7 +49,7 @@
 #'   starts with zero selected variables.
 #' @param test Character string matching either "Chisq" or "F" to determine
 #'   which inference test is used in nested model comparison. The Chi-squared
-#'   test is implemented as in stats::anova, while the F-test is implemented as
+#'   test is implemented by stats::anova, while the F-test is implemented as
 #'   described in Halvorsen (2013, 2015). Default is "Chisq".
 #' @param algorithm Character string matching either "maxent" or "LR", which
 #'   determines the type of model used during forward selection. Default is

@@ -8,7 +8,7 @@ selectDVforEV(dvdata, alpha = 0.01, test = "Chisq", algorithm = "maxent",
   dir = NULL, write = TRUE)
 }
 \arguments{
-\item{dvdata}{A list containing first the response variable, followed by data
+\item{dvdata}{List containing first the response variable, followed by data
 frames of derived variables produced for each explanatory variable (e.g.
 the first item in the list returned by \code{\link{deriveVars}}).}
 
@@ -17,7 +17,7 @@ comparison. Default is 0.01.}
 
 \item{test}{Character string matching either "Chisq" or "F" to determine
 which inference test is used in nested model comparison. The Chi-squared
-test is implemented as in stats::anova, while the F-test is implemented as
+test is implemented by stats::anova, while the F-test is implemented as
 described in Halvorsen (2013, 2015). Default is "Chisq".}
 
 \item{algorithm}{Character string matching either "maxent" or "LR", which
@@ -56,6 +56,12 @@ If using binary-type derived variables from \code{\link{deriveVars}}, be
 aware that a model including all of these DVs will be considered equal to the
 the closest nested model, due to perfect multicollinearity (i.e. the dummy
 variable trap).
+
+The maximum entropy algorithm ("maxent") -- which is implemented in MIAmaxent
+as an infinitly-weighted logisitic regression -- is conventionally used with
+presence-only occurrence data. In contrast, standard logisitic regression
+(algorithm = "LR"), is conventionally used with presence-absence occurrence
+data.
 
 Explanatory variables should be uniquely named. Underscores ('_') and colons
 (':') are reserved to denote derived variables and interaction terms

@@ -8,7 +8,7 @@ selectEV(dvdata, alpha = 0.01, interaction = FALSE, formula = NULL,
   test = "Chisq", algorithm, dir = NULL, write = TRUE)
 }
 \arguments{
-\item{dvdata}{A list containing first the response variable, followed by data
+\item{dvdata}{List containing first the response variable, followed by data
 frames of \emph{selected} derived variables for a given explanatory
 variable (e.g. the first item in the list returned by
 \code{\link{selectDVforEV}}).}
@@ -16,7 +16,7 @@ variable (e.g. the first item in the list returned by
 \item{alpha}{Alpha-level used in F-test comparison of models. Default is
 0.01.}
 
-\item{interaction}{Logical. Allows interaction terms between pairs of EVs.
+\item{interaction}{Logical. Allow interaction terms between pairs of EVs?
 Default is \code{FALSE}.}
 
 \item{formula}{A model formula (in the form y ~ x + ...) specifying a
@@ -30,7 +30,7 @@ starts with zero selected variables.}
 
 \item{test}{Character string matching either "Chisq" or "F" to determine
 which inference test is used in nested model comparison. The Chi-squared
-test is implemented as in stats::anova, while the F-test is implemented as
+test is implemented by stats::anova, while the F-test is implemented as
 described in Halvorsen (2013, 2015). Default is "Chisq".}
 
 \item{algorithm}{Character string matching either "maxent" or "LR", which
@@ -71,6 +71,12 @@ between EVs included in the model afterwards. Therefore, interactions are
 only explored between terms which are individually explain a significant
 amount of variation. When \code{interaction = FALSE}, interactions are not
 considered.
+
+The maximum entropy algorithm ("maxent") -- which is implemented in MIAmaxent
+as an infinitly-weighted logisitic regression -- is conventionally used with
+presence-only occurrence data. In contrast, standard logisitic regression
+(algorithm = "LR"), is conventionally used with presence-absence occurrence
+data.
 
 Explanatory variables should be uniquely named. Underscores ('_') and colons
 (':') are reserved to denote derived variables and interaction terms
