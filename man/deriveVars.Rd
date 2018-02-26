@@ -5,7 +5,7 @@
 \title{Derive variables by transformation.}
 \usage{
 deriveVars(data, transformtype = c("L", "M", "D", "HF", "HR", "T", "B"),
-  allsplines = FALSE, algorithm = "maxent", dir = NULL, write = TRUE)
+  allsplines = FALSE, algorithm = "maxent", write = FALSE, dir = NULL)
 }
 \arguments{
 \item{data}{Data frame containing the response variable in the first column
@@ -26,11 +26,11 @@ explained.}
 \item{algorithm}{Character string matching either "maxent" or "LR", which
 determines the type of model used for spline pre-selection. See Details.}
 
-\item{dir}{Directory to which transformation functions will be written as an
-.Rdata file, for future access. Defaults to the working directory.}
+\item{write}{Logical. Write the transformation functions to .Rdata file?
+Default is \code{FALSE}.}
 
-\item{write}{Logical. Write important function output to file in the
-\code{dir}?}
+\item{dir}{Directory for file writing if \code{write = TRUE}. Defaults to the
+working directory.}
 }
 \value{
 List of 2: \enumerate{ \item dvdata: List containing first the

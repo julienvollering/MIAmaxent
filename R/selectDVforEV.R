@@ -40,10 +40,10 @@
 #' @param algorithm Character string matching either "maxent" or "LR", which
 #'   determines the type of model used during forward selection. Default is
 #'   "maxent".
-#' @param dir Directory to which files will be written during subset selection
-#'   of derived variables. Defaults to the working directory.
-#' @param write Logical. Write important function output to file in the
-#'   \code{dir}?
+#' @param write Logical. Write the trail of forward selection for each EV to
+#'   .csv file? Default is \code{FALSE}.
+#' @param dir Directory for file writing if \code{write = TRUE}. Defaults to the
+#'   working directory.
 #'
 #' @return List of 2: \enumerate{ \item dvdata: A list containing first the
 #'   response variable, followed by data frames of \emph{selected} DVs for each
@@ -65,7 +65,7 @@
 
 
 selectDVforEV <- function(dvdata, alpha = 0.01, test = "Chisq",
-                          algorithm = "maxent", dir = NULL, write = TRUE) {
+                          algorithm = "maxent", write = FALSE, dir = NULL) {
 
   names(dvdata) <- make.names(names(dvdata), allow_ = FALSE)
   rv <- dvdata[[1]]

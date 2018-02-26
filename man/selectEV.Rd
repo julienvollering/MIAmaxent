@@ -5,7 +5,7 @@
 \title{Select parsimonious set of explanatory variables.}
 \usage{
 selectEV(dvdata, alpha = 0.01, interaction = FALSE, formula = NULL,
-  test = "Chisq", algorithm, dir = NULL, write = TRUE)
+  test = "Chisq", algorithm, write = FALSE, dir = NULL)
 }
 \arguments{
 \item{dvdata}{List containing first the response variable, followed by data
@@ -37,11 +37,11 @@ described in Halvorsen (2013, 2015). Default is "Chisq".}
 determines the type of model used during forward selection. Default is
 "maxent".}
 
-\item{dir}{Directory to which files will be written during subset selection
-of explanatory variables. Defaults to the working directory.}
+\item{write}{Logical. Write the trail of forward selection to .csv file?
+Default is \code{FALSE}.}
 
-\item{write}{Logical. Write important function output to file in the
-\code{dir}?}
+\item{dir}{Directory for file writing if \code{write = TRUE}. Defaults to the
+working directory.}
 }
 \value{
 List of 3: \enumerate{ \item dvdata: A list containing first the
