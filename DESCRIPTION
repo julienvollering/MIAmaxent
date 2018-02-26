@@ -31,6 +31,5 @@ Imports:
     utils
 Suggests:
     knitr,
-    rmarkdown,
-    R.rsp
-VignetteBuilder: R.rsp
+    rmarkdown
+VignetteBuilder: knitr
