@@ -25,6 +25,12 @@
 #'   determines the type of model built. Default is "maxent".
 #'
 #' @examples
+#' \dontrun{
+#' # From vignette:
+#' grasslandmodel <- chooseModel(grasslandDVselect$dvdata,
+#'                               formula("~ pr.bygall + geoberg + lcucor1 +
+#'                                       tertpi09 + geolmja1"))
+#' }
 #'
 #' @export
 

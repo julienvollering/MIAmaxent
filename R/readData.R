@@ -26,8 +26,8 @@
 #' The names of the ASCII raster files are used as the names of the explanatory
 #' variables, so these files should be uniquely named. \code{readData} replaces
 #' underscores '_', spaces ' ' and other special characters not allowed in names
-#' with periods '.'. In MIAmaxent, underscores and colons are reserved to
-#' denote derived variables and interaction terms, repectively.
+#' with periods '.'. In MIAmaxent, underscores and colons are reserved to denote
+#' derived variables and interaction terms, repectively.
 #'
 #' @param occurrence Full pathway of the '.csv' file of occurrence data. The
 #'   first column of the CSV should code occurrence (see Details), while the
@@ -55,6 +55,28 @@
 #'   RV values are 1/NA, and when \code{PA = TRUE}, RV values are 1/0.
 #'
 #' @examples
+#' toydata_sp1po <- readData(system.file("extdata/sommerfeltia", "Sp1.csv", package = "MIAmaxent"),
+#'    contEV = system.file("extdata/sommerfeltia", "EV_continuous", package = "MIAmaxent"))
+#' toydata_sp1po
+#'
+#' \dontrun{
+#' # From vignette:
+#' grasslandPO <- readData(
+#'  occurrence=system.file("extdata", "occurrence_PO.csv", package="MIAmaxent"),
+#'   contEV=system.file("extdata", "EV_continuous", package="MIAmaxent"),
+#'   catEV=system.file("extdata", "EV_categorical", package="MIAmaxent"),
+#'   maxbkg=20000)
+#' str(grasslandPO)
+#'
+#' # From vignette:
+#' grasslandPA <- readData(
+#'   occurrence = system.file("extdata", "occurrence_PA.csv", package="MIAmaxent"),
+#'   contEV = system.file("extdata", "EV_continuous", package="MIAmaxent"),
+#'   catEV = system.file("extdata", "EV_categorical", package="MIAmaxent"),
+#'   PA = TRUE, XY = TRUE)
+#' head(grasslandPA)
+#' tail(grasslandPA)
+#' }
 #'
 #' @export
 #'

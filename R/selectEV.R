@@ -73,6 +73,16 @@
 #'   maximum likelihood interpretation of MaxEnt. Ecography, 38(2), 172-183.
 #'
 #' @examples
+#' \dontrun{
+#' # From vignette:
+#' grasslandEVselect <- selectEV(grasslandDVselect$dvdata, alpha = 0.001,
+#'                               interaction = TRUE)
+#' summary(grasslandDVselect$dvdata)
+#' length(grasslandDVselect$dvdata[-1])
+#' summary(grasslandEVselect$dvdata)
+#' length(grasslandEVselect$dvdata[-1])
+#' grasslandEVselect$selectedmodel$formula
+#' }
 #'
 #' @export
 

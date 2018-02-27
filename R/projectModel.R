@@ -61,6 +61,18 @@
 #'   190, 231-259.
 #'
 #' @examples
+#' \dontrun{
+#' # From vignette:
+#' EVstack <- raster::stack(c(
+#'   list.files(system.file("extdata", "EV_continuous", package="MIAmaxent"),
+#'              full.names=TRUE),
+#'   list.files(system.file("extdata", "EV_categorical", package="MIAmaxent"),
+#'              full.names=TRUE)))
+#' grasslandPreds <- projectModel(model = grasslandmodel,
+#'                                transformations = grasslandDVs$transformations,
+#'                                data = EVstack)
+#' grasslandPreds
+#' }
 #'
 #' @export
 

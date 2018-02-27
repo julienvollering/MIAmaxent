@@ -41,5 +41,17 @@ If plotted, the point along the ROC curve where the discrimination threshold
 is PRO = 1, is shown for reference.
 }
 \examples{
+\dontrun{
+# From vignette:
+grasslandPA <- readData(
+  occurrence = system.file("extdata", "occurrence_PA.csv", package="MIAmaxent"),
+  contEV = system.file("extdata", "EV_continuous", package="MIAmaxent"),
+  catEV = system.file("extdata", "EV_categorical", package="MIAmaxent"),
+  PA = TRUE, XY = TRUE)
+head(grasslandPA)
+tail(grasslandPA)
+testAUC(model = grasslandmodel, transformations = grasslandDVs$transformations,
+        data = grasslandPA)
+}
 
 }

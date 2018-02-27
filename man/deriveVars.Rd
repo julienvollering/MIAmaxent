@@ -85,6 +85,22 @@ repectively, and \code{deriveVars} will replace these -- along with other
 special characters -- with periods ('.').
 }
 \examples{
+toydata_dvs <- deriveVars(toydata_sp1po, c("L", "M", "D", "HF", "HR", "T", "B"))
+str(toydata_dvs$dvdata)
+summary(toydata_dvs$transformations)
+
+\dontrun{
+# From vignette:
+grasslandDVs <- deriveVars(grasslandPO,
+                           transformtype = c("L","M","D","HF","HR","T","B"))
+summary(grasslandDVs$dvdata)
+head(summary(grasslandDVs$transformations))
+length(grasslandDVs$transformations)
+plot(grasslandPO$terslpdg, grasslandDVs$dvdata$terslpdg$terslpdg_D2, pch=20,
+     ylab="terslpdg_D2")
+plot(grasslandPO$terslpdg, grasslandDVs$dvdata$terslpdg$terslpdg_M, pch=20,
+     ylab="terslpdg_M")
+}
 
 }
 \references{

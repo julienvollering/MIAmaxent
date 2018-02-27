@@ -69,6 +69,17 @@ repectively, and \code{selectDVforEV} will replace these -- along with other
 special characters -- with periods ('.').
 }
 \examples{
+toydata_seldvs <- selectDVforEV(toydata_dvs$dvdata, alpha = 0.4)
+
+\dontrun{
+# From vignette:
+grasslandDVselect <- selectDVforEV(grasslandDVs$dvdata, alpha = 0.001)
+summary(grasslandDVs$dvdata)
+sum(sapply(grasslandDVs$dvdata[-1], length))
+summary(grasslandDVselect$dvdata)
+sum(sapply(grasslandDVselect$dvdata[-1], length))
+grasslandDVselect$selection$terdem
+}
 
 }
 \references{

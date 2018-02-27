@@ -65,6 +65,18 @@ scale which is dependent on the size of either the training data extent
 (\code{rescale = FALSE}) or projection data extent (\code{rescale = TRUE}).
 }
 \examples{
+\dontrun{
+# From vignette:
+EVstack <- raster::stack(c(
+  list.files(system.file("extdata", "EV_continuous", package="MIAmaxent"),
+             full.names=TRUE),
+  list.files(system.file("extdata", "EV_categorical", package="MIAmaxent"),
+             full.names=TRUE)))
+grasslandPreds <- projectModel(model = grasslandmodel,
+                               transformations = grasslandDVs$transformations,
+                               data = EVstack)
+grasslandPreds
+}
 
 }
 \references{

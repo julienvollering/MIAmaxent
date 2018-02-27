@@ -5,14 +5,13 @@
 \alias{toydata_selevs}
 \title{Selected explanatory variables accompanied by selection trails, from toy
 data.}
-\format{List with 2 elements: \enumerate{ \item A list of 5 data frames,
-  where the first 3 represent selected explanatory variables, and the last 2
-  represent selected interaction terms between these explanatory variables.
-  \item A trail of forward model selection used to select explanatory
-  variables and interaction terms. }}
+\format{List with 3 elements: \enumerate{ \item A list of 3, with the
+  response variable followed by data frames, represent selected explanatory
+  variables. \item A trail of forward model selection used to select
+  explanatory variables and interaction terms. \item The selected model }}
 \source{
-Produced from \code{\link{toydata_seldvs}} and
-  \code{\link{toydata_sp1po}} using \code{\link{selectEV}}.
+Produced from \code{\link{toydata_seldvs}} using
+  \code{\link{selectEV}}.
 }
 \usage{
 toydata_selevs

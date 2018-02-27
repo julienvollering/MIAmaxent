@@ -28,6 +28,13 @@
 #' @describeIn plotResp Plot single-effect model response.
 #'
 #' @examples
+#' \dontrun{
+#' # From vignette:
+#' plotResp(grasslandmodel, grasslandDVs$transformations, "pr.bygall")
+#' plotResp(grasslandmodel, grasslandDVs$transformations, "geolmja1")
+#'
+#' plotResp2(grasslandmodel, grasslandDVs$transformations, "pr.bygall")
+#' }
 #'
 #' @export
 

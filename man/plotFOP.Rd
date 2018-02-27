@@ -62,6 +62,20 @@ result is an empirical frequency of presence curve, rather than a observed
 frequency of presence curve (see Stoea et al. [in press], Sommerfeltia).
 }
 \examples{
+FOPev11 <- plotFOP(toydata_sp1po, 2)
+FOPev12 <- plotFOP(toydata_sp1po, "EV12", intervals = 8)
+FOPev12$EVoptimum
+FOPev12$FOPdata
+
+\dontrun{
+# From vignette:
+teraspifFOP <- plotFOP(grasslandPO, "teraspif")
+terslpdgFOP <- plotFOP(grasslandPO, "terslpdg")
+terslpdgFOP <- plotFOP(grasslandPO, "terslpdg", span = 0.75, intervals = 20)
+terslpdgFOP
+geobergFOP <- plotFOP(grasslandPO, 10)
+geobergFOP
+}
 
 }
 \references{

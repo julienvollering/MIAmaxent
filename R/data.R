@@ -22,10 +22,11 @@
 #' Derived variables and transformation functions for distribution modeling of a
 #' small, synthetic data set used in Halvorsen (2013).
 #'
-#' @format List with 2 elements: \enumerate{ \item A list of 4 data frames, with
-#'   each containing the derived variables produced for a given explanatory
-#'   variable. \item A list of all the transformation functions used to produce
-#'   the derived variables. }
+#' @format List with 2 elements: \enumerate{ \item A list of 5, with the response
+#'   variable followed by data frames each containing the derived variables
+#'   produced for a given explanatory variable. \item A list of the response
+#'   variable and all the transformation functions used to produce the derived
+#'   variables. }
 #' @source Produced from \code{\link{toydata_sp1po}} using
 #'   \code{\link{deriveVars}}.
 #' @references Halvorsen, R. (2013) A strict maximum likelihood explanation of
@@ -40,12 +41,13 @@
 #' derived variables for distribution modeling of a small, synthetic data set
 #' used in Halvorsen (2013).
 #'
-#' @format List with 2 elements: \enumerate{ \item A list of 3 data frames, with
-#'   each containing the derived variables selected for a given explanatory
-#'   variable. \item A list of forward model selection trails used to select
-#'   derived variables. }
-#' @source Produced from \code{\link{toydata_dvs}} and
-#'   \code{\link{toydata_sp1po}} using \code{\link{selectDVforEV}}.
+#' @format List with 2 elements: \enumerate{ \item A list of 3, with the
+#'   response variable followed by data frames each containing the derived
+#'   variables selected for a given explanatory variable. \item A list of the
+#'   response variable and forward model selection trails used to select derived
+#'   variables. }
+#' @source Produced from \code{\link{toydata_dvs}} using
+#'   \code{\link{selectDVforEV}}.
 #' @references Halvorsen, R. (2013) A strict maximum likelihood explanation of
 #'   MaxEnt, and some implications for distribution modelling. Sommerfeltia, 36,
 #'   1-132.
@@ -60,13 +62,12 @@
 #' set used in Halvorsen (2013). Each individual explanatory variable is
 #' represented by a group of derived variables.
 #'
-#' @format List with 2 elements: \enumerate{ \item A list of 5 data frames,
-#'   where the first 3 represent selected explanatory variables, and the last 2
-#'   represent selected interaction terms between these explanatory variables.
-#'   \item A trail of forward model selection used to select explanatory
-#'   variables and interaction terms. }
-#' @source Produced from \code{\link{toydata_seldvs}} and
-#'   \code{\link{toydata_sp1po}} using \code{\link{selectEV}}.
+#' @format List with 3 elements: \enumerate{ \item A list of 3, with the
+#'   response variable followed by data frames, represent selected explanatory
+#'   variables. \item A trail of forward model selection used to select
+#'   explanatory variables and interaction terms. \item The selected model }
+#' @source Produced from \code{\link{toydata_seldvs}} using
+#'   \code{\link{selectEV}}.
 #' @references Halvorsen, R. (2013) A strict maximum likelihood explanation of
 #'   MaxEnt, and some implications for distribution modelling. Sommerfeltia, 36,
 #'   1-132.

@@ -36,5 +36,11 @@ repectively, and \code{chooseModel} will replace these -- along with other
 special characters -- with periods ('.').
 }
 \examples{
+\dontrun{
+# From vignette:
+grasslandmodel <- chooseModel(grasslandDVselect$dvdata,
+                              formula("~ pr.bygall + geoberg + lcucor1 +
+                                      tertpi09 + geolmja1"))
+}
 
 }

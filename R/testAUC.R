@@ -28,6 +28,18 @@
 #'   cannot be changed or correspond to multiple elements in the plot.
 #'
 #' @examples
+#' \dontrun{
+#' # From vignette:
+#' grasslandPA <- readData(
+#'   occurrence = system.file("extdata", "occurrence_PA.csv", package="MIAmaxent"),
+#'   contEV = system.file("extdata", "EV_continuous", package="MIAmaxent"),
+#'   catEV = system.file("extdata", "EV_categorical", package="MIAmaxent"),
+#'   PA = TRUE, XY = TRUE)
+#' head(grasslandPA)
+#' tail(grasslandPA)
+#' testAUC(model = grasslandmodel, transformations = grasslandDVs$transformations,
+#'         data = grasslandPA)
+#' }
 #'
 #' @export
 
