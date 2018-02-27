@@ -39,9 +39,11 @@ Or the development version from github:
 
 ``` r
 # install.packages('devtools')
-# install.packages('R.rsp')
-devtools::install_github("julienvollering/MIAmaxent", build_vignettes=TRUE)
+devtools::install_github("julienvollering/MIAmaxent")
 ```
+
+The vignette for the development version can be found
+[here](https://cdn.rawgit.com/julienvollering/MIAmaxent/89041c93/vignettes/a-modeling-example.html).
 
 ### User Workflow
 
