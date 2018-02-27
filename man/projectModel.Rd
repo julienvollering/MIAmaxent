@@ -34,11 +34,12 @@ interpretation of output values with respect to reference values (e.g. PRO
 = 1). See details. Irrelevant for 'lr' class models.}
 }
 \value{
-List of 2: \enumerate{ \item A data frame with the model output in
-  column 1 and the corresponding explanatory data in subsequent columns.
-  \item A list showing the range of \code{data} compared to the training
-  data, on a 0-1 scale.} If \code{data} is a RasterStack, the model output is
-  plotted as a raster, and only the list of ranges is returned.
+List of 2: \enumerate{ \item output: A data frame with the model
+  output in column 1 and the corresponding explanatory data in subsequent
+  columns. \item ranges: A list showing the range of \code{data} compared to
+  the training data, on a 0-1 scale.} If \code{data} is a RasterStack, the
+  model output is plotted as a raster, and only the list of ranges is
+  returned.
 }
 \description{
 \code{projectModel} Calculates model predictions for any points where values

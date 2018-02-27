@@ -42,11 +42,12 @@
 #'   = 1). See details. Irrelevant for 'lr' class models.
 
 #'
-#' @return List of 2: \enumerate{ \item A data frame with the model output in
-#'   column 1 and the corresponding explanatory data in subsequent columns.
-#'   \item A list showing the range of \code{data} compared to the training
-#'   data, on a 0-1 scale.} If \code{data} is a RasterStack, the model output is
-#'   plotted as a raster, and only the list of ranges is returned.
+#' @return List of 2: \enumerate{ \item output: A data frame with the model
+#'   output in column 1 and the corresponding explanatory data in subsequent
+#'   columns. \item ranges: A list showing the range of \code{data} compared to
+#'   the training data, on a 0-1 scale.} If \code{data} is a RasterStack, the
+#'   model output is plotted as a raster, and only the list of ranges is
+#'   returned.
 #'
 #'
 #' @references Halvorsen, R. (2013) A strict maximum likelihood explanation of
