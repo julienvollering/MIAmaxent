@@ -5,7 +5,7 @@
 \title{S3 method for class "iwlr": returns model predictions for new data in "PRO"
 or "raw" format.}
 \usage{
-\method{predict}{iwlr}(object, newdata, type = "PRO", ...)
+predict.iwlr(object, newdata, type = "PRO", ...)
 }
 \arguments{
 \item{object}{Model of class "iwlr"}

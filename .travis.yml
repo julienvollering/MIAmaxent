@@ -6,5 +6,3 @@ cache: packages
 os:
   - linux
   - osx
-
-r_build_args: --no-build-vignettes
