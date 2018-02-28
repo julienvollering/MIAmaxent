@@ -99,8 +99,8 @@ if(getRversion() >= "2.15.1") {
     stop("The provided formula may contain first-order explanatory variables
       only (no interactions)", call. = FALSE)
   }
-  terms <- labels(stats::terms(formula))
-  for (i in terms) {
+  trms <- labels(stats::terms(formula))
+  for (i in trms) {
     if (sum(names(dvdata) == i) != 1) {
       stop(paste(i, "must be represented in 'dvdata' (exactly once)"),
         call. = FALSE)

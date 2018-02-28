@@ -110,10 +110,10 @@ deriveVars <- function(data,
     .binaryrvcheck(data[, 1])
   }
 
-  if (any(!complete.cases(data[,-1]))) {
-    warning(paste(sum(!complete.cases(data[,-1])),
+  if (any(!stats::complete.cases(data[,-1]))) {
+    warning(paste(sum(!stats::complete.cases(data[,-1])),
                   "rows in 'data' were dropped due to missing EV values."), call. = FALSE)
-    data <- data[complete.cases(data[,-1]), ]
+    data <- data[stats::complete.cases(data[,-1]), ]
   }
 
   if (write == TRUE) {

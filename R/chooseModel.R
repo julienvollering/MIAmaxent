@@ -42,33 +42,33 @@ chooseModel <- function(dvdata, formula, algorithm = "maxent") {
   algorithm <- match.arg(algorithm, choices = c("maxent", "LR"))
 
   formula <- stats::as.formula(formula)
-  terms <- labels(stats::terms(formula))
-  firstorderterms <- terms[attr(stats::terms(formula), "order")==1]
-  secondorderterms <- terms[attr(stats::terms(formula), "order")==2]
-  for (i in firstorderterms) {
+  trms <- labels(stats::terms(formula))
+  firstordertrms <- trms[attr(stats::terms(formula), "order")==1]
+  secondordertrms <- trms[attr(stats::terms(formula), "order")==2]
+  for (i in firstordertrms) {
     if (sum(names(dvdata) == i) != 1) {
       stop(paste(i, "must be represented in 'dvdata' (exactly once)"),
            call. = FALSE) }
   }
 
   dvdata[[1]] <- data.frame("RV"=dvdata[[1]])
-  dvdata <- c(dvdata[1], dvdata[-1][names(dvdata[-1]) %in% firstorderterms])
+  dvdata <- c(dvdata[1], dvdata[-1][names(dvdata[-1]) %in% firstordertrms])
   dfnames <-  unlist(lapply(dvdata, names))
   df <- data.frame(do.call(cbind, dvdata))
   names(df) <- dfnames
 
   maineffectdvs <- lapply(dvdata[-1], names)
-  interactiondvs <- lapply(strsplit(secondorderterms, ":", fixed=TRUE),
+  interactiondvs <- lapply(strsplit(secondordertrms, ":", fixed=TRUE),
                            function(x, data) {
                              dvs1 <- names(data[[x[1]]])
                              dvs2 <- names(data[[x[2]]])
                              apply(expand.grid(dvs1, dvs2), 1, function(y) {
                                paste(y, collapse=":")})
                            }, data=dvdata)
-  names(interactiondvs) <- secondorderterms
+  names(interactiondvs) <- secondordertrms
   dvs <- c(maineffectdvs, interactiondvs)
 
-  selectedsetdvs <- unlist(dvs[terms])
+  selectedsetdvs <- unlist(dvs[trms])
   formula <- stats::formula(paste(names(df)[1], "~",
                                   paste(selectedsetdvs, collapse=" + ")))
   if (algorithm == "maxent") {

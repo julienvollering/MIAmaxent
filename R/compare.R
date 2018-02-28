@@ -30,7 +30,7 @@
       } else {
         mod <- .runLR(formulas[[i]], data)
       }
-      ctable$variables[i] <- paste(labels(terms(formulas[[i]])),
+      ctable$variables[i] <- paste(labels(stats::terms(formulas[[i]])),
                                    collapse = " + ")
       ctable$m[i] <- length(mod$coefficients)-1
       a1 <- stats::anova(mod, test="Chisq")
@@ -54,7 +54,7 @@
       } else {
         mod <- .runLR(formulas[[i]], data)
       }
-      ctable$variables[i] <- paste(labels(terms(formulas[[i]])),
+      ctable$variables[i] <- paste(labels(stats::terms(formulas[[i]])),
                                    collapse = " + ")
       ctable$m[i] <- length(mod$coefficients)-1
       a1 <- stats::anova(mod)

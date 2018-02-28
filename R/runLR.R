@@ -10,7 +10,7 @@
   data[,RV][is.na(data[,RV])] <- 0
 
   withCallingHandlers({
-    model <- stats::glm(formula=formula, family=binomial, data=data)
+    model <- stats::glm(formula=formula, family="binomial", data=data)
   }, warning = function(w) {
     if(grepl("fitted probabilities numerically 0 or 1", conditionMessage(w))){
       invokeRestart("muffleWarning")

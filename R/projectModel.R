@@ -94,7 +94,7 @@ projectModel <- function(model, transformations, data, clamping = FALSE,
 
   for (i in evnames) {
     if (sum(colnames(data) == i) != 1) {
-      stop(paste(a, "must be represented in 'data' (exactly once)"),
+      stop(paste(i, "must be represented in 'data' (exactly once)"),
            call. = FALSE) }
   }
 

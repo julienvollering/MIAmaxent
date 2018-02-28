@@ -18,7 +18,7 @@
   glmdata <- cbind(padddata, wgts)
 
   withCallingHandlers({
-    model <- stats::glm(formula=formula, family=binomial, data=glmdata,
+    model <- stats::glm(formula=formula, family="binomial", data=glmdata,
                         weights=wgts)
   }, warning = function(w) {
     if(grepl("fitted probabilities numerically 0 or 1", conditionMessage(w))){
@@ -35,7 +35,8 @@
     model$formula.narm <- model$formula
     model$betas <- model$coefficients[-1]
   }
-  bkg <- model.matrix(model$formula.narm, padddata[padddata[, RV]==0, ])[, -1, drop=FALSE]
+  bkg <- stats::model.matrix(model$formula.narm,
+                             padddata[padddata[, RV]==0, ])[, -1, drop=FALSE]
   model$alpha <- 0
   link <- (bkg %*% model$betas) + model$alpha
   rr <- exp(link)
@@ -62,7 +63,7 @@
 
 predict.iwlr <- function(model, newdata, type="PRO") {
   mmformula <- stats::update.formula(model$formula.narm, NULL ~ . - 1)
-  newdata <- model.matrix(mmformula, newdata)
+  newdata <- stats::model.matrix(mmformula, newdata)
   raw <- exp((newdata %*% model$betas) + model$alpha)
   RV <- all.vars(model$formula)[1]
   N <- sum(model$data[,RV] == 0)
