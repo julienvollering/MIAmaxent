@@ -1,9 +1,9 @@
 #' Project model across explanatory data.
 #'
-#' \code{projectModel} Calculates model predictions for any points where values
-#' of the explanatory variables in the model are known. \code{projectModel} can
-#' be used to get model predictions for the training data, or to project the
-#' model to a new space or time.
+#' \code{projectModel} calculates model predictions for any points where values
+#' of the explanatory variables in the model are known. It can be used to get
+#' model predictions for the training data, or to project the model to a new
+#' space or time.
 #'
 #' Missing data (NA) for a continuous variable will result in NA output for that
 #' point. Missing data for a categorical variable is treated as belonging to

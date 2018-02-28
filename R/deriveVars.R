@@ -139,7 +139,8 @@ deriveVars <- function(data,
     transformations <- c(transformations, result$storage)
     dvdata[[names(data)[i]]] <- result$evdv
   }
-  dvdata[-1] <- dvdata[-1][sapply(dvdata[-1], function(x) {dim(x)[2] != 0})]
+
+  dvdata <- c(dvdata[1], dvdata[-1][sapply(dvdata[-1], function(x) {dim(x)[2] != 0})])
 
   if (write == TRUE) {
     save(transformations, file = file.path(fdir, "transformations.Rdata"))
