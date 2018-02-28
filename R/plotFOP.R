@@ -95,7 +95,11 @@ plotFOP <- function(data, EV, span = 0.5, intervals = NULL, ranging = FALSE) {
     FOPdf$loess <- stats::predict(stats::loess(intRV~intEV, FOPdf,
                                                weights=FOPdf$n, span=span))
 
-    FOP <- list(EVoptimum = FOPdf$intEV[which.max(FOPdf$loess)],
+    if (any(is.na(FOPdf$loess))) {
+      evoptimum <- FOPdf$intEV[which.max(FOPdf$intRV)]
+    } else { evoptimum <- FOPdf$intEV[which.max(FOPdf$loess)]  }
+
+    FOP <- list(EVoptimum = evoptimum,
                 FOPdata = FOPdf)
 
     op <- graphics::par(mar=(c(5, 4, 4, 4) + 0.3))

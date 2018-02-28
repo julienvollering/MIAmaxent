@@ -74,7 +74,10 @@ if(getRversion() >= "2.15.1") {
                                             intRV = mean(RV, na.rm=FALSE)))
     FOPdf$loess <- stats::predict(stats::loess(intRV~intEV, FOPdf,
                                                weights=FOPdf$n, span=span))
-    EVoptimum <- FOPdf$intEV[which.max(FOPdf$loess)]
+    if (any(is.na(FOPdf$loess))) {
+      EVoptimum <- FOPdf$intEV[which.max(FOPdf$intRV)]
+    } else { EVoptimum <- FOPdf$intEV[which.max(FOPdf$loess)]  }
+
   }
 
   if (class(df[, 2]) %in% c("factor", "character")) {
