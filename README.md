@@ -39,10 +39,10 @@ Or the development version from github:
 
 ``` r
 # install.packages('devtools')
-devtools::install_github("julienvollering/MIAmaxent")
+devtools::install_github("julienvollering/MIAmaxent", build_vignettes = TRUE)
 ```
 
-The vignette for the development version can be found
+The vignette for the development version can also be found
 [here](https://cdn.rawgit.com/julienvollering/MIAmaxent/89041c93/vignettes/a-modeling-example.html).
 
 ### User Workflow
