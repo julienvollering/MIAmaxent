@@ -2,20 +2,18 @@
 % Please edit documentation in R/runIWLR.R
 \name{predict.iwlr}
 \alias{predict.iwlr}
-\title{S3 method for class "iwlr": returns model predictions for new data in "PRO"
-or "raw" format.}
+\title{Predict method for infinitely-weighted logistic regression}
 \usage{
-predict.iwlr(object, newdata, type = "PRO", ...)
+\method{predict}{iwlr}(object, newdata, type = "PRO", ...)
 }
 \arguments{
 \item{object}{Model of class "iwlr"}
 
-\item{newdata}{Data frame containing variables to predict across}
+\item{newdata}{Data frame containing variables with which to predict}
 
 \item{type}{Type of model output: "PRO" or "raw"}
 }
 \description{
-S3 method for class "iwlr": returns model predictions for new data in "PRO"
-or "raw" format.
+Returns model predictions for new data in "PRO" or "raw" format.
 }
 \keyword{internal}

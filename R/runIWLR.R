@@ -50,16 +50,19 @@
 
 
 
-#' S3 method for class "iwlr": returns model predictions for new data in "PRO"
-#' or "raw" format.
+#' Predict method for infinitely-weighted logistic regression
+#'
+#' Returns model predictions for new data in "PRO" or "raw" format.
 #'
 #' @param object Model of class "iwlr"
-#' @param newdata Data frame containing variables to predict across
+#' @param newdata Data frame containing variables with which to predict
 #' @param type Type of model output: "PRO" or "raw"
 #'
 #' @keywords internal
 #'
 #' @export
+#'
+#' @method predict iwlr
 
 predict.iwlr <- function(object, newdata, type="PRO", ...) {
   mmformula <- stats::update.formula(object$formula.narm, NULL ~ . - 1)
