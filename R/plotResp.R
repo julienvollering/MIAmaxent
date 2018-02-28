@@ -82,7 +82,7 @@ plotResp <- function(model, transformations, EV, logscale = FALSE, ...) {
                                      f(x) }, x=seq)))
   names(newdata) <- names(evbetasni)
   type <- ifelse(class(model)[1] == "iwlr", "PRO", "response")
-  preds <- predict(smodel, newdata, type)
+  preds <- stats::predict(smodel, newdata, type)
   resp <- data.frame(EV = seq, preds = preds)
 
   if (logscale == TRUE) { resp$preds <- log10(resp$preds) }

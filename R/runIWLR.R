@@ -53,7 +53,7 @@
 #' S3 method for class "iwlr": returns model predictions for new data in "PRO"
 #' or "raw" format.
 #'
-#' @param model Model of class "iwlr"
+#' @param object Model of class "iwlr"
 #' @param newdata Data frame containing variables to predict across
 #' @param type Type of model output: "PRO" or "raw"
 #'
@@ -61,12 +61,12 @@
 #'
 #' @export
 
-predict.iwlr <- function(model, newdata, type="PRO") {
-  mmformula <- stats::update.formula(model$formula.narm, NULL ~ . - 1)
+predict.iwlr <- function(object, newdata, type="PRO", ...) {
+  mmformula <- stats::update.formula(object$formula.narm, NULL ~ . - 1)
   newdata <- stats::model.matrix(mmformula, newdata)
-  raw <- exp((newdata %*% model$betas) + model$alpha)
-  RV <- all.vars(model$formula)[1]
-  N <- sum(model$data[,RV] == 0)
+  raw <- exp((newdata %*% object$betas) + object$alpha)
+  RV <- all.vars(object$formula)[1]
+  N <- sum(object$data[,RV] == 0)
   PRO <- raw * N
   if (type == "PRO") {return(PRO)} else {return(raw)}
 }

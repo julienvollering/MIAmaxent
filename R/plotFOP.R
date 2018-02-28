@@ -98,15 +98,15 @@ plotFOP <- function(data, EV, span = 0.5, intervals = NULL, ranging = FALSE) {
     FOP <- list(EVoptimum = FOPdf$intEV[which.max(FOPdf$loess)],
                 FOPdata = FOPdf)
 
-    op <- par(mar=(c(5, 4, 4, 4) + 0.3))
-    on.exit(par(op))
-    dens <- density(df[, 2])
+    op <- graphics::par(mar=(c(5, 4, 4, 4) + 0.3))
+    on.exit(graphics::par(op))
+    dens <- stats::density(df[, 2])
     graphics::plot(range(dens$x), range(dens$y), type="n", axes=FALSE, ann=FALSE)
     graphics::polygon(x=c(min(dens$x), dens$x, max(dens$x)), y=c(0, dens$y, 0),
                       border=NA, col="grey90")
-    axis(side=4, col="grey60", col.axis="grey60")
-    mtext("Kernel estimated data density", side=4, line=3, col="grey60")
-    par(new=TRUE)
+    graphics::axis(side=4, col="grey60", col.axis="grey60")
+    graphics::mtext("Kernel estimated data density", side=4, line=3, col="grey60")
+    graphics::par(new=TRUE)
     graphics::plot(FOPdf$intRV ~ FOPdf$intEV, bty="n",
                    main = paste0("FOP plot: ", evname), xlab = evname,
                    ylab = "Frequency of Observed Presence (FOP)", pch=20)
@@ -122,12 +122,12 @@ plotFOP <- function(data, EV, span = 0.5, intervals = NULL, ranging = FALSE) {
                 FOPdata = data.frame(level=FOPdf$EV, n=FOPdf$n,
                                      levelRV=FOPdf$lvlRV))
 
-    op <- par(mar=(c(5, 4, 4, 4) + 0.3))
-    on.exit(par(op))
+    op <- graphics::par(mar=(c(5, 4, 4, 4) + 0.3))
+    on.exit(graphics::par(op))
     graphics::barplot(FOPdf$n, axes=FALSE, ann=FALSE, col="grey90", border=NA)
-    axis(side=4, col="grey60", col.axis="grey60")
-    mtext("Number of observations in data", side=4, line=3, col="grey60")
-    par(new=TRUE)
+    graphics::axis(side=4, col="grey60", col.axis="grey60")
+    graphics::mtext("Number of observations in data", side=4, line=3, col="grey60")
+    graphics::par(new=TRUE)
     graphics::barplot(FOPdf$lvlRV, names.arg = FOPdf$EV,
       main = paste0("FOP plot: ", evname), xlab = evname,
       ylab = "Frequency of Observed Presence (FOP)", density=rep(20, nrow(FOPdf)), col="black")

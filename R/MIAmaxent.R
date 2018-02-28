@@ -35,15 +35,15 @@
 #' @references Halvorsen, R., Mazzoni, S., Bryn, A. & Bakkestuen, V. (2015)
 #'   Opportunities for improved distribution modelling practice via a strict
 #'   maximum likelihood interpretation of MaxEnt. Ecography, 38, 172-183.
-#' @references Halvorsen, R., Mazzoni, S., Dirksen, J.W., Næsset, E., Gobakken,
+#' @references Halvorsen, R., Mazzoni, S., Dirksen, J.W., Naesset, E., Gobakken,
 #'   T. & Ohlson, M. (2016) How important are choice of model selection method
 #'   and spatial autocorrelation of presence data for distribution modelling by
 #'   MaxEnt? Ecological Modelling, 328, 108-118.
 #' @references Mazzoni, S., Halvorsen, R. & Bakkestuen, V. (2015) MIAT: Modular
 #'   R-wrappers for flexible implementation of MaxEnt distribution modelling.
 #'   Ecological Informatics, 30, 215-221.
-#' @references Phillips, S.J., Anderson, R.P., Dudík, M., Schapire, R.E., &
-#'   Blair, M.E. (2017). Opening the black box: an open‐source release of
+#' @references Phillips, S.J., Anderson, R.P., Dudik, M., Schapire, R.E., &
+#'   Blair, M.E. (2017). Opening the black box: an open-source release of
 #'   Maxent. Ecography, 40(7), 887-893.
 #' @references Phillips, S.J., Anderson, R.P. & Schapire, R.E. (2006) Maximum
 #'   entropy modeling of species geographic distributions. Ecological Modelling,
