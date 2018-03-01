@@ -4,8 +4,8 @@ Title: A modular, integrated approach to maximum entropy distribution modeling
 Version: 0.5.0.9000
 Authors@R: c(
     person("Julien", "Vollering", email = "julien.vollering@hvl.no", role = c("aut", "cre")),
+    person("Sabrina", "Mazzoni", email = "sabgis@uevora.pt", role = "aut"),
     person("Rune", "Halvorsen", email = "rune.halvorsen@nhm.uio.no", role = "aut"),
-    person("Sabrina", "Mazzoni", email = "sabgis@uevora.pt", role = c("ctb", "cph")),
     person("Steven", "Phillips", role = "cph"))
 Maintainer: Julien Vollering <julien.vollering@hvl.no>
 Description: Tools for training, selecting, and evaluating maximum entropy
