@@ -33,9 +33,7 @@
       ctable$variables[i] <- paste(labels(stats::terms(formulas[[i]])),
                                    collapse = " + ")
       ctable$m[i] <- length(mod$coefficients)-1
-      a1 <- stats::anova(mod, test="Chisq")
-      ctable$Dsq[i] <- round(sum(a1$Deviance, na.rm = TRUE) /
-                                    a1$`Resid. Dev`[1], digits = 3)
+      ctable$Dsq[i] <- round(1 - (mod$deviance/mod$null.deviance), digits = 3)
       a2 <- stats::anova(refmod, mod, test="Chisq")
       ctable$Chisq[i] <- round(a2$Deviance[2], digits = 3)
       ctable$df[i] <- a2$Df[2]
@@ -57,8 +55,7 @@
       ctable$variables[i] <- paste(labels(stats::terms(formulas[[i]])),
                                    collapse = " + ")
       ctable$m[i] <- length(mod$coefficients)-1
-      a1 <- stats::anova(mod)
-      Dsq <- sum(a1$Deviance, na.rm = TRUE) / a1$`Resid. Dev`[1]
+      Dsq <- 1 - (mod$deviance/mod$null.deviance)
       ctable$Dsq[i] <- round(Dsq, digits = 3)
       N <- nrow(data)
       n <- sum(data[,1]==1, na.rm = TRUE)
