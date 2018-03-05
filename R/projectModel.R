@@ -145,6 +145,7 @@ projectModel <- function(model, transformations, data, clamping = FALSE,
     values[cells] <- Output[,1]
     outraster <- evstack[[1]]
     outraster <- raster::setValues(outraster, values)
+    names(outraster) <- type
     raster::plot(outraster)
     return(list(output = outraster, ranges = Ranges))
   } else {
