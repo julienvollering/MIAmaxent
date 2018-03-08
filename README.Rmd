@@ -26,13 +26,13 @@ Tools for training, selecting, and evaluating maximum entropy (and standard logi
 The predecessor to this package is the MIA Toolbox, which is described in detail in Mazzoni et al. (2015). 
 
 ### Installation
-Install the release version from CRAN:
+Install the release version (0.4.0) from CRAN:
 
 ```{r, eval = FALSE}
 install.packages("MIAmaxent")
 ```
 
-Or the development version from github:
+Or the development version (0.5.0.9000) from github:
 
 ```{r, eval = FALSE}
 # install.packages('devtools')

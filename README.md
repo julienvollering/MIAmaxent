@@ -29,13 +29,13 @@ in detail in Mazzoni et al. (2015).
 
 ### Installation
 
-Install the release version from CRAN:
+Install the release version (0.4.0) from CRAN:
 
 ``` r
 install.packages("MIAmaxent")
 ```
 
-Or the development version from github:
+Or the development version (0.5.0.9000) from github:
 
 ``` r
 # install.packages('devtools')
