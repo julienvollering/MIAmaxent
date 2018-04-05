@@ -1,5 +1,5 @@
 # MIAmaxent 0.5.0.9000
-* Implements maximum entropy models as infinitely-weighted logitic regressions, so that all computation can be done natively in R (maxent.jar no longer required).
+* Implements maximum entropy models as infinitely-weighted logistic regressions, so that all computation can be done natively in R (maxent.jar no longer required).
 * Implements choice of algorithm: "maxent" for maximum entropy or "LR" for standard logistic regression (binomial GLM).
 * Complete revisions of all high-level functions
 
