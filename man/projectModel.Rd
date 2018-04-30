@@ -19,8 +19,8 @@ variables in the model. I.e. the 'transformations' returned by
 
 \item{data}{Data frame of all the explanatory variables (EVs) included in the
 model (see \code{\link{readData}}). Alternatively, an object of class
-'RasterStack' containing rasters for all EVs included in the model. Column
-or raster names must match EV names.}
+'RasterStack' or 'RasterBrick' containing rasters for all EVs included in
+the model. Column or raster names must match EV names.}
 
 \item{clamping}{Logical. Do clamping \emph{sensu} Phillips et al. (2006).
 Default is \code{FALSE}.}
@@ -36,10 +36,10 @@ interpretation of output values with respect to reference values (e.g. PRO
 \value{
 List of 2: \enumerate{ \item output: A data frame with the model
   output in column 1 and the corresponding explanatory data in subsequent
-  columns, or a raster containing predictions if \code{data} is a
-  RasterStack. \item ranges: A list showing the range of \code{data} compared
-  to the training data, on a 0-1 scale.} If \code{data} is a RasterStack, the
-  output is also plotted.
+  columns, or a raster containing predictions if \code{data} is a RasterStack
+  or RasterBrick. \item ranges: A list showing the range of \code{data}
+  compared to the training data, on a 0-1 scale.} If \code{data} is a
+  RasterStack or RasterBrick, the output is also plotted.
 }
 \description{
 \code{projectModel} calculates model predictions for any points where values
