@@ -30,8 +30,8 @@
 #'   'transformations.Rdata' file saved as a result of \code{\link{deriveVars}}.
 #' @param data Data frame of all the explanatory variables (EVs) included in the
 #'   model (see \code{\link{readData}}). Alternatively, an object of class
-#'   'RasterStack' containing rasters for all EVs included in the model. Column
-#'   or raster names must match EV names.
+#'   'RasterStack' or 'RasterBrick' containing rasters for all EVs included in
+#'   the model. Column or raster names must match EV names.
 #' @param clamping Logical. Do clamping \emph{sensu} Phillips et al. (2006).
 #'   Default is \code{FALSE}.
 #' @param raw Logical. Return raw maxent output instead of probability ratio
@@ -44,10 +44,10 @@
 #'
 #' @return List of 2: \enumerate{ \item output: A data frame with the model
 #'   output in column 1 and the corresponding explanatory data in subsequent
-#'   columns, or a raster containing predictions if \code{data} is a
-#'   RasterStack. \item ranges: A list showing the range of \code{data} compared
-#'   to the training data, on a 0-1 scale.} If \code{data} is a RasterStack, the
-#'   output is also plotted.
+#'   columns, or a raster containing predictions if \code{data} is a RasterStack
+#'   or RasterBrick. \item ranges: A list showing the range of \code{data}
+#'   compared to the training data, on a 0-1 scale.} If \code{data} is a
+#'   RasterStack or RasterBrick, the output is also plotted.
 #'
 #'
 #' @references Halvorsen, R. (2013) A strict maximum likelihood explanation of
@@ -84,7 +84,7 @@ projectModel <- function(model, transformations, data, clamping = FALSE,
   evnames <- unique(sub("_.*", "", dvnamesni))
 
   map <- FALSE
-  if (class(data)[1] == "RasterStack") {
+  if (class(data)[1] %in% c("RasterStack", "RasterBrick") {
     map <- TRUE
     names(data) <- make.names(names(data), allow_ = FALSE)
     evstack <- data[[evnames]]
