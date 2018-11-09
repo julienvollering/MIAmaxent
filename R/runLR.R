@@ -4,6 +4,9 @@
 #'   to be fitted.
 #' @param data Data frame containing the variables in the model. Response
 #'   variable as binary (1/NA or 1/0).
+#'
+#' @keywords internal
+#' @noRd
 
 .runLR <- function(formula, data) {
   RV <- all.vars(formula)[1]

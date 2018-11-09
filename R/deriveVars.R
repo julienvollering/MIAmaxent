@@ -60,7 +60,7 @@
 #'   Default is \code{FALSE}.
 #' @param dir Directory for file writing if \code{write = TRUE}. Defaults to the
 #'   working directory.
-
+#' @param quiet Logical. Suppress progress messages from spline pre-selection?
 #'
 #' @return List of 2: \enumerate{ \item dvdata: List containing first the
 #'   response variable, followed data frames of derived variables produced for
@@ -102,7 +102,7 @@
 deriveVars <- function(data,
                        transformtype = c("L", "M", "D", "HF", "HR", "T", "B"),
                        allsplines = FALSE, algorithm = "maxent", write = FALSE,
-                       dir = NULL) {
+                       dir = NULL, quiet = FALSE) {
 
   colnames(data) <- make.names(colnames(data), allow_ = FALSE)
 
@@ -135,7 +135,7 @@ deriveVars <- function(data,
 
   for (i in 2:ncol(data)) {
     df <- data[, c(1,i)]
-    result <- .dvsfromev(df, transformtype, allsplines, algorithm)
+    result <- .dvsfromev(df, transformtype, allsplines, algorithm, quiet)
     transformations <- c(transformations, result$storage)
     dvdata[[names(data)[i]]] <- result$evdv
   }

@@ -4,8 +4,8 @@
 \alias{selectDVforEV}
 \title{Select parsimonious sets of derived variables.}
 \usage{
-selectDVforEV(dvdata, alpha = 0.01, test = "Chisq", algorithm = "maxent",
-  write = FALSE, dir = NULL)
+selectDVforEV(dvdata, alpha = 0.01, test = "Chisq",
+  algorithm = "maxent", write = FALSE, dir = NULL, quiet = FALSE)
 }
 \arguments{
 \item{dvdata}{List containing first the response variable, followed by data
@@ -29,6 +29,8 @@ determines the type of model used during forward selection. Default is
 
 \item{dir}{Directory for file writing if \code{write = TRUE}. Defaults to the
 working directory.}
+
+\item{quiet}{Suppress progress bar?}
 }
 \value{
 List of 2: \enumerate{ \item dvdata: A list containing first the

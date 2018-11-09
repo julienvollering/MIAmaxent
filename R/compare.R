@@ -6,6 +6,9 @@
 #' @param test Character string matching either "Chisq" or "F". F-test is sensu
 #'   Halvorsen (2013, 2015).
 #' @param algorithm Character string matching either "maxent" or "LR".
+#'
+#' @keywords internal
+#' @noRd
 
 .compare <- function(formulas, refformula, data, test="Chisq", algorithm="maxent") {
 

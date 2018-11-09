@@ -51,4 +51,6 @@
 #'
 #' @docType package
 #' @name MIAmaxent
+#' @keywords internal
+#'
 NULL

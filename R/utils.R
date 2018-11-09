@@ -10,6 +10,8 @@ if(getRversion() >= "2.15.1") {
 #' misinterpretation as presence/absence data)
 #'
 #' @param rv Vector of response variable values
+#' @keywords internal
+#' @noRd
 
 .binaryrvcheck <- function(rv) {
   if (class(rv) != "numeric" && class(rv) != "integer") {
@@ -32,6 +34,8 @@ if(getRversion() >= "2.15.1") {
 #'
 #' @param dvnamesni Names of DVs in model (no interaction terms)
 #' @param alltransf List of transformation functions
+#' @keywords internal
+#' @noRd
 
 .check.dvs.in.transf <- function(dvnamesni, alltransf) {
   for (i in dvnamesni) {
@@ -59,6 +63,8 @@ if(getRversion() >= "2.15.1") {
 #'   Defaults to the minimum of N/10 and 100. Irrelevant for categorical EVs.
 #'
 #' @return the EV value at which FOP is highest (\code{EVoptimum})
+#' @keywords internal
+#' @noRd
 
 .fopoptimum <- function(df, span = 0.5, intervals = NULL) {
 
@@ -96,6 +102,8 @@ if(getRversion() >= "2.15.1") {
 #'
 #' @param formula Formula entered as selection start point
 #' @param dvdata List of data frames containing EVs
+#' @keywords internal
+#' @noRd
 
 .formulacheck <- function(formula, dvdata) {
   if (any(attr(stats::terms(formula), "order") != 1)) {
@@ -117,6 +125,8 @@ if(getRversion() >= "2.15.1") {
 #' From .Rdata file or from existing object
 #'
 #' @param transformations transformations object produced by deriveVars
+#' @keywords internal
+#' @noRd
 
 .load.transf <- function(transformations) {
   if (class(transformations) == "character") {
@@ -139,6 +149,8 @@ if(getRversion() >= "2.15.1") {
 #' \code{scalex}
 #'
 #' @param x Vector of data. Must have scale [0,1]!
+#' @keywords internal
+#' @noRd
 
 .minskew <- function(x) {
   cmin <- min(x)-10*(max(x)-min(x))
@@ -179,6 +191,8 @@ if(getRversion() >= "2.15.1") {
 #' @param AUC AUC value
 #' @param x PRO = 1 x-coordinate
 #' @param y PRO = 1 y-coordinate
+#' @keywords internal
+#' @noRd
 
 .plotROC <- function(fpr, tpr, AUC, PROpt, x, y, ...) {
   args1 <- list(xlab="1 - specificity (false positive rate)",
@@ -222,6 +236,8 @@ release_questions <- function() {
 #'
 #' @param x Vector of data.
 #' @param c Constant
+#' @keywords internal
+#' @noRd
 
 .scalex <- function(xnull, x, c) {
   if(e1071::skewness(xnull, na.rm = TRUE, type = 2) < 0) {

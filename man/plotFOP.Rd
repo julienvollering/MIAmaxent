@@ -45,7 +45,8 @@ response variable across intervals or levels of the explanatory variable. For
 continuous variables, a local regression ("loess") of the FOP values is added
 to the plot as a line. \code{plotFOP} also returns a list containing the
 optimum EV value, and a data frame containing the plotted data (for
-customizable plotting).
+customizable plotting). Data density is plotted in the background (grey) to
+help visualize where FOP values are more or less certain.
 }
 \details{
 In the local regression ("loess"), the plotted FOP values are regressed

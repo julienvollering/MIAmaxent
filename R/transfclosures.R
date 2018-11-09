@@ -4,6 +4,8 @@
 #'   transformation
 #' @return Function that transforms x into y by the particular L transfomation
 #'   defined by the properties of xnull
+#' @keywords internal
+#' @noRd
 
 .transfL <- function(xnull) {
   function(x) {
@@ -18,6 +20,8 @@
 #'   transformation
 #' @return Function that transforms x into y by the particular M transfomation
 #'   defined by the properties of xnull
+#' @keywords internal
+#' @noRd
 
 .transfM <- function(xnull) {
   Lnull <- (xnull - range(xnull)[1])/diff(range(xnull))
@@ -42,6 +46,8 @@
 #'   transformation
 #' @return Function that transforms x into y by the particular D transfomation
 #'   defined by the properties of xnull and rv, and specified by devexp.
+#' @keywords internal
+#' @noRd
 
 .transfD <- function(xnull, rv, devexp) {
   optnull <- .fopoptimum(data.frame(rv, xnull))
@@ -63,6 +69,8 @@
 #' @return list of functions that transform x into y by the particular spline
 #'   transformations defined by the properties of xnull, and specified by k and
 #'   type.
+#' @keywords internal
+#' @noRd
 
 .transfSpline <- function(xnull, k, type) {
   force(k)
@@ -88,6 +96,8 @@
 #' @param lvl string specifying which level of the variable to be made binary
 #' @return One function for each level of xnull, which transforms categorical
 #'   variable x into binary variable y.
+#' @keywords internal
+#' @noRd
 
 .transfB <- function(xnull, lvl) {
   force(lvl)

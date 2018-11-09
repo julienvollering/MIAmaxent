@@ -3,6 +3,8 @@
 #' @param rv Vector of response variable values
 #' @param dvs List of spline dvs to be selected from (HF, HR, or Th)
 #' @param algorithm Character string matching either "maxent" or "LR".
+#' @keywords internal
+#' @noRd
 
 .splselect <- function(rv, dvs, algorithm) {
 

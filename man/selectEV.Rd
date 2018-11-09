@@ -5,7 +5,8 @@
 \title{Select parsimonious set of explanatory variables.}
 \usage{
 selectEV(dvdata, alpha = 0.01, interaction = FALSE, formula = NULL,
-  test = "Chisq", algorithm = "maxent", write = FALSE, dir = NULL)
+  test = "Chisq", algorithm = "maxent", write = FALSE, dir = NULL,
+  quiet = FALSE)
 }
 \arguments{
 \item{dvdata}{List containing first the response variable, followed by data
@@ -42,6 +43,8 @@ Default is \code{FALSE}.}
 
 \item{dir}{Directory for file writing if \code{write = TRUE}. Defaults to the
 working directory.}
+
+\item{quiet}{Logical. Suppress progress messages from EV-selection?}
 }
 \value{
 List of 3: \enumerate{ \item dvdata: A list containing first the

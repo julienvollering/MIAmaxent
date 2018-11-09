@@ -6,6 +6,9 @@
 #'   object.
 #' @param data Data frame containing the variables in the model. Response
 #'   variable as (1/NA).
+#'
+#' @keywords internal
+#' @noRd
 
 .runIWLR <- function(formula, data) {
   RV <- all.vars(formula)[1]

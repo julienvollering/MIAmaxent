@@ -7,9 +7,13 @@
 #' @param algorithm Character string matching either "maxent" or "LR".
 #' @param interaction Logical. Allows interaction terms.
 #' @param formula Model formula specifying a starting point for model selection.
+#' @param quiet Logical. Suppress progress messages?
 #'
+#' @keywords internal
+#' @noRd
 
-.parsevs <- function(dvdata, alpha, interaction, formula, test, algorithm) {
+.parsevs <- function(dvdata, alpha, interaction, formula, test, algorithm,
+                     quiet) {
 
   dvdata[[1]] <- data.frame("RV"=dvdata[[1]])
   test <- match.arg(test, choices = c("Chisq", "F"))
@@ -30,7 +34,7 @@
     ctable$variables <- paste(selectedset, collapse=" + ")
     modeltable <- data.frame("round"=roundnumber, ctable)
     refformula <- formula
-    message("Round 0 complete.")
+    if (quiet == FALSE) {message("Round 0 complete.")}
 
     if (length(remainingset) < 1) {
       if (algorithm == "maxent") {
@@ -79,7 +83,7 @@
       remainingset <- remainingset[!is.na(remainingset)]
     }
 
-    message(paste("Round", roundnumber, "complete."))
+    if (quiet == FALSE) {message(paste("Round", roundnumber, "complete."))}
 
     if (nrow(ctable) == 1 ||
         ctable$P[1] > alpha ||
@@ -98,8 +102,10 @@
     return(list(dvdata[selectedset], modeltable, selectedmodel))
   }
 
-  message(paste("Forward selection of interaction terms between",
-    length(selectedset), "EVs"))
+  if (quiet == FALSE) {
+    message(paste("Forward selection of interaction terms between",
+                  length(selectedset), "EVs"))
+  }
 
   remainingset <- apply(utils::combn(selectedset, 2), 2,
                         function(x) {paste(x, collapse=":")})
@@ -144,7 +150,7 @@
       remainingset <- remainingset[!is.na(remainingset)]
     }
 
-    message(paste("Round", roundnumber, "complete."))
+    if (quiet == FALSE) {message(paste("Round", roundnumber, "complete."))}
 
     if (nrow(ctable) == 1 ||
         ctable$P[1] > alpha ||

@@ -58,6 +58,7 @@
 #'   Default is \code{FALSE}.
 #' @param dir Directory for file writing if \code{write = TRUE}. Defaults to the
 #'   working directory.
+#' @param quiet Logical. Suppress progress messages from EV-selection?
 #'
 #' @return List of 3: \enumerate{ \item dvdata: A list containing first the
 #'   response variable, followed by data frames of DVs for each \emph{selected}
@@ -89,7 +90,7 @@
 
 selectEV <- function(dvdata, alpha = 0.01, interaction = FALSE, formula = NULL,
                      test="Chisq", algorithm = "maxent", write = FALSE,
-                     dir = NULL) {
+                     dir = NULL, quiet = FALSE) {
 
   names(dvdata) <- make.names(names(dvdata), allow_ = FALSE)
   .binaryrvcheck(dvdata[[1]])
@@ -113,14 +114,16 @@ selectEV <- function(dvdata, alpha = 0.01, interaction = FALSE, formula = NULL,
     .formulacheck(formula, dvdata)
   }
 
-  if (!is.null(formula) && length(labels(stats::terms(formula))) != 0) {
-    nterms <- length(labels(stats::terms(formula)))
-    message(paste0("Forward selection of ", length(dvdata[-1]) - nterms, " EVs"))
-  } else {
-    message(paste0("Forward selection of ", length(dvdata[-1]), " EVs"))
+  if (quiet == F) {
+    if (!is.null(formula) && length(labels(stats::terms(formula))) != 0) {
+      nterms <- length(labels(stats::terms(formula)))
+      message(paste0("Forward selection of ", length(dvdata[-1]) - nterms, " EVs"))
+      } else {
+      message(paste0("Forward selection of ", length(dvdata[-1]), " EVs"))
+      }
   }
 
-  result <- .parsevs(dvdata, alpha, interaction, formula, test, algorithm)
+  result <- .parsevs(dvdata, alpha, interaction, formula, test, algorithm, quiet)
   if (write == TRUE) {
     utils::write.csv(result[[2]], file = file.path(fdir, "evselection.csv"),
                      row.names = FALSE)

@@ -5,6 +5,9 @@
 #' @param alpha Alpha level for inference test.
 #' @param test Character string matching either "Chisq" or "F".
 #' @param algorithm Character string matching either "maxent" or "LR".
+#'
+#' @keywords internal
+#' @noRd
 
 .parsdvs <- function(df, alpha, test, algorithm) {
 

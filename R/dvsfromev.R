@@ -11,11 +11,15 @@
 #' @param transformtype Set of transformation types to be used.
 #' @param allsplines Logical. Keep all spline transformations.
 #' @param algorithm Character string matching either "maxent" or "LR".
+#' @param quiet Logical. Suppress progress messages from spline pre-seletion?
 #'
 #' @return Dataframe with one column for each DV.
+#'
+#' @keywords internal
+#' @noRd
 
 
-.dvsfromev <- function(df, transformtype, allsplines, algorithm) {
+.dvsfromev <- function(df, transformtype, allsplines, algorithm, quiet) {
 
   rv <- df[, 1]
   ev <- df[, 2]
@@ -49,10 +53,12 @@
         tfunction <- .transfSpline(ev, k, type = "HF")
         splall[[paste0(evname, "_HF", i, "_transf")]] <- tfunction
       }
-      if (allsplines == T) {
+      if (allsplines == TRUE) {
         storage <- c(storage, splall)
       } else {
-        message(paste0("Pre-selecting forward hinge transformations of ", evname))
+        if (quiet == FALSE) {
+          message(paste0("Pre-selecting forward hinge transformations of ", evname))
+          }
         dvs <- lapply(splall, function(x) {x(ev)})
         names(dvs) <- gsub("_transf", "", names(splall))
         selected <- .splselect(rv, dvs, algorithm)
@@ -70,10 +76,12 @@
         tfunction <- .transfSpline(ev, k, type = "HR")
         splall[[paste0(evname, "_HR", i, "_transf")]] <- tfunction
       }
-      if (allsplines == T) {
+      if (allsplines == TRUE) {
         storage <- c(storage, splall)
       } else {
-        message(paste0("Pre-selecting reverse hinge transformations of ", evname))
+        if (quiet == FALSE) {
+          message(paste0("Pre-selecting reverse hinge transformations of ", evname))
+        }
         dvs <- lapply(splall, function(x) {x(ev)})
         names(dvs) <- gsub("_transf", "", names(splall))
         selected <- .splselect(rv, dvs, algorithm)
@@ -91,10 +99,12 @@
         tfunction <- .transfSpline(ev, k, type = "T")
         splall[[paste0(evname, "_T", i, "_transf")]] <- tfunction
       }
-      if (allsplines == T) {
+      if (allsplines == TRUE) {
         storage <- c(storage, splall)
       } else {
-        message(paste0("Pre-selecting threshold transformations of ", evname))
+        if (quiet == FALSE) {
+          message(paste0("Pre-selecting threshold transformations of ", evname))
+        }
         dvs <- lapply(splall, function(x) {x(ev)})
         names(dvs) <- gsub("_transf", "", names(splall))
         selected <- .splselect(rv, dvs, algorithm)

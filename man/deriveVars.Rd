@@ -5,7 +5,8 @@
 \title{Derive variables by transformation.}
 \usage{
 deriveVars(data, transformtype = c("L", "M", "D", "HF", "HR", "T", "B"),
-  allsplines = FALSE, algorithm = "maxent", write = FALSE, dir = NULL)
+  allsplines = FALSE, algorithm = "maxent", write = FALSE,
+  dir = NULL, quiet = FALSE)
 }
 \arguments{
 \item{data}{Data frame containing the response variable in the first column
@@ -31,6 +32,8 @@ Default is \code{FALSE}.}
 
 \item{dir}{Directory for file writing if \code{write = TRUE}. Defaults to the
 working directory.}
+
+\item{quiet}{Logical. Suppress progress messages from spline pre-selection?}
 }
 \value{
 List of 2: \enumerate{ \item dvdata: List containing first the

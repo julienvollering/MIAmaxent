@@ -44,6 +44,7 @@
 #'   .csv file? Default is \code{FALSE}.
 #' @param dir Directory for file writing if \code{write = TRUE}. Defaults to the
 #'   working directory.
+#' @param quiet Suppress progress bar?
 #'
 #' @return List of 2: \enumerate{ \item dvdata: A list containing first the
 #'   response variable, followed by data frames of \emph{selected} DVs for each
@@ -76,7 +77,8 @@
 
 
 selectDVforEV <- function(dvdata, alpha = 0.01, test = "Chisq",
-                          algorithm = "maxent", write = FALSE, dir = NULL) {
+                          algorithm = "maxent", write = FALSE, dir = NULL,
+                          quiet = FALSE) {
 
   names(dvdata) <- make.names(names(dvdata), allow_ = FALSE)
   rv <- dvdata[[1]]
@@ -101,8 +103,10 @@ selectDVforEV <- function(dvdata, alpha = 0.01, test = "Chisq",
   sdvdata <- list()
   trail <- list()
 
-  message(paste0("Forward selection of DVs for ", length(evdv), " EVs"))
-  pb <- utils::txtProgressBar(min = 0, max = length(evdv), style = 3)
+  if (quiet == FALSE) {
+    message(paste0("Forward selection of DVs for ", length(evdv), " EVs"))
+    pb <- utils::txtProgressBar(min = 0, max = length(evdv), style = 3)
+  }
 
   for (i in 1:length(evdv)) {
     evname <- names(evdv)[i]
@@ -115,9 +119,9 @@ selectDVforEV <- function(dvdata, alpha = 0.01, test = "Chisq",
     }
     sdvdata[[i]] <- result[[1]]
     trail[[i]] <- result[[2]]
-    utils::setTxtProgressBar(pb, i)
+    if (quiet == FALSE) {utils::setTxtProgressBar(pb, i)}
   }
-  close(pb)
+  if (quiet == FALSE) {close(pb)}
 
   names(sdvdata) <- names(evdv)
   names(trail) <- names(evdv)
