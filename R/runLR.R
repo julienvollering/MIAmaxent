@@ -15,7 +15,8 @@
   withCallingHandlers({
     model <- stats::glm(formula=formula, family="binomial", data=data)
   }, warning = function(w) {
-    if(grepl("fitted probabilities numerically 0 or 1", conditionMessage(w))){
+    if(grepl("fitted probabilities numerically 0 or 1", conditionMessage(w)) ||
+       grepl("glm.fit: algorithm did not converge", conditionMessage(w))){
       invokeRestart("muffleWarning")
     }
   })
