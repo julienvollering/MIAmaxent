@@ -4,10 +4,12 @@
 #' given explanatory variable. An FOP plot shows the rate of occurrence of the
 #' response variable across intervals or levels of the explanatory variable. For
 #' continuous variables, a local regression ("loess") of the FOP values is added
-#' to the plot as a line. \code{plotFOP} also returns a list containing the
-#' optimum EV value, and a data frame containing the plotted data (for
-#' customizable plotting). Data density is plotted in the background (grey) to
+#' to the plot as a line. Data density is plotted in the background (grey) to
 #' help visualize where FOP values are more or less certain.
+#'
+#' A list of the optimum EV value and a data frame containing the plotted data
+#' is returned invisibly. Store invisibly returned output by assigning it to an
+#' object.
 #'
 #' In the local regression ("loess"), the plotted FOP values are regressed
 #' against their EV values. The points are weighted by the number of
@@ -138,5 +140,5 @@ plotFOP <- function(data, EV, span = 0.5, intervals = NULL, ranging = FALSE) {
       ylab = "Frequency of Observed Presence (FOP)", density=rep(20, nrow(FOPdf)), col="black")
   }
 
-  return(FOP)
+  invisible(FOP)
 }

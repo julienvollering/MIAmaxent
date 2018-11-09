@@ -43,12 +43,14 @@ In addition to the graphical output, a list of 2: \enumerate{ \item
 given explanatory variable. An FOP plot shows the rate of occurrence of the
 response variable across intervals or levels of the explanatory variable. For
 continuous variables, a local regression ("loess") of the FOP values is added
-to the plot as a line. \code{plotFOP} also returns a list containing the
-optimum EV value, and a data frame containing the plotted data (for
-customizable plotting). Data density is plotted in the background (grey) to
+to the plot as a line. Data density is plotted in the background (grey) to
 help visualize where FOP values are more or less certain.
 }
 \details{
+A list of the optimum EV value and a data frame containing the plotted data
+is returned invisibly. Store invisibly returned output by assigning it to an
+object.
+
 In the local regression ("loess"), the plotted FOP values are regressed
 against their EV values. The points are weighted by the number of
 observations they represent, such that an FOP value from an interval with
