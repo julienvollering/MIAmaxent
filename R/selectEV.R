@@ -93,6 +93,9 @@ selectEV <- function(dvdata, alpha = 0.01, interaction = FALSE, formula = NULL,
                      dir = NULL, quiet = FALSE) {
 
   names(dvdata) <- make.names(names(dvdata), allow_ = FALSE)
+  stopifnot(class(dvdata)=="list",
+            length(dvdata)>1,
+            all(lapply(dvdata[-1], class)=="data.frame"))
   .binaryrvcheck(dvdata[[1]])
 
   if (write == TRUE) {

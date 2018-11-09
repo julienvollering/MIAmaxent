@@ -81,6 +81,9 @@ selectDVforEV <- function(dvdata, alpha = 0.01, test = "Chisq",
                           quiet = FALSE) {
 
   names(dvdata) <- make.names(names(dvdata), allow_ = FALSE)
+  stopifnot(class(dvdata)=="list",
+            length(dvdata)>1,
+            all(lapply(dvdata[-1], class)=="data.frame"))
   rv <- dvdata[[1]]
   .binaryrvcheck(rv)
   evdv <- dvdata[-1]
