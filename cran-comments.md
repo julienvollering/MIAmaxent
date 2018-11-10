@@ -1,28 +1,14 @@
-## Minor release submission
+## Major release submission
 
 ## Test environments
-* local Windows install, R 3.3.2
-* ubuntu 12.04 (on travis-ci), R 3.3.2
-* os x 10.11, (on travis-ci), R 3.3.2
+* local Windows install, R 3.5.1
+* ubuntu 14.04 (on travis-ci), R 3.5.1
+* os x 10.13, (on travis-ci), R 3.5.0
 * win-builder (devel)
 
 ## R CMD check results
 
-0 errors | 0 warnings | 2 notes
-
-* 1 note under R devel:
-    "checking CRAN incoming feasibility ... NOTE 
-    Maintainer: 'Julien Vollering <julien.vollering@hvl.no>'
-    Possibly mis-spelled words in DESCRIPTION:
-    Maxent (3:8, 11:6)"
-* "Maxent" is not a mis-spelling.
-
-* 1 note under devtools::release() check:
-    "New maintainer:
-    Julien Vollering <julien.vollering@hvl.no>
-    Old maintainer(s):
-    Julien Vollering <julien.vollering@hisf.no>"
-* The email address of the maintainer has changed due institutional reorganization, from <julien.vollering at hisf.no> to <julien.vollering at hvl.no>. This change is reflected in the description, and a email was sent from <julien.vollering at hisf.no> to <CRAN at R-project.org> on 14.02.2017 to confirm the change.
+0 errors | 0 warnings | 0 notes
 
 ## Reverse dependencies
 

@@ -2,7 +2,7 @@
 
 # MIAmaxent
 
-## v.0.5.0.9000
+## v.1.0.0
 
 ### Description
 
@@ -29,21 +29,18 @@ in detail in Mazzoni et al. (2015).
 
 ### Installation
 
-Install the release version (0.4.0) from CRAN:
+Install the release version from CRAN:
 
 ``` r
 install.packages("MIAmaxent")
 ```
 
-Or the development version (0.5.0.9000) from github:
+Or the development version from github:
 
 ``` r
 # install.packages('devtools')
 devtools::install_github("julienvollering/MIAmaxent", build_vignettes = TRUE)
 ```
-
-The vignette for the development version can also be found
-[here](https://cdn.rawgit.com/julienvollering/MIAmaxent/89041c93/vignettes/a-modeling-example.html).
 
 ### User Workflow
 
