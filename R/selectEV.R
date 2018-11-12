@@ -18,7 +18,8 @@
 #' between EVs included in the model afterwards. Therefore, interactions are
 #' only explored between terms which are individually explain a significant
 #' amount of variation. When \code{interaction = FALSE}, interactions are not
-#' considered.
+#' considered. Practically, interactions between EVs are represented by the
+#' products of all combinations of their component DVs (Halvorsen, 2013).
 #'
 #' The maximum entropy algorithm ("maxent") -- which is implemented in MIAmaxent
 #' as an infinitly-weighted logisitic regression -- is conventionally used with
