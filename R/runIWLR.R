@@ -17,6 +17,7 @@
   padd[, RV] <- 0
   padddata <- rbind(data, padd)
   # Code below this line was modified from the MIT-licensed 'maxnet' library
+  # Copyright (c) 2016, Steven Phillips
   wgts <- padddata[, RV] + (1 - padddata[, RV])*100
   glmdata <- cbind(padddata, wgts)
 
@@ -50,6 +51,7 @@
   class(model) <- c("iwlr", class(model))
   return(model)
   # Code above this line was modified from the MIT-licensed 'maxnet' library
+  # Copyright (c) 2016, Steven Phillips
 }
 
 
