@@ -4,8 +4,8 @@
 \name{MIAmaxent}
 \alias{MIAmaxent}
 \alias{MIAmaxent-package}
-\title{MIAmaxent: A modular, integrated approach to maximum entropy distribution
-modeling}
+\title{MIAmaxent: A Modular, Integrated Approach to Maximum Entropy Distribution
+Modeling}
 \description{
 Tools for training, selecting, and evaluating maximum entropy (and standard
 logistic regression) distribution models. This package provides tools for
