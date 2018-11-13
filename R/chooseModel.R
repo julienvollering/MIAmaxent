@@ -1,17 +1,17 @@
 #' Trains a model containing the explanatory variables specified.
 #'
 #' \code{chooseModel} trains a model based on the formula provided. The formula
-#' specifies which explanatory variables (EVs) -- and potentially first-order
-#' interactions between these -- should be included in the model. Each EV can be
-#' represented by 1 or more derived variables (see \code{\link{deriveVars}}).
+#' specifies which explanatory variables (EVs) --- and potentially first-order
+#' interactions between these --- should be included in the model. Each EV can
+#' be represented by 1 or more derived variables (see \code{\link{deriveVars}}).
 #' The function may be employed to choose a model from the selection pathway of
 #' \code{\link{selectEV}} other than the model selected under the provided alpha
 #' value.
 #'
 #' Explanatory variables should be uniquely named. Underscores ('_') and colons
 #' (':') are reserved to denote derived variables and interaction terms
-#' repectively, and \code{chooseModel} will replace these -- along with other
-#' special characters -- with periods ('.').
+#' repectively, and \code{chooseModel} will replace these --- along with other
+#' special characters --- with periods ('.').
 #'
 #' @param dvdata A list containing first the response variable, followed by data
 #'   frames of \emph{selected} derived variables for a given explanatory

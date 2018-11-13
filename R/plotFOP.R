@@ -137,7 +137,8 @@ plotFOP <- function(data, EV, span = 0.5, intervals = NULL, ranging = FALSE) {
     graphics::par(new=TRUE)
     graphics::barplot(FOPdf$lvlRV, names.arg = FOPdf$EV,
       main = paste0("FOP plot: ", evname), xlab = evname,
-      ylab = "Frequency of Observed Presence (FOP)", density=rep(20, nrow(FOPdf)), col="black")
+      ylab = "Frequency of Observed Presence (FOP)", density=rep(20, nrow(FOPdf)), col="black",
+      las = 2)
   }
 
   invisible(FOP)

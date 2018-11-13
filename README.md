@@ -12,8 +12,8 @@ tools for user-controlled transformation of explanatory variables,
 selection of variables by nested model comparison, and flexible model
 evaluation and projection. It follows principles based on the
 maximum-likelihood interpretation of maximum entropy modeling (Halvorsen
-et al., 2015), and implements maximum entropy models as
-infinitely-weighted logistic regressions (Fithian & Hastie, 2013).
+et al., 2015), and uses infinitely-weighted logistic regression for
+model fitting. (Fithian & Hastie, 2013).
 
 **MIAmaxent** is intended primarily for maximum entropy distribution
 modeling (Phillips et al., 2006; Phillips et al., 2017), but provides an

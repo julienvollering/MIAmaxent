@@ -20,10 +20,12 @@ knitr::opts_chunk$set(
 )
 ```
 
-This short vignette is meant to introduce users to the `MIAmaxent` package by providing a worked example of a distribution modeling exercise. It shows how to use all of the main functions included in `MIAmaxent` in the order of a typical analysis. This vignette does NOT describe the theoretical underpinnings of the package. To learn more about the theory behind `MIAmaxent`, the user is referred to Halvorsen (2013) and Halvorsen et al. (2015), as well as other references listed in the documentation of the package. 
+This vignette is meant to introduce users to the `MIAmaxent` package by providing a worked example of a distribution modeling exercise. It shows how to use all of the top-level functions included in `MIAmaxent` in the order of a typical analysis. This vignette does NOT describe the theoretical underpinnings of the package. To learn more about the theory behind `MIAmaxent`, the user is referred to Halvorsen (2013) and Halvorsen et al. (2015), as well as other references listed in the documentation of the package. 
 
 > Help pages for the package and for individual functions in the package can be accessed in R using the standard help command: `?"MIAmaxent"` (after attaching the package using `library(MIAmaxent)`). 
 
+Abbreviations:
+EV = explanatory variable; DV = derived variable; RV = response variable; FOP = frequency of observed presence; AUC = area under the curve of the receiver operating characteristic plot
 
 ***
 
@@ -46,11 +48,11 @@ points(PO$POINT_X, PO$POINT_Y, pch = 20, cex = 0.5, col = 'blue')
 
 ### readData()
 
-The starting point for modeling using `MIAmaxent` is a simple data object that contains occurrence data for the modeled target, and some number of explanatory variables (EVs). This data object must be formatted as a data frame, with the binary response variable (occurrence) in the first column, and corresponding explanatory variable values in subsequent columns. When the occurrence data consist of presence and absence records, these should be coded as "1" and "0" respectively. When the occurrence data consist of presence records only, presence locations are contrasted against locations with unknown occurrence, and the response variable should be coded as "1" or "NA". EVs may be continuous (numeric class) or categorical (factor class), as denoted in the data object. 
+The starting point for modeling using `MIAmaxent` is a simple data object that contains occurrence data for the modeled target, and some number of explanatory variables (EVs). This data object must be formatted as a data frame, with the binary response variable (RV) representing occurrence in the first column, and corresponding EV values in subsequent columns. When the occurrence data consist of presence and absence records, these should be coded as "1" and "0" respectively. When the occurrence data consist of presence records only, presence locations are contrasted against locations with unknown occurrence, and the RV should be coded as "1" or "NA". EVs may be continuous (numeric class) or categorical (factor class), as denoted in the data object. 
 
 > The `readData()` function transforms data in CSV and ASCII raster file formats into a single data frame which serves as the starting point for modeling.  
 
-Users of the highly popular maxent.jar program for maximum entropy modeling are accustomed to data in an a different format. Specifically, occurrence data is often in CSV file format, with presences records followed by coordinates, and explanatory data in ASCII raster file format. The `readData()` function makes it easy to read these data into the data object that is used in `MIAmaxent`. This function extracts values of the EVs at locations specified in the CSV file and properly formats these into the starting point for modeling. If the CSV file contains presence records only, then `readData()` also selects a random set of uninformed background locations for the data object. Alternatively, the user can specify a custom set of background locations by giving these in the CSV file. 
+Users of the highly popular maxent.jar program for maximum entropy modeling are accustomed to data in a different format. Specifically, occurrence data is often in CSV file format, with presences records followed by coordinates, and explanatory data in ASCII raster file format. The `readData()` function makes it easy to read these data into the data object that is used in `MIAmaxent`. This function extracts values of the EVs at locations specified in the CSV file and properly formats these into the starting point for modeling. If the CSV file contains presence records only, then `readData()` also selects a random set of uninformed background locations for the data object. Alternatively, the user can specify a custom set of background locations by giving these in the CSV file. 
 
 We begin by creating our data object from file. Note that continuous and categorical environmental variables must be placed in separate directories:
 ```{r}
@@ -62,16 +64,18 @@ grasslandPO <- readData(
   maxbkg=20000)
 ```
 
-> Most functions in `MIAmaxent` return console output. Therefore it's handy to assign function output to an object, so that you can manipulate that object further. If you forget, you can use `?.Last.value`.  
+In this case, the number of uninformed background locations to be randomly selected (`maxbkg=20000`) was larger than the total number of raster cells in the study area, so all cells are included in the data object. 
 
-If we look at the resulting data object we see the response variable (with `r sum(grasslandPO$RV == 1, na.rm = TRUE)` presence and `r sum(is.na(grasslandPO$RV))` background locations) along with `r sum(sapply(grasslandPO[,-1], class) == "numeric")` continuous and `r sum(sapply(grasslandPO[,-1], class) == "factor")` categorical explanatory variables:
+> Most functions in `MIAmaxent` return console output. Therefore, it's handy to assign function output to an object, so that you can manipulate that object further. If you forget, you can use `?.Last.value()`.  
+
+If we look at the resulting data object we see the response variable (with `r sum(grasslandPO$RV == 1, na.rm = TRUE)` presence and `r sum(is.na(grasslandPO$RV))` background locations) along with `r sum(sapply(grasslandPO[,-1], class) == "numeric")` continuous and `r sum(sapply(grasslandPO[,-1], class) == "factor")` categorical EVs:
 ```{r}
 str(grasslandPO)
 sum(grasslandPO$RV == 1, na.rm = TRUE)
 sum(is.na(grasslandPO$RV))
 ```
 
-___IMPORTANT: A number of important issues for distribution modeling -- such as accounting for sampling bias and setting study area extent -- are not dealt with in `MIAmaxent`, and should be dealt with beforehand. Good modeling practice requires that these issues be considered carefully! See Guisan et al. (2017) for a full treatment of distribution modeling in R___
+___IMPORTANT: A number of important issues for distribution modeling -- such as accounting for sampling bias and setting study area extent -- are not dealt with in `MIAmaxent`, and should be dealt with beforehand. Good modeling practice requires that these issues be considered carefully! See Guisan et al. (2017) for a full treatment of distribution modeling in R.___
 
 
 ***
@@ -81,9 +85,9 @@ ___IMPORTANT: A number of important issues for distribution modeling -- such as 
 
 By its simplest definition, a distribution model examines the relationship between the modeled target and its environment. In this way, distribution modeling follows the long tradition of gradient analysis in vegetation ecology (Halvorsen, 2012). Therefore, before building an actual model, we should have some idea about what influence the environmental variables have on the occurrence of the target.
 
-### plotFOP(...)
+### plotFOP()
 
-We can use the `plotFOP` function to create a so-called Frequency of Observed Presence (FOP) plot. An FOP plot shows how commonly the target occurs across the range of the EV, and makes it possible to recognize patterns in frequency of occurrence. In theory, the relationship between an EV and modeled target is expected to be unimodal, if the observed range of the EV is sufficiently large. In practice, the pattern seen in the FOP plot depends not only on the range of the EV --- which is affected by the extent of the study area --- but also the scaling of the EV.
+We can use the `plotFOP` function to create a so-called Frequency of Observed Presence (FOP) plot. An FOP plot shows how commonly the target occurs across the range of the EV, and makes it possible to recognize patterns in frequency of occurrence. In theory, the relationship between a continuous EV and modeled target is expected to be unimodal, if the observed range of the EV is sufficiently large. In practice, the pattern seen in the FOP plot depends not only on the range of the EV --- which is affected by the extent of the study area --- but also the scaling of the EV.
 
 Here we examine FOP plots for 2 of the continuous EVs:
 ```{r, fig.show='hold', fig.width=5.5, fig.height=4}
@@ -91,7 +95,9 @@ teraspifFOP <- plotFOP(grasslandPO, "teraspif")
 terslpdgFOP <- plotFOP(grasslandPO, "terslpdg")
 ```
 
-The points in these FOP plots show the observed proportion of points in a given interval of the EV which contain presences. The red line is a local regression smoother which helps summarize the pattern in the empirical FOP values. The grey distribution in the background is an approximation of the data density across the range of the EV.
+The points in these FOP plots show the observed proportion of points in a given interval of the EV which contain presences. The red line is a local regression smoother which aims to summarize the pattern in the empirical FOP values. The grey distribution in the background is an approximation of the data density across the range of the EV.
+
+Notice the difference in the scales of the FOP axes. EVs showing a larger interval on the FOP axis typically carry more explanatory power.
 
 We can change the number of the number of intervals used to calculate FOP, or the neighborhood of the smoother, and we can access the plotted data directly:
 ```{r, fig.width=5.5, fig.height=4}
@@ -101,35 +107,37 @@ terslpdgFOP
 
 Based on this FOP plot, the occurrence of semi-natural grasslands seems to be unimodally related to 'terslopdg' (terrain slope) with a maximum at around `r round(terslpdgFOP$EVoptimum, 0)`.
 
-Now we examine FOP plots for one of the categorical explanatory variables:
+Now we examine FOP plots for one of the categorical EVs:
 ```{r, fig.width=5.5, fig.height=4}
 geobergFOP <- plotFOP(grasslandPO, 10)
 ```
 
-We see that geoberg type 4 has the highest rate of observed presence, followed by type 2, and then types 3 and 28. If we look more closely at the data however, we notice also that geoberg type 4 is sampled very rarely (see grey bars), with only `r geobergFOP$FOPdata$n[geobergFOP$FOPdata$level == 4]` locations falling into that category: 
+We see that geoberg type 4 has the highest rate of observed presence, followed by type 2, and then types 3 and 28. If we look more closely however, we notice also that geoberg type 4 is sampled very rarely (see grey bars), with only `r geobergFOP$FOPdata$n[geobergFOP$FOPdata$level == 4]` locations falling into that category: 
 ```{r}
 geobergFOP
 ```
 
-> It is recommended that FOP plots for all candidate explanatory variables be examined before building a model.
+If geoberg type 4 had shown a high FOP value _and_ a large number of observations, the uncertainty associated with its FOP value would be lower and its likelihood of being selected in the model would be increased.
 
-Looking at FOP plots should help the modeler decide which explanatory variables are likely to have greatest explanatory power, and gives an idea of the strength and shape of the relationships between the explanatory and response variables.
+> It's useful to examine FOP plots for all candidate explanatory variables (EVs) before building a model.
+
+Looking at FOP plots should help the modeler decide which EVs are likely to have greatest explanatory power, and gives an idea of the strength and shape of the relationships between the EVs and RV.
 
 
 ***
 
 
-## Transforming explanatory variables
+## Transforming explanatory variables (EVs)
 
-To fit the many different kinds of relationships between explanatory and response variables, we need to transform the explanatory variables. This means that we create new "derived" variables (DVs) from the original explanatory variables. Another way of thinking about this is to put it in terms of rescaling the explanatory variable; we adjust the scale of the explanatory variable in many different ways in order to check which scaling is most ecologically relevant to the occurrence of the modeled target.
+To fit the many different kinds of relationships between explanatory and response variables, we need to transform the EVs. This means that we create new "derived" variables (DVs) from the original EVs. Another way of thinking about this is to put it in terms of rescaling; we adjust the scale of the EV in many different ways in order to check which scaling is most ecologically relevant to the occurrence of the modeled target.
 
-### deriveVars(...)
+### deriveVars()
 
-The `deriveVars` function produces derived variables from explanatory variables by 7 different transformation types: linear, monotonous, deviation, forward hinge, reverse hinge, threshold, and binary. The first 6 of these are relevant for continuous variables and the binary transformation is relevant only for categorical variables. Different types of transformations can be turned on or off in order to balance model complexity with model fit. 
+The `deriveVars()` function produces DVs from EVs by 7 different transformation types: linear, monotonous, deviation, forward hinge, reverse hinge, threshold, and binary (Halvorsen et al., 2015). The first 6 of these are relevant for continuous variables and the binary transformation is relevant only for categorical variables. Different types of transformations can be turned on or off to balance model complexity with model fit. 
 
-For the spline-type transformations (forward hinge, reverse hinge, threshold) an endless number of different transformations are possible, so the function produces 20 of each, and then chooses those which explain the most variation in the response variable. This means that 20 models are built and evaluated for each combination of explanatory variable and spline transformation. Therefore, running `deriveVars` with these transformation types turned on may take some time.
+For the spline-type transformations (forward hinge, reverse hinge, threshold) an endless number of different transformations are possible, so by default the function produces 20 of each, and then chooses those which explain the most variation in the RV. This means that 20 models are built and evaluated for each combination of EV and spline transformation, so running `deriveVars()` with these transformation types turned on can take a bit of time --- depending on the size of the data set.
 
-Here we produce all types of derived variables from our explanatory variables:
+Here we produce all types of DVs from our EVs:
 ```{r, warning=FALSE}
 grasslandDVs <- deriveVars(grasslandPO, 
                            transformtype = c("L","M","D","HF","HR","T","B"))
@@ -137,14 +145,14 @@ grasslandDVs <- deriveVars(grasslandPO,
 
 > Turn `write` on and (optionally) specify a directory to save the transformation functions produced by `deriveVars` to file.
 
-The console output of `deriveVars` (assigned to `grasslandDVs`) consists of 2 parts:
+The output of `deriveVars()` is a list consisting of 2 parts:
 
 * data frames of DVs for each EV (named "dvdata")  
-* the transformation function used to produce each DV (named "transformations").
+* the transformation functions used to produce each DV (named "transformations").
 
-Each of these also contain the response variable vector.
+Both list elements also contain the RV vaector.
 
-In our grasslands analysis, the contents of these two items look like this:
+In our grasslands analysis, the contents of the list items look like this:
 ```{r}
 summary(grasslandDVs$dvdata)
 head(summary(grasslandDVs$transformations))
@@ -155,11 +163,11 @@ length(grasslandDVs$transformations)
 ***
 
 
-Note that the names of derived variables indicate the type of transformation was used to create them. For example, "terslpdg_D2" is a deviation-type transformation of terslpdg, where the slope of the deviation is controlled by a parameter value of 2. Meanwhile, "terslpdg_HR4" is the a reverse hinge transformation, with the knot in the 4th position.
+Note that the names of DVs indicate the type of transformation was used to create them. For example, "terslpdg_D2" is a deviation-type transformation of terslpdg, where the slope of the deviation is controlled by a parameter value of 2. Meanwhile, "terslpdg_HR4" is a reverse hinge transformation, with the knot in the 4th position.
 
-> Underscores ('_') are used to denote derived variables, and colons (':') are used to denote interaction terms, so explanatory variable names must not contain these characters. EV names should also be unique.
+> Underscores ('_') are used to denote DVs, and colons (':') are used to denote interaction terms, so EV names must not contain these characters. EV names should also be unique.
 
-We can check how derived variables relate to the original, untransformed explanatory variable from which they came. Here we look at "terslpdg_D2" and "terslpdg_M":
+To illustrate, look at how a given DV relates to the original, untransformed EV from which it was derived. Here we examine "terslpdg_D2" and "terslpdg_M":
 ```{r, fig.show='hold', fig.width=2.75}
 plot(grasslandPO$terslpdg, grasslandDVs$dvdata$terslpdg$terslpdg_D2, pch=20, 
      ylab="terslpdg_D2")
@@ -167,40 +175,39 @@ plot(grasslandPO$terslpdg, grasslandDVs$dvdata$terslpdg$terslpdg_M, pch=20,
      ylab="terslpdg_M")
 ```
 
+"terslpdg_D2" is the squared deviation (hence D2) from the estimated optimum in terslpdg (around 6). "terslpdg_M" is a monotone (hence M) transformation of terslpdg --- specifically a zero-skew transformation.
 
 ***
 
 
 ## Selecting variables
 
-With derived variables ready, we are ready to begin the process of choosing which variables to include in the model. This is arguably the most critical process in building a model. Following the principle of parsimony, the aim in selecting variables is to explain as much variation in the response variable as efficiently as possible. The greater the number of explanatory or derived variables included in the model, the more variation in the response variable we can explain, but at the cost of model complexity. In the `MIAmaxent` package, the benefit of additional variation explained is weighed against the cost in model complexity using an inference test (Chi-squared or F). Variables are added to the model one by one in a process of forward selection, and each new model is compared to its predecessor. Another term for this process is "nested model comparison". 
+With DVs ready, we are ready to begin the process of choosing which variables to include in the model. This is arguably the most critical step in the whole modeling process. Following the principle of parsimony, the aim in selecting variables is to explain as much variation in the RV as efficiently as possible. The greater the number of EVs or DVs included in the model, the more variation in the RV we can explain, but at the cost of model complexity. In the `MIAmaxent` package, the benefit of additional variation explained is weighed against the cost in model complexity using an inference test (Chi-squared or F). Variables are added to the model one by one in a process termed forward selection, and each new model is compared to its predecessor. Another term for this process is "nested model comparison." 
 
-Rather than selecting from the full pool of derived variables one by one, `MIAmaxent` performs variable selection in two parts:  
+Rather than selecting from the full pool of DVs one by one, `MIAmaxent` performs variable selection in two parts:  
 
-1. First, a group of derived variables is selected separately for each individual explanatory variable. This is done using the `selectDVforEV` function.  
-2. Second, the explanatory variables themselves, each represented by a group of derived variables, are selected. This is done using the `selectEV` function. 
+1. First, a set of DVs is selected separately for each individual EV. This is done using the `selectDVforEV()` function.  
+2. Second, the EVs themselves --- each represented by a parsimonious set of DVs --- are selected. This is done using the `selectEV()` function. 
 
-> Variable selection occurs hierarchically: first derived variables within each explanatory variable, then explanatory variables within the full model.
+> Variable selection occurs hierarchically: first DVs for each EV, then EVs for the full model.
 
-### selectDVforEV(...)
+### selectDVforEV()
 
-The `selectDVforEV` function performs forward selection of individual derived variables (DVs) for each explanatory variable (EV). In other words, the function takes each EV one by one, and narrows the group of DVs produced from that EV (by `deriveVars`) to a group which explains variation in the response variable most efficiently.
+The `selectDVforEV()` function performs forward selection of individual DVs for each EV. In other words, the function takes each EV one by one, and narrows the group of DVs produced from that EV to a set which explains variation in the RVs most efficiently.
 
-The alpha-value specified in the function is used in the inference test during forward selection, and sets the threshold for how much variation a DV must explain to be retained. A lower alpha values signifies a more conservative test, such that DVs must explain more variation to be included.  
+The `alpha` argument to `selectDVforEV()` is used in the inference test during forward selection, setting the threshold for how much variation a DV must explain to be retained. A lower `alpha` results in a more conservative test, i.e. DVs must explain more variation to be selected.  
 
-Here we use `selectDVforEV` on the grassland data set. Note the "$dvdata" following grasslandsDV, which identifies the list of DVs in the `deriveVars` output (see `?deriveVars` Value).
+Here we use `selectDVforEV()` on the grassland data set. Note the "$dvdata" following grasslandsDV, which identifies the list of DVs we made using `deriveVars()` (see `?deriveVars()` Value). 
 ```{r, warning=FALSE}
-grasslandDVselect <- selectDVforEV(grasslandDVs$dvdata, alpha = 0.001)
+grasslandDVselect <- selectDVforEV(grasslandDVs$dvdata, alpha = 0.001, quiet = TRUE)
 ```
 
-Be aware that the forward selection process may return warnings stating that: "fitted probabilities numerically 0 or 1 occurred". This can occur when particular values of EVs correspond to (near) complete absence or presence, and does not pose problems for the forward selection procedure.  
+The output is a list consisting of 2 parts: 
 
-The output of selectDVforEV consists of 2 main parts:  
+* the DVs that were selected for each EV (again named "dvdata")  
+* the trails of nested models that were built and compared for each EV during the selection process (named "selection")
 
-* the DVs that were selected for each EV (named "dvdata")  
-* the trails of nested models that were built and compared for each explanatory variable during the selection process (named "selection")
-
-We can see that `selectDVforEV` has reduced the number of derived variables considerably, by comparing the list of DVs before and after:
+Comparing the list of DVs before and after selection, we can see that `selectDVforEV()` reduced the number of DVs considerably:
 ```{r}
 summary(grasslandDVs$dvdata)
 sum(sapply(grasslandDVs$dvdata[-1], length))
@@ -208,35 +215,36 @@ summary(grasslandDVselect$dvdata)
 sum(sapply(grasslandDVselect$dvdata[-1], length))
 ```
 
-Note also that the number of explanatory variables was reduced from `r length(grasslandDVs$dvdata) - 1` to `r length(grasslandDVselect$dvdata) - 1`. Explanatory variables for which none of the derived variables explained a significant amount of variation are dropped. 
+Note also that the number of EVs was reduced from `r length(grasslandDVs$dvdata) - 1` to `r length(grasslandDVselect$dvdata) - 1`. EVs for which none of the DVs explained a significant amount of variation are dropped. 
 
-Here is an example of one of the trails of forward DV selection. Shown is the trail for the "terdem" EV:
+Here is an example of one of the (`r length(grasslandDVs$dvdata) - 1`) trails of forward DV selection. Shown is the trail for the "terdem" EV:
 ```{r}
 grasslandDVselect$selection$terdem
 ```
-The columns in this data frame represent: the round of variable selection (round), the names of the derived variables included in the model (variables), the number of variables in the model (m), the fraction of variation explained (D^2^, sensu Guisan & Zimmerman, 2000), the Chi-squared statistic for the nested model comparison (Chisq), the degrees of freedom for the nested model comparison (df), and the probability that the previous round's best model fits the data just as well as the current model (P).
 
-This table shows, for example, that in the first round of selection, one model was built for each of the 8 derived variables, and that all of these explained enough variation to be retained for the second round of selection. Of all the derived variables produced from "terdem", "terdem_D05" explained the most variation in the response variable. However, none of the remaining DVs explained enough of the remaining variation to be selected in addition to "terdem_D05" (P > alpha, in round 2).
+The columns in this data frame represent: the round of variable selection (round), the names of the DVs included in the model (variables), the number of DVs in the model (m), the fraction of deviance explained (D^2^, sensu Guisan & Zimmerman, 2000), the Chi-squared statistic for the nested model comparison (Chisq), the degrees of freedom for the nested model comparison (df), and the p-value for the Chi-squared statistic under the specified degrees of freedom (P).
 
-### selectEV(...)
+This table shows, for example, that in the first round of selection, one model was built for each of the 8 DVs, and that all of these explained enough variation to be retained for the second round of selection. Of all the DVs produced from "terdem", "terdem_D05" explained the most variation in the RV. However, none of the remaining DVs explained enough of the remaining variation to be selected in addition to "terdem_D05" (P > alpha, in round 2).
 
-Part 2 of variable selection using `MIAmaxent` is performed by the `selectEV` function. This function is similar to the `selectDVforEV` function, but instead of selecting parsimonious groups of derived variables to represent each explanatory variable, `selectEV` selects explanatory variables. This proceeds in the same manner as `selectDVforEV`, with nested model comparison using inference tests. Where `selectDVforEV` adds a single DV at a time, `selectEV` adds a single _group of DVs_, representing a single EV, at a time. 
+### selectEV()
 
-The `selectEV` function also differs from `selectDVforEV` in another important way; it includes the option of including interaction terms between selected explanatory variables in the model (`interaction = TRUE`). Interaction terms between variables are useful when one explanatory variable changes the effect of another explanatory variable on the modeled target. In `MIAmaxent` interaction terms are only allowed between EVs which are both included in the model. 
+Part 2 of variable selection using `MIAmaxent` is performed by the `selectEV()` function. This function is similar to the `selectDVforEV()` function, but instead of selecting a parsimonious set of DVs to represent each EV, `selectEV()` selects a parsimonious set of EVs to comprise the model. This proceeds in the same manner as `selectDVforEV()`, with nested model comparison using inference tests. Where `selectDVforEV()` adds a single DV at a time, `selectEV()` adds a single _set of DVs_ (representing one EV) at a time. 
 
-Here we use `selectEV` on the grassland data set. Note the "$dvdata" following grasslandsDVselect, which specifies the list of selected DVs in the `selectDVforEV` output (see `?selectDVforEV` Value).
+The `selectEV()` function also differs from `selectDVforEV()` in another important way; it provides the option of testing interaction terms between selected EVs (`interaction = TRUE`). Interaction terms are useful when one EV changes the effect of another EV on the modeled target. In `MIAmaxent`, only first-order interactions are tested, and only between EVs both included in the model.  
+
+Here we use `selectEV()` on the grassland data set. Note the "$dvdata" following grasslandsDVselect, which identifies the list of selected DVs we made using `selectDVforEV()` (see `?selectDVforEV()` Value).
 ```{r}
 grasslandEVselect <- selectEV(grasslandDVselect$dvdata, alpha = 0.001, 
                               interaction = TRUE)
 ```
 
-The output of selectEV consists of 3 parts:  
+The output is a list consisting of 3 parts:  
 
 * the EVs that were selected (again named "dvdata"), each represented by a group of selected DVs.  
 * the trail of nested models that were built and compared during the selection process (named "selection")
 * the selected full model under the given alpha value (named "selectedmodel")
 
-Now compare the list of EVs before and after:
+Compare the list of EVs before and after:
 ```{r}
 summary(grasslandDVselect$dvdata)
 length(grasslandDVselect$dvdata[-1])
@@ -244,7 +252,7 @@ summary(grasslandEVselect$dvdata)
 length(grasslandEVselect$dvdata[-1])
 ```
 
-We can see that `selectEV` has reduced the number of explanatory variables to `r length(grasslandEVselect[[1]]) - 1`. To check whether any interaction terms have been included in the model, we can look at its formula:
+We can see that `selectEV()` reduced the number of EVs to `r length(grasslandEVselect[[1]]) - 1`. To check whether any interaction terms have been included in the model, we can look at its formula:
 
 ```{r}
 grasslandEVselect$selectedmodel$formula
@@ -261,33 +269,26 @@ grasslandEVselect$selection[roundbestindex, ]
 
 As expected, the model with the interaction term is not significant under the alpha value of 0.001. Instead, the selected model is the model with 6 single-order terms. 
 
-The full selection trail can be saved as a CSV-format file by setting `write = TRUE` in `selectEV`, and optionally specifying a `dir`. Examining the trail of forward selection closely allows you to make an informed decision about what is the best model for your purposes. 
+The full selection trail can be saved as a CSV-format file by setting `write = TRUE` in `selectEV()`, and optionally specifying a `dir`. A careful examination of the trail of forward selection can be helpful in choosing the final model for a given application.
 
-Note that above we started the forward selection procedure from a null model including none of the EVs. However, if we had an _a priori_ reason to include one or more of the EVs in the model regardless of explanatory power, we could do so using the `formula` argument in `selectEV`. Then forward selection proceeds with the specified model as a starting point.
+Note that above we started the forward selection procedure from a null model including none of the EVs. However, if we had an _a priori_ reason to include one or more of the EVs in the model regardless of explanatory power, we could do so using the `formula` argument in `selectEV()`. Then forward selection proceeds with the specified model as a starting point.
 
-### chooseModel(...)
+### chooseModel()
 
-We may choose to plot some of the data in the forward selection trail to help us decide which model to use. For example, we may plot fraction of variation explained (D^2^) against round number, to see how much better the model fit is for each added term:
+We may choose to plot some of the data in the forward selection trail to help us decide which model to use. For example, we may plot fraction of deviance explained (D^2^) against round number, to see how much better the model fit is for each added term:
 ```{r, fig.width=4, fig.height=4}
 plot(grasslandEVselect$selection$round, grasslandEVselect$selection$Dsq, 
      xlab="round", ylab="Dsq")
 ```
 
-In this case, we may decide that a simpler model with only 5 explanatory variables is better than the selected model, since the amount of variation explained seems to level off after round 5. The explanatory variables included in this model are: `r grasslandEVselect$selection[min(which(grasslandEVselect$selection$round == 5)), 2]`. To store this model instead of the `selectedmodel` in `grasslandEVselect`, we can use the chooseModel function:
+In this case, we may decide that a simpler model with only 5 EVs is better than the selected model, since the amount of deviance explained levels off after round 5. The EVs included in this model are: `r grasslandEVselect$selection[min(which(grasslandEVselect$selection$round == 5)), 2]`. To proceed with this model, instead of the `selectedmodel` in `grasslandEVselect`, we can use the `chooseModel()` function:
 ```{r}
 grasslandmodel <- chooseModel(grasslandDVselect$dvdata, 
                               formula("~ prbygall + geoberg + lcucor1 + 
                                       tertpi09 + geolmja1"))
 ```
-This is the model which we explore and use below. 
 
-
-***
-
-
-As an aside, it is important to note that in all of the functions above in which models are trained (i.e. pre-selection of spline DVs in `deriveVars`, along with `selectDVforEV`, `selectEV`, and `chooseModel`), the modeling algorithm used to build the models can be specified. The default is maximum entropy (`algorithm = "maxent"`), but standard logisitic regression (`algorithm = "LR"`) is also an option. The maximum entropy algorithm has primarily been used with presence-only occurrence data -- in a so-called "generative" approach -- although it may also be used with presence-absence data -- the "discriminative" approach (Halvorsen, 2013). In contrast, standard logistic regression is customarily used with presence-absence occurrence data. For an in-depth discussion of the similarities and differences between these different approaches, see Aarts, Fieberg & Matthiopoulous (2012), as well as Fithian & Hastie (2013).  
-
-> Conventionally, the maximum entropy algorithm ("maxent") is used with presence-only occurrence data, while the standard logisitic regression (algorithm = "LR"), is used with presence-absence data.
+This is the model which we explore further below. 
 
 
 ***
@@ -295,24 +296,24 @@ As an aside, it is important to note that in all of the functions above in which
 
 ## Exploring the model
 
-After building a model by selecting which explanatory variables to include, it is useful to explore what the model actually looks like. A straightforward way to do this is to look at model predictions over a range of explanatory data. This gives the modeler a sense of the relationships that the model has captured between explanatory variables and response variables, and can also help the modeler understand strengths and weaknesses in the model.  
+After building a model by selecting which EVs to include, it is useful to explore what the modeled relationships actually look like. A straightforward way to do this is to look at model predictions over a range of explanatory data. This gives the modeler a sense of the relationships that the model has captured, and can help the modeler understand strengths and weaknesses in the model.  
 
-### plotResp(...)
+### plotResp()
 
-We can use the `plotResp` function to create a response curve. A response curve plots model output across the range of one particular explanatory variable. When other variables are excluded from the model entirely, this is called a "single-effect response curve".
+We can use the `plotResp()` function to create a response curve. A response curve plots model output across the range of one particular EV. When other variables are excluded from the model entirely, this is called a "single-effect response curve".
 
-Here we examine a single-effect response curve for the most important explanatory variable included in the model chosen above:
+Here we examine a single-effect response curve for the most important EV included in the model chosen above:
 ```{r, fig.width=5.5, fig.height=4}
 plotResp(grasslandmodel, grasslandDVs$transformations, "prbygall")
 ```
 
-To assess how well the relationship between the explanatory variable and the response variable is captured by the model, it can be useful to examine FOP plots and response plots side-by-side:
+To assess how well the relationship between the EV and RV is captured by the model, it can be useful to examine FOP plots and response plots side-by-side:
 ```{r, fig.show='hold', fig.width=5.5, fig.height=4}
 prbygallFOP <- plotFOP(grasslandPO, "prbygall")
 plotResp(grasslandmodel, grasslandDVs$transformations, "prbygall")
 ```
 
-The values on the y-axes of the plots are not directly comparable, but one can expect that the shape of the response plot curve should mirror, to a greater or lesser extent, the shape of the FOP plot curve.
+The values on the y-axes of the plots are not directly comparable, but we expect the shape of the response plot curve to mirror, more or less, the shape of the FOP plot curve.
 
 Here is the same comparison for one of the categorical variables included in the model:
 ```{r, fig.show='hold', fig.width=5.5, fig.height=4}
@@ -320,13 +321,11 @@ geolmja1FOP <- plotFOP(grasslandPO, "geolmja1")
 plotResp(grasslandmodel, grasslandDVs$transformations, "geolmja1")
 ```
 
-### plotResp2(...)
+### plotResp2()
 
-The `plotResp2` function in `MIAmaxent` is very similar to the `plotResp` function in that it is used to produce model response plots. However, `plotResp2` produces "marginal-effect response plots" instead of "single-effect response plots". A marginal-effect response plot graphs model output across the range of one particular explanatory variable _while holding all other variables in the model constant at their mean value_. 
+The `plotResp2()` function is very similar to the `plotResp()` function in that it takes the same arguments and is used to produce response plots. However, `plotResp2()` plots "marginal-effect" responses rather than "single-effect" responses. A marginal-effect response plot shows model predictions across the range of one EV _while holding all other EVs in the model constant at their mean value_. The resulting curves are often similar in shape, if not in scale.
 
-The inputs to the two functions are identical, and the resulting curves tend to be similar in shape, if not in scale.
-
-Here is the marginal-effect response plot for the same continuous explanatory variable shown above: 
+Here is the marginal-effect response plot for the same continuous EV shown above: 
 ```{r, fig.width=5.5, fig.height=4}
 plotResp2(grasslandmodel, grasslandDVs$transformations, "prbygall")
 ```
@@ -335,15 +334,15 @@ plotResp2(grasslandmodel, grasslandDVs$transformations, "prbygall")
 ***
 
 
-## Using the model
+## Applying the model
 
-For many modeling applications the ultimate motivation for building a model is to obtain model predictions. Model predictions, or model output, can be used in many different ways: to make predictions about parts of the study area for which there exist no occurrence data, to predict relative probability of occurrence outside the study area, or to predict relative probability of occurrence in the past or future. In other words, any form of spatial or temporal interpolation or extrapolation is possible (although not always recommended!). The only requirement is that the values of the explanatory variables are known for the time or space for which model output is desired. 
+For many modeling applications --- although not all --- the motivation for building a model is to obtain model predictions. Model predictions, or model output, can be used in many different ways: to make predictions about parts of the study area for which there exist no occurrence data, to predict relative probability of occurrence outside the study area, or to predict relative probability of occurrence in the past or future. In other words, any form of spatial or temporal interpolation or extrapolation is possible (although not always recommended!). The only requirement is that the values of the EVs are known for the time or space for which model output is desired. 
 
-### projectModel(...)
+### projectModel()
 
-The `projectModel` function in `MIAmaxent` can be used to obtain model predictions for any kind of modeling application. As input it takes the model to be projected (`model`), the transformation functions used by the model (`transformations`), and explanatory data to project across (`data`). For "maxent"-type models, the `projectModel` returns model predictions in probability ratio output (PRO) format for each location represented in `data`. PRO format gives _relative_ probability of presence, and PRO = 1 can be used as a reference value that represents the probability of presence in an "average" cell in the training area.
+The `projectModel()` function can be used to obtain model predictions for any kind of modeling application. As input it takes the model to be projected (`model`), the transformation functions used by the model (`transformations`), and explanatory data to project across (`data`). For "maxent"-type models, the `projectModel` returns model predictions in probability ratio output (PRO) format for each location represented in `data`. PRO format gives _relative_ probability of presence, and PRO = 1 is a reference value that represents the probability of presence in an "average" location in the training data.
 
-> A value of PRO = 1 can be interpreted as the relative probability of presence of a cell randomly drawn from the study area. Put another way, values above 1 represent higher than average probability of presence, and vice versa.
+> A value of PRO = 1 can be interpreted as the relative probability of presence of a location randomly drawn from the training data. Put another way, values above 1 represent higher-than-average probability of presence, and vice versa.
 
 Here, we obtain model output across the extent of the study area as represented by the training data. When we enter the `data` argument as a `RasterStack` or `RasterBrick` object, `projectModel()` automatically shows model predictions in geographical space. Note that the names of the raster layers must match names of EVs in the model.
 ```{r fig.show='hold', fig.width=5.5, fig.height=5.5}
@@ -358,27 +357,32 @@ grasslandPreds <- projectModel(model = grasslandmodel,
                                data = EVstack)
 ```
 
-Alternatively, if the `data` are supplied in a simple data frame, model predictions are appended to the `data` in column 1, and returned as list item `output`. In this case, the predictions can be mapped to geographical space manually, by including spatial coordinates in the `data` input to the `projectModel`, and then using the `rasterize` function in the `raster` package.
+It is often easier to vizualize probability-ratio values on a log scale, so we plot the raster object again as log2(PRO + 1):
+```{r fig.show='hold', fig.width=5.5, fig.height=5.5}
+plot(log2(grasslandPreds$output + 1))
+```
 
-Additionally, the `projectModel` function automatically checks how the range of the input explanatory data compares to the range of the data used to train the model. This is important because if the range of the input data lies outside the range of the training data (called model extrapolation), the model is less reliable. The range of continuous variables is reported on the training data scale, from 0 to 1, and the range of categorical variables is reported as "inside" if all categories are represented in the training data:
+Alternatively, if the `data` are supplied in a simple data frame, model predictions are appended to the `data` in column 1, and returned as list item `output`. In this case, the predictions can be mapped to geographical space manually, by including spatial coordinates in the `data` input to the `projectModel()`, and then using the `rasterize()` function in the `raster` package.
+
+Additionally, the `projectModel()` function automatically checks how the range of the input explanatory data compares to the range of the data used to train the model. This is important because if the range of the input data lies outside the range of the training data (i.e. the model is extrapolated), the predictions are less reliable. The range of continuous variables is reported on the training data scale, from 0 to 1, and the range of categorical variables is reported as "inside" if all categories are represented in the training data:
 ```{r}
 grasslandPreds
 ```
 
-Since we projected the model over the training data, it makes sense that all the ranges are reported as [0,1] or "inside".
+Since we projected the model across the training data, it makes sense that all the ranges are reported as [0,1] or "inside."
 
 
 ***
 
 
 ## Evaluating the model
-There are many ways of evaluating the quality of a model, including assessing the explanatory variables selected and gauging the realism of response curves. Arguably the best way to evaluate a model, however, is to test how often its predictions are correct using occurrence data which are independent from the data used to train the model. This gives a true metric of model accuracy, and ensures that the model success is not the result of overfitting or peculiarities of the training data (such as sampling bias). Independent, presence-absence test data are not always available, for example when projecting a model into the future, but when they are, they represent a gold standard in model evaluation.
+There are many ways of evaluating the quality of a model, including assessing which EVs are selected and gauging the realism of response curves. Arguably the best way to evaluate a model, however, is to test how often its predictions are correct using occurrence data which are independent from the data used to train the model. This is strongly preferable to using training data because it indicates whether the model reflects patterns specific to the training data or generalized patterns for the modeled target (i.e. whether the model is overfitted). Independent, presence-absence test data are not always available, for example when projecting a model into the future, but when they are, they represent a high standard in model validation.
 
-### testAUC(...)
+### testAUC()
 
-The evaluation metric which is used most commonly for distribution models and is implemented in `MIAmaxent` is Area Under the Curve (AUC) of the receiver operating characteristic. This is a metric which measures the performance of the model as a binary classifier over the full range of discrimination thresholds. When calculated using the training data `MIAmaxent` refers to it as "trainAUC" (for example in the forward selection trails), and when it is calculated using independent test data it is referred to as "testAUC".
+The evaluation metric which is used most commonly for distribution models and is implemented in `MIAmaxent` is Area Under the Curve (AUC) of the receiver operating characteristic plot. This is a metric which measures the performance of the model as a binary classifier over the full range of discrimination thresholds. When it is calculated using independent test data we refer to it as "testAUC".
 
-The `testAUC` function takes a data frame of presence and absence locations, along with the corresponding values of explanatory variable at those locations, and calculates a testAUC value for the model. The evaluation data can easily be read into R using the `readData` function with `PA = TRUE` if desired.
+The `testAUC()` function takes a data frame of presence and absence locations, along with the corresponding values of EVs at those locations, and calculates testAUC. The evaluation data can easily be read into R using the `readData()` function with `PA = TRUE` if desired, as shown below.
 
 In our example, 122 test locations in Øsfold County, Norway, were visited to record presence or absence of semi-natural grasslands:
 ```{r}
@@ -391,11 +395,9 @@ head(grasslandPA)
 tail(grasslandPA)
 ```
 
-Plotted on the raster of model predictions these occurrences look like this:
+Plotted on the raster of (log-scaled) model predictions, these occurrences look like this:
 ```{r, fig.show='hold', fig.width=5.5, fig.height=5.5}
-grasslandPreds <- projectModel(model = grasslandmodel,
-                               transformations = grasslandDVs$transformations,
-                               data = EVstack)
+plot(log2(grasslandPreds$output + 1))
 presences <- grasslandPA[grasslandPA$RV==1, ]
 absences <- grasslandPA[grasslandPA$RV==0, ]
 points(presences$x, presences$y, pch = 20, cex = 0.5, col = 'red')
@@ -410,8 +412,94 @@ testAUC(model = grasslandmodel, transformations = grasslandDVs$transformations,
         data = grasslandPA)
 ```
 
-The ROC plot produced by `testAUC` shows how the rate of true positives as well as false positives increases as the binary classification threshold is lowered. The area under this curve corresponds to the value returned by testAUC.  
+The ROC plot shows how the rate of true positives as well as false positives increases as the binary classification threshold is lowered. The area under this curve corresponds to the value returned by testAUC.
 
+Note that the `testAUC()` function can also be used to calculate AUC from presence-only training data, but that the interpretation of these values differs importantly.
+
+
+***
+
+
+## Alternative: logistic regression
+
+In the modeling example above, we used presence-only data to fit maximum entropy models. It is important to note that `MIAmaxent` provides the exact same functionality for models fitted by standard logistic regression. Specifically, in all functions which perform model fitting (i.e. pre-selection of spline DVs in `deriveVars()`, along with `selectDVforEV()`, `selectEV()`, and `chooseModel()`), the fitting `algorithm` can be specified as `"maxent"` or`"LR"`, where `"maxent"` is the default. 
+
+> Conventionally, the maximum entropy estimation (`algorithm = "maxent"`) is used with presence-only occurrence data, while logistic regression (`algorithm = "LR"`), is used with presence-absence data.
+
+The maximum entropy algorithm represents a form of parametric density estimation using an exponential family model, and is equivalent to inhomogeneous Poisson process models (Fithian & Hastie, 2013). It is implemented in `MIAmaxent` using infinitely-weighted logistic regression, with presences automatically added to the background. The maximum entropy algorithm has been used primarily with presence-only occurrence data in the popular maxent.jar software (Phillips et al., 2006), but it may also be used with presence-absence data (Halvorsen, 2013). In contrast, standard logistic regression (binomial GLM) is customarily used with presence-absence occurrence data. For more information about the differences between these approaches, see Guisan et al. (2017) and Fithian & Hastie (2013).  
+
+__Below, we follow the same procedure as above, but use the presence-absence data to fit models by logistic regression.__
+
+```{r, fig.show='hold', fig.width=5.5, fig.height=4}
+grasslandPA <- readData(
+  occurrence = system.file("extdata", "occurrence_PA.csv", package="MIAmaxent"), 
+  contEV = system.file("extdata", "EV_continuous", package="MIAmaxent"),
+  catEV = system.file("extdata", "EV_categorical", package="MIAmaxent"),
+  PA = TRUE, XY = FALSE)
+str(grasslandPA)
+
+plotFOP(grasslandPA, "teraspif")
+plotFOP(grasslandPA, "terslpdg")
+plotFOP(grasslandPA, 10)
+```
+
+Note that since the RV in `grasslandPA` contains presence _and_ absence, the plots above show empirical frequencies of presence, rather than observed frequencies of presence. This is a subtle but important distinction.
+
+```{r, warning = FALSE}
+PA.grasslandDVs <- deriveVars(grasslandPA, algorithm = "LR")
+```
+
+The DVs produced above are not the same as those produced previously with presence-only data, even though the variable names might be the same. That is because the exact forms of the transformations applied are data-dependent.
+
+```{r, fig.show='hold', fig.width=5.5, fig.height=4}
+PA.grasslandDVselect <- selectDVforEV(PA.grasslandDVs$dvdata, alpha = 0.001, 
+                                      algorithm = "LR", quiet = TRUE) 
+
+PA.grasslandEVselect <- selectEV(PA.grasslandDVselect$dvdata, alpha = 0.001, algorithm = "LR")
+PA.grasslandEVselect$selection
+PA.grasslandEVselect$selectedmodel
+
+plotResp(PA.grasslandEVselect$selectedmodel, PA.grasslandDVs$transformations, "terdem")
+plotFOP(grasslandPA, "terdem")
+```
+
+```{r, fig.show='hold', fig.width=5.5, fig.height=4, warning = FALSE}
+plotResp(PA.grasslandEVselect$selectedmodel, PA.grasslandDVs$transformations, "prbygall")
+plotFOP(grasslandPA, "prbygall")
+```
+
+```{r fig.show='hold', fig.width=5.5, fig.height=5.5}
+PA.grasslandPreds <- projectModel(model = PA.grasslandEVselect$selectedmodel,
+                               transformations = PA.grasslandDVs$transformations,
+                               data = EVstack)
+```
+
+Notice that predictions from the logistic regression model --- unlike the maxent model --- are on the interval [0,1]. These values represent predicted probability of presence, rather than predicted _relative_ probability of presence. 
+
+Now, compare the model trained on presence-absence data by logistic regression with the model trained on presence-only data by maximum entropy estimation. First we calculate their AUCs on the presence-absence data set:
+```{r}
+# logistic regression model
+testAUC(PA.grasslandEVselect$selectedmodel, PA.grasslandDVs$transformations, 
+        grasslandPA, plot = FALSE) 
+# maxent model
+testAUC(grasslandmodel, grasslandDVs$transformations, grasslandPA, plot = FALSE) 
+```
+
+Next we calculate their AUCs on the presence-only data set:
+```{r}
+# logistic regression model
+testAUC(PA.grasslandEVselect$selectedmodel, PA.grasslandDVs$transformations, 
+        grasslandPO, plot = FALSE)
+# maxent model
+testAUC(grasslandmodel, grasslandDVs$transformations, grasslandPO, plot = FALSE)
+```
+
+Notice that:
+
+1. AUC values are considerably lower for both models when calculated on presence-only data. This evidences the fact that uninformed background locations are treated as absences in this calculation; therefore even a perfect model would not show a perfect AUC of 1. 
+2. The model trained on the same data as used for evaluation shows the higher AUC, in both evaluation cases; that is, the PA model gives better predictions of the PA data, and the PO model gives better predictions of the PO data. This result is not surprising, but it is not clear which is the better model. 
+
+In general, the question of how to make best use of presence-only and presence-absence data, when both are available, is an area of active research. Similarly, the use of presence-absence data in maximum entropy models is mostly unexplored (Halvorsen, 2013).
 
 ***
 
@@ -433,3 +521,4 @@ Thank you to Sabrina Mazzoni and Rune Halvorsen for providing the data used in t
 5. Halvorsen, R. (2012) A gradient analytic perspective on distribution modelling. Sommerfeltia, 35, 1-165.
 6. Halvorsen, R. (2013) A strict maximum likelihood explanation of MaxEnt, and some implications for distribution modelling. Sommerfeltia, 36, 1-132.
 7. Halvorsen, R., Mazzoni, S., Bryn, A. & Bakkestuen, V. (2015) Opportunities for improved distribution modelling practice via a strict maximum likelihood interpretation of MaxEnt. Ecography, 38, 172-183.
+8. Phillips, S. J., Anderson, R. P., & Schapire, R. E. (2006) Maximum Entropy Modeling of Species Geographic Distributions. Ecological Modelling, 190, 231–59.
