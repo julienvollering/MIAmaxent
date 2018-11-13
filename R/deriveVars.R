@@ -32,14 +32,14 @@
 #' for each category.
 #'
 #' The maximum entropy algorithm ("maxent") --- which is implemented in
-#' MIAmaxent as an infinitly-weighted logisitic regression with presences added
+#' MIAmaxent as an infinitely-weighted logistic regression with presences added
 #' to the background --- is conventionally used with presence-only occurrence
-#' data. In contrast, standard logisitic regression (algorithm = "LR"), is
+#' data. In contrast, standard logistic regression (algorithm = "LR"), is
 #' conventionally used with presence-absence occurrence data.
 #'
 #' Explanatory variables should be uniquely named. Underscores ('_') and colons
 #' (':') are reserved to denote derived variables and interaction terms
-#' repectively, and \code{deriveVars} will replace these --- along with other
+#' respectively, and \code{deriveVars} will replace these --- along with other
 #' special characters --- with periods ('.').
 #'
 #' @param data Data frame containing the response variable in the first column
@@ -48,7 +48,7 @@
 #'   and absence (coded as 1/0). The explanatory variable data should be
 #'   complete (no NAs). See \code{\link{readData}}.
 #' @param transformtype Specifies the types of transformations types to be
-#'   performed. Default is the full set of the following transfomation types: L
+#'   performed. Default is the full set of the following transformation types: L
 #'   (linear), M (monotonous), D (deviation), HF (forward hinge), HR (reverse
 #'   hinge), T (threshold), and B (binary).
 #' @param allsplines Logical. Keep all spline transformations created, rather

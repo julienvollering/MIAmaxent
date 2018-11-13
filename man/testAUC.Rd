@@ -33,7 +33,7 @@ cannot be changed or correspond to multiple elements in the plot.}
 For a given model, \code{testAUC} calculates the Area Under the Curve (AUC)
 of the Receiver Operating Characteristic (ROC) as a threshold-independent
 measure of binary classification performance. This function is intended to be
-used with occurence data that is independent from the data used to train the
+used with occurrence data that is independent from the data used to train the
 model, to obtain an unbiased measure of model performance.
 }
 \details{

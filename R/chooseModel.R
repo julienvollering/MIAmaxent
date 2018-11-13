@@ -10,7 +10,7 @@
 #'
 #' Explanatory variables should be uniquely named. Underscores ('_') and colons
 #' (':') are reserved to denote derived variables and interaction terms
-#' repectively, and \code{chooseModel} will replace these --- along with other
+#' respectively, and \code{chooseModel} will replace these --- along with other
 #' special characters --- with periods ('.').
 #'
 #' @param dvdata A list containing first the response variable, followed by data

@@ -77,14 +77,14 @@ considered. Practically, interactions between EVs are represented by the
 products of all combinations of their component DVs (Halvorsen, 2013).
 
 The maximum entropy algorithm ("maxent") --- which is implemented in
-MIAmaxent as an infinitly-weighted logisitic regression with presences added
+MIAmaxent as an infinitely-weighted logistic regression with presences added
 to the background --- is conventionally used with presence-only occurrence
-data. In contrast, standard logisitic regression (algorithm = "LR"), is
+data. In contrast, standard logistic regression (algorithm = "LR"), is
 conventionally used with presence-absence occurrence data.
 
 Explanatory variables should be uniquely named. Underscores ('_') and colons
 (':') are reserved to denote derived variables and interaction terms
-repectively, and \code{selectEV} will replace these --- along with other
+respectively, and \code{selectEV} will replace these --- along with other
 special characters --- with periods ('.').
 }
 \examples{

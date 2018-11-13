@@ -150,7 +150,7 @@ The output of `deriveVars()` is a list consisting of 2 parts:
 * data frames of DVs for each EV (named "dvdata")  
 * the transformation functions used to produce each DV (named "transformations").
 
-Both list elements also contain the RV vaector.
+Both list elements also contain the RV vector.
 
 In our grasslands analysis, the contents of the list items look like this:
 ```{r}
@@ -357,7 +357,7 @@ grasslandPreds <- projectModel(model = grasslandmodel,
                                data = EVstack)
 ```
 
-It is often easier to vizualize probability-ratio values on a log scale, so we plot the raster object again as log2(PRO + 1):
+It is often easier to visualize probability-ratio values on a log scale, so we plot the raster object again as log2(PRO + 1):
 ```{r fig.show='hold', fig.width=5.5, fig.height=5.5}
 plot(log2(grasslandPreds$output + 1))
 ```
@@ -384,7 +384,7 @@ The evaluation metric which is used most commonly for distribution models and is
 
 The `testAUC()` function takes a data frame of presence and absence locations, along with the corresponding values of EVs at those locations, and calculates testAUC. The evaluation data can easily be read into R using the `readData()` function with `PA = TRUE` if desired, as shown below.
 
-In our example, 122 test locations in Øsfold County, Norway, were visited to record presence or absence of semi-natural grasslands:
+In our example, 122 test locations in Østfold County, Norway, were visited to record presence or absence of semi-natural grasslands:
 ```{r}
 grasslandPA <- readData(
   occurrence = system.file("extdata", "occurrence_PA.csv", package="MIAmaxent"), 

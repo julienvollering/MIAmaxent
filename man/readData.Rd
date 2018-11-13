@@ -68,7 +68,7 @@ The names of the ASCII raster files are used as the names of the explanatory
 variables, so these files should be uniquely named. \code{readData} replaces
 underscores '_', spaces ' ' and other special characters not allowed in names
 with periods '.'. In MIAmaxent, underscores and colons are reserved to denote
-derived variables and interaction terms, repectively.
+derived variables and interaction terms, respectively.
 }
 \examples{
 toydata_sp1po <- readData(system.file("extdata/sommerfeltia", "Sp1.csv", package = "MIAmaxent"),

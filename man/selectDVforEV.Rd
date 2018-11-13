@@ -59,16 +59,16 @@ aware that a model including all of these DVs will be considered equal to the
 the closest nested model, due to perfect multicollinearity (i.e. the dummy
 variable trap).
 
-The maximum entropy algorithm ("maxent") --- which is implemented in MIAmaxent
-as an infinitly-weighted logisitic regression with presences added to the
-background --- is conventionally used with presence-only occurrence data. In
-contrast, standard logisitic regression (algorithm = "LR"), is conventionally
-used with presence-absence occurrence data.
+The maximum entropy algorithm ("maxent") --- which is implemented in
+MIAmaxent as an infinitely-weighted logistic regression with presences added
+to the background --- is conventionally used with presence-only occurrence
+data. In contrast, standard logistic regression (algorithm = "LR"), is
+conventionally used with presence-absence occurrence data.
 
 Explanatory variables should be uniquely named. Underscores ('_') and colons
 (':') are reserved to denote derived variables and interaction terms
-repectively, and \code{selectDVforEV} will replace these --- along with other
-special characters --- with periods ('.').
+respectively, and \code{selectDVforEV} will replace these --- along with
+other special characters --- with periods ('.').
 }
 \examples{
 toydata_seldvs <- selectDVforEV(toydata_dvs$dvdata, alpha = 0.4)

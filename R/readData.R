@@ -27,7 +27,7 @@
 #' variables, so these files should be uniquely named. \code{readData} replaces
 #' underscores '_', spaces ' ' and other special characters not allowed in names
 #' with periods '.'. In MIAmaxent, underscores and colons are reserved to denote
-#' derived variables and interaction terms, repectively.
+#' derived variables and interaction terms, respectively.
 #'
 #' @param occurrence Full pathway of the '.csv' file of occurrence data. The
 #'   first column of the CSV should code occurrence (see Details), while the

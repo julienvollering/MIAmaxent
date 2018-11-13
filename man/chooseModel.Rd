@@ -32,7 +32,7 @@ value.
 \details{
 Explanatory variables should be uniquely named. Underscores ('_') and colons
 (':') are reserved to denote derived variables and interaction terms
-repectively, and \code{chooseModel} will replace these --- along with other
+respectively, and \code{chooseModel} will replace these --- along with other
 special characters --- with periods ('.').
 }
 \examples{
