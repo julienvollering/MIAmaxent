@@ -18,7 +18,7 @@ infinitely-weighted logistic regression for model fitting. (Fithian & Hastie,
 }
 \details{
 MIAmaxent is intended primarily for maximum entropy distribution modeling
-(Phillips et al., 2006; Phillips et al., 2017), but provides an alternative
+(Phillips et al., 2006; Phillips et al., 2017), and provides an alternative
 to the standard methodology for training, selecting, and using models. The
 major advantage in this alternative methodology is greater user control -- in
 variable transformations, in variable selection, and in model output.
