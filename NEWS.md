@@ -1,3 +1,5 @@
+# MIAmaxent 1.0.0.9000
+
 # MIAmaxent 1.0.0
 
 ## Major changes
@@ -7,7 +9,9 @@
 * Choice of Chi-squared or F-test in nested model comparison
 * More consistency in arguments across top-level functions
 * Selection trail tables simplified and clarified
+
 ## Minor changes
+
 * increased flexibility in graphics arguments passed to plotting functions
 * quiet option added to top-level functions performing selection
 * readData() automatically removes duplicates when two or more presences/absences fall in the same cell
