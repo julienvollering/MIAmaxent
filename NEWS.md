@@ -1,4 +1,5 @@
 # MIAmaxent 1.0.0.9000
+* Minor documentation edits to readData and testAUC
 
 # MIAmaxent 1.0.0
 

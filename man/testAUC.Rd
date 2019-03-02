@@ -19,7 +19,7 @@ variables in the model. I.e. the 'transformations' returned by
 \item{data}{Data frame containing test occurrence data in the first column
 and corresponding explanatory variables in the model in subsequent columns.
 The test data should be coded as: 1/0/NA, representing presence, absence,
-and unknown. See \code{\link{readData}}.}
+and uninformed. See \code{\link{readData}}.}
 
 \item{plot}{Logical. Plot the ROC curve?}
 

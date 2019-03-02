@@ -11,12 +11,13 @@
 #' When \code{occurrence} represents presence-only data (\code{PA = FALSE}), all
 #' rows with values other than 'NA' in column 1 of the CSV file are treated as
 #' presence locations. If column 1 contains any values of 'NA', these rows are
-#' treated as the unknown background locations for the response variable. Thus,
-#' 'NA' can be used to specify a specific set of background locations if
-#' desired. Otherwise background points are randomly selected from the full
+#' treated as the uninformed background locations. Thus, 'NA' can be used to
+#' specify a specific set of uninformed background locations if desired.
+#' Otherwise uninformed background locations are randomly selected from the full
 #' extent of the raster cells which are not already included as presence
 #' locations. Only cells which contain data for all environmental variables are
-#' selected as background locations, or retained as presence locations.
+#' retained as presence locations or selected as uninformed background
+#' locations.
 #'
 #' When \code{occurrence} represents presence/absence data (\code{PA = TRUE}),
 #' rows with value '0' in column 1 of the CSV are treated as absence locations,
@@ -39,10 +40,10 @@
 #' @param catEV Pathway to a directory containing categorical environmental
 #'   variables in '.asc' file format.
 #' @param maxbkg Integer. Maximum number of grid cells randomly selected as
-#'   unknown background points for the response variable. Default is 10,000.
-#'   Irrelevant for presence/absence data (\code{PA = TRUE}) and ignored for
-#'   presence-only data (\code{PA = FALSE}) if \code{occurrence} contains 'NA'
-#'   values. See Details.
+#'   uninformed background locations for the response variable. Default is
+#'   10,000. Irrelevant for presence/absence data (\code{PA = TRUE}) and ignored
+#'   for presence-only data (\code{PA = FALSE}) if \code{occurrence} contains
+#'   'NA' values. See Details.
 #' @param PA Logical. Does \code{occurrence} represent presence/absence data?
 #'   This argument affects how the values in \code{occurrence} are interpreted,
 #'   and controls what type of data object is produced. See Details.
