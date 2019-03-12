@@ -14,7 +14,7 @@
 
   test <- match.arg(test, choices = c("Chisq", "F"))
   algorithm <- match.arg(algorithm, choices = c("maxent", "LR"))
-  n <- length(formulas)
+  nformulas <- length(formulas)
 
   if (algorithm == "maxent") {
     refmod <- .runIWLR(refformula, data)
@@ -23,9 +23,9 @@
   }
 
   if (test == "Chisq") {
-    ctable <- data.frame(variables=character(n), m=integer(n),
-                         Dsq=numeric(n), Chisq=numeric(n), df=integer(n),
-                         P=numeric(n), stringsAsFactors = F)
+    ctable <- data.frame(variables=character(nformulas), m=integer(nformulas),
+                         Dsq=numeric(nformulas), Chisq=numeric(nformulas), df=integer(nformulas),
+                         P=numeric(nformulas), stringsAsFactors = F)
 
     for (i in 1:length(formulas)) {
       if (algorithm == "maxent") {
@@ -45,9 +45,9 @@
   }
 
   if (test == "F") {
-    ctable <- data.frame(variables=character(n), m=integer(n),
-                         Dsq=numeric(n), F=numeric(n), dfe=integer(n),
-                         dfu=integer(n), P=numeric(n), stringsAsFactors = F)
+    ctable <- data.frame(variables=character(nformulas), m=integer(nformulas),
+                         Dsq=numeric(nformulas), F=numeric(nformulas), dfe=integer(nformulas),
+                         dfu=integer(nformulas), P=numeric(nformulas), stringsAsFactors = F)
 
     for (i in 1:length(formulas)) {
       if (algorithm == "maxent") {
