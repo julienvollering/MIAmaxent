@@ -1,5 +1,6 @@
 # MIAmaxent 1.0.0.9000
 * Minor documentation edits to readData and testAUC
+* Simplification of F-statistic calculation; may cause rounding differences with respect to previous versions.
 
 # MIAmaxent 1.0.0
 
