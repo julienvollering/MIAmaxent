@@ -1,4 +1,5 @@
 # MIAmaxent 1.0.0.9000
+* Added ellipsis to plotFOP() for easier customization of graphic
 * Minor documentation edits to readData and testAUC
 * Simplification of F-statistic calculation; may cause rounding differences with respect to previous versions.
 

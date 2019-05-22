@@ -4,7 +4,7 @@
 \alias{plotFOP}
 \title{Plot Frequency of Observed Presence (FOP).}
 \usage{
-plotFOP(data, EV, span = 0.5, intervals = NULL, ranging = FALSE)
+plotFOP(data, EV, span = 0.5, intervals = NULL, ranging = FALSE, ...)
 }
 \arguments{
 \item{data}{Data frame containing the response variable in the first column
@@ -25,6 +25,11 @@ Defaults to the minimum of N/10 and 100. Irrelevant for categorical EVs.}
 \item{ranging}{Logical. If \code{TRUE}, will range the EV scale to [0,1].
 This is equivalent to plotting FOP over the linear transformation produced
 by deriveVars. Irrelevant for categorical EVs.}
+
+\item{...}{Arguments to be passed to \code{plot} or \code{barplot} to control
+the appearance of the plot. For example: \itemize{ \item \code{lwd} for
+line width \item \code{cex.main} for size of plot title \item \code{space}
+for space between bars }}
 }
 \value{
 In addition to the graphical output, a list of 2: \enumerate{ \item
