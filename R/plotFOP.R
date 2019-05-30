@@ -22,7 +22,7 @@
 #'
 #' If the response variable in \code{data} represents presence/absence data, the
 #' result is an empirical frequency of presence curve, rather than a observed
-#' frequency of presence curve (see Stoea et al. [in press], Sommerfeltia).
+#' frequency of presence curve (see Støa et al. [2018], Sommerfeltia).
 #'
 #' @param data Data frame containing the response variable in the first column
 #'   and explanatory variables in subsequent columns. The response variable

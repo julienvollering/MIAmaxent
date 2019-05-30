@@ -72,7 +72,7 @@ considered the optimal value of EV.
 
 If the response variable in \code{data} represents presence/absence data, the
 result is an empirical frequency of presence curve, rather than a observed
-frequency of presence curve (see Stoea et al. [in press], Sommerfeltia).
+frequency of presence curve (see Støa et al. [2018], Sommerfeltia).
 }
 \examples{
 FOPev11 <- plotFOP(toydata_sp1po, 2)

@@ -116,5 +116,5 @@ Halvorsen, R., Mazzoni, S., Bryn, A., & Bakkestuen, V. (2015).
 
 Økland, R.H., Økland, T. & Rydgren, K. (2001).
   Vegetation-environment relationships of boreal spruce swamp forests in
-  Oestmarka Nature Reserve, SE Norway. Sommerfeltia, 29, 1-190.
+  Østmarka Nature Reserve, SE Norway. Sommerfeltia, 29, 1-190.
 }

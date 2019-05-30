@@ -76,7 +76,7 @@
 #'   maximum likelihood interpretation of MaxEnt. Ecography, 38(2), 172-183.
 #' @references Økland, R.H., Økland, T. & Rydgren, K. (2001).
 #'   Vegetation-environment relationships of boreal spruce swamp forests in
-#'   Oestmarka Nature Reserve, SE Norway. Sommerfeltia, 29, 1-190.
+#'   Østmarka Nature Reserve, SE Norway. Sommerfeltia, 29, 1-190.
 #'
 #' @examples
 #' toydata_dvs <- deriveVars(toydata_sp1po, c("L", "M", "D", "HF", "HR", "T", "B"))

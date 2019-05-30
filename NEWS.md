@@ -23,7 +23,7 @@
 * quiet option added to top-level functions performing selection
 * readData() automatically removes duplicates when two or more presences/absences fall in the same cell
 * readData() discards presence locations with missing EV data
-* formula argument to selectEV() function, to specifiy starting point for selection
+* formula argument to selectEV() function, to specify starting point for selection
 * plotFOP() smoother changed to loess from exponentially weighted moving average
 * plotFOP() plots data density behind FOP values
 * plotFOP() returns plot data invisibly

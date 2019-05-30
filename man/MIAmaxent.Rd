@@ -56,7 +56,7 @@ Mazzoni, S., Halvorsen, R. & Bakkestuen, V. (2015) MIAT: Modular
   R-wrappers for flexible implementation of MaxEnt distribution modelling.
   Ecological Informatics, 30, 215-221.
 
-Phillips, S.J., Anderson, R.P., Dudik, M., Schapire, R.E., &
+Phillips, S.J., Anderson, R.P., Dudík, M., Schapire, R.E., &
   Blair, M.E. (2017). Opening the black box: an open-source release of
   Maxent. Ecography, 40(7), 887-893.
 
