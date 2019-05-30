@@ -4,7 +4,8 @@
 \alias{plotFOP}
 \title{Plot Frequency of Observed Presence (FOP).}
 \usage{
-plotFOP(data, EV, span = 0.5, intervals = NULL, ranging = FALSE, ...)
+plotFOP(data, EV, span = 0.5, intervals = NULL, ranging = FALSE,
+  densitythreshold = NULL, ...)
 }
 \arguments{
 \item{data}{Data frame containing the response variable in the first column
@@ -25,6 +26,10 @@ Defaults to the minimum of N/10 and 100. Irrelevant for categorical EVs.}
 \item{ranging}{Logical. If \code{TRUE}, will range the EV scale to [0,1].
 This is equivalent to plotting FOP over the linear transformation produced
 by deriveVars. Irrelevant for categorical EVs.}
+
+\item{densitythreshold}{Numeric. Intervals containing fewer than this number
+of observations will be represented with an open symbol in the plot.
+Irrelevant for categorical EVs.}
 
 \item{...}{Arguments to be passed to \code{plot} or \code{barplot} to control
 the appearance of the plot. For example: \itemize{ \item \code{lwd} for
@@ -87,8 +92,8 @@ geobergFOP
 
 }
 \references{
-Stoea, B., Halvorsen, R., Mazzoni, S. & Gusarov, V. (2016)
+Støa, B., R. Halvorsen, S. Mazzoni, and V. I. Gusarov. (2018).
   Sampling bias in presence-only data used for species distribution
-  modelling: assessment and effects on models. Sommerfeltia, submitted
-  manuscript.
+  modelling: theory and methods for detecting sample bias and its effects on
+  models. Sommerfeltia 38:1–53.
 }

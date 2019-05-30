@@ -9,8 +9,8 @@
 #'
 #' The linear transformation "L" is a simple rescaling to the range [0, 1].
 #'
-#' The monotonous transformation "M" performed is a zero-skew transformation
-#' (Oekland et al. 2001).
+#' The monotone transformation "M" performed is a zero-skew transformation
+#' (Økland et al. 2001).
 #'
 #' The deviation transformation "D" is performed around an optimum EV value that
 #' is found by looking at frequency of presence (see \code{\link{plotFOP}}).
@@ -49,7 +49,7 @@
 #'   complete (no NAs). See \code{\link{readData}}.
 #' @param transformtype Specifies the types of transformations types to be
 #'   performed. Default is the full set of the following transformation types: L
-#'   (linear), M (monotonous), D (deviation), HF (forward hinge), HR (reverse
+#'   (linear), M (monotone), D (deviation), HF (forward hinge), HR (reverse
 #'   hinge), T (threshold), and B (binary).
 #' @param allsplines Logical. Keep all spline transformations created, rather
 #'   than pre-selecting particular splines based on fraction of total variation
@@ -74,7 +74,7 @@
 #' @references Halvorsen, R., Mazzoni, S., Bryn, A., & Bakkestuen, V. (2015).
 #'   Opportunities for improved distribution modelling practice via a strict
 #'   maximum likelihood interpretation of MaxEnt. Ecography, 38(2), 172-183.
-#' @references Oekland, R.H., Oekland, T. & Rydgren, K. (2001).
+#' @references Økland, R.H., Økland, T. & Rydgren, K. (2001).
 #'   Vegetation-environment relationships of boreal spruce swamp forests in
 #'   Oestmarka Nature Reserve, SE Norway. Sommerfeltia, 29, 1-190.
 #'

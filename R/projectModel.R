@@ -126,11 +126,19 @@ projectModel <- function(model, transformations, data, clamping = FALSE,
   })
   newdata <- as.data.frame(do.call(cbind, dvdatani))
   names(newdata) <- dvnamesni
-
   type <- if (class(model)[1] == "iwlr") {
     ifelse(raw == TRUE, "raw", "PRO")
   } else { "response" }
-  preds <- stats::predict(model, newdata, type)
+
+  if (any(is.nan(unlist(newdata)))) {
+    nans <- which(apply(newdata, 1, function(x) {any(is.nan(x))}))
+    warning("Transformed 'data' has ", length(nans), " rows with NaN. Predictions for these will be NA.",
+            call. = FALSE)
+    preds <- rep(NA, nrow(newdata))
+    preds[-nans] <- stats::predict(model, newdata[-nans,], type)
+      } else {
+    preds <- stats::predict(model, newdata, type)
+  }
 
   if (class(model)[1] == "iwlr" && rescale == TRUE) {
     if (raw == TRUE) { preds <- preds/sum(preds, na.rm = TRUE)

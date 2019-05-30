@@ -38,6 +38,9 @@
 #' @param ranging Logical. If \code{TRUE}, will range the EV scale to [0,1].
 #'   This is equivalent to plotting FOP over the linear transformation produced
 #'   by deriveVars. Irrelevant for categorical EVs.
+#' @param densitythreshold Numeric. Intervals containing fewer than this number
+#'   of observations will be represented with an open symbol in the plot.
+#'   Irrelevant for categorical EVs.
 #' @param ... Arguments to be passed to \code{plot} or \code{barplot} to control
 #'   the appearance of the plot. For example: \itemize{ \item \code{lwd} for
 #'   line width \item \code{cex.main} for size of plot title \item \code{space}
@@ -54,10 +57,12 @@
 #'   observations in the level ("n"), and the mean RV value of the level
 #'   ("levelRV") are used.}
 #'
-#' @references Stoea, B., Halvorsen, R., Mazzoni, S. & Gusarov, V. (2016)
+#' @references Støa, B., R. Halvorsen, S. Mazzoni, and V. I. Gusarov. (2018).
 #'   Sampling bias in presence-only data used for species distribution
-#'   modelling: assessment and effects on models. Sommerfeltia, submitted
-#'   manuscript.
+#'   modelling: theory and methods for detecting sample bias and its effects on
+#'   models. Sommerfeltia 38:1–53.
+
+
 #'
 #' @examples
 #' FOPev11 <- plotFOP(toydata_sp1po, 2)
@@ -78,7 +83,8 @@
 #' @export
 
 
-plotFOP <- function(data, EV, span = 0.5, intervals = NULL, ranging = FALSE, ...) {
+plotFOP <- function(data, EV, span = 0.5, intervals = NULL, ranging = FALSE,
+                    densitythreshold = NULL, ...) {
 
   if (EV==1) {
     stop("'EV' cannot be the first column of 'data', which must be the response variable")
@@ -109,8 +115,6 @@ plotFOP <- function(data, EV, span = 0.5, intervals = NULL, ranging = FALSE, ...
     FOP <- list(EVoptimum = evoptimum,
                 FOPdata = FOPdf)
 
-
-
     op <- graphics::par(mar=(c(5, 4, 4, 4) + 0.3))
     on.exit(graphics::par(op))
     dens <- stats::density(df[, 2])
@@ -120,8 +124,11 @@ plotFOP <- function(data, EV, span = 0.5, intervals = NULL, ranging = FALSE, ...
     graphics::axis(side=4, col="grey60", col.axis="grey60", las=1)
     graphics::mtext("Kernel estimated data density", side=4, line=3, col="grey60")
     graphics::par(new=TRUE)
+    if (is.null(densitythreshold)) {densitythreshold <- 0}
+    closedsymbols <- as.numeric(FOPdf$n >= densitythreshold)+1
     args1 <- list(bty="n", main = paste0("FOP plot: ", evname), xlab = evname,
-                  ylab = "Frequency of Observed Presence (FOP)", pch=20, las=1)
+                  ylab = "Frequency of Observed Presence (FOP)", las=1,
+                  pch=c(1,20)[closedsymbols])
     inargs <- list(...)
     args1[names(inargs)] <- inargs
     do.call(graphics::plot, c(list(x=FOPdf$intEV, y=FOPdf$intRV), args1))

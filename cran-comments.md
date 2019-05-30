@@ -1,9 +1,8 @@
-## Major release submission
+## Minor release submission
 
 ## Test environments
-* local Windows install, R 3.5.1
+* local OS X install, R 3.6.0
 * ubuntu 14.04 (on travis-ci), R 3.5.1
-* os x 10.13, (on travis-ci), R 3.5.0
 * win-builder, R devel
 
 ## R CMD check results

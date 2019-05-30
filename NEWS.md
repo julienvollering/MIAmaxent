@@ -1,11 +1,15 @@
-# MIAmaxent 1.0.0.9000
+# MIAmaxent 1.1.0
+
 * Added ellipsis to plotFOP() for easier customization of graphic
+* Feature request: added 'densitythreshold' argument to plotFOP()
+* Predictions NA when a transformation returns NaN. 
 * Minor documentation edits to readData and testAUC
 * Simplification of F-statistic calculation; may cause rounding differences with respect to previous versions.
 
 # MIAmaxent 1.0.0
 
 ## Major changes
+
 * Model fitting implemented as infinitely-weighted logistic regression, so that all computation can be done natively in R (maxent.jar no longer required).
 * Implements choice of algorithm: "maxent" for maximum entropy or "LR" for standard logistic regression (binomial GLM).
 * No files written to system unless write = TRUE

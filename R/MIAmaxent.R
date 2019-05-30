@@ -35,7 +35,7 @@
 #' @references Halvorsen, R., Mazzoni, S., Bryn, A. & Bakkestuen, V. (2015)
 #'   Opportunities for improved distribution modelling practice via a strict
 #'   maximum likelihood interpretation of MaxEnt. Ecography, 38, 172-183.
-#' @references Halvorsen, R., Mazzoni, S., Dirksen, J.W., Naesset, E., Gobakken,
+#' @references Halvorsen, R., Mazzoni, S., Dirksen, J.W., Næsset, E., Gobakken,
 #'   T. & Ohlson, M. (2016) How important are choice of model selection method
 #'   and spatial autocorrelation of presence data for distribution modelling by
 #'   MaxEnt? Ecological Modelling, 328, 108-118.
