@@ -1,3 +1,5 @@
+# MIAmaxent 1.1.0.9000
+
 # MIAmaxent 1.1.0
 
 * Added ellipsis to plotFOP() for easier customization of graphic
