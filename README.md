@@ -2,6 +2,9 @@
 
 # MIAmaxent
 
+Read our open-access paper in *Ecology and Evolution* introducing
+MIAmaxent: <https://doi.org/10.1002/ece3.5654>.
+
 ## v.1.1.0
 
 ### Description
@@ -25,7 +28,7 @@ methodology results in simpler models with equally good predictive
 ability, and reduces the risk of overfitting (Halvorsen et al., 2016).
 
 The predecessor to this package is the MIA Toolbox, which is described
-in detail in Mazzoni et al. (2015).
+in detail in Mazzoni et al. (2015).
 
 ### Installation
 
@@ -45,8 +48,7 @@ devtools::install_github("julienvollering/MIAmaxent", build_vignettes = TRUE)
 ### User Workflow
 
 This diagram outlines a common workflow for users of this package.
-Functions are shown in
-red.
+Functions are shown in red.
 
 ![](https://raw.githubusercontent.com/julienvollering/MIAmaxent/master/man/figures/workflow-flowchart.png)
 
