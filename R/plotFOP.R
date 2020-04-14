@@ -103,7 +103,7 @@ plotFOP <- function(data, EV, span = 0.5, intervals = NULL, ranging = FALSE,
     df$int <- cut(df[, 2], breaks=max(2, intervals))
 
     grouped <- dplyr::group_by(df, int)
-    FOPdf <- as.data.frame(dplyr::summarise(grouped, n = n(),
+    FOPdf <- as.data.frame(dplyr::summarise(grouped, n = dplyr::n(),
       intEV = mean(EV), intRV = mean(RV, na.rm=FALSE)))
     FOPdf$loess <- stats::predict(stats::loess(intRV~intEV, FOPdf,
                                                weights=FOPdf$n, span=span))
@@ -137,7 +137,7 @@ plotFOP <- function(data, EV, span = 0.5, intervals = NULL, ranging = FALSE,
 
   if (class(df[, 2]) %in% c("factor", "character")) {
     grouped <- dplyr::group_by(df, EV)
-    FOPdf <- as.data.frame(dplyr::summarise(grouped, n = n(),
+    FOPdf <- as.data.frame(dplyr::summarise(grouped, n = dplyr::n(),
                                             lvlRV = mean(RV, na.rm=FALSE)))
 
     FOP <- list(EVoptimum = FOPdf$EV[which.max(FOPdf$lvlRV)],
