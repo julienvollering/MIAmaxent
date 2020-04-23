@@ -4,8 +4,16 @@
 \alias{selectDVforEV}
 \title{Select parsimonious sets of derived variables.}
 \usage{
-selectDVforEV(dvdata, alpha = 0.01, test = "Chisq",
-  algorithm = "maxent", write = FALSE, dir = NULL, quiet = FALSE)
+selectDVforEV(
+  dvdata,
+  alpha = 0.01,
+  retest = FALSE,
+  test = "Chisq",
+  algorithm = "maxent",
+  write = FALSE,
+  dir = NULL,
+  quiet = FALSE
+)
 }
 \arguments{
 \item{dvdata}{List containing first the response variable, followed by data
@@ -14,6 +22,9 @@ the first item in the list returned by \code{\link{deriveVars}}).}
 
 \item{alpha}{Alpha-level used for inference testing in nested model
 comparison. Default is 0.01.}
+
+\item{retest}{Logical. Test variables that do not meet the alpha criterion
+in a given round in subsequent rounds? Default is \code{FALSE}.}
 
 \item{test}{Character string matching either "Chisq" or "F" to determine
 which inference test is used in nested model comparison. The Chi-squared

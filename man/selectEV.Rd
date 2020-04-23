@@ -4,9 +4,18 @@
 \alias{selectEV}
 \title{Select parsimonious set of explanatory variables.}
 \usage{
-selectEV(dvdata, alpha = 0.01, interaction = FALSE, formula = NULL,
-  test = "Chisq", algorithm = "maxent", write = FALSE, dir = NULL,
-  quiet = FALSE)
+selectEV(
+  dvdata,
+  alpha = 0.01,
+  retest = FALSE,
+  interaction = FALSE,
+  formula = NULL,
+  test = "Chisq",
+  algorithm = "maxent",
+  write = FALSE,
+  dir = NULL,
+  quiet = FALSE
+)
 }
 \arguments{
 \item{dvdata}{List containing first the response variable, followed by data
@@ -16,6 +25,10 @@ variable (e.g. the first item in the list returned by
 
 \item{alpha}{Alpha-level used in F-test comparison of models. Default is
 0.01.}
+
+\item{retest}{Logical. Test variables (or interaction terms) that do not meet
+the alpha criterion in a given round in subsequent rounds? Default is
+\code{FALSE}.}
 
 \item{interaction}{Logical. Allow interaction terms between pairs of EVs?
 Default is \code{FALSE}.}

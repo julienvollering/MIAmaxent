@@ -4,8 +4,14 @@
 \alias{projectModel}
 \title{Project model across explanatory data.}
 \usage{
-projectModel(model, transformations, data, clamping = FALSE,
-  raw = FALSE, rescale = FALSE)
+projectModel(
+  model,
+  transformations,
+  data,
+  clamping = FALSE,
+  raw = FALSE,
+  rescale = FALSE
+)
 }
 \arguments{
 \item{model}{The model to be projected, represented by an object of class

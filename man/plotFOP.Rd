@@ -4,8 +4,15 @@
 \alias{plotFOP}
 \title{Plot Frequency of Observed Presence (FOP).}
 \usage{
-plotFOP(data, EV, span = 0.5, intervals = NULL, ranging = FALSE,
-  densitythreshold = NULL, ...)
+plotFOP(
+  data,
+  EV,
+  span = 0.5,
+  intervals = NULL,
+  ranging = FALSE,
+  densitythreshold = NULL,
+  ...
+)
 }
 \arguments{
 \item{data}{Data frame containing the response variable in the first column

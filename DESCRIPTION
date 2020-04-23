@@ -20,7 +20,7 @@ License: MIT + file LICENSE
 LazyData: TRUE
 URL: https://github.com/julienvollering/MIAmaxent
 BugReports: https://github.com/julienvollering/MIAmaxent/issues
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 Encoding: UTF-8
 Imports:
     dplyr (>= 0.4.3),

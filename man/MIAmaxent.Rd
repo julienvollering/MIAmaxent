@@ -3,7 +3,6 @@
 \docType{package}
 \name{MIAmaxent}
 \alias{MIAmaxent}
-\alias{MIAmaxent-package}
 \title{MIAmaxent: A Modular, Integrated Approach to Maximum Entropy Distribution
 Modeling}
 \description{
