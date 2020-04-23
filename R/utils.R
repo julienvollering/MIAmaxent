@@ -269,7 +269,7 @@ release_questions <- function() {
     ctable <- list$selection[[i]]
     bests <- ctable[!duplicated(ctable$round),]
     if (any(bests$P < alpha)) {
-      selectedmod <- tail(dplyr::filter(bests, P < alpha), 1)
+      selectedmod <- utils::tail(dplyr::filter(bests, .data$P < alpha), 1)
       lastround <- min(selectedmod$round + 1, max(bests$round))
       } else {
         lastround <- 1
