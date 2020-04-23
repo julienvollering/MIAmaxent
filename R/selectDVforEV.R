@@ -33,6 +33,8 @@
 #'   the first item in the list returned by \code{\link{deriveVars}}).
 #' @param alpha Alpha-level used for inference testing in nested model
 #'   comparison. Default is 0.01.
+#' @param retest Logical. Test variables that do not meet the alpha criterion
+#'   in a given round in subsequent rounds? Default is \code{FALSE}.
 #' @param test Character string matching either "Chisq" or "F" to determine
 #'   which inference test is used in nested model comparison. The Chi-squared
 #'   test is implemented by stats::anova, while the F-test is implemented as
@@ -76,7 +78,7 @@
 #' @export
 
 
-selectDVforEV <- function(dvdata, alpha = 0.01, test = "Chisq",
+selectDVforEV <- function(dvdata, alpha = 0.01, retest = FALSE, test = "Chisq",
                           algorithm = "maxent", write = FALSE, dir = NULL,
                           quiet = FALSE) {
 
@@ -114,7 +116,7 @@ selectDVforEV <- function(dvdata, alpha = 0.01, test = "Chisq",
   for (i in 1:length(evdv)) {
     evname <- names(evdv)[i]
     df <- data.frame("RV"=rv, evdv[[i]])
-    result <- .parsdvs(df, alpha, test, algorithm)
+    result <- .parsdvs(df, alpha, retest, test, algorithm)
     if (write == TRUE) {
       utils::write.csv(result[[2]],
                        file=file.path(fdir, paste0(evname, "_dvselection.csv")),

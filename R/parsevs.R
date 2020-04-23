@@ -3,6 +3,7 @@
 #' @param dvdata List with response variable (vector or single-column data
 #'   frame) followed by EVs to be selected from (data frames).
 #' @param alpha Alpha level for F-test.
+#' @param retest Test rejected variables in subsequent rounds?
 #' @param test Character string matching either "Chisq" or "F".
 #' @param algorithm Character string matching either "maxent" or "LR".
 #' @param interaction Logical. Allows interaction terms.
@@ -12,8 +13,8 @@
 #' @keywords internal
 #' @noRd
 
-.parsevs <- function(dvdata, alpha, interaction, formula, test, algorithm,
-                     quiet) {
+.parsevs <- function(dvdata, alpha, retest, interaction, formula, test,
+                     algorithm, quiet) {
 
   dvdata[[1]] <- data.frame("RV"=dvdata[[1]])
   test <- match.arg(test, choices = c("Chisq", "F"))
@@ -79,18 +80,22 @@
       testedEVs <- sapply(strsplit(ctable$variables[seq(nrow(ctable))[-1]],
                                    split=" + ", fixed=TRUE),
                           function(x) {x[length(selectedset)]})
-      remainingset <- testedEVs[ctable$P[seq(nrow(ctable))[-1]] < alpha]
+      if (retest) {
+        remainingset <- testedEVs
+      } else {
+        remainingset <- testedEVs[ctable$P[seq(nrow(ctable))[-1]] < alpha]
+      }
       remainingset <- remainingset[!is.na(remainingset)]
     }
 
     if (quiet == FALSE) {message(paste("Round", roundnumber, "complete."))}
 
-    if (nrow(ctable) == 1 ||
-        ctable$P[1] > alpha ||
-        (all(ctable$P[seq(nrow(ctable))[-1]] >= alpha |
-             is.na(ctable$P[seq(nrow(ctable))[-1]])))) {
-      iterationexit <- TRUE
+    if (nrow(ctable) == 1 || ctable$P[1] > alpha) { iterationexit <- TRUE }
+    if (!iterationexit && !retest) {
+      if (all(ctable$P[seq(nrow(ctable))[-1]] >= alpha |
+              is.na(ctable$P[seq(nrow(ctable))[-1]]))) { iterationexit <- TRUE }
     }
+
   }
 
   if (interaction == FALSE || length(selectedset) < 2) {
@@ -146,17 +151,20 @@
       testedEVs <- sapply(strsplit(ctable$variables[seq(nrow(ctable))[-1]],
                                    split=" + ", fixed=TRUE),
                           function(x) {x[length(selectedset)]})
-      remainingset <- testedEVs[ctable$P[seq(nrow(ctable))[-1]] < alpha]
+      if (retest) {
+        remainingset <- testedEVs
+      } else {
+        remainingset <- testedEVs[ctable$P[seq(nrow(ctable))[-1]] < alpha]
+      }
       remainingset <- remainingset[!is.na(remainingset)]
     }
 
     if (quiet == FALSE) {message(paste("Round", roundnumber, "complete."))}
 
-    if (nrow(ctable) == 1 ||
-        ctable$P[1] > alpha ||
-        (all(ctable$P[seq(nrow(ctable))[-1]] >= alpha |
-             is.na(ctable$P[seq(nrow(ctable))[-1]])))) {
-      iterationexit <- TRUE
+    if (nrow(ctable) == 1 || ctable$P[1] > alpha) { iterationexit <- TRUE }
+    if (!iterationexit && !retest) {
+      if (all(ctable$P[seq(nrow(ctable))[-1]] >= alpha |
+              is.na(ctable$P[seq(nrow(ctable))[-1]]))) { iterationexit <- TRUE }
     }
   }
 

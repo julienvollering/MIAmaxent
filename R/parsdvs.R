@@ -3,14 +3,17 @@
 #' @param df Data frame with response variable in first column and DVs to be
 #'   selected from in subsequent columns.
 #' @param alpha Alpha level for inference test.
+#' @param retest Test rejected variables in subsequent rounds?
 #' @param test Character string matching either "Chisq" or "F".
 #' @param algorithm Character string matching either "maxent" or "LR".
 #'
 #' @keywords internal
 #' @noRd
 
-.parsdvs <- function(df, alpha, test, algorithm) {
+.parsdvs <- function(df, alpha, retest, test, algorithm) {
 
+  test <- match.arg(test, choices = c("Chisq", "F"))
+  algorithm <- match.arg(algorithm, choices = c("maxent", "LR"))
   selectedset <- character(length=0)
   remainingset <- names(df)[-1]
   evtable <- data.frame()
@@ -37,15 +40,18 @@
       testedDVs <- sapply(strsplit(ctable$variables[seq(nrow(ctable))[-1]],
                                    split=" + ", fixed=TRUE),
                           function(x) {x[length(selectedset)]})
-      remainingset <- testedDVs[ctable$P[seq(nrow(ctable))[-1]] < alpha]
+      if (retest) {
+        remainingset <- testedDVs
+      } else {
+        remainingset <- testedDVs[ctable$P[seq(nrow(ctable))[-1]] < alpha]
+      }
       remainingset <- remainingset[!is.na(remainingset)]
     }
 
-    if (nrow(ctable) == 1 ||
-        ctable$P[1] > alpha ||
-        (all(ctable$P[seq(nrow(ctable))[-1]] >= alpha |
-             is.na(ctable$P[seq(nrow(ctable))[-1]])))) {
-      iterationexit <- TRUE
+    if (nrow(ctable) == 1 || ctable$P[1] > alpha) { iterationexit <- TRUE }
+    if (!iterationexit && !retest) {
+      if (all(ctable$P[seq(nrow(ctable))[-1]] >= alpha |
+              is.na(ctable$P[seq(nrow(ctable))[-1]]))) { iterationexit <- TRUE }
     }
   }
 

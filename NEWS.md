@@ -1,5 +1,8 @@
 # MIAmaxent 1.1.1.9000
 
+* Enhancement: added 'retest' argument to selection functions
+* Internal utility: shortcut function for deriving stricter selectDVforEV from lenient selectDVforEV
+
 # MIAmaxent 1.1.1
 
 * Patch for compatibility with dplyr v1.0

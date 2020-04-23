@@ -247,3 +247,44 @@ release_questions <- function() {
     return(log(x + c))
   }
 }
+
+
+#' Return output from \code{\link{selectDVforEV}} as if it had been produced
+#' under a stricter (lower) alpha. Results will match \code{selectDVforEV(...,
+#' alpha = stricter, retest = TRUE)} if \code{list} was also produced with
+#' retest = TRUE.
+#'
+#' @param list Output list from selectDVforEV()
+#' @param alpha Stricter alpha than used to produce \code{list}
+#' @keywords internal
+#' @noRd
+
+.stricterselectDVforEV <- function(list, alpha) {
+  dvdata <- list()
+  selection <- list()
+
+  for (i in seq_along(list$selection)) {
+    evname <- names(list$selection)[i]
+    drop <- FALSE
+    ctable <- list$selection[[i]]
+    bests <- ctable[!duplicated(ctable$round),]
+    if (any(bests$P < alpha)) {
+      selectedmod <- tail(dplyr::filter(bests, P < alpha), 1)
+      lastround <- min(selectedmod$round + 1, max(bests$round))
+      } else {
+        lastround <- 1
+        drop <- TRUE
+      }
+    selection[[i]] <- dplyr::filter(ctable, round <= lastround)
+    names(selection)[i] <- evname
+    if (!drop) {
+      selectedset <- unlist(strsplit(selectedmod$variables, split=" + ",
+                                     fixed=TRUE))
+      dvdata[[i]] <- list$dvdata[[evname]][, selectedset, drop = FALSE]
+      names(dvdata)[i] <- evname
+    }
+  }
+  RV <- list(RV = list$dvdata$RV)
+  dvdata <- c(RV, Filter(Negate(is.null), dvdata))
+  return(list(dvdata = dvdata, selection = selection))
+}

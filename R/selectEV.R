@@ -38,6 +38,9 @@
 #'   \code{\link{selectDVforEV}}).
 #' @param alpha Alpha-level used in F-test comparison of models. Default is
 #'   0.01.
+#' @param retest Logical. Test variables (or interaction terms) that do not meet
+#'   the alpha criterion in a given round in subsequent rounds? Default is
+#'   \code{FALSE}.
 #' @param interaction Logical. Allow interaction terms between pairs of EVs?
 #'   Default is \code{FALSE}.
 #' @param formula A model formula (in the form y ~ x + ...) specifying a
@@ -89,9 +92,9 @@
 #' @export
 
 
-selectEV <- function(dvdata, alpha = 0.01, interaction = FALSE, formula = NULL,
-                     test="Chisq", algorithm = "maxent", write = FALSE,
-                     dir = NULL, quiet = FALSE) {
+selectEV <- function(dvdata, alpha = 0.01, retest = FALSE, interaction = FALSE,
+                     formula = NULL, test="Chisq", algorithm = "maxent",
+                     write = FALSE, dir = NULL, quiet = FALSE) {
 
   names(dvdata) <- make.names(names(dvdata), allow_ = FALSE)
   stopifnot(class(dvdata)=="list",
@@ -127,7 +130,8 @@ selectEV <- function(dvdata, alpha = 0.01, interaction = FALSE, formula = NULL,
       }
   }
 
-  result <- .parsevs(dvdata, alpha, interaction, formula, test, algorithm, quiet)
+  result <- .parsevs(dvdata, alpha, retest, interaction, formula, test,
+                     algorithm, quiet)
   if (write == TRUE) {
     utils::write.csv(result[[2]], file = file.path(fdir, "evselection.csv"),
                      row.names = FALSE)

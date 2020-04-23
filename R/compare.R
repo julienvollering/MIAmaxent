@@ -12,8 +12,6 @@
 
 .compare <- function(formulas, refformula, data, test="Chisq", algorithm="maxent") {
 
-  test <- match.arg(test, choices = c("Chisq", "F"))
-  algorithm <- match.arg(algorithm, choices = c("maxent", "LR"))
   nformulas <- length(formulas)
 
   if (algorithm == "maxent") {
