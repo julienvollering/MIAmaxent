@@ -4,11 +4,13 @@
 \name{toydata_seldvs}
 \alias{toydata_seldvs}
 \title{Selected derived variables accompanied by selection trails, from toy data.}
-\format{List with 2 elements: \enumerate{ \item A list of 3, with the
+\format{
+List with 2 elements: \enumerate{ \item A list of 3, with the
   response variable followed by data frames each containing the derived
   variables selected for a given explanatory variable. \item A list of the
   response variable and forward model selection trails used to select derived
-  variables. }}
+  variables. }
+}
 \source{
 Produced from \code{\link{toydata_dvs}} using
   \code{\link{selectDVforEV}}.

@@ -4,11 +4,13 @@
 \name{toydata_dvs}
 \alias{toydata_dvs}
 \title{Derived variables and transformation functions, from toy data.}
-\format{List with 2 elements: \enumerate{ \item A list of 5, with the response
+\format{
+List with 2 elements: \enumerate{ \item A list of 5, with the response
   variable followed by data frames each containing the derived variables
   produced for a given explanatory variable. \item A list of the response
   variable and all the transformation functions used to produce the derived
-  variables. }}
+  variables. }
+}
 \source{
 Produced from \code{\link{toydata_sp1po}} using
   \code{\link{deriveVars}}.

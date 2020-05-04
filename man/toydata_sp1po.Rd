@@ -4,12 +4,14 @@
 \name{toydata_sp1po}
 \alias{toydata_sp1po}
 \title{Occurrence and environmental toy data.}
-\format{A data frame with 40 rows and 5 variables: \describe{
+\format{
+A data frame with 40 rows and 5 variables: \describe{
   \item{RV}{response variable, occurrence either presence or uninformed
   background} \item{EV11}{explanatory variable: northing}
   \item{EV12}{explanatory variable: easting} \item{EV13}{explanatory
   variable: modified random uniform} \item{EV14}{explanatory variable: random
-  uniform} }}
+  uniform} }
+}
 \source{
 Halvorsen, R. (2013) A strict maximum likelihood explanation of
   MaxEnt, and some implications for distribution modelling. Sommerfeltia, 36,
