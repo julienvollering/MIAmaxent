@@ -1,14 +1,12 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+# MIAmaxent
+
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/MIAmaxent)](https://cran.r-project.org/package=MIAmaxent)
 [![Travis-CI Build
 Status](https://travis-ci.org/julienvollering/MIAmaxent.svg?branch=master)](https://travis-ci.org/julienvollering/MIAmaxent)
 [![CRAN download
 rate](https://cranlogs.r-pkg.org/badges/MIAmaxent)](https://cran.r-project.org/package=MIAmaxent)
-
------
-
-# MIAmaxent
 
 Read our open-access paper in *Ecology and Evolution* introducing
 MIAmaxent: <https://doi.org/10.1002/ece3.5654>.
@@ -57,6 +55,7 @@ This diagram outlines a common workflow for users of this package.
 Functions are shown in red.
 
 ![](https://raw.githubusercontent.com/julienvollering/MIAmaxent/master/man/figures/workflow-flowchart.png)
+\*\*\*
 
 ### References
 
