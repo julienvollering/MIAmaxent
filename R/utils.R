@@ -258,6 +258,7 @@ release_questions <- function() {
 #' @param alpha Stricter alpha than used to produce \code{list}
 #' @keywords internal
 #' @noRd
+#' @importFrom rlang .data
 
 .stricterselectDVforEV <- function(list, alpha) {
   dvdata <- list()
@@ -269,7 +270,7 @@ release_questions <- function() {
     ctable <- list$selection[[i]]
     bests <- ctable[!duplicated(ctable$round),]
     if (any(bests$P < alpha)) {
-      selectedmod <- utils::tail(dplyr::filter(bests, rlang::.data$P < alpha), 1)
+      selectedmod <- utils::tail(dplyr::filter(bests, .data$P < alpha), 1)
       lastround <- min(selectedmod$round + 1, max(bests$round))
       } else {
         lastround <- 1
