@@ -259,12 +259,8 @@ grasslandEVselect$selectedmodel$formula
 ```
 
 No interaction terms were significant in the model. These would be denoted by two DV names separated by a colon (e.g. 'pr.bygall_M:tertpi09_HR12'). This can be confirmed by looking at the trail of forward selection of EVs and interaction terms. Here we show only the best model of each round:
-```{r, echo=FALSE}
-roundbestindex <- sapply(unique(grasslandEVselect$selection$round), 
-                         function(x) {
-                           min(which(grasslandEVselect$selection$round %in% x))
-                         }) 
-grasslandEVselect$selection[roundbestindex, ]
+```{r}
+grasslandEVselect$selection[!duplicated(grasslandEVselect$selection$round), ]
 ```
 
 As expected, the model with the interaction term is not significant under the alpha value of 0.001. Instead, the selected model is the model with 6 single-order terms. 
@@ -328,6 +324,15 @@ The `plotResp2()` function is very similar to the `plotResp()` function in that 
 Here is the marginal-effect response plot for the same continuous EV shown above: 
 ```{r, fig.width=5.5, fig.height=4}
 plotResp2(grasslandmodel, grasslandDVs$transformations, "prbygall")
+```
+
+### calculateFTVA()
+
+As a measure of variable contribution, we can calculate the Fraction of Total Variation Accounted for (FTVA) by each variable (Halvorsen et al., 2015). Here with our chosen model:
+
+```{r}
+calculateFTVA(grasslandEVselect, formula("~ prbygall + geoberg + lcucor1 + 
+                                      tertpi09 + geolmja1"))
 ```
 
 
@@ -466,6 +471,10 @@ plotFOP(grasslandPA, "terdem")
 ```{r, fig.show='hold', fig.width=5.5, fig.height=4, warning = FALSE}
 plotResp(PA.grasslandEVselect$selectedmodel, PA.grasslandDVs$transformations, "prbygall")
 plotFOP(grasslandPA, "prbygall")
+```
+
+```{r}
+calculateFTVA(PA.grasslandEVselect)
 ```
 
 ```{r fig.show='hold', fig.width=5.5, fig.height=5.5}

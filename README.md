@@ -42,11 +42,11 @@ Install the release version from CRAN:
 install.packages("MIAmaxent")
 ```
 
-Or the development version from github:
+Or the development version from GitHub:
 
 ``` r
 # install.packages('devtools')
-devtools::install_github("julienvollering/MIAmaxent", build_vignettes = TRUE)
+remotes::install_github("julienvollering/MIAmaxent", build_vignettes = TRUE)
 ```
 
 ### User Workflow
@@ -55,7 +55,6 @@ This diagram outlines a common workflow for users of this package.
 Functions are shown in red.
 
 ![](https://raw.githubusercontent.com/julienvollering/MIAmaxent/master/man/figures/workflow-flowchart.png)
-\*\*\*
 
 ### References
 

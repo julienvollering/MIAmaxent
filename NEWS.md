@@ -2,6 +2,7 @@
 
 * Enhancement: added 'retest' argument to selection functions
 * Internal utility: shortcut function for deriving stricter selectDVforEV from lenient selectDVforEV
+* Added calculateFTVA() function for variable contribution
 
 # MIAmaxent 1.1.1
 
