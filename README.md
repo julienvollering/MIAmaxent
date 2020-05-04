@@ -1,5 +1,13 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/MIAmaxent)](https://cran.r-project.org/package=MIAmaxent)
+[![Travis-CI Build
+Status](https://travis-ci.org/julienvollering/MIAmaxent.svg?branch=master)](https://travis-ci.org/julienvollering/MIAmaxent)
+[![CRAN download
+rate](https://cranlogs.r-pkg.org/badges/MIAmaxent)](https://cran.r-project.org/package=MIAmaxent)
+
+-----
+
 # MIAmaxent
 
 Read our open-access paper in *Ecology and Evolution* introducing
@@ -26,7 +34,7 @@ methodology results in simpler models with equally good predictive
 ability, and reduces the risk of overfitting (Halvorsen et al., 2016).
 
 The predecessor to this package is the MIA Toolbox, which is described
-in detail in Mazzoni et al. (2015).
+in detail in Mazzoni et al. (2015).
 
 ### Installation
 
@@ -46,8 +54,7 @@ devtools::install_github("julienvollering/MIAmaxent", build_vignettes = TRUE)
 ### User Workflow
 
 This diagram outlines a common workflow for users of this package.
-Functions are shown in
-red.
+Functions are shown in red.
 
 ![](https://raw.githubusercontent.com/julienvollering/MIAmaxent/master/man/figures/workflow-flowchart.png)
 
@@ -77,11 +84,3 @@ Ecography, 40(7), 887-893.
 Phillips, S.J., Anderson, R.P. & Schapire, R.E. (2006) Maximum entropy
 modeling of species geographic distributions. Ecological Modelling, 190,
 231-259.
-
------
-
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/MIAmaxent)](https://cran.r-project.org/package=MIAmaxent)
-[![Travis-CI Build
-Status](https://travis-ci.org/julienvollering/MIAmaxent.svg?branch=master)](https://travis-ci.org/julienvollering/MIAmaxent)
-[![CRAN download
-rate](https://cranlogs.r-pkg.org/badges/MIAmaxent)](https://cran.r-project.org/package=MIAmaxent)
