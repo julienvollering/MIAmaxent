@@ -20,7 +20,7 @@ selection of variables by nested model comparison, and flexible model
 evaluation and projection. It follows principles based on the
 maximum-likelihood interpretation of maximum entropy modeling (Halvorsen
 et al., 2015), and uses infinitely-weighted logistic regression for
-model fitting. (Fithian & Hastie, 2013).
+model fitting (Fithian & Hastie, 2013).
 
 **MIAmaxent** is intended primarily for maximum entropy distribution
 modeling (Phillips et al., 2006; Phillips et al., 2017), and provides an
@@ -45,7 +45,7 @@ install.packages("MIAmaxent")
 Or the development version from GitHub:
 
 ``` r
-# install.packages('devtools')
+# install.packages('remotes')
 remotes::install_github("julienvollering/MIAmaxent", build_vignettes = TRUE)
 ```
 
