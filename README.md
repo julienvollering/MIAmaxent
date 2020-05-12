@@ -45,7 +45,7 @@ install.packages("MIAmaxent")
 Or the development version from GitHub:
 
 ``` r
-# install.packages('remotes')
+# install.packages(c("remotes", "R.rsp"))
 remotes::install_github("julienvollering/MIAmaxent", build_vignettes = TRUE)
 ```
 
