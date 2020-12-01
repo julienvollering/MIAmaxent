@@ -10,7 +10,8 @@ readData(
   catEV = NULL,
   maxbkg = 10000,
   PA = FALSE,
-  XY = FALSE
+  XY = FALSE,
+  duplicates = FALSE
 )
 }
 \arguments{
@@ -39,6 +40,11 @@ and controls what type of data object is produced. See Details.}
 \item{XY}{Logical. Include XY coordinates in the output. May be useful for
 spatial plotting. Note that coordinates included in the training data used
 to build the model will be treated as explanatory variables.}
+
+\item{duplicates}{Logical. Include each coordinate in \code{occurrence} as a
+separate row in the output, even if multiple coordinates fall in the same
+raster cell. If \code{TRUE}, a presence data point in a given cell does not
+preclude absence data points in the same cell.}
 }
 \value{
 Data frame with the Response Variable (RV) in the first column, and
@@ -69,7 +75,8 @@ locations.
 When \code{occurrence} represents presence/absence data (\code{PA = TRUE}),
 rows with value '0' in column 1 of the CSV are treated as absence locations,
 rows with value 'NA' are excluded, and all other rows are treated as
-presences.
+presences. If \code{duplicates = FALSE}, raster cells containing both
+presence and absence locations result in a single presence row.
 
 The names of the ASCII raster files are used as the names of the explanatory
 variables, so these files should be uniquely named. \code{readData} replaces

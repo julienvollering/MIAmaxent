@@ -3,6 +3,7 @@
 * Enhancement: added 'retest' argument to selection functions
 * Internal utility: shortcut function for deriving stricter selectDVforEV from lenient selectDVforEV
 * Added calculateFTVA() function for variable contribution
+* Added 'duplicates' argument to readData() to handle cells with multiple occurrence coordinates more explicitly 
 
 # MIAmaxent 1.1.1
 

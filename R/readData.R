@@ -22,7 +22,8 @@
 #' When \code{occurrence} represents presence/absence data (\code{PA = TRUE}),
 #' rows with value '0' in column 1 of the CSV are treated as absence locations,
 #' rows with value 'NA' are excluded, and all other rows are treated as
-#' presences.
+#' presences. If \code{duplicates = FALSE}, raster cells containing both
+#' presence and absence locations result in a single presence row.
 #'
 #' The names of the ASCII raster files are used as the names of the explanatory
 #' variables, so these files should be uniquely named. \code{readData} replaces
@@ -50,6 +51,10 @@
 #' @param XY Logical. Include XY coordinates in the output. May be useful for
 #'   spatial plotting. Note that coordinates included in the training data used
 #'   to build the model will be treated as explanatory variables.
+#' @param duplicates Logical. Include each coordinate in \code{occurrence} as a
+#'   separate row in the output, even if multiple coordinates fall in the same
+#'   raster cell. If \code{TRUE}, a presence data point in a given cell does not
+#'   preclude absence data points in the same cell.
 #'
 #' @return Data frame with the Response Variable (RV) in the first column, and
 #'   Explanatory Variables (EVs) in subsequent columns. When \code{PA = FALSE},
@@ -84,7 +89,7 @@
 
 
 readData <- function(occurrence, contEV = NULL, catEV = NULL, maxbkg = 10000,
-                     PA = FALSE, XY = FALSE) {
+                     PA = FALSE, XY = FALSE, duplicates = FALSE) {
 
   if (is.null(contEV) && is.null(catEV)) {
     stop("Please specify at least 1 explanatory variable directory.
@@ -104,21 +109,16 @@ readData <- function(occurrence, contEV = NULL, catEV = NULL, maxbkg = 10000,
   if (PA == FALSE) {
     if (any(is.na(occ[, 1]))) {
       pres <- raster::extract(stack, occ[!is.na(occ[, 1]), 2:3], cellnumbers = TRUE)
-      pres <- pres[!duplicated(pres[, 1]), ]
-      bkg <- raster::extract(stack, occ[is.na(occ[, 1]), 2:3], cellnumbers =TRUE)
-      bkg <- bkg[!duplicated(bkg[, 1]), ]
-      cells <- c(pres[, 1], bkg[, 1])
-      presbkg <- rbind(pres[, -1], bkg[, -1])
+      bkg <- raster::extract(stack, occ[is.na(occ[, 1]), 2:3], cellnumbers = TRUE)
     } else {
       pres <- raster::extract(stack, occ[, 2:3], cellnumbers = TRUE)
-      pres <- pres[!duplicated(pres[, 1]), ]
       bkg <- raster::as.data.frame(stack, na.rm = TRUE)
-      bkg <- bkg[!(rownames(bkg) %in% pres[,1]),]
+      bkg <- data.frame(cells = as.numeric(rownames(bkg)), bkg)
+      bkg <- bkg[!(bkg[, "cells"] %in% pres[, "cells"]), ]
       if (nrow(bkg) > maxbkg) {bkg <- bkg[sample(nrow(bkg), maxbkg), ]}
-      cells <- c(pres[,1], as.numeric(rownames(bkg)))
-      presbkg <- rbind(pres[, -1], bkg)
     }
-    xy <- raster::xyFromCell(stack, cells)
+    presbkg <- rbind(pres, bkg)
+    xy <- raster::xyFromCell(stack, presbkg[, "cells"])
     data <- data.frame("RV"=c(rep(1, nrow(pres)), rep(NA, nrow(bkg))), xy,
                        presbkg)
   }
@@ -127,11 +127,9 @@ readData <- function(occurrence, contEV = NULL, catEV = NULL, maxbkg = 10000,
     presabs <- occ[!is.na(occ[, 1]), ]
     absindex <- presabs[, 1] == 0
     pres <- raster::extract(stack, presabs[!absindex, 2:3], cellnumbers = TRUE)
-    pres <- pres[!duplicated(pres[, 1]), ]
     abs <- raster::extract(stack, presabs[absindex, 2:3], cellnumbers = TRUE)
-    abs <- abs[!duplicated(abs[, 1]), ]
-    xy <- raster::xyFromCell(stack, c(pres[, 1], abs[, 1]))
-    presabs <- rbind(pres[, -1], abs[, -1])
+    presabs <- rbind(pres, abs)
+    xy <- raster::xyFromCell(stack, presabs[, "cells"])
     data <- data.frame("RV"=c(rep(1, nrow(pres)), rep(0, nrow(abs))), xy,
                        presabs)
   }
@@ -139,6 +137,10 @@ readData <- function(occurrence, contEV = NULL, catEV = NULL, maxbkg = 10000,
   if (XY == FALSE) {
     data <- data[, -c(2:3)]
   }
+  if (duplicates == FALSE) {
+    data <- data[!duplicated(data[, "cells"]), ]
+  }
+  data$cells <- NULL
   if (!is.null(catEV)) {
     catindex <- seq(ncol(data) - length(catfiles) + 1, ncol(data))
     data[catindex] <- lapply(data[catindex], function(x) as.factor(x))
