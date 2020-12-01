@@ -1,4 +1,4 @@
-# MIAmaxent 1.1.1.9000
+# MIAmaxent 1.2.0
 
 * Enhancement: added 'retest' argument to selection functions
 * Internal utility: shortcut function for deriving stricter selectDVforEV from lenient selectDVforEV

@@ -1,13 +1,13 @@
 Package: MIAmaxent
 Type: Package
 Title: A Modular, Integrated Approach to Maximum Entropy Distribution Modeling
-Version: 1.1.1.9000
+Version: 1.2.0
 Authors@R: c(
-    person("Julien", "Vollering", email = "julien.vollering@hvl.no", role = c("aut", "cre")),
-    person("Sabrina", "Mazzoni", email = "sabgis@uevora.pt", role = "aut"),
-    person("Rune", "Halvorsen", email = "rune.halvorsen@nhm.uio.no", role = "aut"),
+    person("Julien", "Vollering", email = "julienvollering@gmail.com", role = c("aut", "cre")),
+    person("Sabrina", "Mazzoni", role = "aut"),
+    person("Rune", "Halvorsen", role = "aut"),
     person("Steven", "Phillips", role = "cph"))
-Maintainer: Julien Vollering <julien.vollering@hvl.no>
+Maintainer: Julien Vollering <julienvollering@gmail.com>
 Description: Tools for training, selecting, and evaluating maximum entropy
     (and standard logistic regression) distribution models. This package 
     provides tools for user-controlled transformation of explanatory variables, 
