@@ -1,3 +1,5 @@
+# MIAmaxent 1.2.0.9000
+
 # MIAmaxent 1.2.0
 
 * Enhancement: added 'retest' argument to selection functions
