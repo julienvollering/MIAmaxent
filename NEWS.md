@@ -1,5 +1,7 @@
 # MIAmaxent 1.2.0.9000
 
+*Bug fix when DV selection yields Chisq <= 0 (e.g. when identical DVs included)
+
 # MIAmaxent 1.2.0
 
 * Enhancement: added 'retest' argument to selection functions
