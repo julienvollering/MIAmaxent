@@ -10,7 +10,8 @@ projectModel(
   data,
   clamping = FALSE,
   raw = FALSE,
-  rescale = FALSE
+  rescale = FALSE,
+  filename = NULL
 )
 }
 \arguments{
@@ -38,6 +39,11 @@ output (PRO)? Default is FALSE. Irrelevant for 'lr' class models.}
 respect to the projection \code{data}? This has implications for the
 interpretation of output values with respect to reference values (e.g. PRO
 = 1). See details. Irrelevant for 'lr' class models.}
+
+\item{filename}{Full file pathway to write raster model predictions if
+\code{data} is an object of class 'RasterStack' or 'RasterBrick'. File
+format is inferred from the filename extension as in
+\code{raster::writeRaster}.}
 }
 \value{
 List of 2: \enumerate{ \item output: A data frame with the model

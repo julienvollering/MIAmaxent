@@ -40,6 +40,10 @@
 #'   respect to the projection \code{data}? This has implications for the
 #'   interpretation of output values with respect to reference values (e.g. PRO
 #'   = 1). See details. Irrelevant for 'lr' class models.
+#' @param filename Full file pathway to write raster model predictions if
+#'   \code{data} is an object of class 'RasterStack' or 'RasterBrick'. File
+#'   format is inferred from the filename extension as in
+#'   \code{raster::writeRaster}.
 
 #'
 #' @return List of 2: \enumerate{ \item output: A data frame with the model
@@ -78,7 +82,7 @@
 
 
 projectModel <- function(model, transformations, data, clamping = FALSE,
-                         raw = FALSE, rescale = FALSE) {
+                         raw = FALSE, rescale = FALSE, filename = NULL) {
 
   dvnamesni <- names(model$betas)[grep(":", names(model$betas), invert = TRUE)]
   evnames <- unique(sub("_.*", "", dvnamesni))
@@ -154,6 +158,9 @@ projectModel <- function(model, transformations, data, clamping = FALSE,
     outraster <- evstack[[1]]
     outraster <- raster::setValues(outraster, values)
     names(outraster) <- type
+    if (!is.null(filename)) {
+      raster::writeRaster(outraster, filename)
+    }
     raster::plot(outraster)
     return(list(output = outraster, ranges = Ranges))
   } else {

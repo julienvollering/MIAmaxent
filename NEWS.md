@@ -1,6 +1,7 @@
 # MIAmaxent 1.2.0.9000
 
-*Bug fix when DV selection yields Chisq <= 0 (e.g. when identical DVs included)
+* Bug fix when DV selection yields Chisq <= 0 (e.g. when identical DVs included)
+* Added 'filename' argument to projectModel() to write raster predictions to file
 
 # MIAmaxent 1.2.0
 
