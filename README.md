@@ -3,8 +3,6 @@
 # MIAmaxent
 
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/MIAmaxent)](https://cran.r-project.org/package=MIAmaxent)
-[![Travis-CI Build
-Status](https://travis-ci.org/julienvollering/MIAmaxent.svg?branch=master)](https://travis-ci.org/julienvollering/MIAmaxent)
 [![CRAN download
 rate](https://cranlogs.r-pkg.org/badges/MIAmaxent)](https://cran.r-project.org/package=MIAmaxent)
 

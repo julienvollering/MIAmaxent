@@ -3,7 +3,6 @@
 ^\.Rproj\.user$
 ^README\.Rmd$
 ^README-.*\.png$
-^\.travis\.yml$
 ^cran-comments\.md$
 ^data-raw$
 ^informaltesting\.R$
