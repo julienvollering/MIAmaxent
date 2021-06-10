@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-This vignette is meant to introduce users to the `MIAmaxent` package by providing a worked example of a distribution modeling exercise. It shows how to use all of the top-level functions included in `MIAmaxent` in the order of a typical analysis. This vignette does NOT describe the theoretical underpinnings of the package. To learn more about the theory behind `MIAmaxent`, the user is referred to Halvorsen (2013) and Halvorsen et al. (2015), as well as other references listed in the documentation of the package. 
+This vignette is meant to introduce users to the `MIAmaxent` package by providing a worked example of a distribution modeling exercise. It shows how to use all of the top-level functions included in `MIAmaxent` in the order of a typical analysis. This vignette does NOT describe the theoretical underpinnings of the package. To learn more about the theory behind `MIAmaxent`, the user is referred to Halvorsen (2013), Halvorsen et al. (2015), and Vollering et al. (2019). 
 
 > Help pages for the package and for individual functions in the package can be accessed in R using the standard help command: `?"MIAmaxent"` (after attaching the package using `library(MIAmaxent)`). 
 
@@ -531,3 +531,5 @@ Thank you to Sabrina Mazzoni and Rune Halvorsen for providing the data used in t
 6. Halvorsen, R. (2013) A strict maximum likelihood explanation of MaxEnt, and some implications for distribution modelling. Sommerfeltia, 36, 1-132.
 7. Halvorsen, R., Mazzoni, S., Bryn, A. & Bakkestuen, V. (2015) Opportunities for improved distribution modelling practice via a strict maximum likelihood interpretation of MaxEnt. Ecography, 38, 172-183.
 8. Phillips, S. J., Anderson, R. P., & Schapire, R. E. (2006) Maximum Entropy Modeling of Species Geographic Distributions. Ecological Modelling, 190, 231–59.
+9. Vollering, J., Halvorsen, R., & Mazzoni, S. (2019) The MIAmaxent R package: Variable transformation and model selection for species distribution models. Ecology and Evolution, 9, 12051–12068.
+
