@@ -90,7 +90,8 @@
 
     if (quiet == FALSE) {message(paste("Round", roundnumber, "complete."))}
 
-    if (nrow(ctable) == 1 || ctable$P[1] > alpha) { iterationexit <- TRUE }
+    if (nrow(ctable) == 1 || ctable$P[1] > alpha || is.na(ctable$P[1])) {
+      iterationexit <- TRUE }
     if (!iterationexit && !retest) {
       if (all(ctable$P[seq(nrow(ctable))[-1]] >= alpha |
               is.na(ctable$P[seq(nrow(ctable))[-1]]))) { iterationexit <- TRUE }
@@ -161,7 +162,8 @@
 
     if (quiet == FALSE) {message(paste("Round", roundnumber, "complete."))}
 
-    if (nrow(ctable) == 1 || ctable$P[1] > alpha) { iterationexit <- TRUE }
+    if (nrow(ctable) == 1 || ctable$P[1] > alpha || is.na(ctable$P[1])) {
+      iterationexit <- TRUE }
     if (!iterationexit && !retest) {
       if (all(ctable$P[seq(nrow(ctable))[-1]] >= alpha |
               is.na(ctable$P[seq(nrow(ctable))[-1]]))) { iterationexit <- TRUE }

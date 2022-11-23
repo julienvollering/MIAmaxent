@@ -56,5 +56,4 @@ plotResp(grasslandmodel, grasslandDVs$transformations, "geolmja1")
 plotResp2(grasslandmodel, grasslandDVs$transformations, "pr.bygall")
 }
 
-
 }

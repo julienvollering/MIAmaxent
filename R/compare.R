@@ -34,11 +34,18 @@
       ctable$variables[i] <- paste(labels(stats::terms(formulas[[i]])),
                                    collapse = " + ")
       ctable$m[i] <- length(mod$coefficients)-1
-      ctable$Dsq[i] <- round(1 - (mod$deviance/mod$null.deviance), digits = 3)
-      a2 <- stats::anova(refmod, mod, test="Chisq")
-      ctable$Chisq[i] <- round(a2$Deviance[2], digits = 3)
-      ctable$df[i] <- a2$Df[2]
-      ctable$P[i] <- signif(a2$`Pr(>Chi)`[2], digits = 3)
+      if (algorithm == "maxent" && abs(mod$alpha) == Inf) {
+        ctable$Dsq[i] <- NA
+        ctable$Chisq[i] <- NA
+        ctable$df[i] <- NA
+        ctable$P[i] <- NA
+      } else {
+        ctable$Dsq[i] <- round(1 - (mod$deviance/mod$null.deviance), digits = 3)
+        a2 <- stats::anova(refmod, mod, test="Chisq")
+        ctable$Chisq[i] <- round(a2$Deviance[2], digits = 3)
+        ctable$df[i] <- a2$Df[2]
+        ctable$P[i] <- signif(a2$`Pr(>Chi)`[2], digits = 3)
+      }
     }
   }
 
@@ -56,17 +63,25 @@
       ctable$variables[i] <- paste(labels(stats::terms(formulas[[i]])),
                                    collapse = " + ")
       ctable$m[i] <- length(mod$coefficients)-1
-      Dsq <- 1 - (mod$deviance/mod$null.deviance)
-      ctable$Dsq[i] <- round(Dsq, digits = 3)
-      N <- nrow(data)
-      n <- sum(data[,1]==1, na.rm = TRUE)
-      a2 <- stats::anova(refmod, mod)
-      ctable$dfe[i] <- a2$Df[2]
-      ctable$dfu[i] <- (N - n) - (ctable$m[i] + 1) - 1
-      ctable$F[i] <- round((a2$Deviance[2] * ctable$dfu[i]) /
-        (a2$`Resid. Dev`[2] * ctable$dfe[i]), digits = 3)
-      ctable$P[i] <- signif(1 - stats::pf(ctable$F[i], ctable$dfe[i], ctable$dfu[i]),
-                            digits = 3)
+      if (algorithm == "maxent" && abs(mod$alpha) == Inf) {
+        ctable$Dsq[i] <- NA
+        ctable$dfe[i] <- NA
+        ctable$dfu[i] <- NA
+        ctable$F[i] <- NA
+        ctable$P[i] <- NA
+      } else {
+        Dsq <- 1 - (mod$deviance/mod$null.deviance)
+        ctable$Dsq[i] <- round(Dsq, digits = 3)
+        N <- nrow(data)
+        n <- sum(data[,1]==1, na.rm = TRUE)
+        a2 <- stats::anova(refmod, mod)
+        ctable$dfe[i] <- a2$Df[2]
+        ctable$dfu[i] <- (N - n) - (ctable$m[i] + 1) - 1
+        ctable$F[i] <- round((a2$Deviance[2] * ctable$dfu[i]) /
+                               (a2$`Resid. Dev`[2] * ctable$dfe[i]), digits = 3)
+        ctable$P[i] <- signif(1 - stats::pf(ctable$F[i], ctable$dfe[i], ctable$dfu[i]),
+                              digits = 3)
+      }
     }
   }
 
