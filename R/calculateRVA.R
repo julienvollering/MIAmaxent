@@ -1,14 +1,14 @@
-#' Calculates variable contributions (FTVA)
+#' Calculates variable contributions as RVA
 #'
-#' Calculates the Fraction of Total Variation Accounted for (Halvorsen et al.
+#' Calculates the Relative Variation Accounted for (Halvorsen et al.
 #' 2015), for the selected model or a chosen model from the results of
 #' \code{\link{selectEV}}.
 #'
 #' @param selectedEV The list returned by \code{selectEV}.
-#' @param formula  If null, FTVA is calculated for the selected model in
+#' @param formula  If null, RVA is calculated for the selected model in
 #'   \code{selectedEV}. Otherwise, a model formula (in the form ~ x + ...)
 #'   specifying a model in the trail of forward selection
-#'   (\code{selectEV$selection}) for which to calculate FTVA. Response variable
+#'   (\code{selectEV$selection}) for which to calculate RVA. Response variable
 #'   is irrelevant.
 #'
 #' @references Halvorsen, R., Mazzoni, S., Bryn, A., & Bakkestuen, V. (2015).
@@ -18,14 +18,14 @@
 #' @examples
 #' \dontrun{
 #' # From vignette:
-#' calculateFTVA(grasslandEVselect, formula("~ prbygall + geoberg + lcucor1 +
+#' calculateRVA(grasslandEVselect, formula("~ prbygall + geoberg + lcucor1 +
 #' tertpi09 + geolmja1"))
 #' }
 #'
 #' @export
 
 
-calculateFTVA <- function(selectedEV, formula = NULL) {
+calculateRVA <- function(selectedEV, formula = NULL) {
   tab <- selectedEV$selection
   if (is.character(formula) && !grepl(pattern = '~', x = formula)) {
     formula <- paste("~", formula)
@@ -49,6 +49,6 @@ calculateFTVA <- function(selectedEV, formula = NULL) {
   Vt <- roundtab[nrow(roundtab), match("Dsq", names(roundtab))]
   previous <- c(0, roundtab$Dsq[-nrow(roundtab)])
   df <- data.frame(variable = unlist(unname(trailterms[modrow])),
-                   FTVA = round(((roundtab$Dsq - previous) / Vt), digits = 3))
+                   RVA = round(((roundtab$Dsq - previous) / Vt), digits = 3))
   return(df)
 }

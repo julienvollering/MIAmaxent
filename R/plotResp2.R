@@ -1,7 +1,5 @@
 #' @describeIn plotResp Plot marginal-effect model response.
 #'
-#' @examples
-#'
 #' @export
 
 

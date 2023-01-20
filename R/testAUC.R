@@ -66,7 +66,7 @@ Be aware of implications for the interpretation of the AUC value.", call. = FALS
   data <- stats::na.omit(data)
   test <- data[, 1]
   PRO <- projectModel(model, transformations, data)[[1]][, 1]
-  if (var(PRO, na.rm = TRUE) == 0) {
+  if (stats::var(PRO, na.rm = TRUE) == 0) {
     warning("Model predictions over the supplied data have zero variance.
 AUC cannot be calculated.", call. = FALSE)
     return(NA)
