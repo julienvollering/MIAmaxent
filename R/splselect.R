@@ -13,6 +13,7 @@
   formulas <- lapply(names(dvs), function(x) {
     stats::formula(paste("RV ~", x))})
   ctable <- .compare(formulas, stats::formula("RV ~ 1"), data, "Chisq", algorithm)
+  ctable <- ctable[!is.na(ctable$P),]
 
   selected <- character()
   for (i in 3:(nrow(ctable)-2)) {
