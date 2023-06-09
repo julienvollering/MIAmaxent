@@ -1,12 +1,12 @@
 #' Read in data object from files.
 #'
 #' \code{readData} reads in occurrence data in CSV file format and environmental
-#' data in ASCII raster file format and produces a data object which can be used
-#' as the starting point for the functions in this package. This function is
-#' intended to make reading in data easy for users familiar with the maxent.jar
-#' program. It is emphasized that important considerations for data preparation
-#' (e.g. cleaning, sampling bias removal, etc.) are not treated in this package
-#' and must be dealt with separately!
+#' data in ASCII or GeoTIFF raster file format and produces a data object which
+#' can be used as the starting point for the functions in this package. This
+#' function is intended to make reading in data easy for users familiar with the
+#' maxent.jar program. It is emphasized that important considerations for data
+#' preparation (e.g. cleaning, sampling bias removal, etc.) are not treated in
+#' this package and must be dealt with separately!
 #'
 #' When \code{occurrence} represents presence-only data (\code{PA = FALSE}), all
 #' rows with values other than 'NA' in column 1 of the CSV file are treated as
@@ -25,7 +25,7 @@
 #' presences. If \code{duplicates = FALSE}, raster cells containing both
 #' presence and absence locations result in a single presence row.
 #'
-#' The names of the ASCII raster files are used as the names of the explanatory
+#' The names of the input raster files are used as the names of the explanatory
 #' variables, so these files should be uniquely named. \code{readData} replaces
 #' underscores '_', spaces ' ' and other special characters not allowed in names
 #' with periods '.'. In MIAmaxent, underscores and colons are reserved to denote
@@ -34,12 +34,12 @@
 #' @param occurrence Full pathway of the '.csv' file of occurrence data. The
 #'   first column of the CSV should code occurrence (see Details), while the
 #'   second and third columns should contain X and Y coordinates corresponding
-#'   to the ASCII raster coordinate system. The first row of the csv is read as
-#'   a header row.
+#'   to the raster coordinate system. The first row of the csv is read as a
+#'   header row.
 #' @param contEV Pathway to a directory containing continuous environmental
-#'   variables in '.asc' file format.
+#'   variables in either '.asc' (ASCII) or '.tif' (GeoTIFF) file format.
 #' @param catEV Pathway to a directory containing categorical environmental
-#'   variables in '.asc' file format.
+#'   variables in either '.asc' (ASCII) or '.tif' (GeoTIFF) file format.
 #' @param maxbkg Integer. Maximum number of grid cells randomly selected as
 #'   uninformed background locations for the response variable. Default is
 #'   10,000. Irrelevant for presence/absence data (\code{PA = TRUE}) and ignored
@@ -98,13 +98,16 @@ readData <- function(occurrence, contEV = NULL, catEV = NULL, maxbkg = 10000,
 
   occ <- utils::read.csv(occurrence, header = TRUE, na.strings = "NA")
   if (is.null(contEV)) {contfiles <- NULL} else {
-    contfiles <- list.files(contEV, pattern = "\\.asc$", full.names = TRUE)
+    contfiles <- list.files(contEV, pattern = "\\.(asc|tif)$", full.names = TRUE,
+                            ignore.case = TRUE)
   }
   if (is.null(catEV)) {catfiles <- NULL} else {
-    catfiles <- list.files(catEV, pattern = "\\.asc$", full.names = TRUE)
+    catfiles <- list.files(catEV, pattern = "\\.(asc|tif)$", full.names = TRUE,
+                           ignore.case = TRUE)
   }
   stack <- raster::stack(c(contfiles, catfiles))
-  names(stack) <- gsub(".asc", "", basename(c(contfiles, catfiles)))
+  names(stack) <- gsub("\\.(asc|tif)$", "", basename(c(contfiles, catfiles)),
+                       ignore.case = TRUE)
 
   if (PA == FALSE) {
     if (any(is.na(occ[, 1]))) {
