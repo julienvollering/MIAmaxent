@@ -6,7 +6,8 @@ Authors@R: c(
     person("Julien", "Vollering", email = "julienvollering@gmail.com", role = c("aut", "cre")),
     person("Sabrina", "Mazzoni", role = "aut"),
     person("Rune", "Halvorsen", role = "aut"),
-    person("Steven", "Phillips", role = "cph"))
+    person("Steven", "Phillips", role = "cph"),
+    person("Michael", "Bedward", role = "ctb"))
 Maintainer: Julien Vollering <julienvollering@gmail.com>
 Description: Tools for training, selecting, and evaluating maximum entropy
     (and standard logistic regression) distribution models. This package 
