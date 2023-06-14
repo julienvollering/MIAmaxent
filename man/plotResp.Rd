@@ -42,11 +42,11 @@ other explanatory variables are held constant at their mean values (cf.
 }
 \section{Functions}{
 \itemize{
-\item \code{plotResp}: Plot single-effect model response.
+\item \code{plotResp()}: Plot single-effect model response.
 
-\item \code{plotResp2}: Plot marginal-effect model response.
+\item \code{plotResp2()}: Plot marginal-effect model response.
+
 }}
-
 \examples{
 \dontrun{
 # From vignette:

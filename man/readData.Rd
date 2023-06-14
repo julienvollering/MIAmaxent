@@ -18,14 +18,14 @@ readData(
 \item{occurrence}{Full pathway of the '.csv' file of occurrence data. The
 first column of the CSV should code occurrence (see Details), while the
 second and third columns should contain X and Y coordinates corresponding
-to the ASCII raster coordinate system. The first row of the csv is read as
-a header row.}
+to the raster coordinate system. The first row of the csv is read as a
+header row.}
 
 \item{contEV}{Pathway to a directory containing continuous environmental
-variables in '.asc' file format.}
+variables in either '.asc' (ASCII) or '.tif' (GeoTIFF) file format.}
 
 \item{catEV}{Pathway to a directory containing categorical environmental
-variables in '.asc' file format.}
+variables in either '.asc' (ASCII) or '.tif' (GeoTIFF) file format.}
 
 \item{maxbkg}{Integer. Maximum number of grid cells randomly selected as
 uninformed background locations for the response variable. Default is
@@ -53,12 +53,12 @@ Data frame with the Response Variable (RV) in the first column, and
 }
 \description{
 \code{readData} reads in occurrence data in CSV file format and environmental
-data in ASCII raster file format and produces a data object which can be used
-as the starting point for the functions in this package. This function is
-intended to make reading in data easy for users familiar with the maxent.jar
-program. It is emphasized that important considerations for data preparation
-(e.g. cleaning, sampling bias removal, etc.) are not treated in this package
-and must be dealt with separately!
+data in ASCII or GeoTIFF raster file format and produces a data object which
+can be used as the starting point for the functions in this package. This
+function is intended to make reading in data easy for users familiar with the
+maxent.jar program. It is emphasized that important considerations for data
+preparation (e.g. cleaning, sampling bias removal, etc.) are not treated in
+this package and must be dealt with separately!
 }
 \details{
 When \code{occurrence} represents presence-only data (\code{PA = FALSE}), all
@@ -78,7 +78,7 @@ rows with value 'NA' are excluded, and all other rows are treated as
 presences. If \code{duplicates = FALSE}, raster cells containing both
 presence and absence locations result in a single presence row.
 
-The names of the ASCII raster files are used as the names of the explanatory
+The names of the input raster files are used as the names of the explanatory
 variables, so these files should be uniquely named. \code{readData} replaces
 underscores '_', spaces ' ' and other special characters not allowed in names
 with periods '.'. In MIAmaxent, underscores and colons are reserved to denote
