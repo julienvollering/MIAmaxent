@@ -326,12 +326,12 @@ Here is the marginal-effect response plot for the same continuous EV shown above
 plotResp2(grasslandmodel, grasslandDVs$transformations, "prbygall")
 ```
 
-### calculateFTVA()
+### calculateRVA()
 
-As a measure of variable contribution, we can calculate the Fraction of Total Variation Accounted for (FTVA) by each variable (Halvorsen et al., 2015). Here with our chosen model:
+As a measure of variable contribution, we can calculate the Fraction of Total Variation Accounted for (RVA) by each variable (Halvorsen et al., 2015). Here with our chosen model:
 
 ```{r}
-calculateFTVA(grasslandEVselect, formula("~ prbygall + geoberg + lcucor1 + 
+calculateRVA(grasslandEVselect, formula("~ prbygall + geoberg + lcucor1 + 
                                       tertpi09 + geolmja1"))
 ```
 
@@ -474,7 +474,7 @@ plotFOP(grasslandPA, "prbygall")
 ```
 
 ```{r}
-calculateFTVA(PA.grasslandEVselect)
+calculateRVA(PA.grasslandEVselect)
 ```
 
 ```{r fig.show='hold', fig.width=5.5, fig.height=5.5}
