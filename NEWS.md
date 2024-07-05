@@ -3,6 +3,7 @@
 * Handling of NA values in forward stepwise selection (whether cause by unstable parameter estimates, or zero deviance explained)
 * Bug fix when DV selection yields Chisq <= 0 (e.g. when identical DVs included)
 * Added 'filename' argument to projectModel() to write raster predictions to file
+* Package overview documented as per "Documenting packages" in R-exts.
 
 # MIAmaxent 1.2.0
 

@@ -15,13 +15,14 @@ Description: Tools for training, selecting, and evaluating maximum entropy
     selection of variables by nested model comparison, and flexible model 
     evaluation and projection. It follows principles based on the maximum-
     likelihood interpretation of maximum entropy modeling, and uses infinitely-
-    weighted logistic regression for model fitting.
+    weighted logistic regression for model fitting. The package is described in 
+    Vollering et al. (2019; <https://doi.org/10.1002/ece3.5654>).
 Depends: R (>= 2.10)
 License: MIT + file LICENSE
 LazyData: TRUE
 URL: https://github.com/julienvollering/MIAmaxent
 BugReports: https://github.com/julienvollering/MIAmaxent/issues
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Encoding: UTF-8
 Imports:
     dplyr (>= 0.4.3),
