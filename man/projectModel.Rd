@@ -15,9 +15,9 @@ projectModel(
 )
 }
 \arguments{
-\item{model}{The model to be projected, represented by an object of class
-'glm'. This may be the object returned by \code{\link{chooseModel}}, or the
-'selectedmodel' returned by \code{\link{selectEV}}.}
+\item{model}{The model to be projected. This may be the object returned by
+\code{\link{chooseModel}}, or the 'selectedmodel' returned by
+\code{\link{selectEV}}.}
 
 \item{transformations}{Transformation functions used to create the derived
 variables in the model. I.e. the 'transformations' returned by
@@ -33,12 +33,12 @@ the model. Column or raster names must match EV names.}
 Default is \code{FALSE}.}
 
 \item{raw}{Logical. Return raw maxent output instead of probability ratio
-output (PRO)? Default is FALSE. Irrelevant for 'lr' class models.}
+output (PRO)? Default is FALSE. Irrelevant for "LR"-type models.}
 
 \item{rescale}{Logical. Linearly rescale model output (PRO or raw) with
 respect to the projection \code{data}? This has implications for the
 interpretation of output values with respect to reference values (e.g. PRO
-= 1). See details. Irrelevant for 'lr' class models.}
+= 1). See details. Irrelevant for "LR"-type models.}
 
 \item{filename}{Full file pathway to write raster model predictions if
 \code{data} is an object of class 'RasterStack' or 'RasterBrick'. File

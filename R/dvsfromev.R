@@ -26,7 +26,7 @@
   evname <- colnames(df)[2]
   storage <- list()
 
-  if (class(ev) %in% c("numeric", "integer")) {
+  if (inherits(ev, c("numeric", "integer"))) {
 
     if ("L" %in% transformtype) {
       tfunction <- .transfL(ev)
@@ -115,7 +115,7 @@
     }
   }
 
-  if (class(ev) %in% c("factor", "character")) {
+  if (inherits(ev, c("factor", "character"))) {
     ev <- as.factor(ev)
 
     if ("B" %in% transformtype) {

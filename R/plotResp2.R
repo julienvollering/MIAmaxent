@@ -5,7 +5,7 @@
 
 plotResp2 <- function(model, transformations, EV, logscale = FALSE, ...) {
 
-  if (!(class(model)[1] %in% c("iwlr", "lr"))) {
+  if (!(inherits(model, c("MIAmaxent_iwlr", "MIAmaxent_lr")))) {
     stop("'model' should be of the class produced by 'selectEV' or 'chooseModel'", call. = FALSE)
   }
   evbetas <- model$betas[grep(paste0(EV, "_"), names(model$betas))]
@@ -24,10 +24,10 @@ plotResp2 <- function(model, transformations, EV, logscale = FALSE, ...) {
 
   anevtransf <- modtransfs[[paste0(names(evbetasni)[1], "_transf")]]
   evnull <- environment(anevtransf)$xnull
-  if (class(evnull) %in% c("numeric", "integer")) {
+  if (inherits(evnull, c("numeric", "integer"))) {
     seq <- seq(min(evnull), max(evnull), length.out = 100)
   }
-  if (class(evnull) %in% c("factor", "character")) {
+  if (inherits(evnull, c("factor", "character"))) {
     seq <- levels(as.factor(evnull))
   }
 
@@ -38,11 +38,11 @@ plotResp2 <- function(model, transformations, EV, logscale = FALSE, ...) {
       dv <- f(seq)
     } else {
       x <- environment(f)$xnull
-      if (class(x) %in% c("numeric", "integer")) {
+      if (inherits(x, c("numeric", "integer"))) {
         dvmean <- f(mean(x, na.rm = TRUE))
         dv <- rep(dvmean, length(seq))
       }
-      if (class(x) %in% c("factor", "character")) {
+      if (inherits(x, c("factor", "character"))) {
         ux <- unique(x)
         mode <- ux[which.max(tabulate(match(x, ux)))]
         dvmode <- f(mode)
@@ -53,7 +53,7 @@ plotResp2 <- function(model, transformations, EV, logscale = FALSE, ...) {
   }, modtransfs, marginal, MoreArgs = list("seq"=seq))
   colnames(newdata) <- names(betasni)
   newdata <- as.data.frame(newdata)
-  type <- ifelse(class(model)[1] == "iwlr", "PRO", "response")
+  type <- ifelse(inherits(model, "MIAmaxent_iwlr"), "PRO", "response")
   preds <- stats::predict(model, newdata, type)
   resp <- data.frame(EV = seq, preds = preds)
 
@@ -65,11 +65,11 @@ plotResp2 <- function(model, transformations, EV, logscale = FALSE, ...) {
   inargs <- list(...)
   args1[names(inargs)] <- inargs
 
-  if (class(resp[, 1]) %in% c("numeric", "integer")) {
+  if (inherits(resp[, 1], c("numeric", "integer"))) {
     do.call(graphics::plot, c(list(x=resp[, 1], y=resp[, 2], type="l"), args1))
   }
 
-  if (class(resp[, 1]) %in% c("factor", "character")) {
+  if (inherits(resp[, 1], c("factor", "character"))) {
     do.call(graphics::barplot, c(list(height=resp[, 2], names.arg=resp[, 1]), args1))
   }
 

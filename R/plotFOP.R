@@ -95,7 +95,7 @@ plotFOP <- function(data, EV, span = 0.5, intervals = NULL, ranging = FALSE,
   .binaryrvcheck(df[, 1])
   df[, 1][is.na(df[, 1])] <- 0
 
-  if (class(df[, 2]) %in% c("numeric", "integer")) {
+  if (inherits(df[, 2], c("numeric", "integer"))) {
     if (ranging == T) {
       df[, 2] <- (df[, 2] - min(df[, 2])) / diff(range(df[, 2]))
     }
@@ -135,7 +135,7 @@ plotFOP <- function(data, EV, span = 0.5, intervals = NULL, ranging = FALSE,
     graphics::points(FOPdf$loess ~ FOPdf$intEV, type="l", lwd=2, col="red")
   }
 
-  if (class(df[, 2]) %in% c("factor", "character")) {
+  if (inherits(df[, 2], c("factor", "character"))) {
     grouped <- dplyr::group_by(df, EV)
     FOPdf <- as.data.frame(dplyr::summarise(grouped, n = dplyr::n(),
                                             lvlRV = mean(RV, na.rm=FALSE)))

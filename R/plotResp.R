@@ -8,10 +8,9 @@
 #' other explanatory variables are held constant at their mean values (cf.
 #' \code{plotResp}, \code{plotResp2}).
 #'
-#' @param model The model for which the response is to be plotted, represented
-#'   by an object of class 'glm'. This may be the object returned by
-#'   \code{\link{chooseModel}}, or the 'selectedmodel' returned by
-#'   \code{\link{selectEV}}.
+#' @param model The model for which the response is to be plotted. This may be
+#'   the object returned by \code{\link{chooseModel}}, or the 'selectedmodel'
+#'   returned by \code{\link{selectEV}}.
 #' @param transformations Transformation functions used to create the derived
 #'   variables in the model. I.e. the 'transformations' returned by
 #'   \code{\link{deriveVars}}. Equivalently, the full file pathway of the
@@ -41,7 +40,7 @@
 
 plotResp <- function(model, transformations, EV, logscale = FALSE, ...) {
 
-  if (!(class(model)[1] %in% c("iwlr", "lr"))) {
+  if (!(inherits(model, c("MIAmaxent_iwlr", "MIAmaxent_lr")))) {
     stop("'model' should be of the class produced by 'selectEV' or 'chooseModel'", call. = FALSE)
   }
   evbetas <- model$betas[grep(paste0(EV, "_"), names(model$betas))]
@@ -64,24 +63,24 @@ plotResp <- function(model, transformations, EV, logscale = FALSE, ...) {
   traindata <- data.frame("RV"=alltransf[[1]], dvdata)
   formula <- stats::formula(paste("RV ~", paste(names(evbetasni), collapse = " + ")))
 
-  if (class(model)[1] == "iwlr") {
+  if (inherits(model, "MIAmaxent_iwlr")) {
     smodel <- .runIWLR(formula, traindata)
-  } else if (class(model)[1] == "lr") {
+  } else if (inherits(model, "MIAmaxent_lr")) {
     smodel <- .runLR(formula, traindata)
   }
 
   evnull <- environment(evtransfs[[1]])$xnull
-  if (class(evnull) %in% c("numeric", "integer")) {
+  if (inherits(evnull, c("numeric", "integer"))) {
     seq <- seq(min(evnull), max(evnull), length.out = 100)
   }
-  if (class(evnull) %in% c("factor", "character")) {
+  if (inherits(evnull, c("factor", "character"))) {
     seq <- levels(as.factor(evnull))
   }
   newdata <- as.data.frame(do.call(cbind,
                                    lapply(evtransfs, function(f, x) {
                                      f(x) }, x=seq)))
   names(newdata) <- names(evbetasni)
-  type <- ifelse(class(model)[1] == "iwlr", "PRO", "response")
+  type <- ifelse(inherits(model, "MIAmaxent_iwlr"), "PRO", "response")
   preds <- stats::predict(smodel, newdata, type)
   resp <- data.frame(EV = seq, preds = preds)
 
@@ -93,11 +92,11 @@ plotResp <- function(model, transformations, EV, logscale = FALSE, ...) {
   inargs <- list(...)
   args1[names(inargs)] <- inargs
 
-  if (class(resp[, 1]) %in% c("numeric", "integer")) {
+  if (inherits(resp[, 1], c("numeric", "integer"))) {
     do.call(graphics::plot, c(list(x=resp[, 1], y=resp[, 2], type="l"), args1))
   }
 
-  if (class(resp[, 1]) %in% c("factor", "character")) {
+  if (inherits(resp[, 1], c("factor", "character"))) {
     do.call(graphics::barplot, c(list(height=resp[, 2], names.arg=resp[, 1]), args1))
   }
 

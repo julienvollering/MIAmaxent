@@ -7,9 +7,9 @@
 testAUC(model, transformations, data, plot = TRUE, ...)
 }
 \arguments{
-\item{model}{The model to be projected, represented by an object of class
-'glm'. This may be the object returned by \code{\link{chooseModel}}, or the
-'selectedmodel' returned by \code{\link{selectEV}}.}
+\item{model}{The model to be projected. This may be the object returned by
+\code{\link{chooseModel}}, or the 'selectedmodel' returned by
+\code{\link{selectEV}}.}
 
 \item{transformations}{Transformation functions used to create the derived
 variables in the model. I.e. the 'transformations' returned by

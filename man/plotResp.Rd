@@ -10,10 +10,9 @@ plotResp(model, transformations, EV, logscale = FALSE, ...)
 plotResp2(model, transformations, EV, logscale = FALSE, ...)
 }
 \arguments{
-\item{model}{The model for which the response is to be plotted, represented
-by an object of class 'glm'. This may be the object returned by
-\code{\link{chooseModel}}, or the 'selectedmodel' returned by
-\code{\link{selectEV}}.}
+\item{model}{The model for which the response is to be plotted. This may be
+the object returned by \code{\link{chooseModel}}, or the 'selectedmodel'
+returned by \code{\link{selectEV}}.}
 
 \item{transformations}{Transformation functions used to create the derived
 variables in the model. I.e. the 'transformations' returned by

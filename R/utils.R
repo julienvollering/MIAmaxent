@@ -14,7 +14,7 @@ if(getRversion() >= "2.15.1") {
 #' @noRd
 
 .binaryrvcheck <- function(rv) {
-  if (class(rv) != "numeric" && class(rv) != "integer") {
+  if (!inherits(rv, c("numeric","integer"))) {
     stop("The response variable must be numeric or integer class: presence (1)
          and either background or absence (NA/0)", call. = FALSE)
   }
@@ -72,7 +72,7 @@ if(getRversion() >= "2.15.1") {
   .binaryrvcheck(df[, 1])
   df[, 1][is.na(df[, 1])] <- 0
 
-  if (class(df[, 2]) %in% c("numeric", "integer")) {
+  if (inherits(df[, 2], c("numeric", "integer"))) {
     if (is.null(intervals)) {intervals <- min(c(ceiling(nrow(df)/10), 100))}
     df$int <- cut(df[, 2], breaks=max(2, intervals))
     grouped <- dplyr::group_by(df, int)
@@ -87,7 +87,7 @@ if(getRversion() >= "2.15.1") {
 
   }
 
-  if (class(df[, 2]) %in% c("factor", "character")) {
+  if (inherits(df[, 2], c("factor", "character"))) {
     grouped <- dplyr::group_by(df, EV)
     FOPdf <- as.data.frame(dplyr::summarise(grouped, n = dplyr::n(),
                                             lvlRV = mean(RV, na.rm=FALSE)))
@@ -130,12 +130,12 @@ if(getRversion() >= "2.15.1") {
 #' @noRd
 
 .load.transf <- function(transformations) {
-  if (class(transformations) == "character") {
+  if (inherits(transformations, "character")) {
     alltransf <- get(load(transformations))
   } else {
     alltransf <- transformations
   }
-  if (!all(sapply(alltransf[-1], class) == "function")) {
+  if (!(all(sapply(X=alltransf[-1], FUN=inherits, what="function")))) {
     stop("'transformations' should be a transformations object returned by 'deriveVars'",
          call. = FALSE)
   }

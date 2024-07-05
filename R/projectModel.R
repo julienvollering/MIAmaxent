@@ -21,9 +21,9 @@
 #' scale which is dependent on the size of either the training data extent
 #' (\code{rescale = FALSE}) or projection data extent (\code{rescale = TRUE}).
 #'
-#' @param model The model to be projected, represented by an object of class
-#'   'glm'. This may be the object returned by \code{\link{chooseModel}}, or the
-#'   'selectedmodel' returned by \code{\link{selectEV}}.
+#' @param model The model to be projected. This may be the object returned by
+#'   \code{\link{chooseModel}}, or the 'selectedmodel' returned by
+#'   \code{\link{selectEV}}.
 #' @param transformations Transformation functions used to create the derived
 #'   variables in the model. I.e. the 'transformations' returned by
 #'   \code{\link{deriveVars}}. Equivalently, the full file pathway of the
@@ -35,11 +35,11 @@
 #' @param clamping Logical. Do clamping \emph{sensu} Phillips et al. (2006).
 #'   Default is \code{FALSE}.
 #' @param raw Logical. Return raw maxent output instead of probability ratio
-#'   output (PRO)? Default is FALSE. Irrelevant for 'lr' class models.
+#'   output (PRO)? Default is FALSE. Irrelevant for "LR"-type models.
 #' @param rescale Logical. Linearly rescale model output (PRO or raw) with
 #'   respect to the projection \code{data}? This has implications for the
 #'   interpretation of output values with respect to reference values (e.g. PRO
-#'   = 1). See details. Irrelevant for 'lr' class models.
+#'   = 1). See details. Irrelevant for "LR"-type models.
 #' @param filename Full file pathway to write raster model predictions if
 #'   \code{data} is an object of class 'RasterStack' or 'RasterBrick'. File
 #'   format is inferred from the filename extension as in
@@ -88,7 +88,7 @@ projectModel <- function(model, transformations, data, clamping = FALSE,
   evnames <- unique(sub("_.*", "", dvnamesni))
 
   map <- FALSE
-  if (class(data)[1] %in% c("RasterStack", "RasterBrick")) {
+  if (inherits(data, c("RasterStack", "RasterBrick"))) {
     map <- TRUE
     names(data) <- make.names(names(data), allow_ = FALSE)
     evstack <- data[[evnames]]
@@ -109,11 +109,11 @@ projectModel <- function(model, transformations, data, clamping = FALSE,
     evdata <- data[, x]
     anevtransf <- alltransf[grepl(paste0(x, "_"), names(alltransf))][[1]]
     xnull <- environment(anevtransf)$xnull
-    if (class(xnull) %in% c("numeric", "integer")) {
+    if (inherits(xnull, c("numeric", "integer"))) {
       L <- (evdata - range(xnull)[1]) / diff(range(xnull))
       return(range(L, na.rm = TRUE))
     }
-    if (class(xnull) %in% c("factor", "character")) {
+    if (inherits(xnull, c("factor", "character"))) {
       if (all(evdata %in% xnull)) {return("inside")} else {return("outside")}
     }
   })
@@ -130,7 +130,7 @@ projectModel <- function(model, transformations, data, clamping = FALSE,
   })
   newdata <- as.data.frame(do.call(cbind, dvdatani))
   names(newdata) <- dvnamesni
-  type <- if (class(model)[1] == "iwlr") {
+  type <- if (inherits(model, "MIAmaxent_iwlr")) {
     ifelse(raw == TRUE, "raw", "PRO")
   } else { "response" }
 
@@ -144,7 +144,7 @@ projectModel <- function(model, transformations, data, clamping = FALSE,
     preds <- stats::predict(model, newdata, type)
   }
 
-  if (class(model)[1] == "iwlr" && rescale == TRUE) {
+  if (inherits(model, "MIAmaxent_iwlr") && rescale == TRUE) {
     if (raw == TRUE) { preds <- preds/sum(preds, na.rm = TRUE)
     } else { preds <- (preds/sum(preds, na.rm = TRUE)) * sum(!is.na(preds)) }
   }

@@ -9,9 +9,9 @@
 #' If plotted, the point along the ROC curve where the discrimination threshold
 #' is PRO = 1, is shown for reference.
 #'
-#' @param model The model to be projected, represented by an object of class
-#'   'glm'. This may be the object returned by \code{\link{chooseModel}}, or the
-#'   'selectedmodel' returned by \code{\link{selectEV}}.
+#' @param model The model to be projected. This may be the object returned by
+#'   \code{\link{chooseModel}}, or the 'selectedmodel' returned by
+#'   \code{\link{selectEV}}.
 #' @param transformations Transformation functions used to create the derived
 #'   variables in the model. I.e. the 'transformations' returned by
 #'   \code{\link{deriveVars}}. Equivalently, the full file pathway of the
@@ -84,7 +84,7 @@ AUC cannot be calculated.", call. = FALSE)
   wdth <- diff(fpr)
   AUC <- sum(((hgtl + hgtr)/2) * wdth)
 
-  if (class(model)[1] == "iwlr") {
+  if (inherits(model, "MIAmaxent_iwlr")) {
     PROpt <- TRUE
     PRO1fp <- sum(cont[as.numeric(rownames(cont)) > 1, "0"])
     PRO1tp <- sum(cont[as.numeric(rownames(cont)) > 1, "1"])

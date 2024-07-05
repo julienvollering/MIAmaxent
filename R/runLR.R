@@ -30,6 +30,6 @@
     model$formula.narm <- model$formula
     model$betas <- model$coefficients[-1]
   }
-  class(model) <- c("lr", class(model))
+  class(model) <- c("MIAmaxent_lr", class(model))
   return(model)
 }

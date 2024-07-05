@@ -48,7 +48,7 @@
   raw <- rr / sum(rr)
   model$entropy <- -sum(raw * log(raw), na.rm = TRUE)
   model$alpha <- -log(sum(rr))
-  class(model) <- c("iwlr", class(model))
+  class(model) <- c("MIAmaxent_iwlr", class(model))
   return(model)
   # Code above this line was modified from the MIT-licensed 'maxnet' library
   # Copyright (c) 2016, Steven Phillips
@@ -60,7 +60,7 @@
 #'
 #' Returns model predictions for new data in "PRO" or "raw" format.
 #'
-#' @param object Model of class "iwlr"
+#' @param object Model of class "MIAmaxent_iwlr"
 #' @param newdata Data frame containing variables with which to predict
 #' @param type Type of model output: "PRO" or "raw"
 #'
@@ -68,9 +68,9 @@
 #'
 #' @export
 #'
-#' @method predict iwlr
+#' @method predict MIAmaxent_iwlr
 
-predict.iwlr <- function(object, newdata, type="PRO", ...) {
+predict.MIAmaxent_iwlr <- function(object, newdata, type="PRO", ...) {
   mmformula <- stats::update.formula(object$formula.narm, NULL ~ . - 1)
   newdata <- stats::model.matrix(mmformula, newdata)
   raw <- exp((newdata %*% object$betas) + object$alpha)
