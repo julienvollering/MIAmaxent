@@ -26,8 +26,8 @@ variables in the model. I.e. the 'transformations' returned by
 
 \item{data}{Data frame of all the explanatory variables (EVs) included in the
 model (see \code{\link{readData}}). Alternatively, an object of class
-'RasterStack' or 'RasterBrick' containing rasters for all EVs included in
-the model. Column or raster names must match EV names.}
+'SpatRaster' containing rasters for all EVs included in the model. Column
+or raster names must match EV names.}
 
 \item{clamping}{Logical. Do clamping \emph{sensu} Phillips et al. (2006).
 Default is \code{FALSE}.}
@@ -41,17 +41,16 @@ interpretation of output values with respect to reference values (e.g. PRO
 = 1). See details. Irrelevant for "LR"-type models.}
 
 \item{filename}{Full file pathway to write raster model predictions if
-\code{data} is an object of class 'RasterStack' or 'RasterBrick'. File
-format is inferred from the filename extension as in
-\code{raster::writeRaster}.}
+\code{data} is an object of class 'SpatRaster'. File format is inferred
+from the filename extension as in \code{terra::writeRaster}.}
 }
 \value{
 List of 2: \enumerate{ \item output: A data frame with the model
-  output in column 1 and the corresponding explanatory data in subsequent
-  columns, or a raster containing predictions if \code{data} is a RasterStack
-  or RasterBrick. \item ranges: A list showing the range of \code{data}
-  compared to the training data, on a 0-1 scale.} If \code{data} is a
-  RasterStack or RasterBrick, the output is also plotted.
+ output in column 1 and the corresponding explanatory data in subsequent
+ columns, or a raster containing predictions if \code{data} is a SpatRaster.
+ \item ranges: A list showing the range of \code{data} compared to the
+ training data, on a 0-1 scale.} If \code{data} is a SpatRaster, the output
+ is also plotted.
 }
 \description{
 \code{projectModel} calculates model predictions for any points where values
@@ -79,11 +78,12 @@ scale which is dependent on the size of either the training data extent
 \examples{
 \dontrun{
 # From vignette:
-EVstack <- raster::stack(c(
-  list.files(system.file("extdata", "EV_continuous", package="MIAmaxent"),
-             full.names=TRUE),
-  list.files(system.file("extdata", "EV_categorical", package="MIAmaxent"),
-             full.names=TRUE)))
+EVfiles <- c(list.files(system.file("extdata", "EV_continuous", package="MIAmaxent"),
+                        full.names=TRUE),
+             list.files(system.file("extdata", "EV_categorical", package="MIAmaxent"),
+                        full.names=TRUE))
+EVstack <- rast(EVfiles)
+names(EVstack) <- gsub(".asc", "", basename(EVfiles))
 grasslandPreds <- projectModel(model = grasslandmodel,
                                transformations = grasslandDVs$transformations,
                                data = EVstack)
@@ -93,14 +93,14 @@ grasslandPreds
 }
 \references{
 Halvorsen, R. (2013) A strict maximum likelihood explanation of
-  MaxEnt, and some implications for distribution modelling. Sommerfeltia, 36,
-  1-132.
+ MaxEnt, and some implications for distribution modelling. Sommerfeltia, 36,
+ 1-132.
 
 Halvorsen, R., Mazzoni, S., Bryn, A. & Bakkestuen, V. (2015)
-  Opportunities for improved distribution modelling practice via a strict
-  maximum likelihood interpretation of MaxEnt. Ecography, 38, 172-183.
+ Opportunities for improved distribution modelling practice via a strict
+ maximum likelihood interpretation of MaxEnt. Ecography, 38, 172-183.
 
 Phillips, S.J., Anderson, R.P. & Schapire, R.E. (2006) Maximum
-  entropy modeling of species geographic distributions. Ecological Modelling,
-  190, 231-259.
+ entropy modeling of species geographic distributions. Ecological Modelling,
+ 190, 231-259.
 }

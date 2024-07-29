@@ -30,8 +30,8 @@
 #'   'transformations.Rdata' file saved as a result of \code{\link{deriveVars}}.
 #' @param data Data frame of all the explanatory variables (EVs) included in the
 #'   model (see \code{\link{readData}}). Alternatively, an object of class
-#'   'RasterStack' or 'RasterBrick' containing rasters for all EVs included in
-#'   the model. Column or raster names must match EV names.
+#'   'SpatRaster' containing rasters for all EVs included in the model. Column
+#'   or raster names must match EV names.
 #' @param clamping Logical. Do clamping \emph{sensu} Phillips et al. (2006).
 #'   Default is \code{FALSE}.
 #' @param raw Logical. Return raw maxent output instead of probability ratio
@@ -41,44 +41,44 @@
 #'   interpretation of output values with respect to reference values (e.g. PRO
 #'   = 1). See details. Irrelevant for "LR"-type models.
 #' @param filename Full file pathway to write raster model predictions if
-#'   \code{data} is an object of class 'RasterStack' or 'RasterBrick'. File
-#'   format is inferred from the filename extension as in
-#'   \code{raster::writeRaster}.
+#'   \code{data} is an object of class 'SpatRaster'. File format is inferred
+#'   from the filename extension as in \code{terra::writeRaster}.
 
 #'
-#' @return List of 2: \enumerate{ \item output: A data frame with the model
-#'   output in column 1 and the corresponding explanatory data in subsequent
-#'   columns, or a raster containing predictions if \code{data} is a RasterStack
-#'   or RasterBrick. \item ranges: A list showing the range of \code{data}
-#'   compared to the training data, on a 0-1 scale.} If \code{data} is a
-#'   RasterStack or RasterBrick, the output is also plotted.
+#'@return List of 2: \enumerate{ \item output: A data frame with the model
+#'  output in column 1 and the corresponding explanatory data in subsequent
+#'  columns, or a raster containing predictions if \code{data} is a SpatRaster.
+#'  \item ranges: A list showing the range of \code{data} compared to the
+#'  training data, on a 0-1 scale.} If \code{data} is a SpatRaster, the output
+#'  is also plotted.
 #'
 #'
-#' @references Halvorsen, R. (2013) A strict maximum likelihood explanation of
-#'   MaxEnt, and some implications for distribution modelling. Sommerfeltia, 36,
-#'   1-132.
-#' @references Halvorsen, R., Mazzoni, S., Bryn, A. & Bakkestuen, V. (2015)
-#'   Opportunities for improved distribution modelling practice via a strict
-#'   maximum likelihood interpretation of MaxEnt. Ecography, 38, 172-183.
-#' @references Phillips, S.J., Anderson, R.P. & Schapire, R.E. (2006) Maximum
-#'   entropy modeling of species geographic distributions. Ecological Modelling,
-#'   190, 231-259.
+#'@references Halvorsen, R. (2013) A strict maximum likelihood explanation of
+#'  MaxEnt, and some implications for distribution modelling. Sommerfeltia, 36,
+#'  1-132.
+#'@references Halvorsen, R., Mazzoni, S., Bryn, A. & Bakkestuen, V. (2015)
+#'  Opportunities for improved distribution modelling practice via a strict
+#'  maximum likelihood interpretation of MaxEnt. Ecography, 38, 172-183.
+#'@references Phillips, S.J., Anderson, R.P. & Schapire, R.E. (2006) Maximum
+#'  entropy modeling of species geographic distributions. Ecological Modelling,
+#'  190, 231-259.
 #'
 #' @examples
 #' \dontrun{
 #' # From vignette:
-#' EVstack <- raster::stack(c(
-#'   list.files(system.file("extdata", "EV_continuous", package="MIAmaxent"),
-#'              full.names=TRUE),
-#'   list.files(system.file("extdata", "EV_categorical", package="MIAmaxent"),
-#'              full.names=TRUE)))
+#' EVfiles <- c(list.files(system.file("extdata", "EV_continuous", package="MIAmaxent"),
+#'                         full.names=TRUE),
+#'              list.files(system.file("extdata", "EV_categorical", package="MIAmaxent"),
+#'                         full.names=TRUE))
+#' EVstack <- rast(EVfiles)
+#' names(EVstack) <- gsub(".asc", "", basename(EVfiles))
 #' grasslandPreds <- projectModel(model = grasslandmodel,
 #'                                transformations = grasslandDVs$transformations,
 #'                                data = EVstack)
 #' grasslandPreds
 #' }
 #'
-#' @export
+#'@export
 
 
 projectModel <- function(model, transformations, data, clamping = FALSE,
@@ -88,11 +88,11 @@ projectModel <- function(model, transformations, data, clamping = FALSE,
   evnames <- unique(sub("_.*", "", dvnamesni))
 
   map <- FALSE
-  if (inherits(data, c("RasterStack", "RasterBrick"))) {
+  if (inherits(data, "SpatRaster")) {
     map <- TRUE
     names(data) <- make.names(names(data), allow_ = FALSE)
     evstack <- data[[evnames]]
-    data <- raster::as.data.frame(evstack, na.rm = TRUE)
+    data <- terra::as.data.frame(evstack, na.rm = TRUE)
     cells <- as.numeric(row.names(data))
   }
 
@@ -153,15 +153,15 @@ projectModel <- function(model, transformations, data, clamping = FALSE,
   colnames(Output)[1] <- type
 
   if (map == TRUE) {
-    values <- rep(NA, raster::ncell(evstack))
+    values <- rep(NA, terra::ncell(evstack))
     values[cells] <- Output[,1]
     outraster <- evstack[[1]]
-    outraster <- raster::setValues(outraster, values)
+    outraster <- terra::setValues(outraster, values)
     names(outraster) <- type
     if (!is.null(filename)) {
-      raster::writeRaster(outraster, filename)
+      terra::writeRaster(outraster, filename)
     }
-    raster::plot(outraster)
+    terra::plot(outraster)
     return(list(output = outraster, ranges = Ranges))
   } else {
     return(list(output = Output, ranges = Ranges))

@@ -36,11 +36,11 @@ The data used in this vignette have been used to model the distribution of semi-
 
 > The data used in this vignette are included in the package as an example data set, so the results shown here can be directly replicated by executing the code as provided.  
 
-Before beginning the modeling exercise, it may be useful to see what some of the data look like in their geographical representation. We can use the `raster` package to plot the 1059 recorded presences on top of one of the environmental variable rasters:
+Before beginning the modeling exercise, it may be useful to see what some of the data look like in their geographical representation. We can use the `terra` package to plot the 1059 recorded presences on top of one of the environmental variable rasters:
 ```{r, fig.show='hold', fig.width=5.5, fig.height=5.5}
-library(raster)
-EV1 <- raster(list.files(system.file("extdata", "EV_continuous", 
-                                     package="MIAmaxent"), full.names=TRUE)[1])
+library(terra)
+EV1 <- rast(list.files(system.file("extdata", "EV_continuous", 
+                                   package="MIAmaxent"), full.names=TRUE)[1])
 PO <- read.csv(system.file("extdata", "occurrence_PO.csv", package="MIAmaxent"))
 plot(EV1, legend=FALSE)
 points(PO$POINT_X, PO$POINT_Y, pch = 20, cex = 0.5, col = 'blue')
@@ -349,13 +349,13 @@ The `projectModel()` function can be used to obtain model predictions for any ki
 
 > A value of PRO = 1 can be interpreted as the relative probability of presence of a location randomly drawn from the training data. Put another way, values above 1 represent higher-than-average probability of presence, and vice versa.
 
-Here, we obtain model output across the extent of the study area as represented by the training data. When we enter the `data` argument as a `RasterStack` or `RasterBrick` object, `projectModel()` automatically shows model predictions in geographical space. Note that the names of the raster layers must match names of EVs in the model.
+Here, we obtain model output across the extent of the study area as represented by the training data. When we enter the `data` argument as a `SpatRaster` object, `projectModel()` automatically shows model predictions in geographical space. Note that the names of the raster layers must match names of EVs in the model.
 ```{r fig.show='hold', fig.width=5.5, fig.height=5.5}
 EVfiles <- c(list.files(system.file("extdata", "EV_continuous", package="MIAmaxent"), 
              full.names=TRUE),
              list.files(system.file("extdata", "EV_categorical", package="MIAmaxent"), 
              full.names=TRUE))
-EVstack <- raster::stack(EVfiles)
+EVstack <- rast(EVfiles)
 names(EVstack) <- gsub(".asc", "", basename(EVfiles))
 grasslandPreds <- projectModel(model = grasslandmodel,
                                transformations = grasslandDVs$transformations,
@@ -367,7 +367,7 @@ It is often easier to visualize probability-ratio values on a log scale, so we p
 plot(log2(grasslandPreds$output + 1))
 ```
 
-Alternatively, if the `data` are supplied in a simple data frame, model predictions are appended to the `data` in column 1, and returned as list item `output`. In this case, the predictions can be mapped to geographical space manually, by including spatial coordinates in the `data` input to the `projectModel()`, and then using the `rasterize()` function in the `raster` package.
+Alternatively, if the `data` are supplied in a simple data frame, model predictions are appended to the `data` in column 1, and returned as list item `output`. In this case, the predictions can be mapped to geographical space manually, by including spatial coordinates in the `data` input to the `projectModel()`, and then using the `rasterize()` function in the `terra` package.
 
 Additionally, the `projectModel()` function automatically checks how the range of the input explanatory data compares to the range of the data used to train the model. This is important because if the range of the input data lies outside the range of the training data (i.e. the model is extrapolated), the predictions are less reliable. The range of continuous variables is reported on the training data scale, from 0 to 1, and the range of categorical variables is reported as "inside" if all categories are represented in the training data:
 ```{r}
@@ -407,8 +407,7 @@ presences <- grasslandPA[grasslandPA$RV==1, ]
 absences <- grasslandPA[grasslandPA$RV==0, ]
 points(presences$x, presences$y, pch = 20, cex = 0.5, col = 'red')
 points(absences$x, absences$y, pch = 20, cex = 0.5, col = 'blue')
-legend('topleft', c('presence', 'absence'), col = c('red', 'blue'), 
-       pch = c(20, 20))
+legend('top', c('presence', 'absence'), col = c('red', 'blue'), pch = c(20, 20))
 ```
 
 We can use these data to calculate testAUC for our distribution model:

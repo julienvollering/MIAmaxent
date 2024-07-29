@@ -105,23 +105,22 @@ readData <- function(occurrence, contEV = NULL, catEV = NULL, maxbkg = 10000,
     catfiles <- list.files(catEV, pattern = "\\.(asc|tif)$", full.names = TRUE,
                            ignore.case = TRUE)
   }
-  stack <- raster::stack(c(contfiles, catfiles))
+  stack <- terra::rast(c(contfiles, catfiles))
   names(stack) <- gsub("\\.(asc|tif)$", "", basename(c(contfiles, catfiles)),
                        ignore.case = TRUE)
 
   if (PA == FALSE) {
     if (any(is.na(occ[, 1]))) {
-      pres <- raster::extract(stack, occ[!is.na(occ[, 1]), 2:3], cellnumbers = TRUE)
-      bkg <- raster::extract(stack, occ[is.na(occ[, 1]), 2:3], cellnumbers = TRUE)
+      pres <- terra::extract(stack, occ[!is.na(occ[, 1]), 2:3], cells = TRUE, ID = FALSE)
+      bkg <- terra::extract(stack, occ[is.na(occ[, 1]), 2:3], cells = TRUE, ID = FALSE)
     } else {
-      pres <- raster::extract(stack, occ[, 2:3], cellnumbers = TRUE)
-      bkg <- raster::as.data.frame(stack, na.rm = TRUE)
-      bkg <- data.frame(cells = as.numeric(rownames(bkg)), bkg)
-      bkg <- bkg[!(bkg[, "cells"] %in% pres[, "cells"]), ]
+      pres <- terra::extract(stack, occ[, 2:3], cells = TRUE, ID = FALSE)
+      bkg <- terra::as.data.frame(stack, na.rm = TRUE, cells = TRUE)
+      bkg <- bkg[!(bkg[, "cell"] %in% pres[, "cell"]), ]
       if (nrow(bkg) > maxbkg) {bkg <- bkg[sample(nrow(bkg), maxbkg), ]}
     }
     presbkg <- rbind(pres, bkg)
-    xy <- raster::xyFromCell(stack, presbkg[, "cells"])
+    xy <- terra::xyFromCell(stack, presbkg[, "cell"])
     data <- data.frame("RV"=c(rep(1, nrow(pres)), rep(NA, nrow(bkg))), xy,
                        presbkg)
   }
@@ -129,10 +128,10 @@ readData <- function(occurrence, contEV = NULL, catEV = NULL, maxbkg = 10000,
   if (PA == TRUE) {
     presabs <- occ[!is.na(occ[, 1]), ]
     absindex <- presabs[, 1] == 0
-    pres <- raster::extract(stack, presabs[!absindex, 2:3], cellnumbers = TRUE)
-    abs <- raster::extract(stack, presabs[absindex, 2:3], cellnumbers = TRUE)
+    pres <- terra::extract(stack, presabs[!absindex, 2:3], cells = TRUE, ID = FALSE)
+    abs <- terra::extract(stack, presabs[absindex, 2:3], cells = TRUE, ID = FALSE)
     presabs <- rbind(pres, abs)
-    xy <- raster::xyFromCell(stack, presabs[, "cells"])
+    xy <- terra::xyFromCell(stack, presabs[, "cell"])
     data <- data.frame("RV"=c(rep(1, nrow(pres)), rep(0, nrow(abs))), xy,
                        presabs)
   }
@@ -141,9 +140,9 @@ readData <- function(occurrence, contEV = NULL, catEV = NULL, maxbkg = 10000,
     data <- data[, -c(2:3)]
   }
   if (duplicates == FALSE) {
-    data <- data[!duplicated(data[, "cells"]), ]
+    data <- data[!duplicated(data[, "cell"]), ]
   }
-  data$cells <- NULL
+  data$cell <- NULL
   if (!is.null(catEV)) {
     catindex <- seq(ncol(data) - length(catfiles) + 1, ncol(data))
     data[catindex] <- lapply(data[catindex], function(x) as.factor(x))
