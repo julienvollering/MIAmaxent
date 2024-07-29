@@ -6,3 +6,4 @@
 ^cran-comments\.md$
 ^data-raw$
 ^informaltesting\.R$
+^revdep$
