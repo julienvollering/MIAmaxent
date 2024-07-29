@@ -1,21 +1,11 @@
-citHeader("To cite MIAmaxent in publications use:")
-
-citEntry(
-  entry    = "Article",
+bibentry(
+  bibtype  = "Article",
   title    = "The MIAmaxent R package: Variable transformation and model selection for species distribution models",
-  author   = personList(as.person("Julien Vollering"),
-                        as.person("Rune Halvorsen"),
-                        as.person("Sabrina Mazzoni")),
+  author   = "Julien Vollering, Rune Halvorsen, Sabrina Mazzoni",
   journal  = "Ecology and Evolution",
   year     = "2019",
   volume   = "9",
   number   = "21",
   pages    = "12051--12068",
-  doi      = "10.1002/ece3.5654",
-  textVersion = paste("Julien Vollering, Rune Halvorsen, Sabrina Mazzoni (2019).",
-        "The MIAmaxent R package: Variable transformation and model selection for species distribution models.",
-        "Ecology and Evolution, 9(21), 12051-12068.",
-        "DOI 10.1002/ece3.5654"
-
-  )
+  doi      = "10.1002/ece3.5654"
 )
