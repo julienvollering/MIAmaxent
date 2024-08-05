@@ -8,3 +8,4 @@
 ^informaltesting\.R$
 ^revdep$
 ^\.github$
+^CRAN-SUBMISSION$

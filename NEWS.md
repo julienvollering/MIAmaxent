@@ -1,3 +1,5 @@
+# MIAmaxent (development version)
+
 # MIAmaxent 1.3.0
 
 * Handling of NA values in forward stepwise selection (whether cause by unstable parameter estimates, or zero deviance explained)
