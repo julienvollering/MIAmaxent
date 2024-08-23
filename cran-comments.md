@@ -3,8 +3,7 @@
 ## Test environments
 * local windows 10 install, R 4.3.1
 * win-builder, R devel
-* Ubuntu 11.4, R-devel (via rhub)
-* macOS Ventura 13.6.7, R-devel (via rhub)
+* macOS Ventura 13.6.9, R-devel (via rhub)
 
 ## R CMD check results
 
