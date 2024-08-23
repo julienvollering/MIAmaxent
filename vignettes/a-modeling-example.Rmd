@@ -43,7 +43,7 @@ EV1 <- rast(list.files(system.file("extdata", "EV_continuous",
                                    package="MIAmaxent"), full.names=TRUE)[1])
 PO <- read.csv(system.file("extdata", "occurrence_PO.csv", package="MIAmaxent"))
 plot(EV1, legend=FALSE)
-points(PO$POINT_X, PO$POINT_Y, pch = 20, cex = 0.5, col = 'blue')
+points(PO$POINT_X, PO$POINT_Y, pch = 20, cex = 0.5, col = 'red')
 ```
 
 ### readData()
@@ -328,7 +328,7 @@ plotResp2(grasslandmodel, grasslandDVs$transformations, "prbygall")
 
 ### calculateRVA()
 
-As a measure of variable contribution, we can calculate the Fraction of Total Variation Accounted for (RVA) by each variable (Halvorsen et al., 2015). Here with our chosen model:
+As a measure of variable contribution, we can calculate the Relative Variation Accounted for (RVA) by each variable (Halvorsen et al., 2015). Here with our chosen model:
 
 ```{r}
 calculateRVA(grasslandEVselect, formula("~ prbygall + geoberg + lcucor1 + 
@@ -356,7 +356,6 @@ EVfiles <- c(list.files(system.file("extdata", "EV_continuous", package="MIAmaxe
              list.files(system.file("extdata", "EV_categorical", package="MIAmaxent"), 
              full.names=TRUE))
 EVstack <- rast(EVfiles)
-names(EVstack) <- gsub(".asc", "", basename(EVfiles))
 grasslandPreds <- projectModel(model = grasslandmodel,
                                transformations = grasslandDVs$transformations,
                                data = EVstack)
@@ -406,8 +405,8 @@ plot(log2(grasslandPreds$output + 1))
 presences <- grasslandPA[grasslandPA$RV==1, ]
 absences <- grasslandPA[grasslandPA$RV==0, ]
 points(presences$x, presences$y, pch = 20, cex = 0.5, col = 'red')
-points(absences$x, absences$y, pch = 20, cex = 0.5, col = 'blue')
-legend('top', c('presence', 'absence'), col = c('red', 'blue'), pch = c(20, 20))
+points(absences$x, absences$y, pch = 20, cex = 0.5, col = 'grey')
+legend('top', c('presence', 'absence'), col = c('red', 'grey'), pch = c(20, 20))
 ```
 
 We can use these data to calculate testAUC for our distribution model:
