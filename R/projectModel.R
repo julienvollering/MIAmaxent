@@ -88,6 +88,9 @@ projectModel <- function(model, transformations, data, clamping = FALSE,
   evnames <- unique(sub("_.*", "", dvnamesni))
 
   map <- FALSE
+  if (inherits(data, c("RasterLayer","RasterStack","RasterBrick"))) {
+    data <- terra::rast(data)
+  }
   if (inherits(data, "SpatRaster")) {
     map <- TRUE
     names(data) <- make.names(names(data), allow_ = FALSE)

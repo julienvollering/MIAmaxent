@@ -1,5 +1,7 @@
 # MIAmaxent (development version)
 
+* Allow `raster`'s Raster*-classes to be passed to projectModel(), for backward compatibility
+
 # MIAmaxent 1.3.0
 
 * Handling of NA values in forward stepwise selection (whether cause by unstable parameter estimates, or zero deviance explained)
