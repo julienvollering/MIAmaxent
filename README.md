@@ -2,9 +2,13 @@
 
 # MIAmaxent
 
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/MIAmaxent)](https://cran.r-project.org/package=MIAmaxent)
+<!-- badges: start -->
+
+[![CRAN
+status](https://www.r-pkg.org/badges/version/MIAmaxent)](https://CRAN.R-project.org/package=MIAmaxent)
 [![CRAN download
 rate](https://cranlogs.r-pkg.org/badges/MIAmaxent)](https://cran.r-project.org/package=MIAmaxent)
+<!-- badges: end -->
 
 Read our [open-access paper](https://doi.org/10.1002/ece3.5654)
 introducing MIAmaxent in *Ecology and Evolution*.
