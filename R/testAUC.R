@@ -64,6 +64,15 @@ Be aware of implications for the interpretation of the AUC value.", call. = FALS
   }
 
   data <- stats::na.omit(data)
+
+  # Check that there are exactly two levels in the response variable for AUC calculation
+  response_levels <- unique(data[, 1])
+  response_levels <- response_levels[!is.na(response_levels)]
+  if (length(response_levels) != 2) {
+    stop("AUC cannot be calculated:\n response variable must have two levels, but ",
+         length(response_levels), " level(s) found after removing incomplete rows.", call. = FALSE)
+  }
+
   test <- data[, 1]
   PRO <- projectModel(model, transformations, data)[[1]][, 1]
   if (stats::var(PRO, na.rm = TRUE) == 0) {
