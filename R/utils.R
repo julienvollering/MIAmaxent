@@ -237,19 +237,6 @@ if(getRversion() >= "2.15.1") {
 }
 
 
-
-#' Reminders when using devtools::release
-#'
-#' @keywords internal
-
-release_questions <- function() {
-  c(
-    "Have you reknitted the static vignette and copied the html file into /vignettes?"
-  )
-}
-
-
-
 #' skewness transformation using constant c
 #'
 #' @param x Vector of data.
