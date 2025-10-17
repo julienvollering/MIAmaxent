@@ -1,0 +1,601 @@
+---
+title: "Species Distribution Modeling with NCEAS Data"
+author: "Julien Vollering"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+bibliography: references.bib
+vignette: >
+  %\VignetteIndexEntry{Species Distribution Modeling with NCEAS Data}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+```{r setup, include = FALSE}
+# Check if required packages are available
+has_suggested <- requireNamespace("sf", quietly = TRUE) &&
+  requireNamespace("disdat", quietly = TRUE) &&
+  requireNamespace("purrr", quietly = TRUE) &&
+  requireNamespace("tidyr", quietly = TRUE) &&
+  requireNamespace("tibble", quietly = TRUE) &&
+  requireNamespace("ggplot2", quietly = TRUE)
+
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  out.width = "100%",
+  eval = has_suggested
+)
+```
+
+```{r check-packages, echo = FALSE, results = "asis", eval = TRUE}
+if (!has_suggested) {
+  cat("**Note:** This vignette requires the following packages to run: `sf`, `disdat`, `purrr`, `tidyr`, `tibble`, and `ggplot2`. Please install them to view the full vignette output.\n\n")
+  cat("```r\n")
+  cat('install.packages(c("sf", "disdat", "purrr", "tidyr", "tibble", "ggplot2"))\n')
+  cat("```\n\n")
+}
+```
+
+## Introduction
+
+This vignette provides a practical introduction to species distribution modeling using the `MIAmaxent` package. Primarily, it demonstrates the main functionality of the package. Secondarily, it examines some central issues around model selection and evaluation. It is designed to be suitable as learning exercise, also for those with limited experience in R.
+
+We will model the distribution of a tree species in Switzerland using occurrence data and environmental predictors from the `disdat` package. These data are part of a benchmark dataset for species distribution modeling, which was compiled by the National Center for Ecological Analysis and Synthesis (NCEAS) and first used in @elithNovelMethodsImprove2006. The full dataset is described in detail in @elithPresenceonlyPresenceabsenceData2020.
+
+## Setup Swiss tree data
+
+First, load the required packages:
+
+```{r libraries, message=FALSE}
+library(dplyr)
+library(purrr)
+library(tidyr)
+library(tibble)
+library(ggplot2)
+library(terra)
+library(sf)
+library(disdat)
+library(MIAmaxent)
+```
+
+The `disdat` package contains distribution data for 30 tree species in Switzerland, along with 13 environmental variables. We'll work with one species, but you can easily switch to another.
+
+```{r load-data}
+# Choose a species (change this to model a different species!)
+selected_species <- "swi01" # `disdat` has anonymized species codes: swi01 to swi30
+
+# Define predictor variables
+predictors <- c(
+  "bcc", "calc", "ccc", "ddeg", "nutri", "pday",
+  "precyy", "sfroyy", "slope", "sradyy", "swb", "tavecc", "topo"
+)
+
+# Extract presence-only (PO) data for the selected species
+swi_po <- disPo("SWI") # function from `disdat` package
+po_records <- swi_po[swi_po$spid == selected_species, ]
+cat("Number of presence records:", nrow(po_records), "\n")
+
+# Background data (10,000 random locations)
+background <- disBg("SWI") # function from `disdat` package
+
+# Combine presence and background into training data frame
+# RV = 1 for presences, NA for background
+train_data <- rbind(
+  data.frame(RV = 1, po_records[, predictors]),
+  data.frame(RV = NA, background[, predictors])
+)
+
+cat("Training presences:", sum(train_data$RV == 1, na.rm = TRUE), "\n")
+```
+
+Let's briefly plot the coordinates of the presence records to get a sense of the map.
+
+```{r, plot-po, fig.height=4}
+studyarea <- disBorder("SWI")
+po_sf <- st_as_sf(po_records, coords = c("x", "y"), crs = 21781)
+ggplot() +
+  geom_sf(data = studyarea, fill = "lightgrey") +
+  geom_sf(data = po_sf, color = "blue", size = 0.5) +
+  labs(
+    title = paste("Presence records for species", selected_species),
+    x = "Easting (m)", y = "Northing (m)"
+  ) +
+  theme_minimal()
+```
+
+The data include 13 environmental predictors:
+
+| Variable | Description | Type | Units |
+|----------|-------------|------|-------|
+| bcc | Broadleaved continuous cover | Continuous | % cover |
+| calc | Bedrock strictly calcareous | Categorical | 0/1 |
+| ccc | Coniferous continuous cover | Continuous | % cover |
+| ddeg | Growing degree-days above 0°C | Continuous | °C·days |
+| nutri | Soil nutrients index | Continuous | D mval/cm² |
+| pday | Days with rainfall > 1 mm | Continuous | days |
+| precyy | Average yearly precipitation sum | Continuous | mm |
+| sfroyy | Summer frost frequency | Continuous | days |
+| slope | Slope | Continuous | degrees ×10 |
+| sradyy | Potential yearly global radiation | Continuous | kJ·m⁻²·day⁻¹ |
+| swb | Site water balance | Continuous | mm |
+| tavecc | Average temperature of coldest month | Continuous | °C |
+| topo | Topographic position | Continuous | dimensionless |
+
+```{r}
+# Rename columns to more informative names
+col_name_map <- c(
+  RV = "RV",
+  bcc = "broadleaf.cover",
+  calc = "bedrock.calcareous",
+  ccc = "conifer.cover",
+  ddeg = "growing.degree.days",
+  nutri = "soil.nutrients",
+  pday = "precip.days",
+  precyy = "annual.precip",
+  sfroyy = "summer.frost.freq",
+  slope = "slope",
+  sradyy = "solar.radiation",
+  swb = "water.balance",
+  tavecc = "temp.coldest.month",
+  topo = "topographic.position"
+)
+names(train_data) <- col_name_map[names(train_data)]
+
+# Convert the categorical variable to factor
+train_data$bedrock.calcareous <- as.factor(train_data$bedrock.calcareous)
+```
+
+## Examine occurrence--environment relationships
+
+Before building a model, we should explore how environmental variables relate to species occurrence. The `plotFOP()` function shows Frequency of Observed Presence across the range of each variable. For example:
+
+```{r single-fop, fig.height=4}
+plotFOP(train_data, "temp.coldest.month")
+```
+
+The points show how frequently presences are observed at different values of the variable, and the red line is a smoothed trend across these. The grey distribution shows the density of values in the training data.
+
+Let's examine all continuous explanatory variables. We'll extract the FOP data and create a faceted plot to compare them side-by-side. The code is not shown but it gets FOP data for each variable and plots these using `ggplot2` rather than base `r` (the default).
+
+```{r fop-data-extraction, echo=FALSE, fig.show='hide'}
+# Identify continuous variables (exclude RV and categorical variables)
+continuous_vars <- setdiff(names(train_data), c("RV", "bedrock.calcareous"))
+
+# Extract FOP data for all continuous variables
+fop_results <- map(continuous_vars, \(x) plotFOP(train_data, x))
+names(fop_results) <- continuous_vars
+```
+
+```{r fop-combine-data, echo=FALSE}
+# Combine FOP data into a single data frame
+fop_combined <- map2_dfr(
+  fop_results, continuous_vars,
+  \(x, y) mutate(x$FOPdata, variable = y)
+)
+
+# Prepare raw training data for density plots
+train_data_long <- train_data %>%
+  select(all_of(continuous_vars)) %>%
+  pivot_longer(everything(), names_to = "variable", values_to = "value")
+```
+
+```{r fop-faceted-plot, fig.height=10, echo=FALSE}
+# Create a faceted plot to compare FOP across all continuous variables
+ggplot() +
+  # Grey density showing data distribution (scaled to fit on same axis)
+  geom_density(
+    data = train_data_long, aes(x = value, y = after_stat(scaled)),
+    fill = "grey90", color = NA
+  ) +
+  # FOP points and loess line
+  geom_point(data = fop_combined, aes(x = intEV, y = intRV), size = 1.5) +
+  geom_line(data = fop_combined, aes(x = intEV, y = loess), color = "red") +
+  facet_wrap(~variable, scales = "free_x", ncol = 3) +
+  labs(
+    x = "Environmental variable value",
+    y = "Frequency of Observed Presence (FOP)"
+  ) +
+  theme_bw() +
+  theme(strip.text = element_text(size = 8))
+```
+
+By using a *shared Y-axis*, we can more easily compare the strength of each variable's relationship with species occurrence. Variables with larger FOP ranges (along the Y-axis) typically have greater explanatory power.
+
+> **Exercise:** Which environmental variables appear most strongly related to the species' occurrence? How would you describe the species' relationship to this variable in ecological terms?
+
+## Transform and select environmental variables
+
+### Transform to derived variables
+
+To model different types of occurrence--environment relationships, we transform the original, explanatory variables (EVs) into "derived variables" (DVs). This allows us to fit various linear, unimodal, and step-like responses.
+
+```{r derive-vars}
+# Create derived variables using multiple transformation types
+# L = Linear, M = Monotonic, D = Deviation (unimodal),
+# HF = Forward hinge, HR = Reverse hinge, T = Threshold
+train_DVs <- deriveVars(train_data,
+  transformtype = c("L", "M", "D", "HF", "HR", "T"),
+  allsplines = TRUE,
+  quiet = TRUE
+)
+```
+
+```{r examine-dvs}
+# Example: some of the DVs created for temperature
+head(names(train_DVs$dvdata$temp.coldest.month))
+```
+
+DV names indicate the transformation type. For example, `temp.coldest.month_D05` is a deviation transformation (square-root deviation from optimum), while `temp.coldest.month_HF1*` is a reverse hinge transformation (with knot at first position).
+
+With derived variables created, we can proceed to variable selection, where we choose which DVs to include in the final model. Variable selection in MIAmaxent follows a forward stepwise procedure, where models with additional variables are compared to simpler models. The selection process is broken down into two stages.
+
+### Selection stage 1: Select DVs for each EV
+
+```{r select-dvs}
+# Select the best DVs for each individual EV
+train_DV_select <- selectDVforEV(train_DVs$dvdata,
+  alpha = 0.001,
+  quiet = TRUE
+)
+```
+
+```{r examine-selected-dvs}
+# Example: DVs selected for temperature
+names(train_DV_select$dvdata$temp.coldest.month)
+```
+
+The `alpha = 0.001` parameter sets a threshold: only DVs explaining significant variation at this level are retained.
+
+### Selection stage 2: Select EVs for the final model
+
+```{r select-evs}
+# Select which EVs (represented by their best DVs) to include
+train_model <- selectEV(train_DV_select$dvdata,
+  alpha = 0.001,
+  interaction = FALSE,
+  quiet = TRUE
+)
+
+# View the selection trail, only the top model from each round
+selection_trail <- train_model$selection[!duplicated(train_model$selection$round), ]
+knitr::kable(selection_trail, digits = c(0, 0, 0, 3, 1, 0, 3)) # Print the data.frame as a table
+```
+
+In the selection trail, **variables** indicates which explanatory variables are represented in the model while **m** indicates number of derived variables. **Dsq** is the fraction of deviance explained [0,1].
+
+```{r, final-model}
+# View the final model
+train_model$selectedmodel$formula
+```
+
+> **Exercise:** Compare the selection trail to the formula of the selected model. Do you understand how they correspond?
+
+## Explore the model with response curves
+
+Response curves show how the model predicts species occurrence across the range of each variable (holding others constant).
+
+```{r response-curves, fig.height=4}
+# Get the most important variable (first selected)
+top_EV <- train_model$selection$variables[1]
+
+# Plot response curve for the most important variable
+plotResp(
+  train_model$selectedmodel,
+  train_DVs$transformations,
+  top_EV
+)
+```
+
+Compare the above response curve with the FOP plot to see how the model captures the observed pattern:
+
+```{r compare-fop-response, fig.show='hold', fig.height=4}
+plotFOP(train_data, top_EV)
+```
+
+> **Exercise:** Create response curves for the other variables in your model. Compare the shapes of the response curves to the formula of the model. Do you see how the transformations correspond to the shapes?
+
+```{r all-responses, include=FALSE}
+evs <- (train_model$selectedmodel$coefficients)[-1] |>
+  names() |>
+  sub("_.*$", "", x = _) |>
+  unique()
+for (ev in evs[-1]) {
+  plotResp(
+    train_model$selectedmodel,
+    train_DVs$transformations,
+    ev
+  )
+}
+train_model$selectedmodel$formula
+```
+
+## Evaluate the model with AUC
+
+To evaluate how well the model performs, we will use an independent validation set (presence-absence data).
+
+```{r load-data-pa}
+# Extract presence-absence (PA) data
+swi_pa <- disPa("SWI") # function from `disdat` package
+
+# Merge with environmental data by location
+swi_env <- disEnv("SWI") # function from `disdat` package
+pa_merged <- merge(swi_pa, swi_env)
+
+# Create validation data frame with RV and environmental variables (parallel to train_data)
+validation_data <- data.frame(
+  RV = pa_merged[, selected_species],
+  pa_merged[, predictors]
+)
+
+# Rename columns to match training data
+names(validation_data) <- col_name_map[names(validation_data)]
+
+# Convert the categorical variable to factor
+validation_data$bedrock.calcareous <- as.factor(validation_data$bedrock.calcareous)
+
+cat("Validation presences:", sum(validation_data$RV == 1), "\n")
+cat("Validation absences:", sum(validation_data$RV == 0), "\n")
+```
+
+```{r plot-pa, fig.height=4}
+pa_sf <- st_as_sf(swi_pa, coords = c("x", "y"), crs = 21781)
+# Convert to factor for discrete colors (presence/absence)
+pa_sf[[selected_species]] <- as.factor(pa_sf[[selected_species]])
+ggplot() +
+  geom_sf(data = studyarea, fill = "lightgrey") +
+  geom_sf(data = pa_sf, aes(color = .data[[selected_species]]), size = 0.5) +
+  scale_color_manual(
+    values = c("0" = "red", "1" = "blue"),
+    labels = c("0" = "Absence", "1" = "Presence"),
+    name = "Record type"
+  ) +
+  labs(
+    title = paste("Presence-absence records for species", selected_species),
+    x = "Easting (m)", y = "Northing (m)"
+  ) +
+  theme_minimal()
+```
+
+Using the independent validation set (presence-absence data), we will calculate a commonly used discrimination metric: AUC (Area Under the Curve of the Receiver Operating Characteristic). AUC measures how well the model is able to separate presences and absences. Values typically range from 0.5 (no better than random) to 1.0 (perfect discrimination).
+
+```{r validation-auc, fig.height=4}
+# Calculate validation AUC
+auc_result <- testAUC(
+  model = train_model$selectedmodel,
+  transformations = train_DVs$transformations,
+  data = validation_data
+)
+```
+
+The ROC plot shows false positive rate vs. true positive rate at different thresholds --- low thresholds in the upper right corner, and high thresholds in the lower left corner.
+
+> **Exercise:** How does your model perform? If it is important that the model identifies most presences (high sensitivity), would you choose a high or low threshold? What are the trade-offs?
+
+```{r reconstruct-spatial, include=FALSE}
+# To create spatial predictions directly, we need raster data
+# Here we reconstruct the (incomplete) raster from coordinates, and metadata instead
+
+# Create projection data  (similar to validation data but with coordinates)
+proj_data <- data.frame(
+  x = pa_merged$x,
+  y = pa_merged$y,
+  pa_merged[, predictors]
+)
+
+# Rename columns to match training data
+col_name_map <- c(
+  x = "x",
+  y = "y",
+  col_name_map
+)
+names(proj_data) <- col_name_map[names(proj_data)]
+
+# Convert the categorical variable to factor
+proj_data$bedrock.calcareous <- as.factor(proj_data$bedrock.calcareous)
+
+# SWI
+# Prepared by Niklaus E. Zimmermann and Antoine Guisan
+# 13 variables:  see SWI\01_metadata_SWI_environment.csv
+# Coordinate reference system: Transverse, spheroid Bessel (note all data has had a constant shift applied to it)
+# EPSG:21781
+# Units: meters
+# Raster cell size: 100m
+
+# Create a raster to fill in with predictions
+# Here we assume env_data has columns 'x' and 'y' for coordinates
+coordinates <- proj_data[, c("x", "y")]
+env_raster <- rast(
+  xmin = min(coordinates$x),
+  xmax = max(coordinates$x),
+  ymin = min(coordinates$y),
+  ymax = max(coordinates$y),
+  resolution = 100,
+  crs = "EPSG:21781"
+)
+
+# Create a simple prediction map using the environmental data
+predictions <- projectModel(
+  model = train_model$selectedmodel,
+  transformations = train_DVs$transformations,
+  data = proj_data
+)
+
+# Rasterize the predictions
+pred_raster <- rasterize(as.matrix(coordinates), env_raster,
+  values = predictions$output$PRO
+)
+plot(pred_raster, main = "Predicted Probability of Occurrence")
+```
+
+## Summary and extended exercises
+
+**What we've learned:**
+
+1. How to explore species-environment relationships with FOP plots
+2. How to transform variables to fit different response shapes
+3. How to select variables using nested model comparison
+4. How to evaluate model performance with an independent validation set (presence-absence data)
+
+**Exercise:** Compare the FOP plots with the response curves for all variables in your final model. Where do you see good agreement? Where does the model seem to smooth over or (conversely) overfit occurrence patterns? Notice that the scale of the Y-axis in the response curves is unbounded [0,inf] --- with presence-only data, the model can only estimate relative suitability, not absolute probability of occurrence.
+
+```{r fop-resp, include=FALSE}
+evs <- (train_model$selectedmodel$coefficients)[-1] |>
+  names() |>
+  sub("_.*$", "", x = _) |>
+  unique()
+for (ev in evs) {
+  plotFOP(train_data, ev)
+  plotResp(
+    train_model$selectedmodel,
+    train_DVs$transformations,
+    ev
+  )
+}
+```
+
+**Exercise:** Use the `testAUC()` function again, but this time supply the presence-only data as the evaluation data. How does the AUC change compared to when it is calculated on the independent validation set (presence-absence data)? Why might this be?
+
+```{r auc-po, include=FALSE}
+testAUC(
+  model = train_model$selectedmodel,
+  transformations = train_DVs$transformations,
+  data = train_data
+)
+```
+
+**Exercise:** Experiment with the `alpha` parameter in `selectDVforEV()` and `selectEV()`. Try `alpha = 0.01` or `alpha = 0.0001`. How does this affect the number of variables selected and the model complexity?
+
+## Advanced: The bias-variance tradeoff in model selection
+
+This section explores a fundamental challenge in statistical modeling: balancing model complexity to optimize predictive performance [@hastieElementsStatisticalLearning2009]. Simple models (high bias) may fail to capture important patterns, while complex models (high variance) may fit noise in the training data and perform poorly on new data.
+
+In MIAmaxent, this tradeoff is controlled primarily be the `alpha` parameter. Higher alpha values permit more complex models with more variables, while lower values enforce simplicity. We'll systematically compare three alpha levels to understand their effects on model performance.
+
+**Terminology note.** In this section we use standard machine learning terminology for data division:
+
+- *Training set* is data used to fit the model
+- *Test set* is data held out from the same source for internal evaluation
+- *Validation set* is independent data for external evaluation
+
+### Set up the alpha comparison
+
+First, we'll create a data structure to organize our comparison:
+
+```{r bv-setup}
+# Create a tibble to store results for three alpha levels
+model_comparison <- tibble(
+  alpha = c(1e-1, 1e-3, 1e-9)
+)
+```
+
+We will split our presence-background data into training (70%) and test (30%) sets using random partitioning, so that we can evaluate internal performance. The model will not see the 30% test set during training, but this test set is nonetheless part of the same dataset and likely contains similar biases. The independent validation set (presence-absence data), on the other hand, provides a more stringent test of generalization.
+
+```{r bv-split}
+set.seed(123) # For reproducibility
+
+# Create indices for 70/30 split
+n_total <- nrow(train_data)
+train_idx <- sample(1:n_total, size = floor(0.7 * n_total))
+
+# Split the data into training and test sets
+train_70 <- train_data[train_idx, ]
+test_30 <- train_data[-train_idx, ]
+
+# Derive variables for the training set
+train_DVs_70 <- deriveVars(train_70,
+  transformtype = c("L", "M", "D", "HF", "HR", "T"),
+  allsplines = TRUE,
+  quiet = TRUE
+)
+```
+
+### Fit and evaluate the models
+
+Now we'll fit models by repeating variable selection at different levels of `alpha`:
+
+```{r bv-fit-models}
+# Add model fitting results using map
+model_comparison <- model_comparison %>%
+  mutate(
+    # Step 1: Select DVs for each EV
+    dv_selection = map(alpha, \(a) selectDVforEV(train_DVs_70$dvdata,
+      alpha = a,
+      quiet = TRUE
+    )),
+    # Step 2: Select EVs for final model
+    ev_selection = map2(
+      dv_selection, alpha,
+      \(dv, a) selectEV(dv$dvdata,
+        alpha = a,
+        interaction = FALSE,
+        quiet = TRUE
+      )
+    ),
+    # Extract number of DVs in final model
+    n_dvs = map_int(ev_selection, \(ev) length(ev$selectedmodel$coefficients) - 1)
+  )
+
+# Display intermediate results
+model_comparison %>%
+  select(alpha, n_dvs)
+```
+
+Notice how model complexity decreases as alpha decreases. Lower alpha values (more stringent thresholds) allow fewer variables into the model.
+
+Now we'll calculate AUC on two different datasets:
+
+- The 30% test set from the presence-background data (internal evaluation)
+- The independent validation set (presence-absence data) for external evaluation
+
+```{r bv-evaluate, fig.show='hide', warning=FALSE}
+# Add AUC calculations
+model_comparison <- model_comparison %>%
+  mutate(
+    # AUC on 30% test set (internal evaluation)
+    auc_test = map_dbl(
+      ev_selection,
+      \(ev) testAUC(
+        model = ev$selectedmodel,
+        transformations = train_DVs_70$transformations,
+        data = test_30
+      )
+    ),
+    # AUC on independent validation set (external evaluation)
+    auc_validation = map_dbl(
+      ev_selection,
+      \(ev) testAUC(
+        model = ev$selectedmodel,
+        transformations = train_DVs_70$transformations,
+        data = validation_data
+      )
+    )
+  )
+
+# Display final results table
+results_table <- model_comparison %>%
+  select(alpha, n_dvs, auc_test, auc_validation)
+
+knitr::kable(results_table, digits = c(10, 0, 3, 3))
+```
+
+### Interpret results
+
+The bias-variance tradeoff manifests in several observable patterns:
+
+- **Model complexity:** As alpha decreases, the number of derived variables in the model decreases. This reflects the fundamental tradeoff between simple models (which may underfit) and complex models (which may overfit).
+
+- **Internal evaluation (test set AUC):** The 30% test set is drawn from the same presence-background sample used for training. High AUC values here indicate that the model captures patterns in the training data, but this does not guarantee the model will generalize well to independent data.
+
+- **External evaluation (validation set AUC):** The independent validation set (presence-absence data) provides a more stringent test of model performance. The difference between internal and external AUC reveals how well the model generalizes beyond its training data. Small differences suggest the model captures robust ecological patterns; large differences may indicate overfitting to artifacts or spatial autocorrelation in the training data.
+
+### Further reading
+
+**Ultimately, the optimal level of complexity depends on the modeling objective**. Models intended for interpolation within the study region may justify higher complexity, while models for extrapolation to new regions or time periods often benefit from greater simplicity. Independent validation data (preferably presence-absence) are valuable for identifying an appropriate level of complexity. In the absence of independent data, splitting the training data into training and test sets may be the best available option.
+
+The 70/30 split we used above employed *random partitioning* of the training data, which has an important limitation: it does not account for spatial autocorrelation. Because nearby locations tend to have similar environmental conditions and species occurrence patterns, randomly selected test points may be highly similar to nearby training points. This spatial dependence inflates performance estimates and can lead to overly complex models that appear to generalize well internally but fail when applied to new regions [@robertsCrossvalidationStrategiesData2017].
+
+Spatial partitioning strategies address this issue by creating geographic separation between training and test data. For example, spatial blocking methods partition the study area into geographic blocks that are assigned to either training or testing [@valaviBlockCVPackageGenerating2019]. This better mimics the challenge of predicting to unsurveyed areas and may provide more realistic estimates of model transferability.
+
+## References

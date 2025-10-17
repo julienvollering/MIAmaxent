@@ -5,3 +5,5 @@
 inst/doc
 .DS_Store
 informaltesting.R
+/doc/
+/Meta/

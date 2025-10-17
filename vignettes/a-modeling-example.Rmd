@@ -1,10 +1,10 @@
 ---
 title: "A modeling example"
 author: "Julien Vollering"
-date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette:
     toc: true
+bibliography: references.bib
 vignette: >
   %\VignetteIndexEntry{A modeling example}
   %\VignetteEncoding{UTF-8}
@@ -20,15 +20,12 @@ knitr::opts_chunk$set(
 )
 ```
 
-This vignette is meant to introduce users to the `MIAmaxent` package by providing a worked example of a distribution modeling exercise. It shows how to use all of the top-level functions included in `MIAmaxent` in the order of a typical analysis. This vignette does NOT describe the theoretical underpinnings of the package. To learn more about the theory behind `MIAmaxent`, the user is referred to Halvorsen (2013), Halvorsen et al. (2015), and Vollering et al. (2019). 
+This vignette is meant to introduce users to the `MIAmaxent` package by providing a worked example of a distribution modeling exercise. It shows how to use all of the top-level functions included in `MIAmaxent` in the order of a typical analysis. This vignette does NOT describe the theoretical underpinnings of the package. To learn more about the theory behind `MIAmaxent`, the user is referred to @halvorsenStrictMaximumLikelihood2013, @halvorsenOpportunitiesImprovedDistribution2015, and @volleringMIAmaxentPackageVariable2019. 
 
-> Help pages for the package and for individual functions in the package can be accessed in R using the standard help command: `?"MIAmaxent"` (after attaching the package using `library(MIAmaxent)`). 
+> Help pages for the package and for individual functions in the package can be accessed in R using the standard help command: `?MIAmaxent` after attaching the package using `library(MIAmaxent)` 
 
 Abbreviations:
 EV = explanatory variable; DV = derived variable; RV = response variable; FOP = frequency of observed presence; AUC = area under the curve of the receiver operating characteristic plot
-
-***
-
 
 ## Introducing the data set
 
@@ -75,15 +72,11 @@ sum(grasslandPO$RV == 1, na.rm = TRUE)
 sum(is.na(grasslandPO$RV))
 ```
 
-___IMPORTANT: A number of important issues for distribution modeling -- such as accounting for sampling bias and setting study area extent -- are not dealt with in `MIAmaxent`, and should be dealt with beforehand. Good modeling practice requires that these issues be considered carefully! See Guisan et al. (2017) for a full treatment of distribution modeling in R.___
-
-
-***
-
+___IMPORTANT: A number of important issues for distribution modeling -- such as accounting for sampling bias and setting study area extent -- are not dealt with in `MIAmaxent`, and should be dealt with beforehand. Good modeling practice requires that these issues be considered carefully! See @guisanHabitatSuitabilityDistribution2017 for a full treatment of distribution modeling in R.___
 
 ## Examining patterns in occurrence
 
-By its simplest definition, a distribution model examines the relationship between the modeled target and its environment. In this way, distribution modeling follows the long tradition of gradient analysis in vegetation ecology (Halvorsen, 2012). Therefore, before building an actual model, we should have some idea about what influence the environmental variables have on the occurrence of the target.
+By its simplest definition, a distribution model examines the relationship between the modeled target and its environment. In this way, distribution modeling follows the long tradition of gradient analysis in vegetation ecology [@halvorsenGradientAnalyticPerspective2012]. Therefore, before building an actual model, we should have some idea about what influence the environmental variables have on the occurrence of the target.
 
 ### plotFOP()
 
@@ -123,17 +116,13 @@ If geoberg type 4 had shown a high FOP value _and_ a large number of observation
 
 Looking at FOP plots should help the modeler decide which EVs are likely to have greatest explanatory power, and gives an idea of the strength and shape of the relationships between the EVs and RV.
 
-
-***
-
-
 ## Transforming explanatory variables (EVs)
 
 To fit the many different kinds of relationships between explanatory and response variables, we need to transform the EVs. This means that we create new "derived" variables (DVs) from the original EVs. Another way of thinking about this is to put it in terms of rescaling; we adjust the scale of the EV in many different ways in order to check which scaling is most ecologically relevant to the occurrence of the modeled target.
 
 ### deriveVars()
 
-The `deriveVars()` function produces DVs from EVs by 7 different transformation types: linear, monotonous, deviation, forward hinge, reverse hinge, threshold, and binary (Halvorsen et al., 2015). The first 6 of these are relevant for continuous variables and the binary transformation is relevant only for categorical variables. Different types of transformations can be turned on or off to balance model complexity with model fit. 
+The `deriveVars()` function produces DVs from EVs by 7 different transformation types: linear, monotonous, deviation, forward hinge, reverse hinge, threshold, and binary [@halvorsenOpportunitiesImprovedDistribution2015]. The first 6 of these are relevant for continuous variables and the binary transformation is relevant only for categorical variables. Different types of transformations can be turned on or off to balance model complexity with model fit. 
 
 For the spline-type transformations (forward hinge, reverse hinge, threshold) an endless number of different transformations are possible, so by default the function produces 20 of each, and then chooses those which explain the most variation in the RV. This means that 20 models are built and evaluated for each combination of EV and spline transformation, so running `deriveVars()` with these transformation types turned on can take a bit of time --- depending on the size of the data set.
 
@@ -159,10 +148,6 @@ head(summary(grasslandDVs$transformations))
 length(grasslandDVs$transformations)
 ```
 
-
-***
-
-
 Note that the names of DVs indicate the type of transformation was used to create them. For example, "terslpdg_D2" is a deviation-type transformation of terslpdg, where the slope of the deviation is controlled by a parameter value of 2. Meanwhile, "terslpdg_HR4" is a reverse hinge transformation, with the knot in the 4th position.
 
 > Underscores ('_') are used to denote DVs, and colons (':') are used to denote interaction terms, so EV names must not contain these characters. EV names should also be unique.
@@ -176,9 +161,6 @@ plot(grasslandPO$terslpdg, grasslandDVs$dvdata$terslpdg$terslpdg_M, pch=20,
 ```
 
 "terslpdg_D2" is the squared deviation (hence D2) from the estimated optimum in terslpdg (around 6). "terslpdg_M" is a monotone (hence M) transformation of terslpdg --- specifically a zero-skew transformation.
-
-***
-
 
 ## Selecting variables
 
@@ -198,7 +180,7 @@ The `selectDVforEV()` function performs forward selection of individual DVs for 
 The `alpha` argument to `selectDVforEV()` is used in the inference test during forward selection, setting the threshold for how much variation a DV must explain to be retained. A lower `alpha` results in a more conservative test, i.e. DVs must explain more variation to be selected.  
 
 Here we use `selectDVforEV()` on the grassland data set. Note the "$dvdata" following grasslandsDV, which identifies the list of DVs we made using `deriveVars()` (see `?deriveVars()` Value). 
-```{r, warning=FALSE}
+```{r}
 grasslandDVselect <- selectDVforEV(grasslandDVs$dvdata, alpha = 0.001, quiet = TRUE)
 ```
 
@@ -222,7 +204,7 @@ Here is an example of one of the (`r length(grasslandDVs$dvdata) - 1`) trails of
 grasslandDVselect$selection$terdem
 ```
 
-The columns in this data frame represent: the round of variable selection (round), the names of the DVs included in the model (variables), the number of DVs in the model (m), the fraction of deviance explained (D^2^, sensu Guisan & Zimmerman, 2000), the Chi-squared statistic for the nested model comparison (Chisq), the degrees of freedom for the nested model comparison (df), and the p-value for the Chi-squared statistic under the specified degrees of freedom (P).
+The columns in this data frame represent: the round of variable selection (round), the names of the DVs included in the model (variables), the number of DVs in the model (m), the fraction of deviance explained [D^2^; sensu @guisanPredictiveHabitatDistribution2000], the Chi-squared statistic for the nested model comparison (Chisq), the degrees of freedom for the nested model comparison (df), and the p-value for the Chi-squared statistic under the specified degrees of freedom (P).
 
 This table shows, for example, that in the first round of selection, one model was built for each of the 8 DVs, and that all of these explained enough variation to be retained for the second round of selection. Of all the DVs produced from "terdem", "terdem_D05" explained the most variation in the RV. However, none of the remaining DVs explained enough of the remaining variation to be selected in addition to "terdem_D05" (P > alpha, in round 2).
 
@@ -286,10 +268,6 @@ grasslandmodel <- chooseModel(grasslandDVselect$dvdata,
 
 This is the model which we explore further below. 
 
-
-***
-
-
 ## Exploring the model
 
 After building a model by selecting which EVs to include, it is useful to explore what the modeled relationships actually look like. A straightforward way to do this is to look at model predictions over a range of explanatory data. This gives the modeler a sense of the relationships that the model has captured, and can help the modeler understand strengths and weaknesses in the model.  
@@ -328,16 +306,12 @@ plotResp2(grasslandmodel, grasslandDVs$transformations, "prbygall")
 
 ### calculateRVA()
 
-As a measure of variable contribution, we can calculate the Relative Variation Accounted for (RVA) by each variable (Halvorsen et al., 2015). Here with our chosen model:
+As a measure of variable contribution, we can calculate the Relative Variation Accounted for (RVA) by each variable [@halvorsenOpportunitiesImprovedDistribution2015]. Here with our chosen model:
 
 ```{r}
 calculateRVA(grasslandEVselect, formula("~ prbygall + geoberg + lcucor1 + 
                                       tertpi09 + geolmja1"))
 ```
-
-
-***
-
 
 ## Applying the model
 
@@ -374,10 +348,6 @@ grasslandPreds
 ```
 
 Since we projected the model across the training data, it makes sense that all the ranges are reported as [0,1] or "inside."
-
-
-***
-
 
 ## Evaluating the model
 There are many ways of evaluating the quality of a model, including assessing which EVs are selected and gauging the realism of response curves. Arguably the best way to evaluate a model, however, is to test how often its predictions are correct using occurrence data which are independent from the data used to train the model. This is strongly preferable to using training data because it indicates whether the model reflects patterns specific to the training data or generalized patterns for the modeled target (i.e. whether the model is overfitted). Independent, presence-absence test data are not always available, for example when projecting a model into the future, but when they are, they represent a high standard in model validation.
@@ -419,17 +389,13 @@ The ROC plot shows how the rate of true positives as well as false positives inc
 
 Note that the `testAUC()` function can also be used to calculate AUC from presence-only training data, but that the interpretation of these values differs importantly.
 
-
-***
-
-
 ## Alternative: logistic regression
 
 In the modeling example above, we used presence-only data to fit maximum entropy models. It is important to note that `MIAmaxent` provides the exact same functionality for models fitted by standard logistic regression. Specifically, in all functions which perform model fitting (i.e. pre-selection of spline DVs in `deriveVars()`, along with `selectDVforEV()`, `selectEV()`, and `chooseModel()`), the fitting `algorithm` can be specified as `"maxent"` or`"LR"`, where `"maxent"` is the default. 
 
 > Conventionally, the maximum entropy estimation (`algorithm = "maxent"`) is used with presence-only occurrence data, while logistic regression (`algorithm = "LR"`), is used with presence-absence data.
 
-The maximum entropy algorithm represents a form of parametric density estimation using an exponential family model, and is equivalent to inhomogeneous Poisson process models (Fithian & Hastie, 2013). It is implemented in `MIAmaxent` using infinitely-weighted logistic regression, with presences automatically added to the background. The maximum entropy algorithm has been used primarily with presence-only occurrence data in the popular maxent.jar software (Phillips et al., 2006), but it may also be used with presence-absence data (Halvorsen, 2013). In contrast, standard logistic regression (binomial GLM) is customarily used with presence-absence occurrence data. For more information about the differences between these approaches, see Guisan et al. (2017) and Fithian & Hastie (2013).  
+The maximum entropy algorithm represents a form of parametric density estimation using an exponential family model, and is equivalent to inhomogeneous Poisson process models [@fithianFinitesampleEquivalenceStatistical2013]. It is implemented in `MIAmaxent` using infinitely-weighted logistic regression, with presences automatically added to the background. The maximum entropy algorithm has been used primarily with presence-only occurrence data in the popular maxent.jar software [@phillipsMaximumEntropyModeling2006], but it may also be used with presence-absence data [@halvorsenStrictMaximumLikelihood2013]. In contrast, standard logistic regression (binomial GLM) is customarily used with presence-absence occurrence data. For more information about the differences between these approaches, see @guisanHabitatSuitabilityDistribution2017 and @fithianFinitesampleEquivalenceStatistical2013.  
 
 __Below, we follow the same procedure as above, but use the presence-absence data to fit models by logistic regression.__
 
@@ -506,28 +472,11 @@ Notice that:
 1. AUC values are considerably lower for both models when calculated on presence-only data. This evidences the fact that uninformed background locations are treated as absences in this calculation; therefore even a perfect model would not show a perfect AUC of 1. 
 2. The model trained on the same data as used for evaluation shows the higher AUC, in both evaluation cases; that is, the PA model gives better predictions of the PA data, and the PO model gives better predictions of the PO data. This result is not surprising, but it is not clear which is the better model. 
 
-In general, the question of how to make best use of presence-only and presence-absence data, when both are available, is an area of active research. Similarly, the use of presence-absence data in maximum entropy models is mostly unexplored (Halvorsen, 2013).
-
-***
-
+In general, the question of how to make best use of presence-only and presence-absence data, when both are available, is an area of active research. Similarly, the use of presence-absence data in maximum entropy models is mostly unexplored [@halvorsenStrictMaximumLikelihood2013].
 
 ## Acknowledgements
 
 Thank you to Sabrina Mazzoni and Rune Halvorsen for providing the data used in this vignette.
 
-
-***
-
-
 ## References
-
-1. Aarts, G., Fieberg, J., & Matthiopoulos, J. (2012). Comparative interpretation of count, presence–absence and point methods for species distribution models. Methods in Ecology and Evolution, 3(1), 177-187.
-2. Fithian, W., & Hastie, T. (2013). Finite-sample equivalence in statistical models for presence-only data. The annals of applied statistics, 7(4), 1917.
-3. Guisan, A., Thuiller, W., & Zimmermann, N. E. (2017) Habitat Suitability and Distribution Models: With Applications in R. 1st ed. Ecology, Biodiversity and Conservation. Cambridge, UK: Cambridge University Press. https://doi.org/10.1017/9781139028271.
-4. Guisan, A., & Zimmermann, N. E. (2000). Predictive habitat distribution models in ecology. Ecological modelling, 135(2-3), 147-186.
-5. Halvorsen, R. (2012) A gradient analytic perspective on distribution modelling. Sommerfeltia, 35, 1-165.
-6. Halvorsen, R. (2013) A strict maximum likelihood explanation of MaxEnt, and some implications for distribution modelling. Sommerfeltia, 36, 1-132.
-7. Halvorsen, R., Mazzoni, S., Bryn, A. & Bakkestuen, V. (2015) Opportunities for improved distribution modelling practice via a strict maximum likelihood interpretation of MaxEnt. Ecography, 38, 172-183.
-8. Phillips, S. J., Anderson, R. P., & Schapire, R. E. (2006) Maximum Entropy Modeling of Species Geographic Distributions. Ecological Modelling, 190, 231–59.
-9. Vollering, J., Halvorsen, R., & Mazzoni, S. (2019) The MIAmaxent R package: Variable transformation and model selection for species distribution models. Ecology and Evolution, 9, 12051–12068.
 

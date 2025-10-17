@@ -9,3 +9,5 @@
 ^revdep$
 ^\.github$
 ^CRAN-SUBMISSION$
+^doc$
+^Meta$

@@ -1,5 +1,7 @@
 # MIAmaxent (development version)
 
+* Added vignette on variable selection and model evaluation, using NCEAS benchmark data
+
 # MIAmaxent 1.3.1
 
 * Allow `raster`'s Raster*-classes to be passed to projectModel(), for backward compatibility

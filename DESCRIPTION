@@ -34,5 +34,10 @@ Imports:
 Suggests:
     knitr,
     rmarkdown,
-    R.rsp
-VignetteBuilder: R.rsp
+    purrr,
+    tidyr,
+    tibble,
+    ggplot2,
+    sf,
+    disdat
+VignetteBuilder: knitr
