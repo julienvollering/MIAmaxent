@@ -4,6 +4,22 @@ if(getRversion() >= "2.15.1") {
 
 
 
+#' Ensures data is a data.frame, converting from tibble if necessary
+#'
+#' @param data Data object that may be a tibble or data.frame
+#' @return A data.frame
+#' @keywords internal
+#' @noRd
+
+.ensure_dataframe <- function(data) {
+  if (inherits(data, "tbl_df") || inherits(data, "tbl")) {
+    return(as.data.frame(data))
+  }
+  return(data)
+}
+
+
+
 #' checks the validity of RV values
 #'
 #' Presence-only data should be coded as: 1/NA (preferred) or 1/0 (danger of
@@ -68,6 +84,7 @@ if(getRversion() >= "2.15.1") {
 
 .fopoptimum <- function(df, span = 0.5, intervals = NULL) {
 
+  df <- .ensure_dataframe(df)
   df <- data.frame(RV = df[, 1], EV = df[, 2])
   .binaryrvcheck(df[, 1])
   df[, 1][is.na(df[, 1])] <- 0

@@ -104,6 +104,7 @@ deriveVars <- function(data,
                        allsplines = FALSE, algorithm = "maxent", write = FALSE,
                        dir = NULL, quiet = FALSE) {
 
+  data <- .ensure_dataframe(data)
   colnames(data) <- make.names(colnames(data), allow_ = FALSE)
 
     if (any(c("HF", "HR", "T") %in% transformtype) && allsplines == F) {

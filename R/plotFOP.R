@@ -86,6 +86,8 @@
 plotFOP <- function(data, EV, span = 0.5, intervals = NULL, ranging = FALSE,
                     densitythreshold = NULL, ...) {
 
+  data <- .ensure_dataframe(data)
+
   if (EV==1) {
     stop("'EV' cannot be the first column of 'data', which must be the response variable")
   }
