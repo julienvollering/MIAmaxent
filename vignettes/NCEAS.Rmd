@@ -227,7 +227,7 @@ train_DVs <- deriveVars(train_data,
 head(names(train_DVs$dvdata$temp.coldest.month))
 ```
 
-DV names indicate the transformation type. For example, `temp.coldest.month_D05` is a deviation transformation (square-root deviation from optimum), while `temp.coldest.month_HF1*` is a reverse hinge transformation (with knot at first position).
+DV names indicate the transformation type. For example, `temp.coldest.month_D05` is a deviation transformation (square-root deviation from optimum), while `temp.coldest.month_HF1` is a reverse hinge transformation (with knot at first position).
 
 With derived variables created, we can proceed to variable selection, where we choose which DVs to include in the final model. Variable selection in MIAmaxent follows a forward stepwise procedure, where models with additional variables are compared to simpler models. The selection process is broken down into two stages.
 
@@ -241,12 +241,12 @@ train_DV_select <- selectDVforEV(train_DVs$dvdata,
 )
 ```
 
+The `alpha = 0.001` parameter sets a threshold: only DVs explaining significant variation at this level are retained.
+
 ```{r examine-selected-dvs}
 # Example: DVs selected for temperature
 names(train_DV_select$dvdata$temp.coldest.month)
 ```
-
-The `alpha = 0.001` parameter sets a threshold: only DVs explaining significant variation at this level are retained.
 
 ### Selection stage 2: Select EVs for the final model
 
@@ -288,7 +288,7 @@ plotResp(
 )
 ```
 
-Compare the above response curve with the FOP plot to see how the model captures the observed pattern:
+Notice that the scale of the Y-axis in response curves is unbounded [0,inf] --- with presence-only data, the model can only estimate relative suitability, not absolute probability of occurrence. Now compare the above response curve with the FOP plot to see how the model captures the observed pattern:
 
 ```{r compare-fop-response, fig.show='hold', fig.height=4}
 plotFOP(train_data, top_EV)
@@ -438,24 +438,7 @@ plot(pred_raster, main = "Predicted Probability of Occurrence")
 3. How to select variables using nested model comparison
 4. How to evaluate model performance with an independent validation set (presence-absence data)
 
-**Exercise:** Compare the FOP plots with the response curves for all variables in your final model. Where do you see good agreement? Where does the model seem to smooth over or (conversely) overfit occurrence patterns? Notice that the scale of the Y-axis in the response curves is unbounded [0,inf] --- with presence-only data, the model can only estimate relative suitability, not absolute probability of occurrence.
-
-```{r fop-resp, include=FALSE}
-evs <- (train_model$selectedmodel$coefficients)[-1] |>
-  names() |>
-  sub("_.*$", "", x = _) |>
-  unique()
-for (ev in evs) {
-  plotFOP(train_data, ev)
-  plotResp(
-    train_model$selectedmodel,
-    train_DVs$transformations,
-    ev
-  )
-}
-```
-
-**Exercise:** Use the `testAUC()` function again, but this time supply the presence-only data as the evaluation data. How does the AUC change compared to when it is calculated on the independent validation set (presence-absence data)? Why might this be?
+> **Exercise:** Use the `testAUC()` function again, but this time supply the presence-only data as the evaluation data. How does the AUC change compared to when it is calculated on the independent validation set (presence-absence data)? Why might this be?
 
 ```{r auc-po, include=FALSE}
 testAUC(
@@ -465,7 +448,7 @@ testAUC(
 )
 ```
 
-**Exercise:** Experiment with the `alpha` parameter in `selectDVforEV()` and `selectEV()`. Try `alpha = 0.01` or `alpha = 0.0001`. How does this affect the number of variables selected and the model complexity?
+> **Exercise:** Experiment with the `alpha` parameter in `selectDVforEV()` and `selectEV()`. Try `alpha = 0.01` or `alpha = 0.0001`. How does this affect the number of variables selected and the model complexity?
 
 ## Advanced: The bias-variance tradeoff in model selection
 
