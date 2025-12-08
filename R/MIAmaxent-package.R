@@ -14,7 +14,7 @@
 #' @section Workflow: The diagram below outlines a common workflow for users of
 #'   the package. Function names are in red.
 #'
-#'   \if{html}{\figure{workflow-flowchart.png}{options: style="width: 70%;"
+#'   \if{html}{\figure{workflow-flowchart.png}{options: style="width: 70\%;"
 #'   alt="Figure: workflow-flowchart.png"}}
 #'   \if{latex}{\figure{workflow-flowchart.pdf}{options: width=12cm}}
 #'

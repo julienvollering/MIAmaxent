@@ -1,5 +1,11 @@
 # MIAmaxent (development version)
 
+# MIAmaxent 1.4.1
+
+* Patch for fixing CRAN check results: HTML5 standards for docs and oldrel-windows compatibility in vignette 
+
+# MIAmaxent 1.4.0
+
 * Added vignette on variable selection and model evaluation, using NCEAS benchmark data
 
 # MIAmaxent 1.3.1

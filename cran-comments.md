@@ -1,18 +1,15 @@
+This patch is submitted to address an ERROR and a NOTE found during R CMD check on CRAN. The CRAN team requested: "Please correct before 2025-12-15 to safely retain your package on CRAN."
+
 ## R CMD check results
 
-0 errors | 0 warnings | 1 notes
+0 errors | 0 warnings | 0 notes
 
-* checking for future file timestamps ... NOTE
-  unable to verify current time
-  
-  I believe this to be a spurious note, based on <https://forum.posit.co/t/cran-check-note-because-of-dead-time-api/77822>
+
 
 ## R CMD check environments
 
 * local windows 11, r 4.5.1
-* local ubuntu 24.02, r 4.3.3
 * winbuilder, r-devel
-* macbuilder, r 4.5.1
 
 ## revdepcheck results
 
