@@ -373,7 +373,7 @@ The ROC plot shows false positive rate vs. true positive rate at different thres
 
 > **Exercise:** How does your model perform? If it is important that the model identifies most presences (high sensitivity), would you choose a high or low threshold? What are the trade-offs?
 
-```{r reconstruct-spatial, include=FALSE}
+```{r reconstruct-spatial, include=FALSE, eval=FALSE}
 # To create spatial predictions directly, we need raster data
 # Here we reconstruct the (incomplete) raster from coordinates, and metadata instead
 

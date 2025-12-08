@@ -2,6 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
+*.md
 inst/doc
 .DS_Store
 informaltesting.R
