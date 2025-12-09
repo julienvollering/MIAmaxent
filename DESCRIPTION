@@ -1,7 +1,7 @@
 Package: MIAmaxent
 Type: Package
 Title: A Modular, Integrated Approach to Maximum Entropy Distribution Modeling
-Version: 1.4.1
+Version: 1.4.1.9000
 Authors@R: c(
     person("Julien", "Vollering", email = "julienvollering@gmail.com", role = c("aut", "cre")),
     person("Sabrina", "Mazzoni", role = "aut"),
